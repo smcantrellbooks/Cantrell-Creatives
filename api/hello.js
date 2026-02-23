@@ -1,7 +1,4 @@
-// hello.js
-
-function hello() {
-    return 'Hello World';
-}
-
-module.exports = hello;
+module.exports = (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.end(JSON.stringify({ message: "Hello World" }));
+};
