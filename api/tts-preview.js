@@ -32,7 +32,7 @@ module.exports = async function handler(req, res) {
       input: body.text.substring(0, 2000),
       voice: body.voice || 'af_heart'
     };
-    var upstream = await fetch('https://api.apifree.ai/v1/audio/submit', {
+    var upstream = await fetch('https://api.apifree.ai/v1/audio/speech', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + apiKey,
