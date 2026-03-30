@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Voice Studio — Cantrell Creatives</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Cinzel:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;max-width:100%;overflow-x:hidden;min-height:100vh;background:#F9F4ED;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--taupe);}
+/* Hide Sitejet injected navigation */
+.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,
+[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],
+[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none !important;}
+.waveform-play,.ch-play{font-family:Arial,sans-serif !important;}
+:root{
+  --taupe:#2D1F2D;--taupe-lt:rgba(45,31,45,.65);
+  --gold:#C9A961;--gold2:#e8c97a;--gold-lt:rgba(201,169,97,.15);--gold-bd:rgba(201,169,97,.4);
+  --cream:#FBF7F2;--card:#FFFCF8;
+  --plum:#7B5C7B;--plum2:#9b7a9b;--plum-lt:rgba(123,92,123,.1);--plum-bd:rgba(123,92,123,.3);
+  --oak:#F5EDE0;--oak-dark:#EDE0CC;
+  --green:#2a6b3c;--red:#c03c3c;
+}
+.banner{position:relative;overflow:hidden;display:block;width:100%;}
+.banner-img{display:block;width:100%;height:360px;object-fit:cover;object-position:center;}
+.nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:100;}
+.nt-btn{padding:5px 18px;border-radius:999px;border:1px solid rgba(201,169,97,.5);background:rgba(40,20,40,.32);color:rgba(232,201,122,.95);font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.nt-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);}
+.nt-btn.login{background:rgb(201,169,97);border-color:rgb(201,169,97);color:rgb(45,31,45);font-weight:800;}
+.title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
+.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:var(--plum);line-height:1;text-shadow:rgba(255,255,255,.6) 0 2px 16px;letter-spacing:6px;}
+.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:var(--plum);line-height:.95;text-shadow:rgba(255,255,255,.6) 0 2px 16px;margin-left:8px;}
+.title-tagline{font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(90,58,90,.85);margin-top:8px;}
+.gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--plum),transparent);margin-top:8px;border-radius:999px;}
+.nav-bot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(60,30,60,.78) 0%,rgba(60,30,60,.3) 55%,transparent 100%);z-index:100;}
+.nb-inner{display:flex;align-items:center;gap:10px;padding:10px 28px 14px;}
+.nb-btn{padding:7px 22px;border-radius:999px;border:1px solid rgba(201,169,97,.45);background:rgba(40,20,40,.28);color:rgba(232,201,122,.95);font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.nb-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);transform:translateY(-1px);}
+.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,rgba(201,169,97,.3) 10%,rgb(201,169,97) 30%,rgb(232,201,122) 50%,rgb(201,169,97) 70%,rgba(201,169,97,.3) 90%,transparent 100%);background-size:200%;animation:shimmer 4s linear infinite;}
+@keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+
+.page-wrap{max-width:1400px;margin:0 auto;padding:28px 24px 60px;}
+.tab-bar{display:flex;gap:0;background:var(--card);border:1px solid var(--gold-bd);border-radius:10px;overflow:hidden;margin-bottom:24px;width:fit-content;}
+.tab-btn{padding:10px 24px;border:none;background:none;font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--taupe-lt);cursor:pointer;transition:all .22s;display:flex;align-items:center;gap:7px;white-space:nowrap;}
+.tab-btn:hover{background:var(--gold-lt);color:var(--taupe);}
+.tab-btn.active{background:var(--plum);color:#fff;}
+.tab-content{display:none;}.tab-content.active{display:block;}
+.panel{background:var(--card);border:1px solid var(--gold-bd);border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.09);display:flex;flex-direction:column;gap:16px;margin-bottom:16px;}
+.panel:last-child{margin-bottom:0;}
+.panel-title{display:flex;align-items:center;gap:9px;font-family:'Cinzel',serif;color:var(--plum);font-size:1.05rem;font-weight:700;border-bottom:1px solid var(--plum-bd);padding-bottom:10px;}
+.panel-icon{font-size:14px;color:var(--gold);}
+.lbl{display:block;font-size:.85rem;color:var(--taupe);font-weight:700;margin-bottom:5px;}
+.inp,select.inp,textarea.inp{width:100%;padding:10px 12px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--taupe);background:#fff;outline:none;transition:border .18s;}
+.inp:focus{border-color:var(--gold);}
+textarea.inp{resize:vertical;line-height:1.75;}
+.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-gold{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;border:none;background:var(--gold);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-gold:hover{background:#d4b870;transform:translateY(-1px);}
+.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-sec{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:600;white-space:nowrap;}
+.btn-sec:hover{background:rgba(201,169,97,.28);}
+.btn-engine-active{background:var(--plum) !important;color:#fff !important;border-color:var(--plum) !important;}
+.btn-plum{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--plum-bd);background:var(--plum-lt);color:var(--plum);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:700;}
+.btn-plum:hover{background:var(--plum);color:#fff;}
+.btn-generate{width:100%;padding:14px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--plum),#5a3d5a);color:#fff;font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-generate:hover{background:linear-gradient(135deg,#5a3d5a,var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.35);}
+.btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.upload-zone{border:2px dashed var(--gold-bd);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .25s;background:var(--gold-lt);}
+.upload-zone:hover{border-color:var(--gold);background:rgba(201,169,97,.2);}
+.upload-zone.drag-over{border-color:var(--plum);background:var(--plum-lt);}
+.upload-icon{font-size:2.5rem;margin-bottom:12px;color:var(--plum);}
+.upload-title{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--taupe);margin-bottom:6px;}
+.upload-sub{font-size:.88rem;color:var(--taupe-lt);font-style:italic;margin-bottom:16px;}
+.upload-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+/* Editor layout */
+.editor-layout{display:grid;grid-template-columns:200px 1fr 300px;gap:16px;min-height:500px;}
+@media(max-width:1000px){.editor-layout{grid-template-columns:1fr;}}
+.chapter-nav{display:flex;flex-direction:column;gap:4px;max-height:500px;overflow-y:auto;}
+.chapter-nav-item{padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;font-size:.85rem;color:var(--taupe);font-weight:600;transition:all .18s;}
+.chapter-nav-item:hover{border-color:var(--plum-bd);background:var(--plum-lt);}
+.chapter-nav-item.active{border-color:var(--plum);background:var(--plum-lt);color:var(--plum);}
+.doc-editor{width:100%;min-height:400px;max-height:600px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;}
+.doc-editor:focus{border-color:var(--gold);}
+/* Voice casting */
+.voice-cast-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){.voice-cast-row{grid-template-columns:1fr;}}
+/* Progress */
+.progress-bar{height:6px;background:var(--gold-bd);border-radius:999px;overflow:hidden;margin:8px 0;}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--plum),var(--gold));border-radius:999px;transition:width .4s ease;}
+.status-msg{padding:10px 14px;border-radius:8px;font-size:.88rem;margin-top:8px;display:none;}
+.status-msg.show{display:block;}
+.status-msg.ok{background:rgba(42,107,60,.08);border:1px solid rgba(42,107,60,.2);color:var(--green);}
+.status-msg.err{background:rgba(192,60,60,.08);border:1px solid rgba(192,60,60,.2);color:var(--red);}
+.status-msg.info{background:var(--plum-lt);border:1px solid var(--plum-bd);color:var(--plum);}
+.audio-result{background:var(--oak);border:1px solid var(--gold-bd);border-radius:10px;padding:16px;}
+.audio-result-title{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--plum);margin-bottom:10px;}
+.audio-result audio{width:100%;border-radius:6px;}
+.audio-download-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+/* Nyxen */
+.nyxen-bubble{position:fixed;bottom:24px;right:24px;width:64px;height:64px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:3px solid var(--gold);box-shadow:0 6px 24px rgba(0,0,0,.3);cursor:pointer;z-index:9999;transition:transform .2s;}
+.nyxen-bubble:hover{transform:scale(1.08);}
+.nyxen-bubble-label{position:fixed;bottom:94px;right:18px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;color:var(--gold);z-index:9999;pointer-events:none;}
+.nyxen-panel{position:fixed;bottom:104px;right:24px;width:360px;height:520px;background:var(--cream);border:1px solid var(--gold-bd);border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden;z-index:9999;}
+@media(max-width:480px){.nyxen-panel{width:92vw;right:4vw;}}
+.nyxen-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(to right,var(--plum),#5a3d5a);flex-shrink:0;}
+.nyxen-av{width:36px;height:36px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:2px solid var(--gold);flex-shrink:0;}
+.nyxen-hdr-title{font-family:'Cinzel',serif;font-size:.95rem;color:#fff;font-weight:700;}
+.nyxen-hdr-status{font-size:.68rem;color:rgba(255,255,255,.7);font-style:italic;}
+.nyxen-close{cursor:pointer;font-size:1rem;color:rgba(255,255,255,.7);padding:4px 8px;border-radius:6px;border:none;background:none;margin-left:auto;}
+.nyxen-close:hover{color:#fff;}
+.nyxen-feed{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+.nmsg{padding:9px 12px;border-radius:10px;font-size:.88rem;line-height:1.55;max-width:88%;}
+.nmsg.ai{background:var(--plum-lt);border:1px solid var(--plum-bd);color:var(--taupe);align-self:flex-start;border-bottom-left-radius:3px;}
+.nmsg.ai .nlbl{font-size:.57rem;letter-spacing:.14em;color:var(--plum);margin-bottom:3px;font-weight:700;font-family:'Cinzel',serif;}
+.nmsg.user{background:var(--gold-lt);border:1px solid var(--gold-bd);color:var(--taupe);align-self:flex-end;border-bottom-right-radius:3px;}
+.nyxen-input-wrap{display:flex;align-items:flex-end;gap:6px;padding:10px 12px;border-top:1px solid var(--gold-bd);background:rgba(251,247,242,.95);flex-shrink:0;}
+.nyxen-tbox{flex:1;min-height:36px;max-height:80px;padding:7px 10px;border-radius:8px;border:1px solid var(--gold-bd);font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--taupe);background:#fff;outline:none;resize:none;line-height:1.4;}
+.nyxen-tbox:focus{border-color:var(--gold);}
+.nyxen-send{width:32px;height:32px;border-radius:7px;border:none;background:var(--gold);color:var(--taupe);font-size:.85rem;cursor:pointer;flex-shrink:0;font-weight:700;transition:all .18s;}
+.nyxen-send:hover{background:#d4b870;}
+.footer{border-top:1px solid var(--gold-bd);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;}
+.footer a{font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;transition:color .2s;}
+.footer a:hover{color:var(--gold);}
+@media(max-width:768px){.banner-img{height:220px;}.title-voice{font-size:28px;}.title-studio{font-size:36px;}.page-wrap{padding:16px 14px 40px;}.editor-layout{grid-template-columns:1fr;}.tab-btn{padding:8px 14px;font-size:.64rem;}}
+</style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner">
+  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');"/>
+  <div class="title-block">
+    <div class="title-voice">VOICE</div>
+    <div class="title-studio">Studio</div>
+    <div class="title-tagline">Clone &middot; Narrate &middot; Publish</div>
+    <div class="gold-wave"></div>
+  </div>
+  <nav class="nav-top">
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#127968; Home</a>
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/my-account">My Account</a>
+    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
+  </nav>
+  <nav class="nav-bot">
+    <div class="nb-inner">
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">&#127916; Studio</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#9997;&#65039; Publisher</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">&#128218; Collections</a>
+      <a class="nb-btn" href="https://smcantrellbooks.com">&#127758; Main Site</a>
+    </div>
+  </nav>
+</div>
+<div class="gold-line"></div>
+
+<div class="page-wrap">
+  <div style="margin-bottom:24px;">
+    <h1 style="font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--plum);margin-bottom:6px;">Voice Studio</h1>
+    <p style="font-size:1rem;color:var(--taupe-lt);font-style:italic;">Upload your manuscript, edit chapters, cast voices, and generate your audiobook.</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('audiobook',this)">&#127911; Audiobook Generator</button>
+    <button class="tab-btn" onclick="switchTab('clone',this)">&#127908; Voice Cloning</button>
+    <button class="tab-btn" onclick="switchTab('tts',this)">&#128263; Text to Speech</button>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- TAB: AUDIOBOOK GENERATOR (NEW LAYOUT) -->
+  <!-- ══════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-audiobook">
+
+    <!-- EDITOR: Import + Edit area (full document) -->
+    <div class="panel" style="padding:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#9998; Document Editor</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('fileInput').click()">&#128229; Import DOCX</button>
+          <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearEditor()">&#128465; Clear</button>
+          <button class="btn-gold" style="padding:6px 14px;font-size:.78rem;" onclick="exportToAudio()">&#10148; Export Chapters to Audio</button>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept=".txt,.docx" hidden onchange="handleFileUpload(event)"/>
+      <div id="uploadStatus" class="status-msg"></div>
+      <div class="doc-editor" id="docEditor" contenteditable="true" style="min-height:500px;max-height:700px;background:#fff;" ondragover="event.preventDefault();this.style.borderColor='var(--plum)';" ondragleave="this.style.borderColor='var(--gold-bd)';" ondrop="handleEditorDrop(event)">Start typing or import a DOCX file...</div>
+    </div>
+
+    <!-- MAIN DOCUMENT: Chapters for audio (with chapter nav + voice casting) -->
+    <div class="panel" style="margin-top:16px;">
+      <div class="inp-grid">
+        <div><label class="lbl">Book Title</label><input class="inp" type="text" id="bookTitle" placeholder="Your Book Title"/></div>
+        <div><label class="lbl">Author Name</label><input class="inp" type="text" id="authorName" placeholder="S.M. Cantrell"/></div>
+      </div>
+    </div>
+    <div class="editor-layout" style="margin-top:16px;">
+
+      <!-- LEFT: Chapter Navigation -->
+      <div>
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#128218;</span> Chapters</div>
+          <div class="chapter-nav" id="chapterNav">
+            <div style="font-size:.82rem;color:var(--taupe-lt);font-style:italic;padding:10px 0;text-align:center;">Export chapters from the editor above.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER: Main Document for Audio -->
+      <div>
+        <div class="panel" style="padding:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
+            <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#128218; Main Document — Ready for Audio</div>
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearMainDoc()">&#128465; Clear</button>
+          </div>
+          <div class="doc-editor" id="mainDocEditor" contenteditable="true" style="min-height:500px;max-height:700px;background:#fff;">Export chapters from the editor above to populate this document for audio generation.</div>
+          <div style="font-size:.75rem;color:var(--taupe-lt);font-style:italic;margin-top:4px;">This is the final document sent to the audio engine. You can still edit here before generating.</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Voice Casting + Generate -->
+      <div>
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#127908;</span> Voice Casting</div>
+
+          <!-- RADIO BUTTONS: Mode Selection -->
+          <div style="margin-bottom:12px;">
+            <label class="lbl">Voice Mode</label>
+            <div style="display:flex;gap:16px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:.88rem;cursor:pointer;color:var(--taupe);"><input type="radio" name="castMode" value="char_char" checked onchange="onCastModeChange()"/> Character + Character</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.88rem;cursor:pointer;color:var(--taupe);"><input type="radio" name="castMode" value="narr_char" onchange="onCastModeChange()"/> Narrator + Character</label>
+            </div>
+          </div>
+
+          <!-- VOICE 1 -->
+          <div>
+            <label class="lbl">Voice 1 — Engine</label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;" id="engine1Btns">
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(1,'kokoro82m',this)">Kokoro 82M</button>
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(1,'piper',this)">Piper</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <select class="inp" id="voice1Select" style="font-size:.9rem;padding:8px 10px;flex:1;"></select>
+              <button class="btn-plum" style="padding:8px 12px;font-size:.78rem;white-space:nowrap;" onclick="previewVoice(1)">&#9654; Preview</button>
+            </div>
+          </div>
+
+          <!-- VOICE 2 -->
+          <div style="margin-top:10px;">
+            <label class="lbl">Voice 2 — Engine</label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;" id="engine2Btns">
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(2,'kokoro82m',this)">Kokoro 82M</button>
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(2,'piper',this)">Piper</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <select class="inp" id="voice2Select" style="font-size:.9rem;padding:8px 10px;flex:1;"></select>
+              <button class="btn-plum" style="padding:8px 12px;font-size:.78rem;white-space:nowrap;" onclick="previewVoice(2)">&#9654; Preview</button>
+            </div>
+          </div>
+
+          <!-- CHARACTER NAME INPUTS (dynamic) -->
+          <div id="nameFields" style="margin-top:12px;">
+            <div class="inp-grid">
+              <div><label class="lbl" id="name1Label">Character 1 Name</label><input class="inp" type="text" id="name1Input" placeholder="e.g. Marcus"/></div>
+              <div><label class="lbl" id="name2Label">Character 2 Name</label><input class="inp" type="text" id="name2Input" placeholder="e.g. Aria"/></div>
+            </div>
+          </div>
+
+          <div id="voiceCastInfo" style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-top:8px;padding:6px 8px;background:var(--gold-lt);border-radius:6px;">
+            Character + Character: Voice 1 handles narration + Character 1 dialogue. Voice 2 handles Character 2 dialogue.
+          </div>
+
+          <div style="margin-top:10px;">
+            <label class="lbl">TTS Provider</label>
+            <select class="inp" id="ttsProvider" style="font-size:.9rem;padding:8px 10px;">
+              <option value="render">Kokoro TTS (Render)</option>
+              <option value="kokoro82m">Kokoro 82M (Local)</option>
+              <option value="piper">Piper TTS (Local)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="panel" style="padding:14px;">
+          <button class="btn-generate" id="generateBtn" onclick="generateAudiobook()">&#127911; Generate Audiobook</button>
+          <div class="progress-bar" id="genProgress" style="display:none;"><div class="progress-fill" id="genProgressFill" style="width:0%;"></div></div>
+          <div id="genStatus" class="status-msg"></div>
+          <div id="audioResultBox">
+            <div class="audio-result" style="margin-top:8px;">
+              <div class="audio-result-title">&#127911; Audio Player</div>
+              <audio id="generatedAudio" controls style="width:100%;margin-top:8px;"></audio>
+              <div class="audio-download-row">
+                <button class="btn-gold" onclick="downloadAudio()">&#11015; Download MP3</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /editor-layout -->
+
+  </div><!-- /tab-audiobook -->
+
+  <!-- TAB: VOICE CLONING -->
+  <div class="tab-content" id="tab-clone">
+    <div style="max-width:800px;margin:0 auto;">
+      <div class="panel">
+        <div class="panel-title"><span class="panel-icon">&#127908;</span> Clone Your Voice</div>
+        <p style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">Upload a clear audio sample (at least 30 seconds) to create a custom voice clone.</p>
+        <div class="upload-zone" onclick="document.getElementById('cloneAudioInput').click()">
+          <div style="font-size:2.5rem;color:var(--plum);margin-bottom:12px;">&#127908;</div>
+          <div class="upload-title">Drop audio file here</div>
+          <div class="upload-sub">WAV, MP3, M4A &mdash; minimum 30 seconds</div>
+        </div>
+        <input type="file" id="cloneAudioInput" accept=".wav,.mp3,.m4a" hidden onchange="handleCloneUpload(event)"/>
+        <div class="btn-row">
+          <button class="btn-plum" onclick="document.getElementById('cloneAudioInput').click()">&#128229; Upload Sample</button>
+          <button class="btn-sec" onclick="recordLive()">&#128308; Record Live</button>
+        </div>
+        <div id="cloneStatus" class="status-msg"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="panel-icon">&#127911;</span> Your Cloned Voices</div>
+        <div id="clonedVoicesList"><div style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px 0;">No cloned voices yet.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: TEXT TO SPEECH -->
+  <div class="tab-content" id="tab-tts">
+    <div style="max-width:800px;margin:0 auto;">
+      <div class="panel">
+        <div class="panel-title"><span class="panel-icon">&#128263;</span> Text to Speech</div>
+        <p style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">Convert any text to natural speech.</p>
+        <div><label class="lbl">Text to Convert</label><textarea class="inp" id="ttsText" rows="5" placeholder="Enter text to convert to speech..."></textarea></div>
+        <div class="inp-grid">
+          <div>
+            <label class="lbl">Engine</label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;" id="ttsEngineBtns">
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectTtsEngine('kokoro82m',this)">Kokoro 82M</button>
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectTtsEngine('piper',this)">Piper</button>
+            </div>
+            <label class="lbl">Voice</label>
+            <select class="inp" id="ttsVoice" style="font-size:.9rem;padding:8px 10px;"></select>
+          </div>
+          <div>
+            <label class="lbl">Provider</label>
+            <select class="inp" id="ttsSingleProvider" style="font-size:.9rem;padding:8px 10px;">
+              <option value="render">Kokoro TTS (Render)</option>
+              <option value="kokoro82m">Kokoro 82M (Local)</option>
+              <option value="piper">Piper TTS (Local)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-gold" onclick="generateTTS()">&#9654; Generate Speech</button>
+        <div id="ttsStatus" class="status-msg"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="panel-icon">&#127911;</span> Generated Audio</div>
+        <div id="ttsAudioBox" style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px 0;">No audio generated yet.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<footer class="footer">
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Publishing Terms</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure">Audio Disclosures</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy">Our Philosophy</a>
+</footer>
+
+<!-- NYXEN -->
+<div class="nyxen-bubble" onclick="toggleNyxen()" title="Chat with Nyxen"></div>
+<div class="nyxen-bubble-label">Nyxen</div>
+<div class="nyxen-panel" id="nyxenPanel">
+  <div class="nyxen-hdr"><div class="nyxen-av"></div><div><div class="nyxen-hdr-title">Nyxen</div><div class="nyxen-hdr-status" id="nyxenStatus">Your creative assistant</div></div><button class="nyxen-close" onclick="toggleNyxen()">&#10005;</button></div>
+  <div class="nyxen-feed" id="nyxenFeed"></div>
+  <div class="nyxen-input-wrap">
+    <textarea class="nyxen-tbox" id="nyxenInput" placeholder="Ask Nyxen..." rows="1" onkeydown="nyxenKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="nyxen-send" id="nyxenMicBtn" onclick="toggleNyxenMic()" title="Voice input" style="background:var(--gold-lt);color:var(--plum);border:1px solid var(--gold-bd);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </button>
+    <button class="nyxen-send" id="nyxenVoiceBtn" onclick="toggleNyxenVoice()" title="Voice playback" style="background:var(--gold-lt);color:var(--plum);border:1px solid var(--gold-bd);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+    </button>
+    <button class="nyxen-send" onclick="nyxenSend()">&#10148;</button>
+  </div>
+</div>
+
+<script>
+var GRADIO_BASE = 'https://audiobook-creator.onrender.com';
+var TTS_PROXY_URL = 'https://cantrell-creatives.vercel.app/api/tts-preview';
+
+async function gradioCall(endpoint, dataArray) {
+  var resp = await fetch(GRADIO_BASE + '/run/' + endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: dataArray })
+  });
+  if (!resp.ok) {
+    var errText = await resp.text();
+    throw new Error('Gradio ' + endpoint + ' failed (' + resp.status + '): ' + errText.substring(0, 200));
+  }
+  var json = await resp.json();
+  if (json.error) throw new Error(json.error);
+  return json.data;
+}
+
+async function ttsProxyCall(text, voiceId) {
+  var resp = await fetch(TTS_PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text: text.substring(0, 2000),
+      voice: voiceId,
+      model: 'hexgrad/kokoro-tts/american-english'
+    })
+  });
+  if (!resp.ok) throw new Error('TTS proxy returned ' + resp.status);
+  var ct = resp.headers.get('content-type') || '';
+  if (ct.includes('audio') || ct.includes('octet')) {
+    return URL.createObjectURL(await resp.blob());
+  }
+  var errData = await resp.json();
+  throw new Error(errData.error || 'No audio returned');
+}
+
+function deriveNarratorGender(voiceId) {
+  if (!voiceId) return 'female';
+  var prefix = voiceId.substring(0, 3);
+  return (prefix === 'am_' || prefix === 'bm_') ? 'male' : 'female';
+}
+
+function deriveVoiceType(voice1Id, voice2Id) {
+  if (!voice2Id || voice1Id === voice2Id) return 'Single Voice';
+  return 'Multi-Voice';
+}
+
+// ── VOICES: Kokoro-82M (28) + Piper (2) ──
+var VOICES = [
+  {id:'af_alloy',name:'Alloy',style:'Versatile & Clear',gender:'F',provider:'kokoro82m'},
+  {id:'af_aoede',name:'Aoede',style:'Melodic & Warm',gender:'F',provider:'kokoro82m'},
+  {id:'af_bella',name:'Bella',style:'Soft & Narrative',gender:'F',provider:'kokoro82m'},
+  {id:'af_heart',name:'Heart',style:'Warm & Expressive',gender:'F',provider:'kokoro82m'},
+  {id:'af_jessica',name:'Jessica',style:'Friendly & Natural',gender:'F',provider:'kokoro82m'},
+  {id:'af_kore',name:'Kore',style:'Youthful & Bright',gender:'F',provider:'kokoro82m'},
+  {id:'af_nicole',name:'Nicole',style:'Smooth & Confident',gender:'F',provider:'kokoro82m'},
+  {id:'af_nova',name:'Nova',style:'Modern & Engaging',gender:'F',provider:'kokoro82m'},
+  {id:'af_river',name:'River',style:'Calm & Flowing',gender:'F',provider:'kokoro82m'},
+  {id:'af_sarah',name:'Sarah',style:'Classic & Warm',gender:'F',provider:'kokoro82m'},
+  {id:'af_sky',name:'Sky',style:'Light & Airy',gender:'F',provider:'kokoro82m'},
+  {id:'am_adam',name:'Adam',style:'Natural & Clear',gender:'M',provider:'kokoro82m'},
+  {id:'am_echo',name:'Echo',style:'Resonant & Deep',gender:'M',provider:'kokoro82m'},
+  {id:'am_eric',name:'Eric',style:'Steady & Authoritative',gender:'M',provider:'kokoro82m'},
+  {id:'am_fenrir',name:'Fenrir',style:'Bold & Dramatic',gender:'M',provider:'kokoro82m'},
+  {id:'am_liam',name:'Liam',style:'Friendly & Warm',gender:'M',provider:'kokoro82m'},
+  {id:'am_michael',name:'Michael',style:'Rich & Narrative',gender:'M',provider:'kokoro82m'},
+  {id:'am_onyx',name:'Onyx',style:'Deep & Smooth',gender:'M',provider:'kokoro82m'},
+  {id:'am_puck',name:'Puck',style:'Playful & Energetic',gender:'M',provider:'kokoro82m'},
+  {id:'am_santa',name:'Santa',style:'Jolly & Warm',gender:'M',provider:'kokoro82m'},
+  {id:'bf_alice',name:'Alice',style:'British & Elegant',gender:'F',provider:'kokoro82m'},
+  {id:'bf_emma',name:'Emma',style:'British & Warm',gender:'F',provider:'kokoro82m'},
+  {id:'bf_isabella',name:'Isabella',style:'British & Refined',gender:'F',provider:'kokoro82m'},
+  {id:'bf_lily',name:'Lily',style:'British & Bright',gender:'F',provider:'kokoro82m'},
+  {id:'bm_daniel',name:'Daniel',style:'British & Classic',gender:'M',provider:'kokoro82m'},
+  {id:'bm_fable',name:'Fable',style:'British & Storytelling',gender:'M',provider:'kokoro82m'},
+  {id:'bm_george',name:'George',style:'British & Authoritative',gender:'M',provider:'kokoro82m'},
+  {id:'bm_lewis',name:'Lewis',style:'British & Refined',gender:'M',provider:'kokoro82m'},
+  {id:'en_US-lessac-medium',name:'Lessac',style:'American Neutral',gender:'M',provider:'piper'},
+  {id:'en_US-libritts-high',name:'LibriTTS',style:'American Clear',gender:'F',provider:'piper'}
+];
+
+var chapters = [];
+var generatedAudioUrl = null;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', function(){
+  populateVoiceDropdowns();
+  onCastModeChange();
+  setTimeout(function(){ addNyxMsg("Hello! I'm **Nyxen**. I can help with voice selection, chapter prep, and narration tips.\n\nWhat are we working on today?",'ai'); },600);
+});
+
+// ── TABS ──
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// ── VOICE DROPDOWNS (engine-filtered) ──
+var selectedEngine1='kokoro82m';
+var selectedEngine2='kokoro82m';
+
+function populateVoiceDropdowns(){
+  filterVoicesForSlot(1,selectedEngine1);
+  filterVoicesForSlot(2,selectedEngine2);
+  // Also populate TTS tab dropdown with filtered voices
+  selectTtsEngine(selectedTtsEngine,null);
+  var ttsBtns=document.getElementById('ttsEngineBtns');
+  if(ttsBtns) ttsBtns.querySelectorAll('button').forEach(function(b){
+    if(b.textContent.indexOf('Kokoro')>=0) b.classList.add('btn-engine-active');
+  });
+  // Highlight default engine buttons
+  highlightEngineBtn(1,selectedEngine1);
+  highlightEngineBtn(2,selectedEngine2);
+  onCastModeChange();
+}
+
+function selectEngine(slot,engine,btn){
+  if(slot===1) selectedEngine1=engine;
+  else selectedEngine2=engine;
+  filterVoicesForSlot(slot,engine);
+  highlightEngineBtn(slot,engine);
+}
+
+function filterVoicesForSlot(slot,engine){
+  var sel=document.getElementById('voice'+slot+'Select');
+  sel.innerHTML='';
+  var filtered=VOICES.filter(function(v){return v.provider===engine;});
+  filtered.forEach(function(v){
+    sel.innerHTML+='<option value="'+v.id+'">'+v.name+' — '+v.style+' ('+v.gender+')</option>';
+  });
+  if(filtered.length) sel.value=filtered[0].id;
+}
+
+function highlightEngineBtn(slot,engine){
+  var container=document.getElementById('engine'+slot+'Btns');
+  container.querySelectorAll('button').forEach(function(b){b.classList.remove('btn-engine-active');});
+  container.querySelectorAll('button').forEach(function(b){
+    if((engine==='kokoro82m'&&b.textContent.indexOf('Kokoro')>=0)||(engine==='piper'&&b.textContent.indexOf('Piper')>=0)){
+      b.classList.add('btn-engine-active');
+    }
+  });
+}
+
+// ── TTS TAB ENGINE SELECTION ──
+var selectedTtsEngine='kokoro82m';
+function selectTtsEngine(engine,btn){
+  selectedTtsEngine=engine;
+  var sel=document.getElementById('ttsVoice');
+  sel.innerHTML='';
+  VOICES.filter(function(v){return v.provider===engine;}).forEach(function(v){
+    sel.innerHTML+='<option value="'+v.id+'">'+v.name+' — '+v.style+' ('+v.gender+')</option>';
+  });
+  var container=document.getElementById('ttsEngineBtns');
+  container.querySelectorAll('button').forEach(function(b){b.classList.remove('btn-engine-active');});
+  if(btn) btn.classList.add('btn-engine-active');
+}
+
+// ── VOICE PREVIEW (via TTS Proxy) ──
+async function previewVoice(slot){
+  var sel=document.getElementById('voice'+slot+'Select');
+  var voiceId=sel.value;
+  if(!voiceId) return;
+  var sampleText='Hello, this is a preview of my voice for your audiobook narration.';
+  var btn=event.target;
+  btn.disabled=true;btn.textContent='...';
+  try{
+    var url=await ttsProxyCall(sampleText, voiceId);
+    new Audio(url).play();
+  }catch(err){alert('Voice preview temporarily unavailable: '+err.message);}
+  btn.disabled=false;btn.textContent='\u25B6 Preview';
+}
+
+function onCastModeChange(){
+  var mode=document.querySelector('input[name="castMode"]:checked').value;
+  var n1=document.getElementById('name1Label');
+  var n2=document.getElementById('name2Label');
+  var info=document.getElementById('voiceCastInfo');
+  if(mode==='char_char'){
+    n1.textContent='Character 1 Name';
+    n2.textContent='Character 2 Name';
+    info.innerHTML='<strong>Character + Character:</strong> Voice 1 handles narration + Character 1 dialogue. Voice 2 handles Character 2 dialogue only.';
+    info.style.background='var(--gold-lt)';
+  } else {
+    n1.textContent='Narrator Name';
+    n2.textContent='Character Name';
+    info.innerHTML='<strong>Narrator + Character:</strong> Voice 1 reads all narration. Voice 2 reads all dialogue (text in quotes).';
+    info.style.background='var(--plum-lt)';
+  }
+}
+
+// ── FILE UPLOAD + EDITOR ──
+function handleDrop(e){e.preventDefault();document.getElementById('uploadZone').classList.remove('drag-over');var f=e.dataTransfer.files[0];if(f) processFile(f);}
+function handleEditorDrop(e){e.preventDefault();var editor=document.getElementById('docEditor');editor.style.borderColor='var(--gold-bd)';var f=e.dataTransfer.files[0];if(f) processFile(f);}
+function handleFileUpload(e){var f=e.target.files[0];if(f) processFile(f);e.target.value='';}
+function clearEditor(){if(!confirm('Clear the editor?'))return;document.getElementById('docEditor').innerHTML='Start typing or import a DOCX file...';chapters=[];renderChapterNav();}
+
+function processFile(file){
+  var ext=file.name.split('.').pop().toLowerCase();
+  showStatus('uploadStatus','info','Reading '+file.name+'...');
+  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=file.name.replace(/\.[^.]+$/,'');
+  if(ext==='txt'){
+    // TXT files: client-side FileReader only, no Gradio call
+    var r=new FileReader();
+    r.onload=function(ev){loadTextIntoEditor(ev.target.result);showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded');};
+    r.readAsText(file);
+  } else if(ext==='docx'){
+    // DOCX files: Gradio file upload via /run/ endpoints requires sending files as
+    // server-side file paths, which is not possible from a browser-only HTML page
+    // (no server to stage uploaded files). Skipping Gradio upload attempt and using
+    // JSZip client-side parsing directly. If a backend file-staging endpoint becomes
+    // available in the future, add Gradio upload here as the primary path with JSZip
+    // as the fallback.
+    if(typeof JSZip==='undefined'){showStatus('uploadStatus','err','JSZip not loaded.');return;}
+    var r2=new FileReader();
+    r2.onload=function(ev){
+      JSZip.loadAsync(ev.target.result).then(function(zip){
+        var doc=zip.files['word/document.xml'];
+        if(doc) return doc.async('text');
+        throw new Error('No document.xml found');
+      }).then(function(xml){
+        // Preserve paragraph breaks for chapter detection
+        var text=xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
+        loadTextIntoEditor(text);
+        showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded');
+      }).catch(function(e){showStatus('uploadStatus','err','Error: '+e.message);});
+    };
+    r2.readAsArrayBuffer(file);
+  }
+}
+
+function loadTextIntoEditor(text){
+  detectChapters(text);
+}
+
+// ── CHAPTER DETECTION ──
+function detectChapters(text){
+  // Detect chapters, TOC, copyright, prologue, epilogue
+  var regex=/(?:^|\n)\s*(chapter\s+\d+[^\n]*|table of contents[^\n]*|copyright[^\n]*|prologue[^\n]*|epilogue[^\n]*)/gi;
+  var matches=[],m;
+  while((m=regex.exec(text))!==null) matches.push({title:m[1].trim(),index:m.index});
+  if(matches.length>0){
+    chapters=[];
+    // Capture front matter (everything before first match — includes copyright if no heading)
+    var beforeFirst=text.substring(0,matches[0].index).trim();
+    if(beforeFirst) chapters.push({title:'Front Matter',content:beforeFirst});
+    // Add each detected section
+    matches.forEach(function(match,i){
+      var end=i+1<matches.length?matches[i+1].index:text.length;
+      chapters.push({title:match.title,content:text.substring(match.index,end).trim()});
+    });
+  } else {
+    chapters=[{title:'Full Document',content:text}];
+  }
+  renderEditorWithChapters();
+}
+
+function renderEditorWithChapters(){
+  var editor=document.getElementById('docEditor');
+  editor.innerHTML='';
+  chapters.forEach(function(ch,i){
+    var heading=document.createElement('h3');
+    heading.id='editor-ch-'+i;
+    var titleLower=ch.title.toLowerCase();
+    var isNonChapter=(titleLower.indexOf('table of contents')>=0||titleLower.indexOf('copyright')>=0||titleLower==='toc');
+    heading.style.cssText='font-family:Cinzel,serif;font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);'+(isNonChapter?'color:var(--taupe-lt);font-style:italic;':'color:var(--plum);');
+    if(i===0) heading.style.marginTop='0';
+    heading.textContent=ch.title+(isNonChapter?' (not included in audio)':'');
+    var block=document.createElement('div');
+    block.style.cssText='margin-bottom:16px;white-space:pre-wrap;';
+    var content=ch.content;
+    var headingRegex=new RegExp('^'+ch.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i');
+    content=content.replace(headingRegex,'').trim();
+    block.textContent=content;
+    editor.appendChild(heading);
+    editor.appendChild(block);
+  });
+  renderChapterNav();
+}
+
+function renderChapterNav(){
+  // Chapter nav is populated by exportToAudio, not by the import editor
+  // This is called during import to show chapter count info
+  var nav=document.getElementById('chapterNav');
+  var chapterCount=chapters.filter(function(ch){
+    var t=ch.title.toLowerCase();
+    return t.indexOf('table of contents')<0&&t!=='toc'&&t.indexOf('copyright')<0&&t!=='front matter';
+  }).length;
+  nav.innerHTML='<div style="font-size:.82rem;color:var(--taupe-lt);padding:10px 0;text-align:center;">'+chapterCount+' chapters detected in editor.<br/><span style="font-style:italic;">Click "Export Chapters to Audio" above.</span></div>';
+}
+
+function navToChapter(idx){
+  document.querySelectorAll('.chapter-nav-item').forEach(function(c){c.classList.remove('active');});
+  scrollEditorToChapter(idx);
+}
+
+function removeChapter(idx){
+  if(!confirm('Remove "'+chapters[idx].title+'" from the chapter list?')) return;
+  // Remove from editor
+  var heading=document.getElementById('editor-ch-'+idx);
+  if(heading){
+    var next=heading.nextElementSibling;
+    while(next&&next.tagName!=='H3'){var toRemove=next;next=next.nextElementSibling;toRemove.remove();}
+    heading.remove();
+  }
+  chapters.splice(idx,1);
+  // Re-render editor with updated indices
+  renderEditorWithChapters();
+}
+
+function exportToAudio(){
+  getEditorChapters();
+  // Filter out ONLY TOC — copyright and front matter go to main doc (read before book)
+  var audioContent=chapters.filter(function(ch){
+    var t=ch.title.toLowerCase();
+    return t.indexOf('table of contents')<0&&t!=='toc';
+  });
+  if(!audioContent.length){
+    showStatus('genStatus','err','No content to export.');return;
+  }
+  // Separate: front matter/copyright (before chapters) vs actual chapters
+  // Front matter includes anything before Chapter 1 — copyright, dedication, etc.
+  var frontMatter=[];
+  var bookChapters=[];
+  audioContent.forEach(function(ch){
+    var t=ch.title.toLowerCase();
+    if(t.indexOf('copyright')>=0||t==='front matter'||t.indexOf('dedication')>=0){
+      frontMatter.push(ch);
+    } else {
+      bookChapters.push(ch);
+    }
+  });
+  // Build main doc: title + author, then front matter, then chapters
+  var mainDoc=document.getElementById('mainDocEditor');
+  mainDoc.innerHTML='';
+  // Add title and author at top
+  var title=document.getElementById('bookTitle').value.trim();
+  var author=document.getElementById('authorName').value.trim();
+  if(title||author){
+    var titleBlock=document.createElement('div');
+    titleBlock.style.cssText='text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--gold-bd);';
+    if(title) titleBlock.innerHTML+='<h2 style="font-family:Cinzel,serif;color:var(--plum);font-size:1.4rem;margin-bottom:4px;">'+title+'</h2>';
+    if(author) titleBlock.innerHTML+='<div style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">by '+author+'</div>';
+    mainDoc.appendChild(titleBlock);
+  }
+  // Add copyright/front matter (not in chapter nav, but read before book)
+  frontMatter.forEach(function(ch){
+    var h=document.createElement('h3');
+    h.style.cssText='font-family:Cinzel,serif;color:var(--taupe-lt);font-size:1rem;margin:0 0 8px;padding-bottom:4px;border-bottom:1px dashed var(--gold-bd);font-style:italic;';
+    h.textContent=ch.title+' (read before book)';
+    var p=document.createElement('div');
+    p.style.cssText='margin-bottom:20px;white-space:pre-wrap;';
+    p.textContent=ch.content;
+    mainDoc.appendChild(h);
+    mainDoc.appendChild(p);
+  });
+  // Add chapters
+  bookChapters.forEach(function(ch,i){
+    var h=document.createElement('h3');
+    h.id='main-ch-'+i;
+    h.style.cssText='font-family:Cinzel,serif;color:var(--plum);font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);';
+    if(i===0&&!frontMatter.length) h.style.marginTop='0';
+    h.textContent=ch.title;
+    var p=document.createElement('div');
+    p.style.cssText='margin-bottom:16px;white-space:pre-wrap;';
+    p.textContent=ch.content;
+    mainDoc.appendChild(h);
+    mainDoc.appendChild(p);
+  });
+  // Render chapter nav with ONLY book chapters (not copyright)
+  renderMainChapterNav(bookChapters);
+  showStatus('genStatus','ok','&#10003; '+bookChapters.length+' chapters exported'+(frontMatter.length?' (copyright included before chapters)':'')+'. Click Generate Audiobook.');
+  mainDoc.scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Save text to Gradio backend session
+  var allText = bookChapters.map(function(ch){ return ch.title + '\n\n' + ch.content; }).join('\n\n\n');
+  gradioCall('save_book_wrapper', [allText]).then(function(){
+    showStatus('genStatus','ok','&#10003; Text saved to audio engine. Ready to generate.');
+  }).catch(function(err){
+    showStatus('genStatus','info','Text exported locally. Backend save failed: ' + err.message);
+  });
+}
+
+function renderMainChapterNav(bookChapters){
+  var nav=document.getElementById('chapterNav');
+  nav.innerHTML='';
+  if(!bookChapters.length){nav.innerHTML='<div style="font-size:.82rem;color:var(--taupe-lt);font-style:italic;padding:10px 0;text-align:center;">No chapters exported yet.</div>';return;}
+  bookChapters.forEach(function(ch,i){
+    var item=document.createElement('div');
+    item.className='chapter-nav-item';
+    item.style.cssText='display:flex;align-items:center;justify-content:space-between;';
+    item.innerHTML='<span style="flex:1;cursor:pointer;" onclick="scrollMainToChapter('+i+')">'+ch.title+'</span><button style="background:none;border:none;color:var(--red);font-size:.9rem;cursor:pointer;padding:2px 6px;" onclick="event.stopPropagation();removeMainChapter('+i+')" title="Remove">&times;</button>';
+    nav.appendChild(item);
+  });
+}
+
+function scrollMainToChapter(idx){
+  var el=document.getElementById('main-ch-'+idx);
+  if(!el) return;
+  var editor=document.getElementById('mainDocEditor');
+  editor.scrollTop=el.offsetTop-editor.offsetTop-10;
+  el.style.background='var(--gold-lt)';
+  setTimeout(function(){el.style.background='';},1500);
+}
+
+function removeMainChapter(idx){
+  var el=document.getElementById('main-ch-'+idx);
+  if(!el) return;
+  if(!confirm('Remove this chapter from audio?')) return;
+  var next=el.nextElementSibling;
+  while(next&&next.tagName!=='H3'){var r=next;next=next.nextElementSibling;r.remove();}
+  el.remove();
+  // Re-read main doc to rebuild nav
+  var mainDoc=document.getElementById('mainDocEditor');
+  var headings=mainDoc.querySelectorAll('h3');
+  var remaining=[];
+  headings.forEach(function(h,i){
+    h.id='main-ch-'+i;
+    var t=h.textContent.toLowerCase();
+    if(t.indexOf('copyright')<0&&t.indexOf('read before')<0) remaining.push({title:h.textContent});
+  });
+  renderMainChapterNav(remaining);
+}
+
+function clearMainDoc(){
+  if(!confirm('Clear the main document?'))return;
+  document.getElementById('mainDocEditor').innerHTML='Export chapters from the editor above to populate this document for audio generation.';
+}
+
+function scrollEditorToChapter(idx){
+  var el=document.getElementById('editor-ch-'+idx);
+  if(!el) return;
+  var editor=document.getElementById('docEditor');
+  editor.scrollTop=el.offsetTop-editor.offsetTop-10;
+  el.style.background='var(--gold-lt)';
+  setTimeout(function(){el.style.background='';},1500);
+}
+
+// ── GET EDITOR CONTENT + REBUILD CHAPTERS ──
+function getEditorChapters(){
+  var editor=document.getElementById('docEditor');
+  var headings=editor.querySelectorAll('h3');
+  if(headings.length>0){
+    chapters=[];
+    headings.forEach(function(h,i){
+      var title=h.textContent.trim();
+      var content='';
+      var sibling=h.nextElementSibling;
+      while(sibling&&sibling.tagName!=='H3'){
+        content+=(sibling.textContent||'')+'\n';
+        sibling=sibling.nextElementSibling;
+      }
+      chapters.push({title:title,content:content.trim()});
+    });
+  } else {
+    var text=editor.textContent||editor.innerText;
+    chapters=[{title:'Full Document',content:text}];
+  }
+  return chapters;
+}
+
+// ── DIALOGUE SPLITTING (for dual voice) ──
+function splitDialogue(text){
+  // Split text into narration and dialogue segments
+  // Dialogue = text inside "quotes" or \u201Csmart quotes\u201D
+  var segments=[];
+  var pattern=/([\u201C"][^"\u201D]*[\u201D"])/g;
+  var lastIdx=0,match;
+  while((match=pattern.exec(text))!==null){
+    if(match.index>lastIdx){
+      var narr=text.substring(lastIdx,match.index).trim();
+      if(narr) segments.push({role:'narrator',text:narr});
+    }
+    var dialogue=match[1].replace(/^[\u201C"]+|[\u201D"]+$/g,'').trim();
+    if(dialogue) segments.push({role:'character',text:dialogue});
+    lastIdx=match.index+match[0].length;
+  }
+  if(lastIdx<text.length){
+    var remaining=text.substring(lastIdx).trim();
+    if(remaining) segments.push({role:'narrator',text:remaining});
+  }
+  return segments.length?segments:[{role:'narrator',text:text}];
+}
+
+// ── GENERATE AUDIOBOOK ──
+async function generateAudiobook(){
+  // Read from main doc editor
+  var mainDoc=document.getElementById('mainDocEditor');
+  var fullText=(mainDoc.textContent||mainDoc.innerText).trim();
+  if(!fullText||fullText==='Export chapters from the editor above to populate this document for audio generation.'){
+    showStatus('genStatus','err','Export chapters to the main document first, then generate.');return;
+  }
+
+  var title=document.getElementById('bookTitle').value.trim()||'Untitled';
+  var voice1=document.getElementById('voice1Select').value;
+  var voice2=document.getElementById('voice2Select').value;
+  var voiceType=deriveVoiceType(voice1,voice2);
+  var narratorGender=deriveNarratorGender(voice1);
+
+  var btn=document.getElementById('generateBtn');
+  btn.disabled=true;btn.innerHTML='&#127911; Generating...';
+  var progress=document.getElementById('genProgress');
+  var fill=document.getElementById('genProgressFill');
+  progress.style.display='block';fill.style.width='0%';
+
+  try{
+    // Step 1: Save text to Gradio backend session
+    fill.style.width='20%';
+    showStatus('genStatus','info','Saving text...');
+    await gradioCall('save_book_wrapper',[fullText]);
+
+    // Step 2: Generate audiobook
+    fill.style.width='60%';
+    showStatus('genStatus','info','Generating audio...');
+    var result=await gradioCall('generate_audiobook_wrapper',[voiceType,narratorGender,'MP3',null,title]);
+
+    // Extract file URL from response
+    fill.style.width='100%';
+    var fileUrl=null;
+    if(result&&result.length>0){
+      var item=result[0];
+      if(typeof item==='string') fileUrl=item;
+      else if(item&&item.url) fileUrl=item.url;
+      else if(item&&item.name) fileUrl=GRADIO_BASE+'/file='+item.name;
+    }
+
+    if(fileUrl){
+      generatedAudioUrl=fileUrl;
+      document.getElementById('generatedAudio').src=fileUrl;
+      showStatus('genStatus','ok','&#10003; Audiobook generated!');
+    } else {
+      showStatus('genStatus','err','No audio URL returned.');
+    }
+  }catch(err){
+    showStatus('genStatus','err','Error: '+err.message);
+    fill.style.width='0%';
+  }
+  btn.disabled=false;btn.innerHTML='&#127911; Generate Audiobook';
+}
+
+function downloadAudio(){
+  if(!generatedAudioUrl) return;
+  var a=document.createElement('a');
+  a.href=generatedAudioUrl;
+  a.download=(document.getElementById('bookTitle').value||'audiobook')+'.mp3';
+  a.click();
+}
+
+// ── TTS SINGLE ──
+async function generateTTS(){
+  var text=document.getElementById('ttsText').value.trim();
+  if(!text){showStatus('ttsStatus','err','Please enter some text.');return;}
+  var voice=document.getElementById('ttsVoice').value;
+  showStatus('ttsStatus','info','Generating speech...');
+  try{
+    var url=await ttsProxyCall(text, voice);
+    document.getElementById('ttsAudioBox').innerHTML='<audio controls style="width:100%;" src="'+url+'"></audio><div style="margin-top:8px;"><a href="'+url+'" download="speech.wav" class="btn-sec" style="display:inline-flex;">&#11015; Download</a></div>';
+    showStatus('ttsStatus','ok','&#10003; Speech generated!');
+  }catch(e){showStatus('ttsStatus','err','Error: '+e.message);}
+}
+
+// ── VOICE CLONING ──
+function handleCloneUpload(e){
+  e.target.value='';
+  showStatus('cloneStatus','info','Voice cloning is not yet available on the remote service. This feature is coming soon.');
+}
+function recordLive(){showStatus('cloneStatus','info','Live recording is not yet available on the remote service.');}
+
+// ── HELPERS ──
+function showStatus(id,type,text){var el=document.getElementById(id);if(!el)return;el.className='status-msg show '+type;el.innerHTML=text;}
+
+// ── NYXEN ──
+var nyxenOpen=false,nyxenHistory=[];
+function toggleNyxen(){nyxenOpen=!nyxenOpen;document.getElementById('nyxenPanel').style.display=nyxenOpen?'flex':'none';if(nyxenOpen)setTimeout(function(){document.getElementById('nyxenInput').focus();},100);}
+function addNyxMsg(text,role){
+  var feed=document.getElementById('nyxenFeed');var d=document.createElement('div');d.className='nmsg '+role;
+  if(role==='ai'){var r=typeof marked!=='undefined'?marked.parse(text):text.replace(/\n/g,'<br>');d.innerHTML='<div class="nlbl">NYXEN</div><div class="md-content">'+r+'</div>';}
+  else{d.textContent=text;}
+  feed.appendChild(d);feed.scrollTop=feed.scrollHeight;
+}
+async function nyxenSend(){
+  var inp=document.getElementById('nyxenInput');var text=inp.value.trim();if(!text)return;
+  inp.value='';addNyxMsg(text,'user');nyxenHistory.push({role:'user',content:text});
+  addNyxMsg('✨ Nyxen is being rebuilt as an independent app and will return soon. Stay tuned!','ai');
+  document.getElementById('nyxenStatus').textContent='Your creative assistant';
+}
+function nyxenKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();nyxenSend();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+
+// ── NYXEN MIC (speech-to-text) ──
+var nyxenRecording=false,nyxenMediaRec=null,nyxenAudioChunks=[];
+function toggleNyxenMic(){
+  if(nyxenRecording){
+    if(nyxenMediaRec)nyxenMediaRec.stop();
+    return;
+  }
+  if(!navigator.mediaDevices){alert('Mic not available');return;}
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    nyxenMediaRec=new MediaRecorder(stream,{mimeType:'audio/webm'});nyxenAudioChunks=[];
+    nyxenMediaRec.ondataavailable=function(e){if(e.data.size>0)nyxenAudioChunks.push(e.data);};
+    nyxenMediaRec.onstop=function(){
+      stream.getTracks().forEach(function(t){t.stop();});
+      nyxenRecording=false;
+      var btn=document.getElementById('nyxenMicBtn');
+      btn.style.background='var(--gold-lt)';btn.style.color='var(--plum)';
+      addNyxMsg('🎤 Voice input will be available when Nyxen returns. Please type your message for now.','ai');
+    };
+    nyxenMediaRec.start();nyxenRecording=true;
+    var btn=document.getElementById('nyxenMicBtn');
+    btn.style.background='#ff4444';btn.style.color='#fff';
+  }).catch(function(){alert('Mic permission denied');});
+}
+
+// ── NYXEN VOICE PLAYBACK (TTS for responses) ──
+var nyxenVoiceOn=false;
+function toggleNyxenVoice(){
+  nyxenVoiceOn=!nyxenVoiceOn;
+  var btn=document.getElementById('nyxenVoiceBtn');
+  if(nyxenVoiceOn){btn.style.background='var(--plum)';btn.style.color='#fff';}
+  else{btn.style.background='var(--gold-lt)';btn.style.color='var(--plum)';}
+}
+async function speakNyxenReply(text){
+  // Nyxen voice playback disabled — will be part of independent Nyxen app
+  return;
+}
+</script>
+</body>
+</html>

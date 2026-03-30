@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cantrell Creatives — Studio</title>
+<style>
+:root {
+  --bg:#1f1810;
+  --panel:#261c13;
+  --panel2:#2f2217;
+  --border:#5a4326;
+  --border2:#765736;
+  --brown:#4a321a;
+  --brown2:#604127;
+  --cream:#FFF9F3;
+  --cream2:#F4E7D4;
+  --gold:#DDBA6A;
+  --gold2:#F4D899;
+  --plum:#8a4663;
+  --plum2:#b76484;
+  --green:#45563d;
+  --green2:#667a56;
+  --red:#cc6262;
+  --text:#FFF9F3;
+  --muted:#D8CAB4;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+html,body{
+  width:100%;
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  font-size:17px;
+  overflow:hidden;
+}
+
+.wrap{
+  display:flex;
+  flex-direction:column;
+  height:calc(100vh - 72px);
+  min-height:500px;
+  overflow:hidden;
+}
+
+/* HEADER */
+.site-header{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  padding:14px 48px;
+  background:#ffffff;
+  border-bottom:1px solid #e0d8cc;
+}
+
+.site-logo{justify-self:start;}
+.site-logo img{height:58px;}
+.main-nav{justify-self:center;font-size:16px;}
+.main-nav a{margin:0 16px;text-decoration:none;color:#111;font-weight:500;}
+.main-nav a:hover{color:var(--gold);}
+.nav-right{justify-self:end;display:flex;align-items:center;gap:14px;}
+.login-btn{background:#111;color:#fff;padding:7px 16px;border-radius:4px;text-decoration:none;font-size:15px;}
+.login-btn:hover{background:var(--gold);}
+.cart-icon{font-size:20px;text-decoration:none;color:#111;}
+.cart-icon:hover{color:var(--gold);}
+
+/* TOPBAR */
+.topbar{
+  display:flex;
+  align-items:center;
+  padding:0 18px;
+  height:50px;
+  background:#4a3728;
+  border-bottom:2px solid var(--gold);
+  gap:8px;
+  flex-shrink:0;
+}
+
+.brand-name{
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+
+.brand-sub{
+  font-size:11px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--cream2);
+  margin-top:1px;
+}
+
+.spacer{flex:1;}
+
+.tab{
+  padding:8px 18px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--cream2);
+  cursor:pointer;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:all .18s;
+}
+
+.tab:hover{color:var(--cream);border-color:var(--gold);}
+.tab.on{background:var(--gold2);border-color:var(--gold2);color:#21160e;}
+
+.hbtn{
+  padding:8px 18px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--cream);
+  cursor:pointer;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:all .18s;
+}
+.hbtn:hover{border-color:var(--gold);color:var(--gold);}
+.hbtn.ac{background:var(--gold2);border-color:var(--gold2);color:#21160e;}
+
+/* BODY */
+.body{flex:1;display:flex;min-height:0;}
+
+/* LEFT SIDEBAR */
+.lsb{
+  width:220px;
+  flex-shrink:0;
+  background:#23170f;
+  border-right:1px solid var(--gold);
+  display:flex;
+  flex-direction:column;
+}
+
+.lsb-hdr{
+  padding:14px 16px 10px;
+  font-size:13px;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--gold);
+  border-bottom:1px solid var(--border);
+  font-weight:700;
+}
+
+.lsb-list{
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  flex:1;
+}
+
+.lbtn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 14px;
+  border-radius:7px;
+  border:none;
+  background:transparent;
+  color:var(--cream2);
+  cursor:pointer;
+  font-size:16px;
+  font-weight:600;
+  text-align:left;
+  width:100%;
+  transition:all .15s;
+}
+
+.lbtn:hover{background:var(--panel2);color:var(--cream);}
+.lbtn.on{background:var(--gold2);color:#21160e;}
+
+.lsb-recent{
+  border-top:1px solid var(--border);
+  padding:12px 10px 8px;
+  flex-shrink:0;
+}
+
+.lsb-recent-hdr{
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.lsb-recent-hdr span{
+  color:var(--muted);
+  font-size:10px;
+  cursor:pointer;
+  letter-spacing:.05em;
+  text-transform:none;
+}
+.lsb-recent-hdr span:hover{color:var(--gold);}
+
+.recent-strip{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  max-height:230px;
+  overflow-y:auto;
+}
+
+.r-empty{
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+  padding:16px 10px;
+  line-height:1.55;
+}
+
+.lsb-foot{
+  padding:12px;
+  border-top:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.fbtn{
+  width:100%;
+  padding:10px 14px;
+  border-radius:7px;
+  border:1px solid transparent;
+  cursor:pointer;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  transition:all .18s;
+}
+.fbtn.p{background:var(--gold2);color:#21160e;}
+.fbtn.p:hover{background:var(--gold);}
+.fbtn.g{background:transparent;border-color:var(--gold);color:var(--cream);}
+.fbtn.g:hover{border-color:var(--gold2);color:var(--gold2);}
+
+/* CENTER */
+.center{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg);}
+.panel{display:none;flex:1;flex-direction:column;min-height:0;}
+.panel.on{display:flex;}
+
+/* IMAGE PANEL */
+.img-area{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+  background:#261b12;
+}
+
+.cbox{
+  position:relative;
+  background:#1a130e;
+  border-radius:10px;
+  border:1px solid var(--border2);
+  width:100%;
+  max-width:900px;
+  aspect-ratio:16/9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+#cImg{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:10px;
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:2;
+}
+#cImg.vis{
+  display:block !important;
+}
+
+.estate{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color:var(--muted);
+  text-align:center;
+  padding:24px;
+  z-index:1;
+}
+.estate.hide{display:none!important;}
+
+.eico{font-size:40px;}
+.etitle{font-size:20px;color:var(--cream2);font-weight:300;}
+.edesc{font-size:14px;max-width:300px;line-height:1.55;}
+
+.lcover{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  z-index:10;
+  border-radius:10px;
+}
+.lcover.show{display:flex;}
+
+.spin{
+  width:40px;
+  height:40px;
+  border:3px solid var(--border2);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:sp .7s linear infinite;
+}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+.stxt{font-size:13px;color:var(--cream2);letter-spacing:.1em;}
+
+/* PROMPT BAR */
+.pbar{
+  border-top:1px solid var(--border);
+  padding:12px 16px;
+  background:#23170f;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-shrink:0;
+}
+
+.pin{
+  flex:1;
+  padding:10px 15px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:var(--panel2);
+  color:var(--text);
+  font-family:inherit;
+  font-size:15px;
+  outline:none;
+  transition:border-color .2s;
+}
+.pin:focus{border-color:var(--gold);}
+.pin::placeholder{color:var(--muted);}
+
+.genbtn{
+  padding:10px 20px;
+  border-radius:999px;
+  border:none;
+  background:var(--gold2);
+  color:#21160e;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:all .18s;
+  white-space:nowrap;
+}
+.genbtn:hover{background:var(--gold);}
+.genbtn:disabled{opacity:.5;cursor:not-allowed;}
+
+.ibtn{
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--cream2);
+  font-family:inherit;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition:all .18s;
+  white-space:nowrap;
+}
+.ibtn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* VOICEOVER PANEL */
+.vowrap{flex:1;display:grid;grid-template-columns:1fr 280px;min-height:0;}
+
+.vomain{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  overflow-y:auto;
+}
+
+.volbl{
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+.fta{
+  width:100%;
+  padding:12px 14px;
+  border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--panel2);
+  color:var(--text);
+  font-family:inherit;
+  font-size:15px;
+  outline:none;
+  resize:vertical;
+  min-height:200px;
+  line-height:1.6;
+  transition:border-color .2s;
+}
+.fta:focus{border-color:var(--gold);}
+.fta::placeholder{color:var(--muted);}
+
+.audbox{
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  border-radius:9px;
+  padding:16px;
+  display:none;
+}
+.audbox.on{display:block;}
+
+.audlbl{
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+#aPrev{width:100%;accent-color:var(--gold2);}
+
+.aacts{display:flex;gap:8px;margin-top:10px;}
+
+.smbtn{
+  padding:6px 14px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--cream2);
+  font-family:inherit;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .15s;
+}
+.smbtn:hover{border-color:var(--gold);color:var(--gold);}
+.smbtn.pl{background:var(--plum);border-color:var(--plum);color:#fff;}
+
+.voright{
+  border-left:1px solid var(--border);
+  background:var(--panel);
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+}
+
+.vob{padding:16px;border-bottom:1px solid var(--border);}
+
+.fin{
+  width:100%;
+  padding:8px 11px;
+  border-radius:6px;
+  border:1px solid var(--border2);
+  background:var(--panel2);
+  color:var(--text);
+  font-family:inherit;
+  font-size:14px;
+  outline:none;
+  transition:border-color .2s;
+}
+.fin:focus{border-color:var(--gold);}
+.fin::placeholder{color:var(--muted);}
+
+.fsel{
+  width:100%;
+  padding:8px 10px;
+  border-radius:6px;
+  border:1px solid var(--border2);
+  background:var(--panel2);
+  color:var(--text);
+  font-family:inherit;
+  font-size:14px;
+  outline:none;
+  cursor:pointer;
+}
+.fsel:focus{border-color:var(--gold);}
+
+.hint{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:5px;
+  line-height:1.5;
+}
+
+.vostat{
+  padding:10px 16px;
+  background:#23170f;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:var(--muted);
+  flex-shrink:0;
+}
+
+.sdot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green2);
+  flex-shrink:0;
+}
+.sdot.y{background:var(--gold);}
+.sdot.r{background:var(--red);}
+
+/* ASSETS PANEL */
+.awrap{flex:1;padding:24px;overflow-y:auto;}
+
+.albl{
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:16px;
+}
+
+.agrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px;
+}
+
+.aitem{
+  border-radius:7px;
+  overflow:hidden;
+  border:1px solid var(--border2);
+  aspect-ratio:1;
+  background:var(--panel2);
+  cursor:pointer;
+  transition:border-color .15s;
+}
+.aitem:hover{border-color:var(--gold);}
+.aitem img{width:100%;height:100%;object-fit:cover;display:block;}
+
+.aempty{
+  color:var(--muted);
+  text-align:center;
+  padding:50px 20px;
+  font-size:14px;
+  line-height:1.7;
+  grid-column:1/-1;
+}
+
+/* MODAL */
+.mbg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:500;
+  backdrop-filter:blur(4px);
+}
+.mbg.on{display:flex;}
+
+.mbox{
+  background:var(--panel);
+  border:1px solid var(--border2);
+  border-radius:14px;
+  padding:24px;
+  width:400px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.mtitle{
+  font-size:16px;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:.08em;
+}
+
+.mcls{
+  position:absolute;
+  top:16px;
+  right:18px;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:20px;
+  line-height:1;
+}
+.mcls:hover{color:var(--cream);}
+
+.rgrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.rbtn{
+  padding:10px 6px;
+  border-radius:8px;
+  border:1px solid var(--border2);
+  background:transparent;
+  color:var(--cream2);
+  cursor:pointer;
+  font-size:12px;
+  text-align:center;
+  transition:all .15s;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+.rbtn:hover,.rbtn.on{
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(201,153,58,.08);
+}
+
+.rp{background:var(--border2);border-radius:3px;}
+
+.mapply{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:var(--gold2);
+  color:#21160e;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .18s;
+}
+.mapply:hover{background:var(--gold);}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  color:var(--text);
+  padding:10px 22px;
+  border-radius:999px;
+  font-size:14px;
+  opacity:0;
+  transition:all .28s;
+  pointer-events:none;
+  z-index:999;
+  white-space:nowrap;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{border-color:var(--green2);}
+.toast.err{border-color:var(--red);}
+
+/* NYXEN BUBBLE */
+.nyxen-bubble{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  z-index:9000;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+}
+.nyxen-toggle{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  border:2px solid var(--gold);
+  color:#21160e;
+  font-size:26px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.5);
+  transition:all .2s;
+  flex-shrink:0;
+}
+.nyxen-toggle:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(221,186,106,.35);}
+.nyxen-frame-wrap{
+  width:380px;
+  height:560px;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+  border:1.5px solid var(--gold);
+  display:none;
+  flex-direction:column;
+  background:#1a1208;
+}
+.nyxen-frame-wrap.open{display:flex;}
+.nyxen-frame-hdr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 14px;
+  background:#2a1c10;
+  border-bottom:1px solid var(--gold);
+  flex-shrink:0;
+}
+.nyxen-frame-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:14px;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:.07em;
+}
+.nyxen-avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1.5px solid var(--gold);
+}
+.nyxen-msgs{
+  flex:1;
+  overflow-y:auto;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  background:#1a1208;
+}
+.nyxen-msg{
+  padding:9px 12px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.55;
+  max-width:88%;
+}
+.nyxen-msg.ai{
+  background:#2f2217;
+  border:1px solid var(--border2);
+  color:var(--cream2);
+  align-self:flex-start;
+}
+.nyxen-msg.ai .nlbl{
+  font-size:10px;
+  letter-spacing:.15em;
+  color:var(--gold);
+  margin-bottom:3px;
+  font-weight:700;
+}
+.nyxen-msg.user{
+  background:#4a3728;
+  border:1px solid var(--border2);
+  color:var(--cream);
+  align-self:flex-end;
+  text-align:right;
+}
+.nyxen-input-bar{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 12px;
+  background:#2a1c10;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.nyxen-text-in{
+  flex:1;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--border2);
+  background:#1a1208;
+  color:var(--cream);
+  font-family:inherit;
+  font-size:13px;
+  outline:none;
+}
+.nyxen-text-in:focus{border-color:var(--gold);}
+.nyxen-text-in::placeholder{color:var(--muted);}
+.nyxen-send-btn{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:var(--gold2);color:#21160e;font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;
+}
+.nyxen-send-btn:hover{background:var(--gold);}
+.nyxen-mic-btn{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);
+  background:transparent;color:var(--cream2);font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;
+}
+.nyxen-mic-btn:hover{border-color:var(--gold);color:var(--gold);}
+.nyxen-mic-btn.listening{background:var(--red);border-color:var(--red);color:#fff;animation:pulse-mic .8s infinite;}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(204,98,98,.4);}50%{box-shadow:0 0 0 7px rgba(204,98,98,0);}}
+.nyxen-frame-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0;}
+.nyxen-frame-close:hover{color:var(--cream);}
+.nyxen-frame-wrap iframe{flex:1;border:none;width:100%;height:100%;}
+
+#imgFile,#vidFile{display:none;}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:999px;}
+
+.voice-sample{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  margin-bottom:8px;
+  transition:all .2s;
+}
+.voice-sample:hover{border-color:var(--gold);}
+.voice-sample audio{flex:1;height:32px;}
+
+/* MEDIA THUMBNAILS */
+.media-thumb{
+  position:relative;
+  border:1px solid var(--border2);
+  border-radius:8px;
+  overflow:hidden;
+  background:var(--panel2);
+  cursor:pointer;
+  transition:all .2s;
+  aspect-ratio:16/9;
+}
+.media-thumb:hover{
+  border-color:var(--gold);
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+}
+.media-thumb img,
+.media-thumb video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.media-thumb-label{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:6px 8px;
+  background:rgba(0,0,0,.8);
+  color:var(--cream2);
+  font-size:11px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.media-thumb-icon{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:32px;
+  color:var(--gold);
+  opacity:.8;
+  pointer-events:none;
+}
+
+.audio-thumb{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--panel2);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.audio-thumb:hover{
+  border-color:var(--gold);
+  background:var(--brown);
+}
+.audio-thumb-icon{
+  font-size:20px;
+  color:var(--gold);
+}
+.audio-thumb-name{
+  flex:1;
+  font-size:13px;
+  color:var(--cream2);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.audio-thumb-play{
+  font-size:18px;
+  color:var(--muted);
+}
+
+/* SETTINGS PANEL */
+.settings-panel{
+  position:fixed;
+  right:0;
+  top:60px;
+  bottom:0;
+  width:320px;
+  background:var(--panel);
+  border-left:2px solid var(--gold);
+  transform:translateX(100%);
+  transition:transform .3s ease;
+  z-index:100;
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+}
+.settings-panel.open{transform:translateX(0);}
+
+.sp-header{
+  padding:16px 20px;
+  background:var(--panel2);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.sp-title{
+  font-size:16px;
+  font-weight:700;
+  color:var(--gold);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+.sp-close{
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:22px;
+  line-height:1;
+  padding:0;
+}
+.sp-close:hover{color:var(--cream);}
+
+.sp-body{
+  padding:20px;
+  flex:1;
+}
+
+.sp-section{
+  margin-bottom:24px;
+}
+
+.sp-label{
+  font-size:12px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:12px;
+  display:block;
+}
+
+.sp-input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:6px;
+  border:1px solid var(--border2);
+  background:var(--panel2);
+  color:var(--text);
+  font-family:inherit;
+  font-size:14px;
+  outline:none;
+  margin-bottom:8px;
+}
+.sp-input:focus{border-color:var(--gold);}
+
+.sp-slider{
+  width:100%;
+  margin:8px 0;
+}
+
+.sp-value{
+  font-size:13px;
+  color:var(--cream2);
+  text-align:right;
+  display:block;
+  margin-top:4px;
+}
+
+.settings-toggle{
+  position:fixed;
+  right:20px;
+  top:80px;
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:var(--gold2);
+  border:2px solid var(--gold);
+  color:#21160e;
+  font-size:20px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+  transition:all .2s;
+  z-index:99;
+}
+.settings-toggle:hover{
+  background:var(--gold);
+  transform:scale(1.05);
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="T"></div>
+
+<!-- Settings Toggle Button -->
+<button class="settings-toggle" onclick="toggleSettings()" title="Generation Settings">⚙</button>
+
+<!-- Settings Panel -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="sp-header">
+    <div class="sp-title">⚙ Settings</div>
+    <button class="sp-close" onclick="toggleSettings()">✕</button>
+  </div>
+  <div class="sp-body">
+    <div class="sp-section">
+      <label class="sp-label">Image Generation</label>
+      <select class="sp-input" id="imageStyle">
+        <option value="cinematic">Cinematic Realism</option>
+        <option value="watercolor">Watercolor Illustration</option>
+        <option value="noir">Moody Noir</option>
+        <option value="fantasy">High Fantasy</option>
+        <option value="editorial">Warm Editorial</option>
+        <option value="bookcover">Book Cover Art</option>
+      </select>
+      <label class="sp-label" style="margin-top:16px;">Quality</label>
+      <input type="range" class="sp-slider" id="imageQuality" min="1" max="10" value="7" oninput="updateSliderValue('imageQuality', this.value)">
+      <span class="sp-value" id="imageQualityValue">7/10</span>
+    </div>
+    
+    <div class="sp-section">
+      <label class="sp-label">Video Generation</label>
+      <select class="sp-input" id="videoLength">
+        <option value="15">15 seconds</option>
+        <option value="30">30 seconds</option>
+        <option value="45">45 seconds</option>
+        <option value="60">60 seconds</option>
+      </select>
+      <label class="sp-label" style="margin-top:16px;">Video Style</label>
+      <select class="sp-input" id="videoStyle">
+        <option value="cinematic">Cinematic</option>
+        <option value="dark">Dark Fantasy</option>
+        <option value="anime">Anime</option>
+        <option value="realistic">Realistic</option>
+        <option value="surreal">Surreal</option>
+        <option value="painterly">Painterly</option>
+      </select>
+    </div>
+    
+    <div class="sp-section">
+      <label class="sp-label">Voice Settings</label>
+      <label class="sp-label" style="margin-top:16px;font-size:11px;">Custom Voice ID</label>
+      <input type="text" class="sp-input" id="customVoiceId" placeholder="Paste your ElevenLabs voice ID" oninput="saveCustomVoiceId()">
+      <span class="sp-value" style="text-align:left;font-size:11px;color:var(--muted);">Used when "My Voice" is selected</span>
+      <label class="sp-label" style="margin-top:16px;font-size:11px;">Stability</label>
+      <input type="range" class="sp-slider" id="voiceStability" min="0" max="100" value="50" oninput="updateSliderValue('voiceStability', this.value)">
+      <span class="sp-value" id="voiceStabilityValue">0.50</span>
+      
+      <label class="sp-label" style="margin-top:16px;font-size:11px;">Clarity</label>
+      <input type="range" class="sp-slider" id="voiceClarity" min="0" max="100" value="75" oninput="updateSliderValue('voiceClarity', this.value)">
+      <span class="sp-value" id="voiceClarityValue">0.75</span>
+    </div>
+    
+    <div class="sp-section">
+      <label class="sp-label">Canvas Settings</label>
+      <label class="sp-label" style="margin-top:16px;font-size:11px;">Width</label>
+      <input type="number" class="sp-input" id="canvasWidth" value="1920" min="256" max="4096">
+      
+      <label class="sp-label" style="margin-top:12px;font-size:11px;">Height</label>
+      <input type="number" class="sp-input" id="canvasHeight" value="1080" min="256" max="4096">
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mbg" id="MB">
+  <div class="mbox">
+    <button class="mcls" onclick="closeModal()">✕</button>
+    <div class="mtitle">Screen Settings</div>
+    <div>
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Aspect Ratio</div>
+      <div class="rgrid">
+        <button class="rbtn on" onclick="setRatio('16/9',this)">
+          <div class="rp" style="width:42px;height:24px;"></div>16:9
+        </button>
+        <button class="rbtn" onclick="setRatio('9/16',this)">
+          <div class="rp" style="width:22px;height:38px;"></div>9:16
+        </button>
+        <button class="rbtn" onclick="setRatio('1/1',this)">
+          <div class="rp" style="width:32px;height:32px;"></div>1:1
+        </button>
+        <button class="rbtn" onclick="setRatio('4/3',this)">
+          <div class="rp" style="width:36px;height:27px;"></div>4:3
+        </button>
+        <button class="rbtn" onclick="setRatio('21/9',this)">
+          <div class="rp" style="width:46px;height:20px;"></div>21:9
+        </button>
+        <button class="rbtn" onclick="setRatio('2/3',this)">
+          <div class="rp" style="width:24px;height:36px;"></div>Book Cover
+        </button>
+      </div>
+    </div>
+    <button class="mapply" onclick="applyModal()">Apply Settings</button>
+  </div>
+</div>
+
+
+<header class="site-header">
+  <div class="site-logo">
+    <a href="/">
+      <img src="/images/0/23942179/logo-bXxpKbLy_jbfPHmoVV4gbQ.png" alt="S.M. Cantrell Books">
+    </a>
+  </div>
+  <nav class="main-nav">
+    <a href="/">Home</a>
+    <a href="/studio">Studio</a>
+    <a href="/founder">Founder</a>
+    <a href="/join">Join</a>
+  </nav>
+  <div class="nav-right">
+    <a href="/login" class="login-btn">Login</a>
+    <a href="/cart" class="cart-icon">🛒</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="topbar">
+    <div style="margin-right:8px;">
+      <div class="brand-name">Cantrell Creatives</div>
+      <div class="brand-sub">Production Studio</div>
+    </div>
+    <button class="tab on" id="tI" onclick="switchTab('I')">🖼 Image</button>
+    <button class="tab" id="tV" onclick="switchTab('V')">🎬 Video</button>
+    <button class="tab" id="tO" onclick="switchTab('O')">🎤 Voiceover</button>
+    <button class="tab" id="tA" onclick="switchTab('A')">📁 Assets</button>
+    <div class="spacer"></div>
+    <button class="hbtn" onclick="location.href='/publication-workspace'">Publisher's Workspace</button>
+    <button class="hbtn ac" onclick="location.href='/collections'">Collections</button>
+  </div>
+
+  <div class="body">
+    <!-- LEFT SIDEBAR -->
+    <div class="lsb">
+      <div class="lsb-hdr">Tools</div>
+      <div class="lsb-list">
+        <button class="lbtn on" id="lG" onclick="leftClick('G',this)">✨ AI Generate</button>
+        <button class="lbtn" id="lI" onclick="leftClick('I',this);importImage()">⭳ Import Image</button>
+        <button class="lbtn" id="lV" onclick="leftClick('V',this);importVideo()">🎬 Import Video</button>
+        <button class="lbtn" id="lO" onclick="leftClick('O',this);switchTab('O')">🎤 Voiceover</button>
+        <button class="lbtn" id="lA" onclick="leftClick('A',this);switchTab('A')">📁 Asset Library</button>
+      </div>
+      <div class="lsb-recent">
+        <div class="lsb-recent-hdr">
+          Recent Assets
+          <span onclick="switchTab('A')" title="View all">View all →</span>
+        </div>
+        <div class="recent-strip" id="recentStrip">
+          <div class="r-empty">No assets yet.<br>Generate or import<br>to see them here.</div>
+        </div>
+      </div>
+      <div class="lsb-foot">
+        <button class="fbtn p" id="nP" onclick="newProject()">＋ New Project</button>
+        <button class="fbtn g" onclick="openModal()">⚙ Screen Settings</button>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div class="center">
+      <!-- IMAGE PANEL -->
+      <div class="panel on" id="pI">
+        <div class="img-area">
+          <div class="cbox" id="CB">
+            <div class="estate" id="ES">
+              <div class="eico">🖼</div>
+              <div class="etitle">Create Your Vision</div>
+              <div class="edesc">Describe what you want below and click Generate, or import an image.</div>
+            </div>
+            <img id="cImg" alt="Canvas">
+            <div class="lcover" id="LC">
+              <div class="spin"></div>
+              <div class="stxt">Generating your vision...</div>
+            </div>
+          </div>
+        </div>
+        <div class="pbar">
+          <input type="text" class="pin" id="promptInput" placeholder="Describe your image...">
+          <button class="genbtn" onclick="generateImage()">✨ Generate</button>
+          <button class="ibtn" onclick="importImage()">⭳ Import</button>
+        </div>
+      </div>
+
+      <!-- VOICEOVER PANEL -->
+      <div class="panel" id="pO">
+        <div class="vowrap">
+          <div class="vomain">
+            <div>
+              <div class="volbl">🎤 Voiceover Script</div>
+              <textarea class="fta" id="voScript" placeholder="Enter your script here..."></textarea>
+            </div>
+            <div class="audbox" id="audBox">
+              <div class="audlbl">🎧 Generated Audio</div>
+              <audio id="aPrev" controls></audio>
+              <div class="aacts">
+                <button class="smbtn" onclick="downloadAudio()">⬇ Download</button>
+                <button class="smbtn" onclick="clearAudio()">✕ Clear</button>
+              </div>
+            </div>
+          </div>
+          <div class="voright">
+            <div class="vob">
+              <div class="volbl">Voice</div>
+              <select class="fsel" id="voiceSelect">
+                <option value="">Select Voice</option>
+                <option value="rachel">Rachel — Warm Female</option>
+                <option value="domi">Domi — Strong Female</option>
+                <option value="bella">Bella — Soft Female</option>
+                <option value="antoni">Antoni — Narrative Male</option>
+                <option value="arnold">Arnold — Deep Male</option>
+                <option value="adam">Adam — Authoritative</option>
+                <option value="sam">Sam — Conversational</option>
+                <option value="custom">My Voice (Custom Clone)</option>
+              </select>
+              <div class="hint">To use "My Voice", paste your cloned voice ID into the <code>custom</code> entry in the voiceIds map in the script.</div>
+            </div>
+            <div class="vob">
+              <div class="volbl">Voice Samples</div>
+              <div id="audioSamplesContainer">
+                <div style="font-size:12px;color:var(--muted);padding:10px;text-align:center;">
+                  Upload audio samples to /studio-assets/audio/
+                </div>
+              </div>
+            </div>
+            <div class="vob">
+              <div class="volbl">ElevenLabs API Key</div>
+              <input type="password" class="fin" id="apiKey" placeholder="Enter your API key">
+              <div class="hint">Stored in your browser only. Never exposed.</div>
+              <button class="fbtn p" style="margin-top:10px;" onclick="saveApiKey()">Save Key</button>
+            </div>
+            <div class="vob">
+              <button class="fbtn p" onclick="generateVoiceover()">🎤 Generate Voiceover</button>
+            </div>
+          </div>
+        </div>
+        <div class="vostat">
+          <div class="sdot" id="statusDot"></div>
+          <span id="statusText">Ready — Enter a script and click Generate Voiceover</span>
+        </div>
+      </div>
+
+      <!-- ASSETS PANEL -->
+      <div class="panel" id="pA">
+        <div class="awrap">
+          <div class="albl">Asset Library</div>
+          <div class="agrid" id="assetGrid">
+            <div class="aempty">No assets yet. Generate or import images and videos.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO PANEL -->
+      <div class="panel" id="pV">
+        <div class="img-area">
+          <div class="cbox" id="VB">
+            <div class="estate" id="VES">
+              <div class="eico">🎬</div>
+              <div class="etitle">Video Editor</div>
+              <div class="edesc">Generate a video from text or import your own.</div>
+            </div>
+            <video id="cVid" controls style="width:100%;height:100%;object-fit:contain;display:none;"></video>
+            <div class="lcover" id="VLC">
+              <div class="spin"></div>
+              <div class="stxt">Generating your video...</div>
+            </div>
+          </div>
+        </div>
+        <div class="pbar">
+          <input type="text" class="pin" id="videoPromptInput" placeholder="Describe your video...">
+          <button class="genbtn" onclick="generateVideo()">✨ Generate Video</button>
+          <button class="ibtn" onclick="importVideo()">⭳ Import Video</button>
+        </div>
+        <div style="padding:16px;background:var(--panel);border-top:1px solid var(--border);max-height:280px;overflow-y:auto;">
+          <div style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Video Samples</div>
+          <div id="videoSamplesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;">
+            <div style="color:var(--muted);text-align:center;padding:20px;font-size:12px;grid-column:1/-1;">
+              Upload video samples to /studio-assets/videos/
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="imgFile" accept="image/*" onchange="handleImageUpload(event)">
+<input type="file" id="vidFile" accept="video/*" onchange="handleVideoUpload(event)">
+
+<!-- Nyxen AI Chatbot Bubble -->
+<div class="nyxen-bubble" id="nyxenBubble">
+  <div class="nyxen-frame-wrap" id="nyxenFrame">
+    <!-- Header -->
+    <div class="nyxen-frame-hdr">
+      <div class="nyxen-frame-title">
+        <img class="nyxen-avatar" src="https://1drv.ms/i/c/c3a4af6979fa9827/IQDkAb16ZSy4TZIU-vKMH-i6AcmK-1lpWLlMe_wsK5ZzwqU?e=Ai6fUC" alt="Nyxen" onerror="this.style.display='none'">
+        ✦ Nyxen
+      </div>
+      <button class="nyxen-frame-close" onclick="toggleNyxen()" title="Close">✕</button>
+    </div>
+    <!-- Messages (top) -->
+    <div class="nyxen-msgs" id="nyxenMsgs">
+      <div class="nyxen-msg ai">
+        <div class="nlbl">NYXEN</div>
+        Hi! I'm Nyxen, your creative AI. Ask me anything — story ideas, image prompts, editing help, or just chat. I also support voice input. 🎤
+      </div>
+    </div>
+    <!-- Input bar (bottom) -->
+    <div class="nyxen-input-bar">
+      <button class="nyxen-mic-btn" id="nyxenMicBtn" onclick="toggleNyxenVoice()" title="Voice input">🎤</button>
+      <input
+        type="text"
+        class="nyxen-text-in"
+        id="nyxenTextIn"
+        placeholder="Ask Nyxen..."
+        onkeydown="if(event.key==='Enter') sendNyxen()"
+      >
+      <button class="nyxen-send-btn" onclick="sendNyxen()" title="Send">➤</button>
+    </div>
+  </div>
+  <!-- Toggle button -->
+  <button class="nyxen-toggle" onclick="toggleNyxen()" title="Open Nyxen AI">✦</button>
+</div>
+
+<script>
+// Global state
+var currentRatio = '16/9';
+var assets = [];
+
+// Media config
+var MEDIA_CONFIG = {
+  images: { folder: '/studio-assets/images/', files: [] },
+  videos: { folder: '/studio-assets/videos/', files: [] },
+  audio:  { folder: '/studio-assets/audio/',  files: [] }
+};
+
+// Tab switching
+function switchTab(tab) {
+  // Update tab buttons
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('t' + tab).classList.add('on');
+  
+  // Update panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('p' + tab).classList.add('on');
+}
+
+// Left sidebar clicks
+function leftClick(btn, el) {
+  document.querySelectorAll('.lbtn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// Modal functions
+function openModal() {
+  document.getElementById('MB').classList.add('on');
+}
+
+function closeModal() {
+  document.getElementById('MB').classList.remove('on');
+}
+
+function setRatio(ratio, el) {
+  currentRatio = ratio;
+  document.querySelectorAll('.rbtn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function applyModal() {
+  document.getElementById('CB').style.aspectRatio = currentRatio;
+  showToast('Settings applied!', 'ok');
+  closeModal();
+}
+
+// Toast notifications
+function showToast(msg, type = '') {
+  const toast = document.getElementById('T');
+  toast.textContent = msg;
+  toast.className = 'toast on ' + type;
+  setTimeout(() => {
+    toast.classList.remove('on');
+  }, 3000);
+}
+
+// Image generation - Pollinations.ai (free, no key needed)
+function generateImage() {
+  var prompt = document.getElementById('promptInput').value.trim();
+  if (!prompt) { showToast('Please enter a description', 'err'); return; }
+
+  var lc  = document.getElementById('LC');
+  var es  = document.getElementById('ES');
+  var img = document.getElementById('cImg');
+
+  es.classList.add('hide');
+  lc.style.cssText = 'display:flex;position:absolute;inset:0;background:rgba(0,0,0,.6);flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;border-radius:10px;';
+
+  var styleVal   = (document.getElementById('imageStyle') || {}).value || 'cinematic realism';
+  var fullPrompt = prompt + ', ' + styleVal + ', high quality, detailed';
+  var seed       = Math.floor(Math.random() * 999999);
+  var imgUrl     = 'https://image.pollinations.ai/prompt/'
+    + encodeURIComponent(fullPrompt)
+    + '?width=1280&height=720&seed=' + seed + '&nologo=true&enhance=true';
+
+  // Use a hidden loader — no crossOrigin
+  var loader = new Image();
+  loader.onload = function() {
+    lc.style.display = 'none';
+    img.removeAttribute('crossorigin');
+    img.src = imgUrl;
+    img.classList.add('vis');
+    es.classList.add('hide');
+    img.style.cssText = 'display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:10;border-radius:10px;';
+    addAsset({ type: 'image', src: imgUrl, name: prompt.substring(0, 30) });
+    showToast('Image generated!', 'ok');
+  };
+  loader.onerror = function() {
+    // Retry with different seed
+    var retryUrl = 'https://image.pollinations.ai/prompt/'
+      + encodeURIComponent(fullPrompt)
+      + '?width=1280&height=720&seed=' + (seed + 7) + '&nologo=true';
+    var loader2 = new Image();
+    loader2.onload = function() {
+      lc.style.display = 'none';
+      img.removeAttribute('crossorigin');
+      img.src = retryUrl;
+      img.classList.add('vis');
+      es.classList.add('hide');
+      img.style.cssText = 'display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:10;border-radius:10px;';
+      addAsset({ type: 'image', src: retryUrl, name: prompt.substring(0, 30) });
+      showToast('Image generated!', 'ok');
+    };
+    loader2.onerror = function() {
+      lc.style.display = 'none';
+      es.classList.remove('hide');
+      showToast('Generation failed — check connection', 'err');
+    };
+    loader2.src = retryUrl;
+  };
+  loader.src = imgUrl;
+}
+
+// Import image
+function importImage() {
+  document.getElementById('imgFile').click();
+}
+
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Switch to image tab first
+    switchTab('I');
+
+    // Then set the image after the panel is visible
+    setTimeout(() => {
+      const cb  = document.getElementById('CB');
+      const es  = document.getElementById('ES');
+      const lc  = document.getElementById('LC');
+
+      // Remove any old generated result
+      const old = document.getElementById('genResult');
+      if (old) old.remove();
+
+      // Create image element inside canvas box
+      const img = document.getElementById('cImg');
+      img.src            = e.target.result;
+      img.style.display  = 'block';
+      img.style.position = 'absolute';
+      img.style.inset    = '0';
+      img.style.width    = '100%';
+      img.style.height   = '100%';
+      img.style.objectFit= 'contain';
+      img.style.zIndex   = '5';
+      es.style.display   = 'none';
+      lc.style.display   = 'none';
+
+      addAsset({ type: 'image', src: e.target.result, name: file.name });
+      showToast('Image imported!', 'ok');
+    }, 50);
+  };
+  reader.readAsDataURL(file);
+}
+
+// Import video
+function importVideo() {
+  document.getElementById('vidFile').click();
+}
+
+function handleVideoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const vid = document.getElementById('cVid');
+    const ves = document.getElementById('VES');
+    const vlc = document.getElementById('VLC');
+
+    vid.src            = e.target.result;
+    vid.style.display  = 'block';
+    vid.style.position = 'absolute';
+    vid.style.inset    = '0';
+    vid.style.width    = '100%';
+    vid.style.height   = '100%';
+    vid.style.objectFit= 'contain';
+    vid.style.zIndex   = '5';
+    ves.style.display  = 'none';
+    vlc.style.display  = 'none';
+
+    addAsset({ type: 'video', src: e.target.result, name: file.name });
+    showToast('Video imported!', 'ok');
+    switchTab('V');
+  };
+  reader.readAsDataURL(file);
+}
+
+// Video generation - Pollinations.ai cinematic frame (free, no key needed)
+function generateVideo() {
+  var prompt = document.getElementById('videoPromptInput').value.trim();
+  if (!prompt) { showToast('Please enter a video description', 'err'); return; }
+
+  var vlc = document.getElementById('VLC');
+  var ves = document.getElementById('VES');
+  var vb  = document.getElementById('VB');
+
+  ves.style.display = 'none';
+  vlc.style.cssText = 'display:flex;position:absolute;inset:0;background:rgba(0,0,0,.6);flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;border-radius:10px;';
+
+  var old = document.getElementById('vidResult');
+  if (old) old.remove();
+
+  var styleVal   = document.getElementById('videoStyle') ? document.getElementById('videoStyle').value : 'cinematic';
+  var fullPrompt = prompt + ', ' + styleVal + ' film still, cinematic lighting, 4k, detailed';
+  var seed       = Math.floor(Math.random() * 999999);
+  var imgUrl     = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(fullPrompt) + '?width=1280&height=720&seed=' + seed + '&nologo=true';
+
+  var previewImg    = document.createElement('img');
+  previewImg.id     = 'vidResult';
+  previewImg.style.cssText = 'display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:10;border-radius:10px;';
+  vb.appendChild(previewImg);
+
+  previewImg.onload = function() {
+    previewImg.onload = null;
+    previewImg.onerror = null;
+    vlc.style.display  = 'none';
+    previewImg.style.display = 'block';
+    addAsset({ type: 'image', src: imgUrl, name: prompt.substring(0, 30) });
+    showToast('Frame generated!', 'ok');
+  };
+
+  previewImg.onerror = function() {
+    previewImg.onload = null;
+    previewImg.onerror = null;
+    var retryUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(fullPrompt) + '?width=1280&height=720&seed=' + (seed + 1) + '&nologo=true';
+    previewImg.onload = function() {
+      previewImg.onload = null;
+      previewImg.onerror = null;
+      vlc.style.display = 'none';
+      previewImg.style.display = 'block';
+      addAsset({ type: 'image', src: retryUrl, name: prompt.substring(0, 30) });
+      showToast('Frame generated!', 'ok');
+    };
+    previewImg.onerror = function() {
+      previewImg.onload = null;
+      previewImg.onerror = null;
+      vlc.style.display = 'none';
+      ves.style.display = '';
+      showToast('Generation failed - check connection', 'err');
+    };
+    previewImg.src = retryUrl;
+  };
+
+  previewImg.src = imgUrl;
+}
+
+// Settings panel
+function toggleSettings() {
+  const panel = document.getElementById('settingsPanel');
+  panel.classList.toggle('open');
+}
+
+function updateSliderValue(id, value) {
+  const display = document.getElementById(id + 'Value');
+  if (id.includes('voice')) {
+    display.textContent = (value / 100).toFixed(2);
+  } else {
+    display.textContent = value + '/10';
+  }
+}
+
+// Voiceover functions
+function generateVoiceover() {
+  var script = document.getElementById('voScript').value.trim();
+  var voice  = document.getElementById('voiceSelect').value;
+  var apiKey = localStorage.getItem('elevenLabsApiKey');
+
+  if (!script) { showToast('Please enter a script', 'err'); updateStatus('error', 'No script provided'); return; }
+  if (!voice)  { showToast('Please select a voice', 'err'); updateStatus('error', 'No voice selected'); return; }
+  if (!apiKey) { showToast('Please save your API key first', 'err'); updateStatus('error', 'No API key found'); return; }
+
+  updateStatus('processing', 'Generating voiceover...');
+
+  // ElevenLabs voice ID map
+  var customId = localStorage.getItem('customVoiceId') || '';
+  var voiceIds = {
+    rachel:  '21m00Tcm4TlvDq8ikWAM',
+    domi:    'AZnzlk1XvdvUeBnXmlld',
+    bella:   'EXAVITQu4vr4xnSDxMaL',
+    antoni:  'ErXwobaYiN019PkySvjV',
+    arnold:  'VR6AewLTigWG4xSOukaG',
+    adam:    'pNInz6obpgDQGcFmaJgB',
+    sam:     'yoZ06aMxZJJ28mfd3POQ',
+    custom:  customId
+  };
+
+  if (voice === 'custom' && !customId) {
+    showToast('Open Settings and enter your custom voice ID', 'err');
+    updateStatus('error', 'No custom voice ID set');
+    return;
+  }
+
+  var vid    = voiceIds[voice] || voiceIds['rachel'];
+  var apiUrl = 'https://api.elevenlabs.io/v1/text-to-speech/' + vid;
+
+  var stability = 0.5;
+  var clarity   = 0.75;
+  var stabEl = document.getElementById('voiceStability');
+  var clarEl = document.getElementById('voiceClarity');
+  if (stabEl) stability = parseFloat(stabEl.value) / 100;
+  if (clarEl) clarity   = parseFloat(clarEl.value) / 100;
+
+  fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text: script,
+      model_id: 'eleven_monolingual_v1',
+      voice_settings: { stability: stability, similarity_boost: clarity }
+    })
+  })
+  .then(function(r) {
+    if (!r.ok) { throw new Error('API error ' + r.status); }
+    return r.blob();
+  })
+  .then(function(blob) {
+    var url    = URL.createObjectURL(blob);
+    var audio  = document.getElementById('aPrev');
+    var audBox = document.getElementById('audBox');
+    audio.pause();
+    audio.src = url;
+    audio.load();
+    audBox.classList.add('on');
+    updateStatus('ready', 'Ready - press play');
+    showToast('Voiceover ready!', 'ok');
+  })
+  .catch(function(err) {
+    updateStatus('error', 'API error: ' + err.message);
+    showToast('API error - check your key', 'err');
+  });
+}
+
+function saveApiKey() {
+  var apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    showToast('Please enter an API key', 'err');
+    return;
+  }
+  localStorage.setItem('elevenLabsApiKey', apiKey);
+  showToast('API key saved!', 'ok');
+}
+
+function saveCustomVoiceId() {
+  var id = document.getElementById('customVoiceId').value.trim();
+  localStorage.setItem('customVoiceId', id);
+}
+
+function downloadAudio() {
+  const audio = document.getElementById('aPrev');
+  if (!audio.src) {
+    showToast('No audio to download', 'err');
+    return;
+  }
+  
+  const a = document.createElement('a');
+  a.href = audio.src;
+  a.download = 'voiceover.mp3';
+  a.click();
+  showToast('Download started!', 'ok');
+}
+
+function clearAudio() {
+  const audBox = document.getElementById('audBox');
+  const audio = document.getElementById('aPrev');
+  
+  audio.src = '';
+  audBox.classList.remove('on');
+  updateStatus('ready', 'Ready - Enter a script and click Generate Voiceover');
+  showToast('Audio cleared', 'ok');
+}
+
+function updateStatus(type, text) {
+  const dot = document.getElementById('statusDot');
+  const statusText = document.getElementById('statusText');
+  
+  dot.className = 'sdot';
+  if (type === 'processing') dot.classList.add('y');
+  if (type === 'error') dot.classList.add('r');
+  
+  statusText.textContent = text;
+}
+
+// Asset management
+function addAsset(asset) {
+  assets.push(asset);
+  updateAssetGrid();
+  updateRecentAssets();
+}
+
+function updateAssetGrid() {
+  const grid = document.getElementById('assetGrid');
+  
+  if (assets.length === 0) {
+    grid.innerHTML = '<div class="aempty">No assets yet. Generate or import images and videos.</div>';
+    return;
+  }
+  
+  grid.innerHTML = assets.map((asset, i) => `
+    <div class="aitem" onclick="loadAsset(${i})">
+      <img src="${asset.src}" alt="${asset.name}">
+    </div>
+  `).join('');
+}
+
+function updateRecentAssets() {
+  const strip = document.getElementById('recentStrip');
+  
+  if (assets.length === 0) {
+    strip.innerHTML = '<div class="r-empty">No assets yet.<br>Generate or import<br>to see them here.</div>';
+    return;
+  }
+  
+  const recent = assets.slice(-5).reverse();
+  strip.innerHTML = recent.map((asset, i) => `
+    <div class="r-thumb" onclick="loadAsset(${assets.length - 1 - i})">
+      <img src="${asset.src}" alt="${asset.name}">
+      <div class="r-thumb-info">
+        <div class="r-thumb-name">${asset.name}</div>
+        <div class="r-thumb-type">${asset.type}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadAsset(index) {
+  const asset = assets[index];
+  if (!asset) return;
+  
+  if (asset.type === 'image') {
+    const img = document.getElementById('cImg');
+    const es = document.getElementById('ES');
+    
+    img.src = asset.src;
+    img.classList.add('vis');
+    es.classList.add('hide');
+    
+    switchTab('I');
+    showToast('Asset loaded!', 'ok');
+  } else if (asset.type === 'video') {
+    const vid = document.getElementById('cVid');
+    const ves = document.getElementById('VES');
+    
+    vid.src = asset.src;
+    vid.style.display = 'block';
+    ves.classList.add('hide');
+    
+    switchTab('V');
+    showToast('Video loaded!', 'ok');
+  }
+}
+
+// New project
+function newProject() {
+  if (confirm('Start a new project? This will clear your current work.')) {
+    document.getElementById('cImg').classList.remove('vis');
+    document.getElementById('ES').classList.remove('hide');
+    document.getElementById('promptInput').value = '';
+    showToast('New project started!', 'ok');
+  }
+}
+
+// Nyxen bubble toggle
+function toggleNyxen() {
+  var frame = document.getElementById('nyxenFrame');
+  frame.classList.toggle('open');
+}
+
+// Nyxen send message
+function sendNyxen() {
+  var inp = document.getElementById('nyxenTextIn');
+  var msg = inp.value.trim();
+  if (!msg) return;
+  appendNyxenMsg(msg, 'user');
+  inp.value = '';
+  fetchNyxen(msg);
+}
+
+function appendNyxenMsg(text, role) {
+  var msgs = document.getElementById('nyxenMsgs');
+  var d = document.createElement('div');
+  d.className = 'nyxen-msg ' + role;
+  if (role === 'ai') {
+    d.innerHTML = '<div class="nlbl">NYXEN</div>' + text;
+  } else {
+    d.textContent = text;
+  }
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function fetchNyxen(msg) {
+  // Typing indicator
+  var msgs = document.getElementById('nyxenMsgs');
+  var typing = document.createElement('div');
+  typing.className = 'nyxen-msg ai';
+  typing.id = 'nyxenTyping';
+  typing.innerHTML = '<div class="nlbl">NYXEN</div><span style="opacity:.5;font-style:italic;">typing...</span>';
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  fetch('https://nyxen.smcantrellbooks.workers.dev/nyxen', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: msg })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    var t = document.getElementById('nyxenTyping');
+    if (t) t.remove();
+    var reply = d.reply || d.message || d.response || d.text || 'I\'m here! How can I help?';
+    appendNyxenMsg(reply, 'ai');
+    speakNyxen(reply);
+  })
+  .catch(function() {
+    var t = document.getElementById('nyxenTyping');
+    if (t) t.remove();
+    appendNyxenMsg('I\'m here! Let me know how I can help.', 'ai');
+  });
+}
+
+// Nyxen voice output — via Cloudflare Worker (key stored server-side)
+function speakNyxen(text) {
+  fetch('https://nyxen.smcantrellbooks.workers.dev/nyxen', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: text, tts: true })
+  })
+  .then(function(r) {
+    // If worker returns audio blob
+    var ct = r.headers.get('content-type') || '';
+    if (ct.includes('audio')) {
+      return r.blob().then(function(blob) {
+        var url = URL.createObjectURL(blob);
+        var audio = new Audio(url);
+        audio.play();
+        audio.onended = function() { URL.revokeObjectURL(url); };
+      });
+    }
+    // Worker returned JSON — no audio in response, silent
+    return r.json().catch(function(){});
+  })
+  .catch(function() {
+    // Silent fail — chat still works
+  });
+}
+
+// Nyxen voice input (Web Speech Recognition)
+var nyxenRecognition = null;
+function toggleNyxenVoice() {
+  var btn = document.getElementById('nyxenMicBtn');
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    showToast('Voice input not supported in this browser', 'err');
+    return;
+  }
+  if (nyxenRecognition && btn.classList.contains('listening')) {
+    nyxenRecognition.stop();
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    return;
+  }
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  nyxenRecognition = new SR();
+  nyxenRecognition.lang = 'en-US';
+  nyxenRecognition.interimResults = false;
+  nyxenRecognition.maxAlternatives = 1;
+
+  nyxenRecognition.onstart = function() {
+    btn.classList.add('listening');
+    btn.textContent = '⏹';
+  };
+  nyxenRecognition.onresult = function(e) {
+    var transcript = e.results[0][0].transcript;
+    document.getElementById('nyxenTextIn').value = transcript;
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    sendNyxen();
+  };
+  nyxenRecognition.onerror = function() {
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    showToast('Voice input error — try again', 'err');
+  };
+  nyxenRecognition.onend = function() {
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+  };
+  nyxenRecognition.start();
+}
+
+// Load voices when available
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = function() {
+    window.speechSynthesis.getVoices();
+  };
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  var savedKey = localStorage.getItem('elevenLabsApiKey');
+  if (savedKey) {
+    document.getElementById('apiKey').value = savedKey;
+  }
+  var savedVoiceId = localStorage.getItem('customVoiceId');
+  if (savedVoiceId) {
+    document.getElementById('customVoiceId').value = savedVoiceId;
+  }
+  loadImageSamples();
+  loadVideoSamples();
+  loadAudioSamples();
+});
+
+// Load image samples
+async function loadImageSamples() {
+  const container = document.getElementById('assetGrid');
+  
+  if (!window.MEDIA_CONFIG || MEDIA_CONFIG.images.files.length === 0) {
+    // Show placeholder if no files configured
+    return;
+  }
+  
+  const html = MEDIA_CONFIG.images.files.map((filename, index) => {
+    const src = MEDIA_CONFIG.images.folder + filename;
+    return `
+      <div class="media-thumb" onclick="loadSampleImage('${src}', '${filename}')">
+        <img src="${src}" alt="${filename}" onerror="this.parentElement.style.display='none'">
+        <div class="media-thumb-label">${filename}</div>
+      </div>
+    `;
+  }).join('');
+  
+  if (assets.length === 0) {
+    container.innerHTML = html || '<div class="aempty">No assets yet. Generate or import images and videos.</div>';
+  }
+}
+
+// Load video samples
+async function loadVideoSamples() {
+  const container = document.getElementById('videoSamplesGrid');
+  
+  if (!window.MEDIA_CONFIG || MEDIA_CONFIG.videos.files.length === 0) {
+    container.innerHTML = `
+      <div style="color:var(--muted);text-align:center;padding:20px;font-size:12px;grid-column:1/-1;">
+        Upload video samples to /studio-assets/videos/<br>
+        <span style="font-size:11px;opacity:.7;">Then add filenames to studio-media-config.js</span>
+      </div>
+    `;
+    return;
+  }
+  
+  const html = MEDIA_CONFIG.videos.files.map((filename, index) => {
+    const src = MEDIA_CONFIG.videos.folder + filename;
+    return `
+      <div class="media-thumb" onclick="loadSampleVideo('${src}', '${filename}')">
+        <video src="${src}" preload="metadata" onerror="this.parentElement.style.display='none'"></video>
+        <div class="media-thumb-icon">▶</div>
+        <div class="media-thumb-label">${filename}</div>
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = html;
+}
+
+// Load audio samples
+async function loadAudioSamples() {
+  const container = document.getElementById('audioSamplesContainer');
+  
+  if (!window.MEDIA_CONFIG || MEDIA_CONFIG.audio.files.length === 0) {
+    container.innerHTML = `
+      <div style="font-size:12px;color:var(--muted);padding:10px;text-align:center;">
+        Upload audio samples to /studio-assets/audio/<br>
+        <span style="font-size:11px;opacity:.7;">Then add filenames to studio-media-config.js</span>
+      </div>
+    `;
+    return;
+  }
+  
+  const html = MEDIA_CONFIG.audio.files.map((filename, index) => {
+    const src = MEDIA_CONFIG.audio.folder + filename;
+    return `
+      <div class="audio-thumb" onclick="playSampleAudio('${src}', '${filename}')">
+        <div class="audio-thumb-icon">🎵</div>
+        <div class="audio-thumb-name">${filename}</div>
+        <div class="audio-thumb-play">▶</div>
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = html;
+}
+
+// Load sample image into canvas
+function loadSampleImage(src, filename) {
+  const img = document.getElementById('cImg');
+  const es = document.getElementById('ES');
+  
+  img.src = src;
+  img.classList.add('vis');
+  es.classList.add('hide');
+  
+  addAsset({
+    type: 'image',
+    src: src,
+    name: filename
+  });
+  
+  switchTab('I');
+  showToast('Sample image loaded!', 'ok');
+}
+
+// Load sample video into player
+function loadSampleVideo(src, filename) {
+  const vid = document.getElementById('cVid');
+  const ves = document.getElementById('VES');
+  
+  vid.src = src;
+  vid.style.display = 'block';
+  ves.classList.add('hide');
+  
+  addAsset({
+    type: 'video',
+    src: src,
+    name: filename
+  });
+  
+  showToast('Sample video loaded!', 'ok');
+}
+
+// Play sample audio
+function playSampleAudio(src, filename) {
+  const audio = document.getElementById('aPrev');
+  const audBox = document.getElementById('audBox');
+  
+  audio.src = src;
+  audio.load();
+  audio.play();
+  audBox.classList.add('on');
+  
+  updateStatus('ready', 'Playing: ' + filename);
+  showToast('Playing audio sample', 'ok');
+}
+</script>
+
+</body>
+</html>

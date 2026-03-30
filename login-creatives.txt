@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Free Videos • Cantrell Creatives</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Georgia", serif;
+    background-color: #f4f1ea;
+    color: #2b2b2b;
+}
+
+/* HEADER */
+header {
+    background-color: #f7f5ef;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #8b6f47;
+}
+.logo {
+    font-size: 1.3rem;
+    color: #5a3e2b;
+    font-weight: bold;
+}
+nav a {
+    margin-left: 20px;
+    font-size: 1rem;
+    color: #3f4a23;
+    text-decoration: none;
+    font-weight: 500;
+}
+nav a:hover {
+    color: #556b2f;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    padding: 70px 20px;
+    background: #e9e4d8;
+    border-bottom: 2px solid #8b6f47;
+}
+.hero h1 {
+    font-size: 40px;
+    color: #5a3e2b;
+}
+.hero p {
+    font-size: 18px;
+    color: #4a463f;
+}
+
+/* SECTION */
+.section {
+    max-width: 900px;
+    margin: 50px auto 70px;
+    padding: 0 20px;
+}
+.card {
+    background: #f7f5ef;
+    border-radius: 10px;
+    border: 2px solid #8b6f47;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+.card h2 {
+    font-size: 22px;
+    color: #556b2f;
+    margin-bottom: 10px;
+}
+.card p {
+    color: #4a463f;
+    line-height: 1.6;
+}
+
+/* FOOTER */
+.footer {
+    text-align: center;
+    padding: 30px;
+    background: #f7f5ef;
+    border-top: 2px solid #8b6f47;
+}
+.footer nav a {
+    margin: 0 10px;
+    color: #5a3e2b;
+    text-decoration: none;
+}
+.footer nav a:hover {
+    color: #556b2f;
+}
+</style>
+</head>
+
+<body>
+<header>
+    <div class="logo">S.M. Cantrell</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="features.html">Featured Books</a>
+        <a href="series.html">Series</a>
+        <a href="otherworks.html">Other Works</a>
+        <a href="video-credits.html">Free Videos</a>
+        <a href="video-pricing.html">Video Plans</a>
+        <a href="storefront.html">Storefront</a>
+        <a href="publishing.html">Publishing</a>
+        <a href="nyxen.html">Nyxen</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Free Videos</h1>
+    <p>Sample videos created through Cantrell Creatives tools.</p>
+</section>
+
+<section class="section">
+    <div class="card">
+        <h2>Sample Reel</h2>
+        <p>Placeholder for embedded free video content or links to hosted clips.</p>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>&copy; 2026 Cantrell Creatives. All rights reserved.</p>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="storefront.html">Storefront</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</footer>
+</body>
+</html>

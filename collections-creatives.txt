@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Collections - Cantrell Creatives - Visual Creations &amp; Publishing Platform</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — Cantrell Creatives</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Cinzel:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#ffffff;--card:#fff;--border:#e8e0ce;--text:#111111;--muted:rgba(0,0,0,.5);--primary:#C9A040;--gold:#C9A040;--gold-dark:#a07d20;--plum:#7B5C7B;--cream:#FDFBF7;}
+html,body{min-height:100vh;font-family:'Cormorant Garamond',serif;color:var(--text);background:var(--bg);font-size:18px;overflow-x:hidden;}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;border:none;outline:none;background:none;}
+button{cursor:pointer;}a{text-decoration:none;color:inherit;}
+.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ===== BANNER ===== */
+.banner{position:relative;width:100%;overflow:hidden;display:block;}
+.banner-img{display:block;width:100%;height:340px;object-fit:cover;object-position:center center;}
+.banner-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(20,5,10,.25) 0%,rgba(20,5,10,.1) 50%,rgba(20,5,10,.55) 100%);}
+.banner-nav{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:linear-gradient(rgba(0,0,0,.45) 0%,transparent 100%);z-index:10;flex-wrap:nowrap;}
+.banner-logo{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:rgba(232,201,122,.95);letter-spacing:.15em;text-transform:uppercase;}
+.banner-nav-links{display:flex;gap:6px;flex-wrap:nowrap;}
+.bnl{padding:5px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.6);background:rgba(0,0,0,.28);color:#fff;font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.bnl:hover{background:rgba(201,169,97,.5);border-color:rgb(201,169,97);}
+.bnl.login{background:#C9A040;border-color:#C9A040;color:#000;font-weight:800;}
+.bnl.login:hover{background:#e0b84a;}
+.banner-title{position:absolute;bottom:0;left:0;right:0;padding:20px 28px 16px;z-index:10;}
+.banner-title h1{font-family:'Cinzel',serif;font-size:2.2rem;font-weight:700;color:#fff;letter-spacing:4px;text-shadow:0 2px 16px rgba(0,0,0,.5);}
+.banner-title p{font-size:.9rem;color:rgba(255,255,255,.75);letter-spacing:.2em;text-transform:uppercase;margin-top:4px;}
+.banner-bottom-nav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(20,5,10,.7) 0%,transparent 100%);padding:10px 28px 14px;gap:10px;z-index:10;}
+.bbn{padding:6px 18px;border-radius:999px;border:1px solid rgba(201,169,97,.6);background:rgba(0,0,0,.3);color:#fff;font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;white-space:nowrap;}
+.bbn:hover{background:rgba(201,169,97,.4);border-color:#C9A040;transform:translateY(-1px);}
+.gold-line{width:100%;height:4px;background:linear-gradient(to right,transparent 0%,rgba(201,169,97,.3) 10%,rgb(201,169,97) 30%,rgb(232,201,122) 50%,rgb(201,169,97) 70%,rgba(201,169,97,.3) 90%,transparent 100%) 0 0/200%;animation:shimmer 4s linear infinite;}
+@keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+
+/* FREE TIER NOTICE */
+.tier-notice{background:linear-gradient(135deg,#fffbf0,#fff9e6);border:1px solid #C9A040;border-radius:8px;padding:12px 18px;margin:20px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.tier-notice-left{display:flex;align-items:center;gap:10px;}
+.tier-badge{background:#111;color:#C9A040;font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:999px;text-transform:uppercase;}
+.tier-notice p{font-size:.85rem;color:#111;}
+.tier-notice strong{color:#a07d20;font-weight:700;}
+.upgrade-link{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;color:#fff;background:#111;border:1px solid #111;padding:5px 14px;border-radius:4px;transition:all .2s;white-space:nowrap;}
+.upgrade-link:hover{background:#C9A040;border-color:#C9A040;color:#000;}
+
+/* TITLE BAR */
+.title-bar{padding:16px 24px 12px;border-bottom:2px solid var(--gold);background:#fff;}
+.title-bar h2{font-size:1.3rem;font-weight:700;font-family:'Cinzel',serif;color:#111;}
+
+/* MAIN */
+.main-grid{max-width:1240px;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
+@media(max-width:1024px){.main-grid{grid-template-columns:1fr;}}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:16px;}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:'Cinzel',serif;color:#111;border-bottom:1px solid #f0e8d0;padding-bottom:8px;}
+
+/* FORMS */
+.form-group{margin-bottom:10px;}
+.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px;font-weight:600;letter-spacing:.04em;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:4px;font-size:.95rem;background:#fff;transition:border .18s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);outline:none;}
+.form-group textarea{resize:none;}
+.form-group select{appearance:auto;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* UPLOADS */
+.upload-box{border:2px dashed var(--border);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.upload-box:hover{border-color:rgba(122,38,56,.5);}
+.upload-box p{font-size:.9rem;margin-top:6px;}
+.upload-box .small{font-size:.75rem;color:var(--muted);}
+
+/* ASSETS */
+.asset-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.asset-row:last-child{border-bottom:none;}
+.asset-left{display:flex;align-items:center;gap:8px;font-size:.9rem;}
+.asset-status{font-size:.75rem;color:var(--muted);}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:4px;font-size:.85rem;font-weight:600;transition:all .2s;}
+.btn-primary{background:#111;color:#C9A040;border:1px solid #111;}
+.btn-primary:hover{background:#C9A040;color:#000;border-color:#C9A040;}
+.btn-outline{border:1px solid var(--border);color:var(--text);}
+.btn-outline:hover{background:rgba(0,0,0,.03);}
+.btn-toggle{flex:1;padding:10px;border-radius:4px;font-size:.82rem;font-weight:700;text-align:center;transition:all .2s;font-family:'Cinzel',serif;letter-spacing:.04em;}
+.btn-toggle.active{background:#111;color:#C9A040;}
+.btn-toggle:not(.active){background:#f5f5f5;color:#555;border:1px solid #ddd;}
+.btn-toggle:not(.active):hover{background:#e8e0ce;}
+
+/* PREVIEW */
+.preview-box{background:rgba(0,0,0,.03);border-radius:8px;padding:14px;margin-top:12px;}
+.preview-box .thumb{width:70px;height:100px;background:rgba(0,0,0,.06);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.preview-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-family:'Cinzel',serif;}
+
+/* EARNINGS */
+.earn-row{display:flex;justify-content:space-between;font-size:.9rem;margin-bottom:6px;}
+.earn-total{border-top:1px solid var(--border);padding-top:8px;margin-top:8px;}
+.fee-highlight{background:#fffbf0;border:1px solid #C9A040;border-radius:6px;padding:10px 12px;margin-bottom:10px;font-size:.82rem;color:#7a5a00;}
+.fee-highlight strong{font-weight:700;color:#a07d20;}
+
+/* PUBLISH BTN */
+.publish-btn{width:100%;padding:14px;border-radius:8px;font-size:1rem;font-weight:700;color:#111;background:linear-gradient(135deg,#C9A040,#e0b84a);letter-spacing:1px;transition:all .2s;font-family:'Cinzel',serif;border:2px solid #C9A040;}
+.publish-btn:hover{background:linear-gradient(135deg,#111,#333);color:#C9A040;border-color:#111;}
+
+/* FOOTER */
+.footer{border-top:2px solid #C9A040;padding:24px 24px;text-align:center;margin-top:20px;background:#fff;}
+.footer a{font-size:.82rem;color:#888;margin:0 8px;transition:color .2s;font-family:'Cinzel',serif;letter-spacing:.05em;}
+.footer a:hover{color:#C9A040;}
+
+/* TAX FORM */
+.tax-success{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:16px;text-align:center;}
+.tax-success h4{color:#166534;font-size:1rem;margin-bottom:6px;}
+.tax-success p{font-size:.8rem;color:#166534;}
+.tax-disclaimer{font-size:.75rem;color:var(--muted);margin-top:10px;padding:10px;background:rgba(0,0,0,.02);border-radius:4px;}
+.hidden{display:none;}
+
+/* ===== NYXEN BUBBLE ===== */
+.nyxen-bubble{
+  position:fixed;bottom:24px;right:24px;
+  width:68px;height:68px;border-radius:50%;
+  background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat,
+             linear-gradient(135deg,#7B5C7B,#2D1F2D);
+  border:3px solid #C9A040;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);
+  cursor:pointer;z-index:9999;
+  transition:transform .2s,box-shadow .2s;
+}
+.nyxen-bubble:hover{transform:scale(1.08);box-shadow:0 8px 28px rgba(0,0,0,.35);}
+.nyxen-bubble-label{
+  position:fixed;bottom:98px;right:18px;
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;
+  color:#C9A040;text-align:center;z-index:9999;pointer-events:none;
+}
+.nyxen-panel{
+  position:fixed;bottom:108px;right:24px;
+  width:380px;height:520px;
+  background:#FBF7F2;
+  border:1px solid rgba(201,169,97,.4);border-radius:16px;
+  box-shadow:0 16px 48px rgba(0,0,0,.28);
+  display:none;flex-direction:column;
+  overflow:hidden;z-index:9999;
+}
+@media(max-width:480px){.nyxen-panel{width:92vw;right:4vw;}}
+.nyxen-hdr{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  background:linear-gradient(to right,#7B5C7B,#5a3d5a);
+  flex-shrink:0;
+}
+.nyxen-av{width:38px;height:38px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:2px solid #C9A961;flex-shrink:0;}
+.nyxen-hdr-title{font-family:'Cinzel',serif;font-size:1rem;color:#fff;font-weight:700;}
+.nyxen-hdr-status{font-size:.68rem;color:rgba(255,255,255,.6);font-style:italic;}
+.nyxen-close{cursor:pointer;font-size:1.2rem;color:rgba(255,255,255,.7);padding:4px 8px;border-radius:6px;border:none;background:none;transition:.18s;margin-left:auto;}
+.nyxen-close:hover{color:#fff;background:rgba(255,255,255,.12);}
+.nyxen-feed{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
+.nyxen-feed::-webkit-scrollbar{width:3px;}
+.nyxen-feed::-webkit-scrollbar-thumb{background:rgba(123,92,123,.3);border-radius:999px;}
+.msg{display:flex;gap:7px;align-items:flex-end;}
+.msg.user{flex-direction:row-reverse;}
+.msg-av{width:24px;height:24px;border-radius:50%;flex-shrink:0;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:1px solid rgba(201,169,97,.4);}
+.msg-av.u{background:linear-gradient(135deg,#C9A961,#a88030);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#2D1F2D;font-weight:700;font-family:'Cinzel',serif;}
+.msg-bubble{max-width:80%;padding:8px 11px;border-radius:11px;font-size:.88rem;line-height:1.5;color:#1a0f08;}
+.msg.nyxen .msg-bubble{background:rgba(123,92,123,.1);border:1px solid rgba(123,92,123,.2);border-bottom-left-radius:3px;}
+.msg.user .msg-bubble{background:rgba(201,169,97,.15);border:1px solid rgba(201,169,97,.35);border-bottom-right-radius:3px;}
+.msg-system{text-align:center;font-size:.72rem;font-style:italic;color:var(--muted);padding:3px 0;}
+.typing-dots{display:inline-flex;gap:3px;align-items:center;padding:2px 0;}
+.typing-dots span{width:5px;height:5px;border-radius:50%;background:#7B5C7B;animation:tb 1.2s ease-in-out infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes tb{0%,80%,100%{transform:translateY(0);opacity:.4;}40%{transform:translateY(-4px);opacity:1;}}
+.nyxen-input-bar{display:flex;align-items:flex-end;gap:6px;padding:10px 12px;border-top:1px solid rgba(201,169,97,.3);background:rgba(249,244,237,.95);flex-shrink:0;}
+.nyxen-tbox{flex:1;min-height:38px;max-height:90px;padding:8px 11px;border-radius:8px;border:1px solid rgba(201,169,97,.4);font-family:'Cormorant Garamond',serif;font-size:.95rem;color:#1a0f08;background:#fff;outline:none;resize:none;line-height:1.4;overflow-y:auto;}
+.nyxen-tbox:focus{border-color:#C9A961;}
+.nyxen-tbox::placeholder{color:rgba(26,15,8,.4);}
+.nyxen-send{width:34px;height:34px;border-radius:7px;border:none;background:#C9A961;color:#2D1F2D;display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:all .18s;flex-shrink:0;font-weight:700;}
+.nyxen-send:hover{background:#d4b870;}
+
+/* ── AUTH WIDGET ── */
+.auth-widget{position:relative;display:flex;align-items:center;}
+.auth-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7B5C7B,#5a3d5a);border:2px solid #C9A961;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:#e8c97a;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.auth-avatar:hover{transform:scale(1.05);}
+.auth-name-tag{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;color:rgba(232,201,122,.9);margin-left:6px;cursor:pointer;white-space:nowrap;}
+.auth-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(201,169,97,.3);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.2);min-width:200px;overflow:hidden;display:none;z-index:9999;}
+.auth-dropdown.open{display:block;}
+.auth-dd-header{padding:12px 14px;background:linear-gradient(135deg,#1a0f08,#2c1810);border-bottom:1px solid rgba(201,169,97,.2);}
+.auth-dd-name{font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;color:#fff;margin-bottom:2px;}
+.auth-dd-email{font-size:.7rem;color:rgba(255,255,255,.5);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.auth-dd-tier{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:999px;font-family:'Cinzel',serif;font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(201,169,97,.2);border:1px solid rgba(201,169,97,.3);color:#e8c97a;}
+.auth-dd-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#2c1810;text-decoration:none;transition:background .18s;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
+.auth-dd-item:hover{background:rgba(201,169,97,.1);}
+.auth-dd-item.danger{color:#7a2638;}
+.auth-dd-divider{height:1px;background:rgba(201,169,97,.15);margin:4px 0;}
+
+</style>
+
+
+
+<!-- ===== BANNER ===== -->
+<div class="banner">
+  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164863/Copilot_20260311_144017-7S4NWERpwdSOPYWx49vqyg.png" alt="Collections Banner" onerror="this.style.background='linear-gradient(135deg,#f5ede0,#e8d8e8)';this.removeAttribute('src');">
+  <div class="banner-overlay"></div>
+
+  <!-- TOP NAV -->
+  <nav class="banner-nav">
+    <span class="banner-logo">Cantrell Creatives</span>
+    <div class="banner-nav-links">
+      <a class="bnl" href="https://creatives.smcantrellbooks.com">Home</a>
+      <a class="bnl" href="https://creatives.smcantrellbooks.com/my-account">My Account</a>
+      <a class="bnl login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
+    </div>
+  </nav>
+
+  <!-- TITLE -->
+  <div class="banner-title">
+    <h1>COLLECTIONS</h1>
+    <p>Publication Ready — Cantrell Creatives</p>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="banner-bottom-nav">
+    <a class="bbn" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>
+    <a class="bbn" href="https://creatives.smcantrellbooks.com/publisher-workspace">✍️ Publisher Workspace</a>
+    <a class="bbn" href="https://creatives.smcantrellbooks.com/voice-studio">🎤 Voice Studio</a>
+  </nav>
+</div>
+<div class="gold-line"></div>
+
+<!-- FREE TIER NOTICE -->
+<div class="tier-notice">
+  <div class="tier-notice-left">
+    <span class="tier-badge">Free Tier</span>
+    <p>A <strong>15% platform fee</strong> applies to all sales on the free tier. This is automatically calculated in your earnings below.</p>
+  </div>
+  <a class="upgrade-link" href="https://creatives.smcantrellbooks.com/membership">Upgrade to PD Member →</a>
+</div>
+
+<div class="title-bar"><h2>Publication Ready</h2></div>
+
+<div class="main-grid">
+  <!-- LEFT COLUMN -->
+  <div>
+    <!-- Book Details -->
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Book Details</h3>
+      <div class="form-group"><label>Book Title</label><input id="title" value="The Enchanted Relic"></div>
+      <div class="form-group"><label>Subtitle (optional)</label><input id="subtitle"></div>
+      <div class="form-group"><label>Description</label><textarea rows="3" id="description" placeholder="Describe your book..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Categories</label><select id="categories"><option>Fantasy</option><option>Romance</option><option>Sci-Fi</option><option>Mystery</option><option>Poetry</option></select></div>
+        <div class="form-group"><label>Keywords</label><input id="keywords" placeholder="magic, adventure"></div>
+      </div>
+    </div>
+
+    <!-- File Uploads -->
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"></path></svg> File Uploads</h3>
+      <input type="file" id="coverUpload" accept="image/*" hidden="" onchange="handleFileUpload(event,'coverUpload','coverStatus','coverPreviewImg')">
+      <div class="upload-box" style="margin-bottom:10px;" onclick="document.getElementById('coverUpload').click()">
+        <svg class="icon" style="width:28px;height:28px;color:var(--muted);" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        <p>Upload Cover Image</p><span class="small">JPG, PNG (1600×2400 recommended)</span>
+        <div id="coverStatus" style="font-size:.75rem;color:#C9A040;margin-top:4px;"></div>
+        <img id="coverPreviewImg" style="display:none;max-width:100%;margin-top:8px;border-radius:4px;max-height:120px;object-fit:contain;">
+      </div>
+      <input type="file" id="epubUpload" accept=".epub" hidden="" onchange="handleFileUpload(event,'epubUpload','epubStatus',null)">
+      <div class="upload-box" onclick="document.getElementById('epubUpload').click()">
+        <svg class="icon" style="width:28px;height:28px;color:var(--muted);" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path></svg>
+        <p>Upload EPUB File</p><span class="small">.epub format only</span>
+        <div id="epubStatus" style="font-size:.75rem;color:#C9A040;margin-top:4px;"></div>
+      </div>
+    </div>
+
+    <!-- Assets -->
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg> Book Assets</h3>
+      <div class="asset-row"><div class="asset-left"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path></svg> EPUB File</div><span class="asset-status">Not uploaded</span></div>
+      <div class="asset-row"><div class="asset-left"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg> Cover Image</div><span class="asset-status">Not uploaded</span></div>
+      <div class="asset-row"><div class="asset-left"><svg class="icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg> Audio Files</div><span class="asset-status">Optional</span></div>
+      <div class="asset-row"><div class="asset-left"><svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse></svg> Metadata</div><span class="asset-status">Incomplete</span></div>
+    </div>
+  </div>
+
+  <!-- CENTER COLUMN -->
+  <div>
+    <!-- Author Bio -->
+    <div class="card">
+      <h3>Author Bio</h3>
+      <div class="form-group"><label>Author Name</label><input id="authorName" value="S.M. Cantrell"></div>
+      <div class="form-group"><label>Bio</label><textarea rows="4" id="authorBio" placeholder="Tell readers about yourself..."></textarea></div>
+      <input type="file" id="authorPhotoUpload" accept="image/*" hidden="" onchange="handleFileUpload(event,'authorPhotoUpload','authorPhotoStatus','authorPhotoPreview')">
+      <div class="upload-box" onclick="document.getElementById('authorPhotoUpload').click()">
+        <p style="font-size:.85rem;color:var(--muted);">Upload Author Photo (optional)</p>
+        <div id="authorPhotoStatus" style="font-size:.75rem;color:#C9A040;margin-top:4px;"></div>
+        <img id="authorPhotoPreview" style="display:none;width:60px;height:60px;border-radius:50%;object-fit:cover;margin:8px auto 0;">
+      </div>
+      <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
+        <div class="preview-label">Storefront Preview</div>
+        <div class="preview-box" style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.08);flex-shrink:0;"></div>
+          <div><div style="font-weight:600;font-size:.9rem;" id="previewAuthor">S.M. Cantrell</div><div style="font-size:.75rem;color:var(--muted);" id="previewBio">Your bio will appear here...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collection -->
+    <div class="card">
+      <h3>Select Collection</h3>
+      <div style="display:flex;gap:10px;margin-bottom:14px;">
+        <button class="btn-toggle active" id="btnGrace" onclick="setCollection('grace')">The Grace Collection</button>
+        <button class="btn-toggle" id="btnHorizon" onclick="setCollection('horizon')">The Horizon Collection</button>
+      </div>
+      <div class="preview-label" id="collLabel">Grace Collection Preview</div>
+      <div class="preview-box" style="display:flex;gap:14px;">
+        <div class="thumb"><svg class="icon" style="color:var(--muted);" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg></div>
+        <div>
+          <div style="font-weight:700;font-size:.9rem;" id="previewTitle">The Enchanted Relic</div>
+          <div style="font-size:.75rem;color:var(--muted);" id="previewSubtitle"></div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:2px;" id="previewBy">by S.M. Cantrell</div>
+          <div style="font-weight:700;color:#C9A040;margin-top:6px;font-size:1.05rem;" id="previewPrice">$3.99</div>
+          <span id="comingSoon" class="hidden" style="display:inline-block;margin-top:6px;padding:2px 8px;background:rgba(122,38,56,.1);color:var(--primary);font-size:.75rem;border-radius:4px;">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Series -->
+    <div class="card">
+      <h3><svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> Series Information</h3>
+      <div class="form-group"><label>Series Name</label><input id="seriesName" placeholder="e.g. The Fated Bond Series"></div>
+      <div class="form-group"><label>Book Order in Series</label><input type="number" id="seriesOrder" min="1" value="1"></div>
+      <div class="form-group"><label>Series Description</label><textarea rows="3" id="seriesDesc" placeholder="Describe the series..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div>
+    <!-- Pricing -->
+    <div class="card">
+      <h3>Pricing</h3>
+      <div class="form-group"><label>Book Price (USD)</label>
+        <div style="position:relative;"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);">$</span><input id="price" type="number" step="0.01" min="0" value="3.99" style="padding-left:24px;"></div>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="card">
+      <h3>Payment Method</h3>
+      <div class="form-group">
+        <select id="paymentMethod" onchange="updatePayment()">
+          <option value="select">Select</option>
+          <option value="paypal">PayPal Business</option>
+          <option value="cashapp">Cash App</option>
+          <option value="venmo">Venmo</option>
+          <option value="direct">Direct Deposit</option>
+        </select>
+      </div>
+      <div id="paypalFields" class="hidden"><div class="form-group"><label>PayPal Email</label><input type="email" placeholder="your@email.com"></div></div>
+      <div id="cashappFields" class="hidden"><div class="form-group"><label>Cash App Tag</label><input placeholder="$YourCashtag"></div></div>
+      <div id="venmoFields" class="hidden"><div class="form-group"><label>Venmo Username</label><input placeholder="@username"></div></div>
+      <div id="directFields" class="hidden">
+        <div class="form-group"><label>Bank Name</label><input></div>
+        <div class="form-group"><label>Routing Number</label><input></div>
+        <div class="form-group"><label>Account Number</label><input></div>
+      </div>
+    </div>
+
+    <!-- Earnings Calculator -->
+    <div class="card">
+      <h3>Earnings Calculator</h3>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="btn-toggle active" id="tierFree" onclick="setTier('free')">Free Tier</button>
+        <button class="btn-toggle" id="tierPd" onclick="setTier('pd')">PD Member</button>
+      </div>
+      <div id="freeTierNote" class="fee-highlight">
+        <strong>Free Tier:</strong> A 15% platform fee is automatically deducted from each sale. Upgrade to PD Member to keep 100% of your earnings.
+      </div>
+      <div id="earningsDisplay"></div>
+    </div>
+
+    <!-- Tax Form -->
+    <div class="card" id="taxCard">
+      <h3><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg> Publisher Tax Form</h3>
+      <div id="taxForm">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <button class="btn-toggle active" id="taxIndiv" onclick="setEntityType('individual')">Individual</button>
+          <button class="btn-toggle" id="taxBiz" onclick="setEntityType('business')">Business</button>
+        </div>
+        <div class="form-group"><label>Full Legal Name</label><input id="taxName"></div>
+        <div id="indivFields">
+          <div class="form-group"><label>SSN / Tax ID</label><input type="password" id="taxSSN" placeholder="XXX-XX-XXXX"></div>
+        </div>
+        <div id="bizFields" class="hidden">
+          <div class="form-group"><label>Business Name</label><input id="taxBizName"></div>
+          <div class="form-group"><label>EIN</label><input id="taxEIN" placeholder="XX-XXXXXXX"></div>
+        </div>
+        <div class="form-group"><label>Street Address</label><input id="taxAddress"></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input id="taxCity"></div>
+          <div class="form-group"><label>State</label><input id="taxState"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>ZIP Code</label><input id="taxZip"></div>
+          <div class="form-group"><label>Country</label><select id="taxCountry"><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Australia</option><option>Other</option></select></div>
+        </div>
+        <div class="tax-disclaimer">This information is collected for tax reporting purposes (W-9 equivalent). Your data is stored securely and connected to your publisher account for payment processing.</div>
+        <button class="btn btn-primary" style="width:100%;margin-top:12px;padding:10px;" onclick="saveTaxForm()">Save Tax Information</button>
+      </div>
+      <div id="taxSuccess" class="hidden">
+        <div class="tax-success">
+          <h4>✓ Tax Information Saved</h4>
+          <p>Your tax form has been submitted and linked to your publisher account. Payments will be sent to your selected payment method.</p>
+        </div>
+        <button class="btn btn-outline" style="width:100%;margin-top:10px;" onclick="editTaxForm()">Edit Tax Info</button>
+      </div>
+    </div>
+
+    <!-- Publish Button -->
+    <button class="publish-btn" id="publishBtn">Publish to Grace Collection</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Publishing Terms</a> ·
+  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure">Audio Disclosures</a> ·
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Platform Terms</a> ·
+  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy">Our Philosophy</a>
+</footer>
+
+<!-- ===== NYXEN BUBBLE ===== -->
+<div class="nyxen-bubble" onclick="toggleNyxen()" title="Ask Nyxen"></div>
+<div class="nyxen-bubble-label">Nyxen</div>
+
+<div class="nyxen-panel" id="nyxenPanel">
+  <div class="nyxen-hdr">
+    <div class="nyxen-av"></div>
+    <div>
+      <div class="nyxen-hdr-title">Nyxen</div>
+      <div class="nyxen-hdr-status" id="nyxenStatus">Your creative assistant</div>
+    </div>
+    <button class="nyxen-close" onclick="toggleNyxen()">✕</button>
+  </div>
+  <div class="nyxen-feed" id="nyxenFeed"></div>
+  <div class="nyxen-input-bar">
+    <textarea class="nyxen-tbox" id="nyxenInput" placeholder="Ask Nyxen anything…" rows="1" onkeydown="nyxenKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="nyxen-send" onclick="nyxenSend()" title="Send">➤</button>
+  </div>
+</div>
+
+
+<script>
+/* ===== COLLECTIONS LOGIC ===== */
+let collection='grace', membershipTier='free', entityType='individual';
+
+function setCollection(c){
+  collection=c;
+  document.getElementById('btnGrace').classList.toggle('active',c==='grace');
+  document.getElementById('btnHorizon').classList.toggle('active',c==='horizon');
+  document.getElementById('collLabel').textContent=(c==='grace'?'Grace':'Horizon')+' Collection Preview';
+  document.getElementById('comingSoon').classList.toggle('hidden',c!=='horizon');
+  document.getElementById('publishBtn').textContent='Publish to '+(c==='grace'?'Grace':'Horizon')+' Collection';
+  updatePreview();
+}
+
+function setTier(t){
+  membershipTier=t;
+  document.getElementById('tierFree').classList.toggle('active',t==='free');
+  document.getElementById('tierPd').classList.toggle('active',t==='pd');
+  document.getElementById('freeTierNote').style.display=t==='free'?'block':'none';
+  updateEarnings();
+}
+
+function setEntityType(t){
+  entityType=t;
+  document.getElementById('taxIndiv').classList.toggle('active',t==='individual');
+  document.getElementById('taxBiz').classList.toggle('active',t==='business');
+  document.getElementById('indivFields').classList.toggle('hidden',t!=='individual');
+  document.getElementById('bizFields').classList.toggle('hidden',t!=='business');
+}
+
+function updatePayment(){
+  const m=document.getElementById('paymentMethod').value;
+  ['paypal','cashapp','venmo','direct'].forEach(f=>document.getElementById(f+'Fields').classList.add('hidden'));
+  if(m!=='select')document.getElementById(m+'Fields').classList.remove('hidden');
+  updateEarnings();
+}
+
+function updateEarnings(){
+  const price=parseFloat(document.getElementById('price').value)||0;
+  const platformFee=membershipTier==='free'?price*0.15:0;
+  const method=document.getElementById('paymentMethod').value;
+  const paypalFee=method==='paypal'?(price*0.029+0.30):0;
+  const totalFees=platformFee+paypalFee;
+  const payout=Math.max(0,price-totalFees);
+
+  let html='';
+  html+=`<div class="earn-row"><span style="color:var(--muted);">Book Price</span><span>$${price.toFixed(2)}</span></div>`;
+  if(membershipTier==='free'){
+    html+=`<div class="earn-row"><span style="color:var(--primary);font-weight:600;">Platform Fee (15%)</span><span style="color:var(--primary);">-$${platformFee.toFixed(2)}</span></div>`;
+  } else {
+    html+=`<div class="earn-row"><span style="color:var(--muted);">Platform Fee</span><span style="color:green;">$0.00 ✓</span></div>`;
+  }
+  if(method==='paypal')html+=`<div class="earn-row"><span style="color:var(--muted);">PayPal Fee (2.9% + $0.30)</span><span>-$${paypalFee.toFixed(2)}</span></div>`;
+  html+=`<div class="earn-row earn-total"><span style="font-weight:700;">Your Payout</span><span style="color:#a07d20;font-weight:700;font-size:1.1rem;">$${payout.toFixed(2)}</span></div>`;
+  document.getElementById('earningsDisplay').innerHTML=html;
+}
+
+function updatePreview(){
+  document.getElementById('previewTitle').textContent=document.getElementById('title').value||'Book Title';
+  document.getElementById('previewSubtitle').textContent=document.getElementById('subtitle').value;
+  document.getElementById('previewBy').textContent='by '+(document.getElementById('authorName').value||'Author Name');
+  document.getElementById('previewPrice').textContent='$'+(document.getElementById('price').value||'0.00');
+  document.getElementById('previewAuthor').textContent=document.getElementById('authorName').value||'Author Name';
+  document.getElementById('previewBio').textContent=document.getElementById('authorBio').value||'Your bio will appear here...';
+}
+
+function saveTaxForm(){
+  const name=document.getElementById('taxName').value.trim();
+  const addr=document.getElementById('taxAddress').value.trim();
+  const city=document.getElementById('taxCity').value.trim();
+  const state=document.getElementById('taxState').value.trim();
+  const zip=document.getElementById('taxZip').value.trim();
+  if(!name||!addr||!city||!state||!zip){alert('Please fill in all required fields.');return;}
+  if(entityType==='individual'&&!document.getElementById('taxSSN').value.trim()){alert('Please enter your SSN/Tax ID.');return;}
+  if(entityType==='business'&&(!document.getElementById('taxBizName').value.trim()||!document.getElementById('taxEIN').value.trim())){alert('Please enter business name and EIN.');return;}
+  document.getElementById('taxForm').classList.add('hidden');
+  document.getElementById('taxSuccess').classList.remove('hidden');
+}
+
+function editTaxForm(){
+  document.getElementById('taxForm').classList.remove('hidden');
+  document.getElementById('taxSuccess').classList.add('hidden');
+}
+
+['title','subtitle','authorName','authorBio','price'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{updatePreview();updateEarnings();});
+});
+
+updateEarnings();
+updatePreview();
+
+/* ===== NYXEN BUBBLE ===== */
+const NYXEN_WORKER = 'https://nyxen-video-worker.smcantrellbooks.workers.dev/generate';
+let nyxenOpen=false, nyxenHistory=[];
+
+
+function toggleNyxen(){
+  nyxenOpen=!nyxenOpen;
+  document.getElementById('nyxenPanel').style.display=nyxenOpen?'flex':'none';
+  if(nyxenOpen && nyxenHistory.length===0){
+    addMsg('nyxen',"Hi! I'm Nyxen — your Cantrell Creatives assistant. Need help with your book details, pricing, or publishing questions? I'm here!");
+  }
+  if(nyxenOpen) setTimeout(()=>document.getElementById('nyxenInput').focus(),100);
+}
+
+function addMsg(role,text){
+  const feed=document.getElementById('nyxenFeed');
+  if(role==='system'){const d=document.createElement('div');d.className='msg-system';d.textContent=text;feed.appendChild(d);feed.scrollTop=feed.scrollHeight;return;}
+  const row=document.createElement('div');row.className='msg '+(role==='user'?'user':'nyxen');
+  const av=document.createElement('div');av.className='msg-av'+(role==='user'?' u':'');
+  if(role==='user')av.textContent='U';
+  row.appendChild(av);
+  const b=document.createElement('div');b.className='msg-bubble';b.textContent=text;
+  row.appendChild(b);feed.appendChild(row);feed.scrollTop=feed.scrollHeight;
+}
+
+function showTyping(){
+  const feed=document.getElementById('nyxenFeed');
+  const row=document.createElement('div');row.className='msg nyxen';row.id='nyxTyping';
+  const av=document.createElement('div');av.className='msg-av';row.appendChild(av);
+  const b=document.createElement('div');b.className='msg-bubble';
+  b.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+  row.appendChild(b);feed.appendChild(row);feed.scrollTop=feed.scrollHeight;
+}
+function removeTyping(){const el=document.getElementById('nyxTyping');if(el)el.remove();}
+
+async function nyxenSend(){
+  const inp=document.getElementById('nyxenInput');
+  const text=inp.value.trim();if(!text)return;
+  inp.value='';inp.style.height='';
+  addMsg('user',text);
+  nyxenHistory.push({role:'user',content:text});
+  showTyping();
+  document.getElementById('nyxenStatus').textContent='Thinking…';
+  try{
+    const resp=await fetch(NYXEN_WORKER,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:text,history:nyxenHistory.slice(-20)})
+    });
+    removeTyping();
+    let data={};
+    try{ data=await resp.json(); }
+    catch(e){ throw new Error('Could not parse worker response'); }
+    const reply=data.story||data.message||data.response||JSON.stringify(data);
+    nyxenHistory.push({role:'assistant',content:reply});
+    addMsg('nyxen',reply);
+    document.getElementById('nyxenStatus').textContent='Your creative assistant';
+  }catch(e){
+    removeTyping();
+    addMsg('system','⚠ '+e.message);
+    document.getElementById('nyxenStatus').textContent='Error — try again';
+  }
+}
+
+function handleFileUpload(e, inputId, statusId, previewId){
+  const file = e.target.files[0]; if(!file) return;
+  const status = document.getElementById(statusId);
+  status.textContent = '✓ ' + file.name;
+  if(previewId){
+    const preview = document.getElementById(previewId);
+    const reader = new FileReader();
+    reader.onload = ev => { preview.src = ev.target.result; preview.style.display = 'block'; };
+    reader.readAsDataURL(file);
+  }
+  // Update asset status in Book Assets card
+  if(inputId === 'coverUpload') updateAssetStatus('Cover Image','Uploaded ✓');
+  if(inputId === 'epubUpload') updateAssetStatus('EPUB File','Uploaded ✓');
+}
+
+function updateAssetStatus(name, status){
+  document.querySelectorAll('.asset-row').forEach(row => {
+    if(row.querySelector('.asset-left') && row.querySelector('.asset-left').textContent.includes(name)){
+      row.querySelector('.asset-status').textContent = status;
+      row.querySelector('.asset-status').style.color = '#C9A040';
+    }
+  });
+}
+
+function nyxenKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();nyxenSend();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
+</script>

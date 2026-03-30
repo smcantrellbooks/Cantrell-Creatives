@@ -1,0 +1,47 @@
+AUDIO & VOICE DISCLOSURE
+
+Use of Audio & Voice Tools
+Cantrell Creatives provides audio and voice-generation tools to assist creators with narration, audiobooks, previews, and other spoken-word content.
+Audio may be generated using artificial intelligence–based text-to-speech services, including third-party providers.
+
+Role of the Creator
+Creators are fully responsible for:
+	• Reviewing all generated audio before use or publication
+	• Confirming pronunciation, pacing, tone, and accuracy
+	• Ensuring audio content aligns with their intended purpose
+Generated audio should be treated as a working output, not a final product, until reviewed and approved by the creator.
+
+Voice Selection & Variability
+Audio output may vary based on:
+	• Selected voice
+	• Language and regional settings
+	• Text structure and formatting
+	• Third-party service behavior
+Cantrell Creatives does not guarantee consistency across voices, sessions, or providers.
+
+Temporary Storage & Retention
+Unless otherwise stated by membership level:
+	• Generated audio files are considered temporary
+	• Audio may be deleted after applicable retention periods
+	• Deleted audio files cannot be recovered
+Creators are responsible for downloading and backing up any audio they wish to retain.
+
+Third-Party Audio Services
+Audio generation may utilize third-party services such as:
+	• Microsoft Azure Text-to-Speech
+	• Google Text-to-Speech
+	• Other supported providers
+Use of these services is subject to their respective terms, limitations, and availability.
+Cantrell Creatives is not responsible for service interruptions, voice changes, or provider-level restrictions.
+
+Ownership & Usage
+Creators retain ownership of audio generated from their content.
+However:
+	• Ownership does not imply guaranteed storage
+	• Audio files not downloaded within retention periods may be removed
+	• Cantrell Creatives does not claim authorship or rights to creator audio
+
+Important Notice
+ATTENTION:
+Creators should download and back up all audio files immediately after generation.
+Cantrell Creatives is not liable for loss of audio due to technical issues, expired retention periods, or failure to download files.

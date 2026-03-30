@@ -1,0 +1,53 @@
+AI USAGE DISCLOSURE
+
+(Applies to all AI-assisted tools on Cantrell Creatives)
+Use of Artificial Intelligence
+Cantrell Creatives provides access to artificial intelligence tools to assist creators in the development of creative works. These tools may support, but do not replace, human creativity, authorship, or editorial judgment.
+AI-assisted features may include, but are not limited to:
+	• Text generation and editing assistance
+	• Image generation
+	• Video generation
+	• Audio narration and voice synthesis
+	• Creative ideation and exploratory drafting
+
+
+Role of the Creator
+Creators remain fully responsible for:
+	• The content they generate or publish
+	• Reviewing, editing, and approving all AI-assisted outputs
+	• Ensuring accuracy, originality, and compliance with applicable laws and platform policies
+
+AI tools operate based on user input and system configuration. Outputs may vary and are not guaranteed to be error-free or suitable for final publication without review.
+
+AI Output Ownership
+Unless otherwise stated:
+	• Creators retain ownership of the AI-generated content they create
+	• Cantrell Creatives does not claim authorship or copyright over AI-assisted outputs
+	• Generated assets are considered working materials unless formally published
+
+Ownership does not imply permanence. Retention is governed by Studio and Publication policies.
+
+Disclosure of AI-Generated Content
+Creators are responsible for determining whether disclosure of AI assistance is required when publishing content externally.
+Cantrell Creatives does not automatically disclose or label AI-generated content on behalf of creators unless required by law or platform policy.
+
+Limitations & Variability
+AI-generated content may:
+	• Produce unexpected or inconsistent results
+	• Reflect limitations of training data
+	• Require human correction or refinement
+	• Be influenced by prompt quality and context
+
+Cantrell Creatives makes no guarantees regarding the originality, suitability, or factual accuracy of AI-generated outputs.
+
+Third-Party AI Services
+Cantrell Creatives utilizes third-party AI services, which may include:
+	• Text-to-speech services (e.g., Microsoft Azure)
+	• Image and video generation platforms
+	• Other AI service providers as needed
+
+Use of these services is subject to their respective terms, policies, and technical limitations.
+
+Data Handling & Privacy
+User inputs may be transmitted to third-party AI services solely for the purpose of generating requested outputs.
+Cantrell Creatives does not use creator content to train proprietary AI models unless explicitly stated.

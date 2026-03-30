@@ -1,0 +1,38 @@
+TASK: Modify this page with STRICT LIMITED CHANGES.
+
+You are NOT allowed to redesign, restructure, refactor, simplify, or optimize the page.
+
+Do NOT change:
+• layout
+• color scheme
+• CSS variables
+• header
+• navigation
+• containers
+• spacing
+• typography
+• any existing styling
+• any element outside the document editor section
+
+Keep the entire page exactly as it is visually.
+
+Allowed changes ONLY:
+
+1. Replace the current document editor component with the new editor code I will provide.
+https://www.pdffiller.com/s/jRh3pq3Uv
+
+2. Add the AI chat bubble component I provide.
+
+Rules:
+
+• Do NOT move or rename any existing sections.
+• Do NOT shorten or rewrite existing code.
+• Do NOT remove CSS or HTML unless it belongs directly to the old editor being replaced.
+• The new editor must inherit the existing styles and colors.
+• The AI bubble must be positioned as a floating element without modifying the layout structure.
+
+The result must look identical to the current page except for:
+• the updated document editor
+• the added AI bubble
+
+Return the FULL updated file with only those two changes applied.
