@@ -6,31 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Cinzel:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;max-width:100%;overflow-x:hidden;min-height:100vh;background:#F9F4ED;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--taupe);}
-
-/* Hide Sitejet injected navigation — but NOT the content wrapper */
-.wv-header, .wv-nav, .wv-footer, header.site-header, nav.site-nav,
-[class*="sitejet-header"], [class*="sitejet-nav"], [class*="sitejet-footer"],
-[class*="webcard-header"], [class*="webcard-nav"], [class*="webcard-footer"]{
-  display:none !important;
-}
-
-/* Waveform play button fix */
-.waveform-play{font-family:Arial,sans-serif !important;}
-
+/* Hide Sitejet injected navigation */
+.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,
+[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],
+[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none !important;}
+.waveform-play,.ch-play{font-family:Arial,sans-serif !important;}
 :root{
-  --taupe:#2D1F2D; --taupe-lt:rgba(45,31,45,.65);
-  --gold:#C9A961; --gold2:#e8c97a; --gold-lt:rgba(201,169,97,.15); --gold-bd:rgba(201,169,97,.4);
-  --cream:#FBF7F2; --card:#FFFCF8;
-  --plum:#7B5C7B; --plum2:#9b7a9b; --plum-lt:rgba(123,92,123,.1); --plum-bd:rgba(123,92,123,.3);
-  --oak:#F5EDE0; --oak-dark:#EDE0CC;
-  --green:#2a6b3c; --red:#c03c3c;
+  --taupe:#2D1F2D;--taupe-lt:rgba(45,31,45,.65);
+  --gold:#C9A961;--gold2:#e8c97a;--gold-lt:rgba(201,169,97,.15);--gold-bd:rgba(201,169,97,.4);
+  --cream:#FBF7F2;--card:#FFFCF8;
+  --plum:#7B5C7B;--plum2:#9b7a9b;--plum-lt:rgba(123,92,123,.1);--plum-bd:rgba(123,92,123,.3);
+  --oak:#F5EDE0;--oak-dark:#EDE0CC;
+  --green:#2a6b3c;--red:#c03c3c;
 }
-
-/* ── BANNER ── */
 .banner{position:relative;overflow:hidden;display:block;width:100%;}
 .banner-img{display:block;width:100%;height:360px;object-fit:cover;object-position:center;}
 .nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:100;}
@@ -49,36 +41,33 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;min-height:100vh;backgroun
 .gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,rgba(201,169,97,.3) 10%,rgb(201,169,97) 30%,rgb(232,201,122) 50%,rgb(201,169,97) 70%,rgba(201,169,97,.3) 90%,transparent 100%);background-size:200%;animation:shimmer 4s linear infinite;}
 @keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
 
-/* ── BREADCRUMB NAV ── */
-.breadcrumb{display:flex;align-items:center;gap:8px;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--gold-bd);overflow-x:auto;white-space:nowrap;}
-.bc-item{font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-lt);text-decoration:none;transition:color .2s;}
-.bc-item:hover{color:var(--plum);}
-.bc-item.active{color:var(--plum);border-bottom:2px solid var(--plum);padding-bottom:1px;}
-.bc-arrow{color:var(--taupe-lt);font-size:.7rem;}
-
-/* ── PAGE WRAP ── */
 .page-wrap{max-width:1400px;margin:0 auto;padding:28px 24px 60px;}
-
-/* ── TABS ── */
 .tab-bar{display:flex;gap:0;background:var(--card);border:1px solid var(--gold-bd);border-radius:10px;overflow:hidden;margin-bottom:24px;width:fit-content;}
 .tab-btn{padding:10px 24px;border:none;background:none;font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--taupe-lt);cursor:pointer;transition:all .22s;display:flex;align-items:center;gap:7px;white-space:nowrap;}
 .tab-btn:hover{background:var(--gold-lt);color:var(--taupe);}
 .tab-btn.active{background:var(--plum);color:#fff;}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-
-/* ── TWO COLUMN LAYOUT ── */
-.studio-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
-@media(max-width:1000px){.studio-grid{grid-template-columns:1fr;}}
-
-/* ── PANELS ── */
+.tab-content{display:none;}.tab-content.active{display:block;}
 .panel{background:var(--card);border:1px solid var(--gold-bd);border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.09);display:flex;flex-direction:column;gap:16px;margin-bottom:16px;}
 .panel:last-child{margin-bottom:0;}
 .panel-title{display:flex;align-items:center;gap:9px;font-family:'Cinzel',serif;color:var(--plum);font-size:1.05rem;font-weight:700;border-bottom:1px solid var(--plum-bd);padding-bottom:10px;}
 .panel-icon{font-size:14px;color:var(--gold);}
 .lbl{display:block;font-size:.85rem;color:var(--taupe);font-weight:700;margin-bottom:5px;}
-
-/* ── UPLOAD ZONE ── */
+.inp,select.inp,textarea.inp{width:100%;padding:10px 12px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--taupe);background:#fff;outline:none;transition:border .18s;}
+.inp:focus{border-color:var(--gold);}
+textarea.inp{resize:vertical;line-height:1.75;}
+.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-gold{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;border:none;background:var(--gold);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-gold:hover{background:#d4b870;transform:translateY(-1px);}
+.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-sec{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:600;white-space:nowrap;}
+.btn-sec:hover{background:rgba(201,169,97,.28);}
+.btn-engine-active{background:var(--plum) !important;color:#fff !important;border-color:var(--plum) !important;}
+.btn-plum{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--plum-bd);background:var(--plum-lt);color:var(--plum);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:700;}
+.btn-plum:hover{background:var(--plum);color:#fff;}
+.btn-generate{width:100%;padding:14px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--plum),#5a3d5a);color:#fff;font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-generate:hover{background:linear-gradient(135deg,#5a3d5a,var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.35);}
+.btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
 .upload-zone{border:2px dashed var(--gold-bd);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .25s;background:var(--gold-lt);}
 .upload-zone:hover{border-color:var(--gold);background:rgba(201,169,97,.2);}
 .upload-zone.drag-over{border-color:var(--plum);background:var(--plum-lt);}
@@ -86,109 +75,31 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;min-height:100vh;backgroun
 .upload-title{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--taupe);margin-bottom:6px;}
 .upload-sub{font-size:.88rem;color:var(--taupe-lt);font-style:italic;margin-bottom:16px;}
 .upload-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-
-/* ── BUTTONS ── */
-.btn-gold{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;border:none;background:var(--gold);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.btn-gold:hover{background:#d4b870;transform:translateY(-1px);}
-.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.btn-sec{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:600;white-space:nowrap;}
-.btn-sec:hover{background:rgba(201,169,97,.28);}
-.btn-plum{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--plum-bd);background:var(--plum-lt);color:var(--plum);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:700;}
-.btn-plum:hover{background:var(--plum);color:#fff;}
-.btn-generate{width:100%;padding:14px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--plum),#5a3d5a);color:#fff;font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-generate:hover{background:linear-gradient(135deg,#5a3d5a,var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.35);}
-.btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-
-/* ── INPUTS ── */
-.inp,select.inp,textarea.inp{width:100%;padding:10px 12px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--taupe);background:#fff;outline:none;transition:border .18s;}
-.inp:focus{border-color:var(--gold);}
-textarea.inp{resize:vertical;line-height:1.75;}
-.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-
-/* ── CHAPTER LIST ── */
-.chapter-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;}
-.chapter-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;transition:all .18s;cursor:pointer;}
-.chapter-item:hover{border-color:var(--plum-bd);background:var(--plum-lt);}
-.chapter-item.playing{border-color:var(--plum);background:var(--plum-lt);}
-.ch-name{font-size:.95rem;color:var(--taupe);font-weight:600;}
-.ch-meta{display:flex;align-items:center;gap:10px;}
-.ch-dur{font-size:.75rem;color:var(--taupe-lt);font-style:italic;}
-.ch-play{width:28px;height:28px;border-radius:50%;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--plum);font-size:.75rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-.ch-play:hover{background:var(--gold);color:#fff;}
-
-/* ── WAVEFORM ── */
-.waveform-box{background:var(--oak-dark);border-radius:10px;padding:16px;display:flex;align-items:center;gap:12px;}
-.waveform-play{width:38px;height:38px;border-radius:50%;border:none;background:var(--gold);color:var(--taupe);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
-.waveform-play:hover{background:#d4b870;}
-.waveform-visual{flex:1;height:48px;display:flex;align-items:center;gap:1.5px;}
-.waveform-bar{flex:1;border-radius:999px;background:var(--gold-bd);min-width:2px;transition:height .3s;}
-.waveform-bar.active{background:var(--plum);}
-.waveform-time{font-family:'Cinzel',serif;font-size:.65rem;color:var(--taupe-lt);white-space:nowrap;}
-
-/* ── VOICE CARDS ── */
-.voice-list{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;padding-right:2px;}
-.voice-list::-webkit-scrollbar{width:3px;}
-.voice-list::-webkit-scrollbar-thumb{background:var(--plum-bd);border-radius:999px;}
-.voice-card{padding:10px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;transition:all .18s;}
-.voice-card:hover{border-color:var(--plum-bd);background:var(--plum-lt);}
-.voice-card.selected{border-color:var(--plum);background:var(--plum-lt);}
-.vc-row{display:flex;align-items:center;justify-content:space-between;}
-.vc-name{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--taupe);}
-.vc-gender{font-size:.72rem;color:var(--taupe-lt);}
-.vc-style{font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-top:2px;}
-.vc-provider-badge{display:inline-block;padding:1px 6px;border-radius:3px;font-family:'Cinzel',serif;font-size:.48rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#fff;}
-.vc-sample-btn{width:22px;height:22px;border-radius:50%;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--plum);font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:Arial,sans-serif;flex-shrink:0;}
-.vc-sample-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
-
-/* ── SLIDERS ── */
-.slider-row{margin-bottom:14px;}
-.slider-header{display:flex;justify-content:space-between;margin-bottom:6px;}
-.slider-lbl{font-size:.8rem;color:var(--taupe-lt);}
-.slider-val{font-size:.8rem;color:var(--taupe);font-weight:700;}
-input[type=range]{width:100%;accent-color:var(--plum);cursor:pointer;}
-
-/* ── WORKFLOW STEPS ── */
-.workflow-box{background:var(--plum-lt);border:1px solid var(--plum-bd);border-radius:10px;padding:18px;}
-.workflow-title{font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;color:var(--plum);margin-bottom:14px;}
-.wf-step{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.wf-step:last-child{margin-bottom:0;}
-.wf-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;flex-shrink:0;}
-.wf-num.done{background:var(--oak-dark);color:var(--taupe-lt);}
-.wf-num.current{background:var(--plum);color:#fff;}
-.wf-num.next{background:var(--oak-dark);color:var(--taupe-lt);}
-.wf-label{font-size:.9rem;color:var(--taupe-lt);}
-.wf-label.current{color:var(--plum);font-weight:700;}
-.wf-line{width:2px;height:14px;background:var(--plum-bd);margin-left:12px;}
-
-/* ── PROGRESS BAR ── */
+/* Editor layout */
+.editor-layout{display:grid;grid-template-columns:200px 1fr 300px;gap:16px;min-height:500px;}
+@media(max-width:1000px){.editor-layout{grid-template-columns:1fr;}}
+.chapter-nav{display:flex;flex-direction:column;gap:4px;max-height:500px;overflow-y:auto;}
+.chapter-nav-item{padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;font-size:.85rem;color:var(--taupe);font-weight:600;transition:all .18s;}
+.chapter-nav-item:hover{border-color:var(--plum-bd);background:var(--plum-lt);}
+.chapter-nav-item.active{border-color:var(--plum);background:var(--plum-lt);color:var(--plum);}
+.doc-editor{width:100%;min-height:400px;max-height:600px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;}
+.doc-editor:focus{border-color:var(--gold);}
+/* Voice casting */
+.voice-cast-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){.voice-cast-row{grid-template-columns:1fr;}}
+/* Progress */
 .progress-bar{height:6px;background:var(--gold-bd);border-radius:999px;overflow:hidden;margin:8px 0;}
 .progress-fill{height:100%;background:linear-gradient(to right,var(--plum),var(--gold));border-radius:999px;transition:width .4s ease;}
-
-/* ── STATUS MSGS ── */
 .status-msg{padding:10px 14px;border-radius:8px;font-size:.88rem;margin-top:8px;display:none;}
 .status-msg.show{display:block;}
 .status-msg.ok{background:rgba(42,107,60,.08);border:1px solid rgba(42,107,60,.2);color:var(--green);}
 .status-msg.err{background:rgba(192,60,60,.08);border:1px solid rgba(192,60,60,.2);color:var(--red);}
 .status-msg.info{background:var(--plum-lt);border:1px solid var(--plum-bd);color:var(--plum);}
-
-/* ── GENERATED AUDIO ── */
 .audio-result{background:var(--oak);border:1px solid var(--gold-bd);border-radius:10px;padding:16px;}
 .audio-result-title{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--plum);margin-bottom:10px;}
 .audio-result audio{width:100%;border-radius:6px;}
 .audio-download-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-
-/* ── VOICE CLONING ── */
-.clone-upload{border:2px dashed var(--plum-bd);border-radius:12px;padding:32px 20px;text-align:center;background:var(--plum-lt);cursor:pointer;transition:all .22s;}
-.clone-upload:hover{border-color:var(--plum);background:rgba(123,92,123,.18);}
-.clone-voices-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
-.cloned-voice-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:8px;border:1px solid var(--plum-bd);background:#fff;}
-.cv-name{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--plum);}
-.cv-actions{display:flex;gap:6px;}
-.cv-btn{padding:4px 12px;border-radius:6px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-size:.78rem;cursor:pointer;transition:all .2s;}
-.cv-btn:hover{background:var(--gold);}
-
-/* ── NYXEN BUBBLE ── */
+/* Nyxen */
 .nyxen-bubble{position:fixed;bottom:24px;right:24px;width:64px;height:64px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:3px solid var(--gold);box-shadow:0 6px 24px rgba(0,0,0,.3);cursor:pointer;z-index:9999;transition:transform .2s;}
 .nyxen-bubble:hover{transform:scale(1.08);}
 .nyxen-bubble-label{position:fixed;bottom:94px;right:18px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;color:var(--gold);z-index:9999;pointer-events:none;}
@@ -201,61 +112,26 @@ input[type=range]{width:100%;accent-color:var(--plum);cursor:pointer;}
 .nyxen-close{cursor:pointer;font-size:1rem;color:rgba(255,255,255,.7);padding:4px 8px;border-radius:6px;border:none;background:none;margin-left:auto;}
 .nyxen-close:hover{color:#fff;}
 .nyxen-feed{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;}
-.nyxen-feed::-webkit-scrollbar{width:3px;}
-.nyxen-feed::-webkit-scrollbar-thumb{background:var(--plum-bd);border-radius:999px;}
 .nmsg{padding:9px 12px;border-radius:10px;font-size:.88rem;line-height:1.55;max-width:88%;}
 .nmsg.ai{background:var(--plum-lt);border:1px solid var(--plum-bd);color:var(--taupe);align-self:flex-start;border-bottom-left-radius:3px;}
 .nmsg.ai .nlbl{font-size:.57rem;letter-spacing:.14em;color:var(--plum);margin-bottom:3px;font-weight:700;font-family:'Cinzel',serif;}
-.nmsg.ai .md-content h1,.nmsg.ai .md-content h2,.nmsg.ai .md-content h3{font-family:'Cinzel',serif;color:var(--plum);margin:8px 0 4px;font-size:.9rem;}
-.nmsg.ai .md-content p{margin-bottom:6px;}
-.nmsg.ai .md-content ul,.nmsg.ai .md-content ol{padding-left:16px;margin:4px 0;}
-.nmsg.ai .md-content strong{font-weight:700;}
 .nmsg.user{background:var(--gold-lt);border:1px solid var(--gold-bd);color:var(--taupe);align-self:flex-end;border-bottom-right-radius:3px;}
-.typing-dots{display:inline-flex;gap:3px;align-items:center;}
-.typing-dots span{width:5px;height:5px;border-radius:50%;background:var(--plum);animation:tb 1.2s ease-in-out infinite;}
-.typing-dots span:nth-child(2){animation-delay:.2s;}
-.typing-dots span:nth-child(3){animation-delay:.4s;}
-@keyframes tb{0%,80%,100%{transform:translateY(0);opacity:.4;}40%{transform:translateY(-5px);opacity:1;}}
 .nyxen-input-wrap{display:flex;align-items:flex-end;gap:6px;padding:10px 12px;border-top:1px solid var(--gold-bd);background:rgba(251,247,242,.95);flex-shrink:0;}
 .nyxen-tbox{flex:1;min-height:36px;max-height:80px;padding:7px 10px;border-radius:8px;border:1px solid var(--gold-bd);font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--taupe);background:#fff;outline:none;resize:none;line-height:1.4;}
 .nyxen-tbox:focus{border-color:var(--gold);}
 .nyxen-send{width:32px;height:32px;border-radius:7px;border:none;background:var(--gold);color:var(--taupe);font-size:.85rem;cursor:pointer;flex-shrink:0;font-weight:700;transition:all .18s;}
 .nyxen-send:hover{background:#d4b870;}
-
-/* ── FOOTER ── */
 .footer{border-top:1px solid var(--gold-bd);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;}
 .footer a{font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;transition:color .2s;}
 .footer a:hover{color:var(--gold);}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){.banner-img{height:220px;}.title-voice{font-size:28px;}.title-studio{font-size:36px;}.page-wrap{padding:16px 14px 40px;}.studio-grid{grid-template-columns:1fr;}.tab-btn{padding:8px 14px;font-size:.64rem;}}
-
-/* ── AUTH WIDGET ── */
-.auth-widget{position:relative;display:flex;align-items:center;}
-.auth-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7B5C7B,#5a3d5a);border:2px solid #C9A961;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;color:#e8c97a;cursor:pointer;transition:all .2s;flex-shrink:0;}
-.auth-avatar:hover{transform:scale(1.05);}
-.auth-name-tag{font-family:'Cinzel',serif;font-size:.6rem;font-weight:600;color:rgba(232,201,122,.9);margin-left:6px;cursor:pointer;white-space:nowrap;}
-.auth-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border:1px solid rgba(201,169,97,.3);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,.2);min-width:200px;overflow:hidden;display:none;z-index:9999;}
-.auth-dropdown.open{display:block;}
-.auth-dd-header{padding:12px 14px;background:linear-gradient(135deg,#1a0f08,#2c1810);border-bottom:1px solid rgba(201,169,97,.2);}
-.auth-dd-name{font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;color:#fff;margin-bottom:2px;}
-.auth-dd-email{font-size:.7rem;color:rgba(255,255,255,.5);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.auth-dd-tier{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:999px;font-family:'Cinzel',serif;font-size:.52rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(201,169,97,.2);border:1px solid rgba(201,169,97,.3);color:#e8c97a;}
-.auth-dd-item{display:flex;align-items:center;gap:8px;padding:9px 14px;font-family:'Cinzel',serif;font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#2c1810;text-decoration:none;transition:background .18s;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
-.auth-dd-item:hover{background:rgba(201,169,97,.1);}
-.auth-dd-item.danger{color:#7a2638;}
-.auth-dd-divider{height:1px;background:rgba(201,169,97,.15);margin:4px 0;}
-
+@media(max-width:768px){.banner-img{height:220px;}.title-voice{font-size:28px;}.title-studio{font-size:36px;}.page-wrap{padding:16px 14px 40px;}.editor-layout{grid-template-columns:1fr;}.tab-btn{padding:8px 14px;font-size:.64rem;}}
 </style>
 </head>
 <body>
 
 <!-- BANNER -->
 <div class="banner">
-  <img class="banner-img"
-    src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png"
-    alt="Voice Studio"
-    onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');"/>
+  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');"/>
   <div class="title-block">
     <div class="title-voice">VOICE</div>
     <div class="title-studio">Studio</div>
@@ -263,214 +139,177 @@ input[type=range]{width:100%;accent-color:var(--plum);cursor:pointer;}
     <div class="gold-wave"></div>
   </div>
   <nav class="nav-top">
-    <button class="nt-btn" onclick="location.href='https://creatives.smcantrellbooks.com'">&#127968; Home</button>
-    <button class="nt-btn" onclick="location.href='https://creatives.smcantrellbooks.com/my-account'">My Account</button>
-    <button class="nt-btn login" onclick="location.href='https://creatives.smcantrellbooks.com/login'">Log In</button>
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#127968; Home</a>
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/my-account">My Account</a>
+    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
   </nav>
   <nav class="nav-bot">
     <div class="nb-inner">
-      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/studio_new.html'">&#127916; Studio</button>
-      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/publisher.html'">&#9997;&#65039; Publisher</button>
-      <button class="nb-btn" onclick="location.href='https://smcantrellbooks.com/collections'">&#128218; Collections</button>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">&#127916; Studio</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#9997;&#65039; Publisher</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">&#128218; Collections</a>
+      <a class="nb-btn" href="https://smcantrellbooks.com">&#127758; Main Site</a>
     </div>
   </nav>
 </div>
 <div class="gold-line"></div>
 
-<!-- BREADCRUMB -->
-<div class="breadcrumb">
-  <a class="bc-item" href="https://creatives.smcantrellbooks.com/studio_new.html">Studio</a>
-  <span class="bc-arrow">&#8250;</span>
-  <a class="bc-item" href="https://creatives.smcantrellbooks.com/publisher.html">Publisher's Workspace</a>
-  <span class="bc-arrow">&#8250;</span>
-  <span class="bc-item active">Voice Studio</span>
-  <span class="bc-arrow">&#8250;</span>
-  <a class="bc-item" href="https://smcantrellbooks.com/collections">Collections</a>
-</div>
-
-<!-- PAGE -->
 <div class="page-wrap">
-
-  <!-- PAGE HEADER -->
   <div style="margin-bottom:24px;">
     <h1 style="font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--plum);margin-bottom:6px;">Voice Studio</h1>
-    <p style="font-size:1rem;color:var(--taupe-lt);font-style:italic;">Clone voices, generate narration, and produce full audiobooks from your manuscripts. Available to Publication tier members.</p>
+    <p style="font-size:1rem;color:var(--taupe-lt);font-style:italic;">Upload your manuscript, edit chapters, cast voices, and generate your audiobook.</p>
   </div>
 
-  <!-- TABS -->
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('audiobook',this)">&#127911; Audiobook Generator</button>
     <button class="tab-btn" onclick="switchTab('clone',this)">&#127908; Voice Cloning</button>
     <button class="tab-btn" onclick="switchTab('tts',this)">&#128263; Text to Speech</button>
   </div>
 
-  <!-- ═══════════════════════════════════ -->
-  <!-- TAB: AUDIOBOOK GENERATOR           -->
-  <!-- ═══════════════════════════════════ -->
+  <!-- ══════════════════════════════════════ -->
+  <!-- TAB: AUDIOBOOK GENERATOR (NEW LAYOUT) -->
+  <!-- ══════════════════════════════════════ -->
   <div class="tab-content active" id="tab-audiobook">
-    <div class="studio-grid">
 
-      <!-- LEFT COLUMN -->
+    <!-- EDITOR: Import + Edit area (full document) -->
+    <div class="panel" style="padding:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#9998; Document Editor</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('fileInput').click()">&#128229; Import DOCX</button>
+          <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearEditor()">&#128465; Clear</button>
+          <button class="btn-gold" style="padding:6px 14px;font-size:.78rem;" onclick="exportToAudio()">&#10148; Export Chapters to Audio</button>
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept=".txt,.docx" hidden onchange="handleFileUpload(event)"/>
+      <div id="uploadStatus" class="status-msg"></div>
+      <div class="doc-editor" id="docEditor" contenteditable="true" style="min-height:500px;max-height:700px;background:#fff;" ondragover="event.preventDefault();this.style.borderColor='var(--plum)';" ondragleave="this.style.borderColor='var(--gold-bd)';" ondrop="handleEditorDrop(event)">Start typing or import a DOCX file...</div>
+    </div>
+
+    <!-- MAIN DOCUMENT: Chapters for audio (with chapter nav + voice casting) -->
+    <div class="panel" style="margin-top:16px;">
+      <div class="inp-grid">
+        <div><label class="lbl">Book Title</label><input class="inp" type="text" id="bookTitle" placeholder="Your Book Title"/></div>
+        <div><label class="lbl">Author Name</label><input class="inp" type="text" id="authorName" placeholder="S.M. Cantrell"/></div>
+      </div>
+    </div>
+    <div class="editor-layout" style="margin-top:16px;">
+
+      <!-- LEFT: Chapter Navigation -->
       <div>
-
-        <!-- UPLOAD PANEL -->
-        <div class="panel">
-          <div class="panel-title"><span class="panel-icon">&#128229;</span> Upload Manuscript</div>
-          <div class="upload-zone" id="uploadZone"
-            onclick="document.getElementById('fileInput').click()"
-            ondragover="event.preventDefault();this.classList.add('drag-over')"
-            ondragleave="this.classList.remove('drag-over')"
-            ondrop="handleDrop(event)">
-            <div class="upload-icon">&#128196;</div>
-            <div class="upload-title">Drop your ePub, DOCX or TXT here</div>
-            <div class="upload-sub">or import directly from Publisher's Workspace</div>
-            <div class="upload-btns">
-              <button class="btn-sec" onclick="event.stopPropagation();document.getElementById('fileInput').click()">&#128193; Browse Files</button>
-              <button class="btn-sec" onclick="event.stopPropagation();importFromWorkspace()">&#9997;&#65039; Import from Workspace</button>
-            </div>
-          </div>
-          <input type="file" id="fileInput" accept=".txt,.epub,.docx" hidden onchange="handleFileUpload(event)"/>
-          <div class="inp-grid">
-            <div><label class="lbl">Book Title</label><input class="inp" type="text" id="bookTitle" placeholder="Your Book Title"/></div>
-            <div><label class="lbl">Author Name</label><input class="inp" type="text" id="authorName" placeholder="S.M. Cantrell"/></div>
-          </div>
-          <div id="uploadStatus" class="status-msg"></div>
-        </div>
-
-        <!-- CHAPTER PREVIEW -->
-        <div class="panel">
-          <div class="panel-title"><span class="panel-icon">&#128218;</span> Chapter Preview</div>
-          <div class="chapter-list" id="chapterList">
-            <div style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px;">Upload a manuscript to see chapters here.</div>
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#128218;</span> Chapters</div>
+          <div class="chapter-nav" id="chapterNav">
+            <div style="font-size:.82rem;color:var(--taupe-lt);font-style:italic;padding:10px 0;text-align:center;">Export chapters from the editor above.</div>
           </div>
         </div>
+      </div>
 
-        <!-- AUDIO PREVIEW -->
-        <div class="panel">
-          <div class="panel-title"><span class="panel-icon">&#127911;</span> Audio Preview</div>
-          <div class="waveform-box">
-            <button class="waveform-play" id="previewPlayBtn" onclick="togglePreviewPlay()">&#x25B6;</button>
-            <div class="waveform-visual" id="waveformVisual"></div>
-            <div class="waveform-time" id="waveformTime">0:00 / 0:00</div>
-          </div>
-          <audio id="previewAudio" style="display:none;" onended="resetPreviewPlay()"></audio>
-          <div id="audioResultBox" style="display:none;">
-            <div class="audio-result" style="margin-top:8px;">
-              <div class="audio-result-title">&#10003; Audiobook Generated</div>
-              <audio id="generatedAudio" controls style="width:100%;margin-top:8px;"></audio>
-              <div class="audio-download-row">
-                <button class="btn-gold" onclick="downloadAudio()">&#11015; Download MP3</button>
-                <button class="btn-sec" onclick="sendToCollections()">&#128218; Send to Collections</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /left column -->
-
-      <!-- RIGHT COLUMN — SIDEBAR -->
+      <!-- CENTER: Main Document for Audio -->
       <div>
-
-        <!-- NARRATOR VOICE -->
-        <div class="panel">
-          <div class="panel-title"><span class="panel-icon">&#127908;</span> Narrator Voice</div>
-          <div class="voice-list" id="voiceList"></div>
-          <button class="btn-plum" style="width:100%;margin-top:4px;" onclick="switchTab('clone',document.querySelector('.tab-btn:nth-child(2)'))">&#127908; Use Cloned Voice</button>
+        <div class="panel" style="padding:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
+            <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#128218; Main Document — Ready for Audio</div>
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearMainDoc()">&#128465; Clear</button>
+          </div>
+          <div class="doc-editor" id="mainDocEditor" contenteditable="true" style="min-height:500px;max-height:700px;background:#fff;">Export chapters from the editor above to populate this document for audio generation.</div>
+          <div style="font-size:.75rem;color:var(--taupe-lt);font-style:italic;margin-top:4px;">This is the final document sent to the audio engine. You can still edit here before generating.</div>
         </div>
+      </div>
 
-        <!-- VOICE SETTINGS -->
-        <div class="panel">
-          <div class="panel-title"><span class="panel-icon">&#9881;&#65039;</span> Voice Settings</div>
+      <!-- RIGHT: Voice Casting + Generate -->
+      <div>
+        <div class="panel" style="padding:14px;">
+          <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#127908;</span> Voice Casting</div>
 
-          <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-lbl">Stability</span>
-              <span class="slider-val" id="stabilityVal">50%</span>
+          <!-- RADIO BUTTONS: Mode Selection -->
+          <div style="margin-bottom:12px;">
+            <label class="lbl">Voice Mode</label>
+            <div style="display:flex;gap:16px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:.88rem;cursor:pointer;color:var(--taupe);"><input type="radio" name="castMode" value="char_char" checked onchange="onCastModeChange()"/> Character + Character</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:.88rem;cursor:pointer;color:var(--taupe);"><input type="radio" name="castMode" value="narr_char" onchange="onCastModeChange()"/> Narrator + Character</label>
             </div>
-            <input type="range" min="0" max="100" value="50" oninput="document.getElementById('stabilityVal').textContent=this.value+'%'"/>
-          </div>
-          <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-lbl">Similarity</span>
-              <span class="slider-val" id="similarityVal">75%</span>
-            </div>
-            <input type="range" min="0" max="100" value="75" oninput="document.getElementById('similarityVal').textContent=this.value+'%'"/>
-          </div>
-          <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-lbl">Speed</span>
-              <span class="slider-val" id="speedVal">100%</span>
-            </div>
-            <input type="range" min="70" max="130" value="100" oninput="document.getElementById('speedVal').textContent=this.value+'%'"/>
           </div>
 
-          <div style="margin-top:4px;">
+          <!-- VOICE 1 -->
+          <div>
+            <label class="lbl">Voice 1 — Engine</label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;" id="engine1Btns">
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(1,'kokoro82m',this)">Kokoro 82M</button>
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(1,'piper',this)">Piper</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <select class="inp" id="voice1Select" style="font-size:.9rem;padding:8px 10px;flex:1;"></select>
+              <button class="btn-plum" style="padding:8px 12px;font-size:.78rem;white-space:nowrap;" onclick="previewVoice(1)">&#9654; Preview</button>
+            </div>
+          </div>
+
+          <!-- VOICE 2 -->
+          <div style="margin-top:10px;">
+            <label class="lbl">Voice 2 — Engine</label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;" id="engine2Btns">
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(2,'kokoro82m',this)">Kokoro 82M</button>
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectEngine(2,'piper',this)">Piper</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <select class="inp" id="voice2Select" style="font-size:.9rem;padding:8px 10px;flex:1;"></select>
+              <button class="btn-plum" style="padding:8px 12px;font-size:.78rem;white-space:nowrap;" onclick="previewVoice(2)">&#9654; Preview</button>
+            </div>
+          </div>
+
+          <!-- CHARACTER NAME INPUTS (dynamic) -->
+          <div id="nameFields" style="margin-top:12px;">
+            <div class="inp-grid">
+              <div><label class="lbl" id="name1Label">Character 1 Name</label><input class="inp" type="text" id="name1Input" placeholder="e.g. Marcus"/></div>
+              <div><label class="lbl" id="name2Label">Character 2 Name</label><input class="inp" type="text" id="name2Input" placeholder="e.g. Aria"/></div>
+            </div>
+          </div>
+
+          <div id="voiceCastInfo" style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-top:8px;padding:6px 8px;background:var(--gold-lt);border-radius:6px;">
+            Character + Character: Voice 1 handles narration + Character 1 dialogue. Voice 2 handles Character 2 dialogue.
+          </div>
+
+          <div style="margin-top:10px;">
             <label class="lbl">TTS Provider</label>
             <select class="inp" id="ttsProvider" style="font-size:.9rem;padding:8px 10px;">
-              <option value="render">Kokoro TTS (Render) — Recommended</option>
+              <option value="render">Kokoro TTS (Render)</option>
               <option value="kokoro82m">Kokoro 82M (Local)</option>
               <option value="piper">Piper TTS (Local)</option>
             </select>
           </div>
 
-          <div style="margin-top:8px;">
-            <div style="display:flex;gap:16px;margin-bottom:10px;">
-              <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer;color:var(--taupe);"><input type="radio" name="voiceMode" value="single" checked onchange="onVoiceModeChange()"/> Single Voice</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer;color:var(--taupe);"><input type="radio" name="voiceMode" value="dual" onchange="onVoiceModeChange()"/> Dual Voice</label>
-            </div>
-            <div id="dualVoicePanel" style="display:none;flex-direction:column;gap:10px;">
-              <div>
-                <label class="lbl">Narrator Voice</label>
-                <select class="inp" id="narratorVoiceSelect" style="font-size:.9rem;padding:8px 10px;"></select>
-              </div>
-              <div>
-                <label class="lbl">Character Voice</label>
-                <select class="inp" id="characterVoiceSelect" style="font-size:.9rem;padding:8px 10px;"></select>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- GENERATE -->
-        <div class="panel">
-          <button class="btn-generate" id="generateBtn" onclick="generateAudiobook()">
-            &#127911; Generate Audiobook
-          </button>
-          <p style="font-size:.75rem;color:var(--taupe-lt);text-align:center;font-style:italic;">Publication tier required for full audiobook generation</p>
+        <div class="panel" style="padding:14px;">
+          <button class="btn-generate" id="generateBtn" onclick="generateAudiobook()">&#127911; Generate Audiobook</button>
           <div class="progress-bar" id="genProgress" style="display:none;"><div class="progress-fill" id="genProgressFill" style="width:0%;"></div></div>
           <div id="genStatus" class="status-msg"></div>
-        </div>
-
-        <!-- WORKFLOW -->
-        <div class="panel">
-          <div class="workflow-box">
-            <div class="workflow-title">&#9654; Pipeline Workflow</div>
-            <div class="wf-step"><div class="wf-num done">1</div><span class="wf-label">Write &amp; Edit</span></div>
-            <div class="wf-line"></div>
-            <div class="wf-step"><div class="wf-num current">2</div><span class="wf-label current">Voice Studio</span></div>
-            <div class="wf-line"></div>
-            <div class="wf-step"><div class="wf-num next">3</div><span class="wf-label">Publish to Collections</span></div>
-            <button class="btn-gold" style="width:100%;margin-top:14px;" onclick="location.href='https://smcantrellbooks.com/collections'">Next: Collections &#8594;</button>
+          <div id="audioResultBox">
+            <div class="audio-result" style="margin-top:8px;">
+              <div class="audio-result-title">&#127911; Audio Player</div>
+              <audio id="generatedAudio" controls style="width:100%;margin-top:8px;"></audio>
+              <div class="audio-download-row">
+                <button class="btn-gold" onclick="downloadAudio()">&#11015; Download MP3</button>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-      </div><!-- /right column -->
-    </div>
-  </div>
+    </div><!-- /editor-layout -->
 
-  <!-- ═══════════════════════════════════ -->
-  <!-- TAB: VOICE CLONING                 -->
-  <!-- ═══════════════════════════════════ -->
+  </div><!-- /tab-audiobook -->
+
+  <!-- TAB: VOICE CLONING -->
   <div class="tab-content" id="tab-clone">
     <div style="max-width:800px;margin:0 auto;">
-
       <div class="panel">
         <div class="panel-title"><span class="panel-icon">&#127908;</span> Clone Your Voice</div>
-        <p style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">Upload a clear audio sample (at least 30 seconds) to create a custom voice clone for narration and character dialogue.</p>
-        <div class="clone-upload" onclick="document.getElementById('cloneAudioInput').click()">
+        <p style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">Upload a clear audio sample (at least 30 seconds) to create a custom voice clone.</p>
+        <div class="upload-zone" onclick="document.getElementById('cloneAudioInput').click()">
           <div style="font-size:2.5rem;color:var(--plum);margin-bottom:12px;">&#127908;</div>
-          <div style="font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--taupe);margin-bottom:6px;">Drop audio file here</div>
-          <div style="font-size:.85rem;color:var(--taupe-lt);">WAV, MP3, M4A &mdash; minimum 30 seconds, recommended 3&ndash;5 minutes</div>
+          <div class="upload-title">Drop audio file here</div>
+          <div class="upload-sub">WAV, MP3, M4A &mdash; minimum 30 seconds</div>
         </div>
         <input type="file" id="cloneAudioInput" accept=".wav,.mp3,.m4a" hidden onchange="handleCloneUpload(event)"/>
         <div class="btn-row">
@@ -479,75 +318,29 @@ input[type=range]{width:100%;accent-color:var(--plum);cursor:pointer;}
         </div>
         <div id="cloneStatus" class="status-msg"></div>
       </div>
-
       <div class="panel">
         <div class="panel-title"><span class="panel-icon">&#127911;</span> Your Cloned Voices</div>
-        <div class="clone-voices-list" id="clonedVoicesList">
-          <div style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px 0;">No cloned voices yet. Upload an audio sample to get started.</div>
-        </div>
+        <div id="clonedVoicesList"><div style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px 0;">No cloned voices yet.</div></div>
       </div>
-
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════ -->
-  <!-- TAB: TEXT TO SPEECH                -->
-  <!-- ═══════════════════════════════════ -->
+  <!-- TAB: TEXT TO SPEECH -->
   <div class="tab-content" id="tab-tts">
     <div style="max-width:800px;margin:0 auto;">
-
       <div class="panel">
         <div class="panel-title"><span class="panel-icon">&#128263;</span> Text to Speech</div>
-        <p style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">Convert any text to natural speech. Perfect for previewing narration styles before generating a full audiobook.</p>
-        <div>
-          <label class="lbl">Text to Convert</label>
-          <textarea class="inp" id="ttsText" rows="5" placeholder="Enter text to convert to speech…"></textarea>
-        </div>
+        <p style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">Convert any text to natural speech.</p>
+        <div><label class="lbl">Text to Convert</label><textarea class="inp" id="ttsText" rows="5" placeholder="Enter text to convert to speech..."></textarea></div>
         <div class="inp-grid">
           <div>
+            <label class="lbl">Engine</label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;" id="ttsEngineBtns">
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectTtsEngine('kokoro82m',this)">Kokoro 82M</button>
+              <button class="btn-sec" style="padding:6px 14px;font-size:.8rem;" onclick="selectTtsEngine('piper',this)">Piper</button>
+            </div>
             <label class="lbl">Voice</label>
-            <select class="inp" id="ttsVoice" style="font-size:.9rem;padding:8px 10px;">
-              <optgroup label="Kokoro 82M — American Female">
-                <option value="af_alloy">Alloy — Versatile &amp; Clear (F)</option>
-                <option value="af_aoede">Aoede — Melodic &amp; Warm (F)</option>
-                <option value="af_bella" selected>Bella — Soft &amp; Narrative (F)</option>
-                <option value="af_heart">Heart — Warm &amp; Expressive (F)</option>
-                <option value="af_jessica">Jessica — Friendly &amp; Natural (F)</option>
-                <option value="af_kore">Kore — Youthful &amp; Bright (F)</option>
-                <option value="af_nicole">Nicole — Smooth &amp; Confident (F)</option>
-                <option value="af_nova">Nova — Modern &amp; Engaging (F)</option>
-                <option value="af_river">River — Calm &amp; Flowing (F)</option>
-                <option value="af_sarah">Sarah — Classic &amp; Warm (F)</option>
-                <option value="af_sky">Sky — Light &amp; Airy (F)</option>
-              </optgroup>
-              <optgroup label="Kokoro 82M — American Male">
-                <option value="am_adam">Adam — Natural &amp; Clear (M)</option>
-                <option value="am_echo">Echo — Resonant &amp; Deep (M)</option>
-                <option value="am_eric">Eric — Steady &amp; Authoritative (M)</option>
-                <option value="am_fenrir">Fenrir — Bold &amp; Dramatic (M)</option>
-                <option value="am_liam">Liam — Friendly &amp; Warm (M)</option>
-                <option value="am_michael">Michael — Rich &amp; Narrative (M)</option>
-                <option value="am_onyx">Onyx — Deep &amp; Smooth (M)</option>
-                <option value="am_puck">Puck — Playful &amp; Energetic (M)</option>
-                <option value="am_santa">Santa — Jolly &amp; Warm (M)</option>
-              </optgroup>
-              <optgroup label="Kokoro 82M — British Female">
-                <option value="bf_alice">Alice — British &amp; Elegant (F)</option>
-                <option value="bf_emma">Emma — British &amp; Warm (F)</option>
-                <option value="bf_isabella">Isabella — British &amp; Refined (F)</option>
-                <option value="bf_lily">Lily — British &amp; Bright (F)</option>
-              </optgroup>
-              <optgroup label="Kokoro 82M — British Male">
-                <option value="bm_daniel">Daniel — British &amp; Classic (M)</option>
-                <option value="bm_fable">Fable — British &amp; Storytelling (M)</option>
-                <option value="bm_george">George — British &amp; Authoritative (M)</option>
-                <option value="bm_lewis">Lewis — British &amp; Refined (M)</option>
-              </optgroup>
-              <optgroup label="Piper TTS">
-                <option value="en_US-lessac-medium">Lessac — American Neutral (M)</option>
-                <option value="en_US-libritts-high">LibriTTS — American Clear (F)</option>
-              </optgroup>
-            </select>
+            <select class="inp" id="ttsVoice" style="font-size:.9rem;padding:8px 10px;"></select>
           </div>
           <div>
             <label class="lbl">Provider</label>
@@ -561,597 +354,667 @@ input[type=range]{width:100%;accent-color:var(--plum);cursor:pointer;}
         <button class="btn-gold" onclick="generateTTS()">&#9654; Generate Speech</button>
         <div id="ttsStatus" class="status-msg"></div>
       </div>
-
       <div class="panel">
         <div class="panel-title"><span class="panel-icon">&#127911;</span> Generated Audio</div>
-        <div id="ttsAudioBox" style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px 0;">No audio generated yet. Enter text above and click generate.</div>
+        <div id="ttsAudioBox" style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px 0;">No audio generated yet.</div>
       </div>
-
     </div>
   </div>
 
 </div><!-- /page-wrap -->
 
-<!-- FOOTER -->
 <footer class="footer">
   <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Publishing Terms</a> &middot;
   <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure">Audio Disclosures</a> &middot;
   <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy">Our Philosophy</a>
 </footer>
 
-<!-- NYXEN BUBBLE -->
+<!-- NYXEN -->
 <div class="nyxen-bubble" onclick="toggleNyxen()" title="Chat with Nyxen"></div>
 <div class="nyxen-bubble-label">Nyxen</div>
 <div class="nyxen-panel" id="nyxenPanel">
-  <div class="nyxen-hdr">
-    <div class="nyxen-av"></div>
-    <div>
-      <div class="nyxen-hdr-title">Nyxen</div>
-      <div class="nyxen-hdr-status" id="nyxenStatus">Your creative assistant</div>
-    </div>
-    <button class="nyxen-close" onclick="toggleNyxen()">&#10005;</button>
-  </div>
+  <div class="nyxen-hdr"><div class="nyxen-av"></div><div><div class="nyxen-hdr-title">Nyxen</div><div class="nyxen-hdr-status" id="nyxenStatus">Your creative assistant</div></div><button class="nyxen-close" onclick="toggleNyxen()">&#10005;</button></div>
   <div class="nyxen-feed" id="nyxenFeed"></div>
   <div class="nyxen-input-wrap">
-    <textarea class="nyxen-tbox" id="nyxenInput" placeholder="Ask Nyxen…" rows="1" onkeydown="nyxenKey(event)" oninput="autoResize(this)"></textarea>
+    <textarea class="nyxen-tbox" id="nyxenInput" placeholder="Ask Nyxen..." rows="1" onkeydown="nyxenKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="nyxen-send" id="nyxenMicBtn" onclick="toggleNyxenMic()" title="Voice input" style="background:var(--gold-lt);color:var(--plum);border:1px solid var(--gold-bd);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </button>
+    <button class="nyxen-send" id="nyxenVoiceBtn" onclick="toggleNyxenVoice()" title="Voice playback" style="background:var(--gold-lt);color:var(--plum);border:1px solid var(--gold-bd);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+    </button>
     <button class="nyxen-send" onclick="nyxenSend()">&#10148;</button>
   </div>
 </div>
 
 <script>
-// ── CONFIG ──
-const NYXEN_WORKER  = 'https://nyxen-video-worker.smcantrellbooks.workers.dev/chat';
-const RENDER_URL    = 'https://audiobook-creator.onrender.com';
-const WORKER_BASE   = 'https://nyxen-video-worker.smcantrellbooks.workers.dev';
+var GRADIO_BASE = 'https://audiobook-creator.onrender.com';
+var TTS_PROXY_URL = 'https://cantrell-creatives.vercel.app/api/tts-preview';
 
-// ── VOICES — Kokoro-82M (28 voices) + Piper (2 voices) ──
+async function gradioCall(endpoint, dataArray) {
+  var resp = await fetch(GRADIO_BASE + '/run/' + endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: dataArray })
+  });
+  if (!resp.ok) {
+    var errText = await resp.text();
+    throw new Error('Gradio ' + endpoint + ' failed (' + resp.status + '): ' + errText.substring(0, 200));
+  }
+  var json = await resp.json();
+  if (json.error) throw new Error(json.error);
+  return json.data;
+}
+
+async function ttsProxyCall(text, voiceId) {
+  var resp = await fetch(TTS_PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      text: text.substring(0, 2000),
+      voice: voiceId,
+      model: 'hexgrad/kokoro-tts/american-english'
+    })
+  });
+  if (!resp.ok) throw new Error('TTS proxy returned ' + resp.status);
+  var ct = resp.headers.get('content-type') || '';
+  if (ct.includes('audio') || ct.includes('octet')) {
+    return URL.createObjectURL(await resp.blob());
+  }
+  var errData = await resp.json();
+  throw new Error(errData.error || 'No audio returned');
+}
+
+function deriveNarratorGender(voiceId) {
+  if (!voiceId) return 'female';
+  var prefix = voiceId.substring(0, 3);
+  return (prefix === 'am_' || prefix === 'bm_') ? 'male' : 'female';
+}
+
+function deriveVoiceType(voice1Id, voice2Id) {
+  if (!voice2Id || voice1Id === voice2Id) return 'Single Voice';
+  return 'Multi-Voice';
+}
+
+// ── VOICES: Kokoro-82M (28) + Piper (2) ──
 var VOICES = [
-  // ── Kokoro-82M: American Female (af_) ──
-  { id:'af_alloy',   name:'Alloy',    style:'Versatile & Clear',     gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_aoede',   name:'Aoede',    style:'Melodic & Warm',        gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_bella',   name:'Bella',    style:'Soft & Narrative',      gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_heart',   name:'Heart',    style:'Warm & Expressive',     gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_jessica', name:'Jessica',  style:'Friendly & Natural',    gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_kore',    name:'Kore',     style:'Youthful & Bright',     gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_nicole',  name:'Nicole',   style:'Smooth & Confident',    gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_nova',    name:'Nova',     style:'Modern & Engaging',     gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_river',   name:'River',    style:'Calm & Flowing',        gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_sarah',   name:'Sarah',    style:'Classic & Warm',        gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'af_sky',     name:'Sky',      style:'Light & Airy',          gender:'Female', provider:'kokoro82m', sample:'' },
-  // ── Kokoro-82M: American Male (am_) ──
-  { id:'am_adam',    name:'Adam',     style:'Natural & Clear',       gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_echo',    name:'Echo',     style:'Resonant & Deep',       gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_eric',    name:'Eric',     style:'Steady & Authoritative',gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_fenrir',  name:'Fenrir',   style:'Bold & Dramatic',       gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_liam',    name:'Liam',     style:'Friendly & Warm',       gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_michael', name:'Michael',  style:'Rich & Narrative',      gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_onyx',    name:'Onyx',     style:'Deep & Smooth',         gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_puck',    name:'Puck',     style:'Playful & Energetic',   gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'am_santa',   name:'Santa',    style:'Jolly & Warm',          gender:'Male',   provider:'kokoro82m', sample:'' },
-  // ── Kokoro-82M: British Female (bf_) ──
-  { id:'bf_alice',    name:'Alice',    style:'British & Elegant',     gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'bf_emma',     name:'Emma',     style:'British & Warm',        gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'bf_isabella', name:'Isabella', style:'British & Refined',     gender:'Female', provider:'kokoro82m', sample:'' },
-  { id:'bf_lily',     name:'Lily',     style:'British & Bright',      gender:'Female', provider:'kokoro82m', sample:'' },
-  // ── Kokoro-82M: British Male (bm_) ──
-  { id:'bm_daniel',  name:'Daniel',   style:'British & Classic',     gender:'Male',   provider:'kokoro82m', sample:'' },
-  { id:'bm_fable',   name:'Fable',    style:'British & Storytelling', gender:'Male',  provider:'kokoro82m', sample:'' },
-  { id:'bm_george',  name:'George',   style:'British & Authoritative',gender:'Male',  provider:'kokoro82m', sample:'' },
-  { id:'bm_lewis',   name:'Lewis',    style:'British & Refined',     gender:'Male',   provider:'kokoro82m', sample:'' },
-  // ── Piper TTS ──
-  { id:'en_US-lessac-medium',  name:'Lessac',   style:'American Neutral',  gender:'Male',   provider:'piper', sample:'' },
-  { id:'en_US-libritts-high',  name:'LibriTTS',  style:'American Clear',   gender:'Female', provider:'piper', sample:'' },
+  {id:'af_alloy',name:'Alloy',style:'Versatile & Clear',gender:'F',provider:'kokoro82m'},
+  {id:'af_aoede',name:'Aoede',style:'Melodic & Warm',gender:'F',provider:'kokoro82m'},
+  {id:'af_bella',name:'Bella',style:'Soft & Narrative',gender:'F',provider:'kokoro82m'},
+  {id:'af_heart',name:'Heart',style:'Warm & Expressive',gender:'F',provider:'kokoro82m'},
+  {id:'af_jessica',name:'Jessica',style:'Friendly & Natural',gender:'F',provider:'kokoro82m'},
+  {id:'af_kore',name:'Kore',style:'Youthful & Bright',gender:'F',provider:'kokoro82m'},
+  {id:'af_nicole',name:'Nicole',style:'Smooth & Confident',gender:'F',provider:'kokoro82m'},
+  {id:'af_nova',name:'Nova',style:'Modern & Engaging',gender:'F',provider:'kokoro82m'},
+  {id:'af_river',name:'River',style:'Calm & Flowing',gender:'F',provider:'kokoro82m'},
+  {id:'af_sarah',name:'Sarah',style:'Classic & Warm',gender:'F',provider:'kokoro82m'},
+  {id:'af_sky',name:'Sky',style:'Light & Airy',gender:'F',provider:'kokoro82m'},
+  {id:'am_adam',name:'Adam',style:'Natural & Clear',gender:'M',provider:'kokoro82m'},
+  {id:'am_echo',name:'Echo',style:'Resonant & Deep',gender:'M',provider:'kokoro82m'},
+  {id:'am_eric',name:'Eric',style:'Steady & Authoritative',gender:'M',provider:'kokoro82m'},
+  {id:'am_fenrir',name:'Fenrir',style:'Bold & Dramatic',gender:'M',provider:'kokoro82m'},
+  {id:'am_liam',name:'Liam',style:'Friendly & Warm',gender:'M',provider:'kokoro82m'},
+  {id:'am_michael',name:'Michael',style:'Rich & Narrative',gender:'M',provider:'kokoro82m'},
+  {id:'am_onyx',name:'Onyx',style:'Deep & Smooth',gender:'M',provider:'kokoro82m'},
+  {id:'am_puck',name:'Puck',style:'Playful & Energetic',gender:'M',provider:'kokoro82m'},
+  {id:'am_santa',name:'Santa',style:'Jolly & Warm',gender:'M',provider:'kokoro82m'},
+  {id:'bf_alice',name:'Alice',style:'British & Elegant',gender:'F',provider:'kokoro82m'},
+  {id:'bf_emma',name:'Emma',style:'British & Warm',gender:'F',provider:'kokoro82m'},
+  {id:'bf_isabella',name:'Isabella',style:'British & Refined',gender:'F',provider:'kokoro82m'},
+  {id:'bf_lily',name:'Lily',style:'British & Bright',gender:'F',provider:'kokoro82m'},
+  {id:'bm_daniel',name:'Daniel',style:'British & Classic',gender:'M',provider:'kokoro82m'},
+  {id:'bm_fable',name:'Fable',style:'British & Storytelling',gender:'M',provider:'kokoro82m'},
+  {id:'bm_george',name:'George',style:'British & Authoritative',gender:'M',provider:'kokoro82m'},
+  {id:'bm_lewis',name:'Lewis',style:'British & Refined',gender:'M',provider:'kokoro82m'},
+  {id:'en_US-lessac-medium',name:'Lessac',style:'American Neutral',gender:'M',provider:'piper'},
+  {id:'en_US-libritts-high',name:'LibriTTS',style:'American Clear',gender:'F',provider:'piper'}
 ];
-var selectedVoice = 'af_bella';
+
 var chapters = [];
 var generatedAudioUrl = null;
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded', function(){
-  renderVoiceList();
-  renderWaveform();
-  checkWorkspaceIncoming();
-  setTimeout(function(){
-    addNyxMsg("Hello! I'm **Nyxen**. I can help you with your audiobook production — voice selection, chapter prep, and narration tips.\n\nWhat are we working on today?", 'ai');
-  }, 600);
+  populateVoiceDropdowns();
+  onCastModeChange();
+  setTimeout(function(){ addNyxMsg("Hello! I'm **Nyxen**. I can help with voice selection, chapter prep, and narration tips.\n\nWhat are we working on today?",'ai'); },600);
 });
 
 // ── TABS ──
-function switchTab(name, btn){
-  document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.getElementById('tab-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
 }
 
-// ── VOICE LIST ──
-var providerColors = { kokoro82m:'#2a6b3c', piper:'#0078d4', render:'#6b4a9b' };
-var providerLabels = { kokoro82m:'Kokoro 82M', piper:'Piper', render:'Kokoro API' };
+// ── VOICE DROPDOWNS (engine-filtered) ──
+var selectedEngine1='kokoro82m';
+var selectedEngine2='kokoro82m';
 
-function renderVoiceList(){
-  var list = document.getElementById('voiceList');
-  list.innerHTML = '';
-  VOICES.forEach(function(v){
-    var card = document.createElement('div');
-    card.className = 'voice-card' + (v.id === selectedVoice ? ' selected' : '');
-    var provColor = providerColors[v.provider] || '#888';
-    var provLabel = providerLabels[v.provider] || v.provider;
-    var sampleBtn = v.sample
-      ? '<button class="vc-sample-btn" onclick="playSample(\''+v.sample+'\',event)" title="Play sample">\u25B6</button>'
-      : '<button class="vc-sample-btn" onclick="generateSample(\''+v.id+'\',\''+v.provider+'\',event)" title="Generate sample">\u266A</button>';
-    card.innerHTML =
-      '<div class="vc-row">' +
-        '<span class="vc-name">'+v.name+'</span>' +
-        '<div style="display:flex;align-items:center;gap:6px;">' +
-          '<span class="vc-gender">'+v.gender+'</span>' +
-          '<span class="vc-provider-badge" style="background:'+provColor+';">'+provLabel+'</span>' +
-          sampleBtn +
-        '</div>' +
-      '</div>' +
-      '<div class="vc-style">'+v.style+'</div>';
-    card.onclick = function(e){
-      if(e.target.classList.contains('vc-sample-btn')) return;
-      selectedVoice = v.id;
-      selectedProvider = v.provider;
-      document.querySelectorAll('.voice-card').forEach(function(c){ c.classList.remove('selected'); });
-      card.classList.add('selected');
-      var provSel = document.getElementById('ttsProvider');
-      if(provSel) provSel.value = v.provider === 'kokoro82m' ? 'render' : v.provider;
-    };
-    list.appendChild(card);
+function populateVoiceDropdowns(){
+  filterVoicesForSlot(1,selectedEngine1);
+  filterVoicesForSlot(2,selectedEngine2);
+  // Also populate TTS tab dropdown with filtered voices
+  selectTtsEngine(selectedTtsEngine,null);
+  var ttsBtns=document.getElementById('ttsEngineBtns');
+  if(ttsBtns) ttsBtns.querySelectorAll('button').forEach(function(b){
+    if(b.textContent.indexOf('Kokoro')>=0) b.classList.add('btn-engine-active');
+  });
+  // Highlight default engine buttons
+  highlightEngineBtn(1,selectedEngine1);
+  highlightEngineBtn(2,selectedEngine2);
+  onCastModeChange();
+}
+
+function selectEngine(slot,engine,btn){
+  if(slot===1) selectedEngine1=engine;
+  else selectedEngine2=engine;
+  filterVoicesForSlot(slot,engine);
+  highlightEngineBtn(slot,engine);
+}
+
+function filterVoicesForSlot(slot,engine){
+  var sel=document.getElementById('voice'+slot+'Select');
+  sel.innerHTML='';
+  var filtered=VOICES.filter(function(v){return v.provider===engine;});
+  filtered.forEach(function(v){
+    sel.innerHTML+='<option value="'+v.id+'">'+v.name+' — '+v.style+' ('+v.gender+')</option>';
+  });
+  if(filtered.length) sel.value=filtered[0].id;
+}
+
+function highlightEngineBtn(slot,engine){
+  var container=document.getElementById('engine'+slot+'Btns');
+  container.querySelectorAll('button').forEach(function(b){b.classList.remove('btn-engine-active');});
+  container.querySelectorAll('button').forEach(function(b){
+    if((engine==='kokoro82m'&&b.textContent.indexOf('Kokoro')>=0)||(engine==='piper'&&b.textContent.indexOf('Piper')>=0)){
+      b.classList.add('btn-engine-active');
+    }
   });
 }
 
-var selectedProvider = 'kokoro82m';
-
-function populateVoiceDropdown(selectId, selectedId){
-  var sel = document.getElementById(selectId);
-  if(!sel) return;
-  sel.innerHTML = '';
-  VOICES.forEach(function(v){
-    var opt = document.createElement('option');
-    opt.value = v.id;
-    opt.textContent = v.name + ' — ' + v.style + ' (' + v.gender[0] + ')';
-    if(v.id === selectedId) opt.selected = true;
-    sel.appendChild(opt);
+// ── TTS TAB ENGINE SELECTION ──
+var selectedTtsEngine='kokoro82m';
+function selectTtsEngine(engine,btn){
+  selectedTtsEngine=engine;
+  var sel=document.getElementById('ttsVoice');
+  sel.innerHTML='';
+  VOICES.filter(function(v){return v.provider===engine;}).forEach(function(v){
+    sel.innerHTML+='<option value="'+v.id+'">'+v.name+' — '+v.style+' ('+v.gender+')</option>';
   });
+  var container=document.getElementById('ttsEngineBtns');
+  container.querySelectorAll('button').forEach(function(b){b.classList.remove('btn-engine-active');});
+  if(btn) btn.classList.add('btn-engine-active');
 }
 
-function onVoiceModeChange(){
-  var dual = document.querySelector('input[name="voiceMode"]:checked');
-  var panel = document.getElementById('dualVoicePanel');
-  if(panel) panel.style.display = (dual && dual.value === 'dual') ? 'flex' : 'none';
-  if(dual && dual.value === 'dual'){
-    populateVoiceDropdown('narratorVoiceSelect', selectedVoice);
-    var secondVoice = VOICES.length > 1 ? VOICES[1].id : selectedVoice;
-    populateVoiceDropdown('characterVoiceSelect', secondVoice);
-  }
-}
-
-function playSample(url, e){
-  e.stopPropagation();
-  var audio = new Audio(url);
-  audio.play().catch(function(){ alert('Could not play sample.'); });
-}
-
-async function generateSample(voiceId, provider, e){
-  e.stopPropagation();
-  var sampleText = 'Hello, this is a sample of my voice for your audiobook narration.';
+// ── VOICE PREVIEW (via TTS Proxy) ──
+async function previewVoice(slot){
+  var sel=document.getElementById('voice'+slot+'Select');
+  var voiceId=sel.value;
+  if(!voiceId) return;
+  var sampleText='Hello, this is a preview of my voice for your audiobook narration.';
+  var btn=event.target;
+  btn.disabled=true;btn.textContent='...';
   try{
-    var endpoint = provider==='render' ? RENDER_URL+'/tts' : WORKER_BASE+'/tts';
-    var resp = await fetch(endpoint,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({text:sampleText, voice:voiceId, provider:provider})
-    });
-    if(!resp.ok) throw new Error(resp.status);
-    var ct = resp.headers.get('content-type')||'';
-    var url;
-    if(ct.includes('audio')||ct.includes('octet')){ url = URL.createObjectURL(await resp.blob()); }
-    else { var d=await resp.json(); url=d.audio_url||d.url; }
-    if(url){ var a=new Audio(url); a.play(); }
-  }catch(err){ console.warn('Sample error:',err); }
+    var url=await ttsProxyCall(sampleText, voiceId);
+    new Audio(url).play();
+  }catch(err){alert('Voice preview temporarily unavailable: '+err.message);}
+  btn.disabled=false;btn.textContent='\u25B6 Preview';
 }
 
-// ── WAVEFORM ──
-function renderWaveform(){
-  var vis = document.getElementById('waveformVisual');
-  vis.innerHTML = '';
-  for(var i=0;i<60;i++){
-    var bar = document.createElement('div');
-    bar.className = 'waveform-bar';
-    bar.style.height = (Math.random()*60+10)+'%';
-    vis.appendChild(bar);
+function onCastModeChange(){
+  var mode=document.querySelector('input[name="castMode"]:checked').value;
+  var n1=document.getElementById('name1Label');
+  var n2=document.getElementById('name2Label');
+  var info=document.getElementById('voiceCastInfo');
+  if(mode==='char_char'){
+    n1.textContent='Character 1 Name';
+    n2.textContent='Character 2 Name';
+    info.innerHTML='<strong>Character + Character:</strong> Voice 1 handles narration + Character 1 dialogue. Voice 2 handles Character 2 dialogue only.';
+    info.style.background='var(--gold-lt)';
+  } else {
+    n1.textContent='Narrator Name';
+    n2.textContent='Character Name';
+    info.innerHTML='<strong>Narrator + Character:</strong> Voice 1 reads all narration. Voice 2 reads all dialogue (text in quotes).';
+    info.style.background='var(--plum-lt)';
   }
 }
 
-// ── IMPORT FROM WORKSPACE ──
-function checkWorkspaceIncoming(){
-  var data = localStorage.getItem('vs_incoming');
-  if(data){
-    try{
-      var d = JSON.parse(data);
-      if(d.title) document.getElementById('bookTitle').value = d.title;
-      if(d.author) document.getElementById('authorName').value = d.author;
-      if(d.chapters && d.chapters.length){
-        chapters = d.chapters;
-      } else if(d.content){
-        chapters = splitIntoChapters(d.content);
-      }
-      renderChapters();
-      showStatus('uploadStatus','ok','&#10003; Imported from Publisher\'s Workspace: '+chapters.length+' chapters');
-      localStorage.removeItem('vs_incoming');
-    }catch(e){}
-  }
-}
+// ── FILE UPLOAD + EDITOR ──
+function handleDrop(e){e.preventDefault();document.getElementById('uploadZone').classList.remove('drag-over');var f=e.dataTransfer.files[0];if(f) processFile(f);}
+function handleEditorDrop(e){e.preventDefault();var editor=document.getElementById('docEditor');editor.style.borderColor='var(--gold-bd)';var f=e.dataTransfer.files[0];if(f) processFile(f);}
+function handleFileUpload(e){var f=e.target.files[0];if(f) processFile(f);e.target.value='';}
+function clearEditor(){if(!confirm('Clear the editor?'))return;document.getElementById('docEditor').innerHTML='Start typing or import a DOCX file...';chapters=[];renderChapterNav();}
 
-function importFromWorkspace(){
-  var data = localStorage.getItem('vs_incoming');
-  if(data){ checkWorkspaceIncoming(); }
-  else { showStatus('uploadStatus','info','No manuscript found in workspace. Please export from Publisher\'s Workspace first.'); }
-}
-
-// ── FILE UPLOAD ──
-function handleDrop(e){
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.remove('drag-over');
-  var file = e.dataTransfer.files[0];
-  if(file) processFile(file);
-}
-function handleFileUpload(e){
-  var file = e.target.files[0];
-  if(file) processFile(file);
-  e.target.value='';
-}
 function processFile(file){
-  var ext = file.name.split('.').pop().toLowerCase();
-  showStatus('uploadStatus','info','Reading '+file.name+'…');
-  if(!document.getElementById('bookTitle').value)
-    document.getElementById('bookTitle').value = file.name.replace(/\.[^.]+$/,'');
-
+  var ext=file.name.split('.').pop().toLowerCase();
+  showStatus('uploadStatus','info','Reading '+file.name+'...');
+  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=file.name.replace(/\.[^.]+$/,'');
   if(ext==='txt'){
-    var r = new FileReader();
-    r.onload = function(ev){
-      chapters = splitIntoChapters(ev.target.result);
-      renderChapters();
-      showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded — '+chapters.length+' chapters detected');
-    };
+    // TXT files: client-side FileReader only, no Gradio call
+    var r=new FileReader();
+    r.onload=function(ev){loadTextIntoEditor(ev.target.result);showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded');};
     r.readAsText(file);
-  } else if(ext==='epub'||ext==='docx'){
-    if(typeof JSZip==='undefined'){ showStatus('uploadStatus','err','JSZip not loaded. Please refresh.'); return; }
-    var r2 = new FileReader();
-    r2.onload = function(ev){
+  } else if(ext==='docx'){
+    // DOCX files: Gradio file upload via /run/ endpoints requires sending files as
+    // server-side file paths, which is not possible from a browser-only HTML page
+    // (no server to stage uploaded files). Skipping Gradio upload attempt and using
+    // JSZip client-side parsing directly. If a backend file-staging endpoint becomes
+    // available in the future, add Gradio upload here as the primary path with JSZip
+    // as the fallback.
+    if(typeof JSZip==='undefined'){showStatus('uploadStatus','err','JSZip not loaded.');return;}
+    var r2=new FileReader();
+    r2.onload=function(ev){
       JSZip.loadAsync(ev.target.result).then(function(zip){
-        var textPromises = [];
-        if(ext==='epub'){
-          var files = Object.keys(zip.files).filter(function(f){ return (f.endsWith('.html')||f.endsWith('.xhtml'))&&!f.includes('toc'); }).sort();
-          files.forEach(function(fn){ textPromises.push(zip.files[fn].async('text')); });
-        } else {
-          var doc = zip.files['word/document.xml'];
-          if(doc) textPromises.push(doc.async('text'));
-        }
-        return Promise.all(textPromises);
-      }).then(function(arr){
-        var full = arr.map(function(h){ return h.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(); }).join('\n\n');
-        chapters = splitIntoChapters(full);
-        renderChapters();
-        showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded — '+chapters.length+' chapters');
-      }).catch(function(e){ showStatus('uploadStatus','err','Error reading file: '+e.message); });
+        var doc=zip.files['word/document.xml'];
+        if(doc) return doc.async('text');
+        throw new Error('No document.xml found');
+      }).then(function(xml){
+        // Preserve paragraph breaks for chapter detection
+        var text=xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
+        loadTextIntoEditor(text);
+        showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded');
+      }).catch(function(e){showStatus('uploadStatus','err','Error: '+e.message);});
     };
     r2.readAsArrayBuffer(file);
   }
 }
 
-function splitIntoChapters(text){
-  // Try to detect chapter headings
-  var chapterRegex = /(?:^|\n)(chapter\s+\d+[^\n]*|part\s+\d+[^\n]*|prologue|epilogue)/gi;
-  var matches = [], match;
-  while((match = chapterRegex.exec(text)) !== null) matches.push({title: match[1].trim(), index: match.index});
+function loadTextIntoEditor(text){
+  detectChapters(text);
+}
 
-  if(matches.length > 1){
-    return matches.map(function(m, i){
-      var end = i+1 < matches.length ? matches[i+1].index : text.length;
-      return { title: m.title, text: text.substring(m.index, end).trim() };
+// ── CHAPTER DETECTION ──
+function detectChapters(text){
+  // Detect chapters, TOC, copyright, prologue, epilogue
+  var regex=/(?:^|\n)\s*(chapter\s+\d+[^\n]*|table of contents[^\n]*|copyright[^\n]*|prologue[^\n]*|epilogue[^\n]*)/gi;
+  var matches=[],m;
+  while((m=regex.exec(text))!==null) matches.push({title:m[1].trim(),index:m.index});
+  if(matches.length>0){
+    chapters=[];
+    // Capture front matter (everything before first match — includes copyright if no heading)
+    var beforeFirst=text.substring(0,matches[0].index).trim();
+    if(beforeFirst) chapters.push({title:'Front Matter',content:beforeFirst});
+    // Add each detected section
+    matches.forEach(function(match,i){
+      var end=i+1<matches.length?matches[i+1].index:text.length;
+      chapters.push({title:match.title,content:text.substring(match.index,end).trim()});
     });
+  } else {
+    chapters=[{title:'Full Document',content:text}];
   }
-  // No chapters detected — split by word count (~2000 words per chapter)
-  var words = text.split(/\s+/);
-  var result = [], chunkSize = 2000;
-  for(var i=0; i<words.length; i+=chunkSize){
-    var chunk = words.slice(i, i+chunkSize).join(' ');
-    result.push({ title: 'Chapter '+(Math.floor(i/chunkSize)+1), text: chunk });
-  }
-  return result.length ? result : [{title:'Chapter 1', text:text}];
+  renderEditorWithChapters();
 }
 
-function renderChapters(){
-  var list = document.getElementById('chapterList');
-  list.innerHTML = '';
-  if(!chapters.length){ list.innerHTML='<div style="font-size:.9rem;color:var(--taupe-lt);font-style:italic;text-align:center;padding:20px;">No chapters found.</div>'; return; }
-  chapters.forEach(function(ch, i){
-    var words = ch.text ? ch.text.split(/\s+/).length : 0;
-    var mins = Math.ceil(words/150);
-    var item = document.createElement('div');
-    item.className = 'chapter-item';
-    item.innerHTML = '<span class="ch-name">'+ch.title+'</span><div class="ch-meta"><span class="ch-dur">~'+mins+' min</span><button class="ch-play" onclick="previewChapter('+i+',event)">\u25B6</button></div>';
-    list.appendChild(item);
+function renderEditorWithChapters(){
+  var editor=document.getElementById('docEditor');
+  editor.innerHTML='';
+  chapters.forEach(function(ch,i){
+    var heading=document.createElement('h3');
+    heading.id='editor-ch-'+i;
+    var titleLower=ch.title.toLowerCase();
+    var isNonChapter=(titleLower.indexOf('table of contents')>=0||titleLower.indexOf('copyright')>=0||titleLower==='toc');
+    heading.style.cssText='font-family:Cinzel,serif;font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);'+(isNonChapter?'color:var(--taupe-lt);font-style:italic;':'color:var(--plum);');
+    if(i===0) heading.style.marginTop='0';
+    heading.textContent=ch.title+(isNonChapter?' (not included in audio)':'');
+    var block=document.createElement('div');
+    block.style.cssText='margin-bottom:16px;white-space:pre-wrap;';
+    var content=ch.content;
+    var headingRegex=new RegExp('^'+ch.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i');
+    content=content.replace(headingRegex,'').trim();
+    block.textContent=content;
+    editor.appendChild(heading);
+    editor.appendChild(block);
+  });
+  renderChapterNav();
+}
+
+function renderChapterNav(){
+  // Chapter nav is populated by exportToAudio, not by the import editor
+  // This is called during import to show chapter count info
+  var nav=document.getElementById('chapterNav');
+  var chapterCount=chapters.filter(function(ch){
+    var t=ch.title.toLowerCase();
+    return t.indexOf('table of contents')<0&&t!=='toc'&&t.indexOf('copyright')<0&&t!=='front matter';
+  }).length;
+  nav.innerHTML='<div style="font-size:.82rem;color:var(--taupe-lt);padding:10px 0;text-align:center;">'+chapterCount+' chapters detected in editor.<br/><span style="font-style:italic;">Click "Export Chapters to Audio" above.</span></div>';
+}
+
+function navToChapter(idx){
+  document.querySelectorAll('.chapter-nav-item').forEach(function(c){c.classList.remove('active');});
+  scrollEditorToChapter(idx);
+}
+
+function removeChapter(idx){
+  if(!confirm('Remove "'+chapters[idx].title+'" from the chapter list?')) return;
+  // Remove from editor
+  var heading=document.getElementById('editor-ch-'+idx);
+  if(heading){
+    var next=heading.nextElementSibling;
+    while(next&&next.tagName!=='H3'){var toRemove=next;next=next.nextElementSibling;toRemove.remove();}
+    heading.remove();
+  }
+  chapters.splice(idx,1);
+  // Re-render editor with updated indices
+  renderEditorWithChapters();
+}
+
+function exportToAudio(){
+  getEditorChapters();
+  // Filter out ONLY TOC — copyright and front matter go to main doc (read before book)
+  var audioContent=chapters.filter(function(ch){
+    var t=ch.title.toLowerCase();
+    return t.indexOf('table of contents')<0&&t!=='toc';
+  });
+  if(!audioContent.length){
+    showStatus('genStatus','err','No content to export.');return;
+  }
+  // Separate: front matter/copyright (before chapters) vs actual chapters
+  // Front matter includes anything before Chapter 1 — copyright, dedication, etc.
+  var frontMatter=[];
+  var bookChapters=[];
+  audioContent.forEach(function(ch){
+    var t=ch.title.toLowerCase();
+    if(t.indexOf('copyright')>=0||t==='front matter'||t.indexOf('dedication')>=0){
+      frontMatter.push(ch);
+    } else {
+      bookChapters.push(ch);
+    }
+  });
+  // Build main doc: title + author, then front matter, then chapters
+  var mainDoc=document.getElementById('mainDocEditor');
+  mainDoc.innerHTML='';
+  // Add title and author at top
+  var title=document.getElementById('bookTitle').value.trim();
+  var author=document.getElementById('authorName').value.trim();
+  if(title||author){
+    var titleBlock=document.createElement('div');
+    titleBlock.style.cssText='text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid var(--gold-bd);';
+    if(title) titleBlock.innerHTML+='<h2 style="font-family:Cinzel,serif;color:var(--plum);font-size:1.4rem;margin-bottom:4px;">'+title+'</h2>';
+    if(author) titleBlock.innerHTML+='<div style="font-size:.95rem;color:var(--taupe-lt);font-style:italic;">by '+author+'</div>';
+    mainDoc.appendChild(titleBlock);
+  }
+  // Add copyright/front matter (not in chapter nav, but read before book)
+  frontMatter.forEach(function(ch){
+    var h=document.createElement('h3');
+    h.style.cssText='font-family:Cinzel,serif;color:var(--taupe-lt);font-size:1rem;margin:0 0 8px;padding-bottom:4px;border-bottom:1px dashed var(--gold-bd);font-style:italic;';
+    h.textContent=ch.title+' (read before book)';
+    var p=document.createElement('div');
+    p.style.cssText='margin-bottom:20px;white-space:pre-wrap;';
+    p.textContent=ch.content;
+    mainDoc.appendChild(h);
+    mainDoc.appendChild(p);
+  });
+  // Add chapters
+  bookChapters.forEach(function(ch,i){
+    var h=document.createElement('h3');
+    h.id='main-ch-'+i;
+    h.style.cssText='font-family:Cinzel,serif;color:var(--plum);font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);';
+    if(i===0&&!frontMatter.length) h.style.marginTop='0';
+    h.textContent=ch.title;
+    var p=document.createElement('div');
+    p.style.cssText='margin-bottom:16px;white-space:pre-wrap;';
+    p.textContent=ch.content;
+    mainDoc.appendChild(h);
+    mainDoc.appendChild(p);
+  });
+  // Render chapter nav with ONLY book chapters (not copyright)
+  renderMainChapterNav(bookChapters);
+  showStatus('genStatus','ok','&#10003; '+bookChapters.length+' chapters exported'+(frontMatter.length?' (copyright included before chapters)':'')+'. Click Generate Audiobook.');
+  mainDoc.scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Save text to Gradio backend session
+  var allText = bookChapters.map(function(ch){ return ch.title + '\n\n' + ch.content; }).join('\n\n\n');
+  gradioCall('save_book_wrapper', [allText]).then(function(){
+    showStatus('genStatus','ok','&#10003; Text saved to audio engine. Ready to generate.');
+  }).catch(function(err){
+    showStatus('genStatus','info','Text exported locally. Backend save failed: ' + err.message);
   });
 }
 
-// ── PREVIEW CHAPTER ──
-function previewChapter(idx, e){
-  e.stopPropagation();
-  var ch = chapters[idx];
-  if(!ch) return;
-  var preview = ch.text.substring(0, 300);
-  // Animate waveform
-  document.querySelectorAll('.waveform-bar').forEach(function(b){
-    b.style.height = (Math.random()*70+15)+'%';
-    b.classList.add('active');
+function renderMainChapterNav(bookChapters){
+  var nav=document.getElementById('chapterNav');
+  nav.innerHTML='';
+  if(!bookChapters.length){nav.innerHTML='<div style="font-size:.82rem;color:var(--taupe-lt);font-style:italic;padding:10px 0;text-align:center;">No chapters exported yet.</div>';return;}
+  bookChapters.forEach(function(ch,i){
+    var item=document.createElement('div');
+    item.className='chapter-nav-item';
+    item.style.cssText='display:flex;align-items:center;justify-content:space-between;';
+    item.innerHTML='<span style="flex:1;cursor:pointer;" onclick="scrollMainToChapter('+i+')">'+ch.title+'</span><button style="background:none;border:none;color:var(--red);font-size:.9rem;cursor:pointer;padding:2px 6px;" onclick="event.stopPropagation();removeMainChapter('+i+')" title="Remove">&times;</button>';
+    nav.appendChild(item);
   });
-  showStatus('uploadStatus','info','Preview: '+ch.title+' (first 300 chars)');
 }
 
-function togglePreviewPlay(){
-  var btn = document.getElementById('previewPlayBtn');
-  btn.textContent = btn.textContent.trim() === '\u25B6' ? '\u23F8' : '\u25B6';
+function scrollMainToChapter(idx){
+  var el=document.getElementById('main-ch-'+idx);
+  if(!el) return;
+  var editor=document.getElementById('mainDocEditor');
+  editor.scrollTop=el.offsetTop-editor.offsetTop-10;
+  el.style.background='var(--gold-lt)';
+  setTimeout(function(){el.style.background='';},1500);
 }
-function resetPreviewPlay(){ document.getElementById('previewPlayBtn').textContent = '\u25B6'; }
+
+function removeMainChapter(idx){
+  var el=document.getElementById('main-ch-'+idx);
+  if(!el) return;
+  if(!confirm('Remove this chapter from audio?')) return;
+  var next=el.nextElementSibling;
+  while(next&&next.tagName!=='H3'){var r=next;next=next.nextElementSibling;r.remove();}
+  el.remove();
+  // Re-read main doc to rebuild nav
+  var mainDoc=document.getElementById('mainDocEditor');
+  var headings=mainDoc.querySelectorAll('h3');
+  var remaining=[];
+  headings.forEach(function(h,i){
+    h.id='main-ch-'+i;
+    var t=h.textContent.toLowerCase();
+    if(t.indexOf('copyright')<0&&t.indexOf('read before')<0) remaining.push({title:h.textContent});
+  });
+  renderMainChapterNav(remaining);
+}
+
+function clearMainDoc(){
+  if(!confirm('Clear the main document?'))return;
+  document.getElementById('mainDocEditor').innerHTML='Export chapters from the editor above to populate this document for audio generation.';
+}
+
+function scrollEditorToChapter(idx){
+  var el=document.getElementById('editor-ch-'+idx);
+  if(!el) return;
+  var editor=document.getElementById('docEditor');
+  editor.scrollTop=el.offsetTop-editor.offsetTop-10;
+  el.style.background='var(--gold-lt)';
+  setTimeout(function(){el.style.background='';},1500);
+}
+
+// ── GET EDITOR CONTENT + REBUILD CHAPTERS ──
+function getEditorChapters(){
+  var editor=document.getElementById('docEditor');
+  var headings=editor.querySelectorAll('h3');
+  if(headings.length>0){
+    chapters=[];
+    headings.forEach(function(h,i){
+      var title=h.textContent.trim();
+      var content='';
+      var sibling=h.nextElementSibling;
+      while(sibling&&sibling.tagName!=='H3'){
+        content+=(sibling.textContent||'')+'\n';
+        sibling=sibling.nextElementSibling;
+      }
+      chapters.push({title:title,content:content.trim()});
+    });
+  } else {
+    var text=editor.textContent||editor.innerText;
+    chapters=[{title:'Full Document',content:text}];
+  }
+  return chapters;
+}
+
+// ── DIALOGUE SPLITTING (for dual voice) ──
+function splitDialogue(text){
+  // Split text into narration and dialogue segments
+  // Dialogue = text inside "quotes" or \u201Csmart quotes\u201D
+  var segments=[];
+  var pattern=/([\u201C"][^"\u201D]*[\u201D"])/g;
+  var lastIdx=0,match;
+  while((match=pattern.exec(text))!==null){
+    if(match.index>lastIdx){
+      var narr=text.substring(lastIdx,match.index).trim();
+      if(narr) segments.push({role:'narrator',text:narr});
+    }
+    var dialogue=match[1].replace(/^[\u201C"]+|[\u201D"]+$/g,'').trim();
+    if(dialogue) segments.push({role:'character',text:dialogue});
+    lastIdx=match.index+match[0].length;
+  }
+  if(lastIdx<text.length){
+    var remaining=text.substring(lastIdx).trim();
+    if(remaining) segments.push({role:'narrator',text:remaining});
+  }
+  return segments.length?segments:[{role:'narrator',text:text}];
+}
 
 // ── GENERATE AUDIOBOOK ──
 async function generateAudiobook(){
-  if(!chapters.length){ showStatus('genStatus','err','Please upload a manuscript first.'); return; }
-  var title  = document.getElementById('bookTitle').value.trim()||'Untitled';
-  var author = document.getElementById('authorName').value.trim()||'';
-  var provider = document.getElementById('ttsProvider').value;
-  var speed  = document.querySelector('input[type=range]:nth-of-type(3)').value / 100;
-
-  var btn = document.getElementById('generateBtn');
-  btn.disabled = true; btn.textContent = '&#127911; Generating…';
-
-  var progress = document.getElementById('genProgress');
-  var fill = document.getElementById('genProgressFill');
-  progress.style.display = 'block'; fill.style.width = '5%';
-  showStatus('genStatus','info','Sending manuscript to audiobook engine…');
-
-  try {
-    var fullText = chapters.map(function(ch){ return ch.title+'\n\n'+ch.text; }).join('\n\n\n');
-    fill.style.width = '20%';
-
-    var endpoint, body, headers = {'Content-Type':'application/json'};
-
-    if(provider === 'render'){
-      // Render audiobook-creator endpoint
-      var payload = {
-        title:    title,
-        author:   author,
-        text:     fullText,
-        voice:    selectedVoice,
-        speed:    speed,
-        chapters: chapters.map(function(ch){ return {title:ch.title, text:ch.text}; })
-      };
-      // Add dual voice if enabled
-      var dualMode = document.querySelector('input[name="voiceMode"]:checked');
-      if(dualMode && dualMode.value === 'dual'){
-        var narr = document.getElementById('narratorVoiceSelect');
-        var char_ = document.getElementById('characterVoiceSelect');
-        if(narr) payload.narrator_voice = narr.value;
-        if(char_) payload.character_voice = char_.value;
-      }
-      endpoint = RENDER_URL + '/generate';
-      body = JSON.stringify(payload);
-    } else {
-      // Cloudflare Worker TTS
-      endpoint = WORKER_BASE + '/tts';
-      body = JSON.stringify({
-        text:     fullText.substring(0, 5000),
-        voice:    selectedVoice,
-        provider: provider
-      });
-    }
-
-    fill.style.width = '50%';
-    showStatus('genStatus','info','Processing with '+provider+'… this may take a moment.');
-
-    var resp = await fetch(endpoint, { method:'POST', headers:headers, body:body });
-    fill.style.width = '85%';
-
-    if(!resp.ok) throw new Error('Server returned '+resp.status+': '+resp.statusText);
-
-    var contentType = resp.headers.get('content-type')||'';
-    if(contentType.includes('audio') || contentType.includes('octet')){
-      var blob = await resp.blob();
-      generatedAudioUrl = URL.createObjectURL(blob);
-    } else {
-      var data = await resp.json();
-      generatedAudioUrl = data.audio_url || data.url || data.file_url || null;
-      if(!generatedAudioUrl && data.message) throw new Error(data.message);
-    }
-
-    fill.style.width = '100%';
-
-    if(generatedAudioUrl){
-      document.getElementById('generatedAudio').src = generatedAudioUrl;
-      document.getElementById('audioResultBox').style.display = 'block';
-      showStatus('genStatus','ok','&#10003; Audiobook generated successfully!');
-      // Also save to localStorage for collections
-      localStorage.setItem('collections_incoming', JSON.stringify({ title:title, author:author, audio_url:generatedAudioUrl }));
-    } else {
-      showStatus('genStatus','err','Generated but no audio URL returned. Check provider settings.');
-    }
-
-  } catch(err){
-    showStatus('genStatus','err','Error: '+err.message);
-    fill.style.width = '0%';
+  // Read from main doc editor
+  var mainDoc=document.getElementById('mainDocEditor');
+  var fullText=(mainDoc.textContent||mainDoc.innerText).trim();
+  if(!fullText||fullText==='Export chapters from the editor above to populate this document for audio generation.'){
+    showStatus('genStatus','err','Export chapters to the main document first, then generate.');return;
   }
 
-  btn.disabled = false; btn.innerHTML = '&#127911; Generate Audiobook';
+  var title=document.getElementById('bookTitle').value.trim()||'Untitled';
+  var voice1=document.getElementById('voice1Select').value;
+  var voice2=document.getElementById('voice2Select').value;
+  var voiceType=deriveVoiceType(voice1,voice2);
+  var narratorGender=deriveNarratorGender(voice1);
+
+  var btn=document.getElementById('generateBtn');
+  btn.disabled=true;btn.innerHTML='&#127911; Generating...';
+  var progress=document.getElementById('genProgress');
+  var fill=document.getElementById('genProgressFill');
+  progress.style.display='block';fill.style.width='0%';
+
+  try{
+    // Step 1: Save text to Gradio backend session
+    fill.style.width='20%';
+    showStatus('genStatus','info','Saving text...');
+    await gradioCall('save_book_wrapper',[fullText]);
+
+    // Step 2: Generate audiobook
+    fill.style.width='60%';
+    showStatus('genStatus','info','Generating audio...');
+    var result=await gradioCall('generate_audiobook_wrapper',[voiceType,narratorGender,'MP3',null,title]);
+
+    // Extract file URL from response
+    fill.style.width='100%';
+    var fileUrl=null;
+    if(result&&result.length>0){
+      var item=result[0];
+      if(typeof item==='string') fileUrl=item;
+      else if(item&&item.url) fileUrl=item.url;
+      else if(item&&item.name) fileUrl=GRADIO_BASE+'/file='+item.name;
+    }
+
+    if(fileUrl){
+      generatedAudioUrl=fileUrl;
+      document.getElementById('generatedAudio').src=fileUrl;
+      showStatus('genStatus','ok','&#10003; Audiobook generated!');
+    } else {
+      showStatus('genStatus','err','No audio URL returned.');
+    }
+  }catch(err){
+    showStatus('genStatus','err','Error: '+err.message);
+    fill.style.width='0%';
+  }
+  btn.disabled=false;btn.innerHTML='&#127911; Generate Audiobook';
 }
 
 function downloadAudio(){
   if(!generatedAudioUrl) return;
-  var a = document.createElement('a');
-  a.href = generatedAudioUrl;
-  a.download = (document.getElementById('bookTitle').value||'audiobook')+'.mp3';
+  var a=document.createElement('a');
+  a.href=generatedAudioUrl;
+  a.download=(document.getElementById('bookTitle').value||'audiobook')+'.mp3';
   a.click();
-}
-
-function sendToCollections(){
-  var title  = document.getElementById('bookTitle').value.trim()||'Untitled';
-  var author = document.getElementById('authorName').value.trim()||'';
-  localStorage.setItem('collections_incoming', JSON.stringify({ title:title, author:author, audio_url:generatedAudioUrl }));
-  location.href = 'https://smcantrellbooks.com/collections';
 }
 
 // ── TTS SINGLE ──
 async function generateTTS(){
-  var text = document.getElementById('ttsText').value.trim();
-  if(!text){ showStatus('ttsStatus','err','Please enter some text.'); return; }
-  var voice    = document.getElementById('ttsVoice').value;
-  var provider = document.getElementById('ttsSingleProvider').value;
-  showStatus('ttsStatus','info','Generating speech…');
-
+  var text=document.getElementById('ttsText').value.trim();
+  if(!text){showStatus('ttsStatus','err','Please enter some text.');return;}
+  var voice=document.getElementById('ttsVoice').value;
+  showStatus('ttsStatus','info','Generating speech...');
   try{
-    var endpoint = provider==='render' ? RENDER_URL+'/tts' : WORKER_BASE+'/tts';
-    var resp = await fetch(endpoint, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ text:text, voice:voice, provider:provider })
-    });
-    if(!resp.ok) throw new Error(resp.status+' '+resp.statusText);
-    var contentType = resp.headers.get('content-type')||'';
-    var audioUrl;
-    if(contentType.includes('audio')||contentType.includes('octet')){
-      var blob = await resp.blob();
-      audioUrl = URL.createObjectURL(blob);
-    } else {
-      var data = await resp.json();
-      audioUrl = data.audio_url||data.url||null;
-    }
-    if(audioUrl){
-      document.getElementById('ttsAudioBox').innerHTML = '<audio controls style="width:100%;" src="'+audioUrl+'"></audio><div style="margin-top:8px;"><a href="'+audioUrl+'" download="speech.mp3" class="btn-sec" style="display:inline-flex;">&#11015; Download</a></div>';
-      showStatus('ttsStatus','ok','&#10003; Speech generated!');
-    }
-  }catch(e){ showStatus('ttsStatus','err','Error: '+e.message); }
+    var url=await ttsProxyCall(text, voice);
+    document.getElementById('ttsAudioBox').innerHTML='<audio controls style="width:100%;" src="'+url+'"></audio><div style="margin-top:8px;"><a href="'+url+'" download="speech.wav" class="btn-sec" style="display:inline-flex;">&#11015; Download</a></div>';
+    showStatus('ttsStatus','ok','&#10003; Speech generated!');
+  }catch(e){showStatus('ttsStatus','err','Error: '+e.message);}
 }
 
 // ── VOICE CLONING ──
 function handleCloneUpload(e){
-  var file = e.target.files[0]; if(!file) return;
-  showStatus('cloneStatus','info','Uploading voice sample: '+file.name+'…');
-  // Store locally and show in cloned voices list
-  setTimeout(function(){
-    var list = document.getElementById('clonedVoicesList');
-    list.innerHTML = '<div class="cloned-voice-item"><span class="cv-name">'+file.name.replace(/\.[^.]+$/,'')+'</span><div class="cv-actions"><button class="cv-btn">&#9654; Preview</button><button class="cv-btn">Use</button></div></div>';
-    showStatus('cloneStatus','ok','&#10003; Voice sample uploaded! Ready to use for narration.');
-  }, 1500);
+  e.target.value='';
+  showStatus('cloneStatus','info','Voice cloning is not yet available on the remote service. This feature is coming soon.');
 }
-function recordLive(){ showStatus('cloneStatus','info','Live recording coming soon — use file upload for now.'); }
+function recordLive(){showStatus('cloneStatus','info','Live recording is not yet available on the remote service.');}
 
 // ── HELPERS ──
-function showStatus(id, type, text){
-  var el = document.getElementById(id);
-  if(!el) return;
-  el.className = 'status-msg show '+type;
-  el.innerHTML = text;
-}
+function showStatus(id,type,text){var el=document.getElementById(id);if(!el)return;el.className='status-msg show '+type;el.innerHTML=text;}
 
 // ── NYXEN ──
-var nyxenOpen = false, nyxenHistory = [];
-function toggleNyxen(){
-  nyxenOpen = !nyxenOpen;
-  document.getElementById('nyxenPanel').style.display = nyxenOpen ? 'flex' : 'none';
-  if(nyxenOpen) setTimeout(function(){ document.getElementById('nyxenInput').focus(); }, 100);
+var nyxenOpen=false,nyxenHistory=[];
+function toggleNyxen(){nyxenOpen=!nyxenOpen;document.getElementById('nyxenPanel').style.display=nyxenOpen?'flex':'none';if(nyxenOpen)setTimeout(function(){document.getElementById('nyxenInput').focus();},100);}
+function addNyxMsg(text,role){
+  var feed=document.getElementById('nyxenFeed');var d=document.createElement('div');d.className='nmsg '+role;
+  if(role==='ai'){var r=typeof marked!=='undefined'?marked.parse(text):text.replace(/\n/g,'<br>');d.innerHTML='<div class="nlbl">NYXEN</div><div class="md-content">'+r+'</div>';}
+  else{d.textContent=text;}
+  feed.appendChild(d);feed.scrollTop=feed.scrollHeight;
 }
-function addNyxMsg(text, role){
-  var feed = document.getElementById('nyxenFeed');
-  var d = document.createElement('div'); d.className = 'nmsg '+role;
-  if(role==='ai'){
-    var rendered = typeof marked !== 'undefined' ? marked.parse(text) : text.replace(/\n/g,'<br>');
-    d.innerHTML = '<div class="nlbl">NYXEN</div><div class="md-content">'+rendered+'</div>';
-  } else { d.textContent = text; }
-  feed.appendChild(d); feed.scrollTop = feed.scrollHeight;
-}
-function showTyping(){
-  var feed = document.getElementById('nyxenFeed');
-  var d = document.createElement('div'); d.className='nmsg ai'; d.id='nyxTyping';
-  d.innerHTML='<div class="nlbl">NYXEN</div><div class="typing-dots"><span></span><span></span><span></span></div>';
-  feed.appendChild(d); feed.scrollTop=feed.scrollHeight;
-}
-function removeTyping(){ var el=document.getElementById('nyxTyping'); if(el) el.remove(); }
 async function nyxenSend(){
-  var inp = document.getElementById('nyxenInput');
-  var text = inp.value.trim(); if(!text) return;
-  inp.value=''; inp.style.height='';
-  addNyxMsg(text,'user');
-  nyxenHistory.push({role:'user',content:text});
-  showTyping();
-  document.getElementById('nyxenStatus').textContent = 'Thinking…';
-  try{
-    var resp = await fetch(NYXEN_WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,history:nyxenHistory.slice(-20)})});
-    removeTyping();
-    var data = await resp.json();
-    var reply = data.story||data.message||data.response||JSON.stringify(data);
-    nyxenHistory.push({role:'assistant',content:reply});
-    addNyxMsg(reply,'ai');
-    document.getElementById('nyxenStatus').textContent = 'Your creative assistant';
-  }catch(e){ removeTyping(); addNyxMsg('Error: '+e.message,'ai'); document.getElementById('nyxenStatus').textContent='Error'; }
+  var inp=document.getElementById('nyxenInput');var text=inp.value.trim();if(!text)return;
+  inp.value='';addNyxMsg(text,'user');nyxenHistory.push({role:'user',content:text});
+  addNyxMsg('✨ Nyxen is being rebuilt as an independent app and will return soon. Stay tuned!','ai');
+  document.getElementById('nyxenStatus').textContent='Your creative assistant';
 }
-function nyxenKey(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); nyxenSend(); } }
-function autoResize(el){ el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,80)+'px'; }
-</script>
-<script>
-(function(){
-  var n=localStorage.getItem('cc_user_name')||'';
-  var e=localStorage.getItem('cc_user_email')||'';
-  var t=localStorage.getItem('cc_user_tier')||'';
-  var TL={free:'Free Creator',visual:'Visual Tier',publication:'Publication Tier',reader:'Reader'};
-  var aU='https://creatives.smcantrellbooks.com/my-account';
-  var lU='https://creatives.smcantrellbooks.com/login';
-  function buildWidget(){
-    var nav=document.querySelector('.nav-top, .banner-nav-links');
-    if(!nav)return;
-    nav.querySelectorAll('.nt-btn.login,.bnl.login').forEach(function(b){b.remove();});
-    var w=document.createElement('div');
-    w.id='authWidget';
-    w.style.cssText='position:relative;display:flex;align-items:center;';
-    if(!e){
-      w.innerHTML='<a class="nt-btn login" href="'+lU+'">Log In</a>';
-    } else {
-      var i=(n||e)[0].toUpperCase(),d=n||e.split('@')[0],tl=TL[t]||'Member';
-      w.innerHTML=
-        '<div class="auth-avatar" onclick="toggleAuthDD()">'+i+'</div>'+
-        '<span class="auth-name-tag" onclick="toggleAuthDD()">'+d+'</span>'+
-        '<div class="auth-dropdown" id="authDropdown">'+
-          '<div class="auth-dd-header">'+
-            '<div class="auth-dd-name">'+d+'</div>'+
-            '<div class="auth-dd-email">'+e+'</div>'+
-            '<div class="auth-dd-tier">'+tl+'</div>'+
-          '</div>'+
-          '<a class="auth-dd-item" href="'+aU+'">&#128100; My Account</a>'+
-          '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/studio">&#127916; Studio</a>'+
-          '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#9997; Publisher</a>'+
-          '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/voice-studio">&#127911; Voice Studio</a>'+
-          '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/collections">&#128218; Collections</a>'+
-          '<a class="auth-dd-item" href="https://smcantrellbooks.com">&#127758; Main Store</a>'+
-          '<div class="auth-dd-divider"></div>'+
-          '<button class="auth-dd-item danger" onclick="authSignOut()">&#9889; Sign Out</button>'+
-        '</div>';
-    }
-    nav.appendChild(w);
-    document.addEventListener('click',function(ev){
-      var dd=document.getElementById('authDropdown');
-      if(dd&&!dd.contains(ev.target)&&!ev.target.classList.contains('auth-avatar'))dd.classList.remove('open');
-    });
-    window.toggleAuthDD=function(){var dd=document.getElementById('authDropdown');if(dd)dd.classList.toggle('open');};
-    window.authSignOut=function(){
-      if(!confirm('Sign out?'))return;
-      ['cc_user_tier','cc_user_name','cc_user_email','cc_user_id'].forEach(function(k){localStorage.removeItem(k);});
-      if(window._sb)window._sb.auth.signOut();
-      window.location.href=lU;
-    };
+function nyxenKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();nyxenSend();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,80)+'px';}
+
+// ── NYXEN MIC (speech-to-text) ──
+var nyxenRecording=false,nyxenMediaRec=null,nyxenAudioChunks=[];
+function toggleNyxenMic(){
+  if(nyxenRecording){
+    if(nyxenMediaRec)nyxenMediaRec.stop();
+    return;
   }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',buildWidget);}
-  else{buildWidget();}
-})();
+  if(!navigator.mediaDevices){alert('Mic not available');return;}
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    nyxenMediaRec=new MediaRecorder(stream,{mimeType:'audio/webm'});nyxenAudioChunks=[];
+    nyxenMediaRec.ondataavailable=function(e){if(e.data.size>0)nyxenAudioChunks.push(e.data);};
+    nyxenMediaRec.onstop=function(){
+      stream.getTracks().forEach(function(t){t.stop();});
+      nyxenRecording=false;
+      var btn=document.getElementById('nyxenMicBtn');
+      btn.style.background='var(--gold-lt)';btn.style.color='var(--plum)';
+      addNyxMsg('🎤 Voice input will be available when Nyxen returns. Please type your message for now.','ai');
+    };
+    nyxenMediaRec.start();nyxenRecording=true;
+    var btn=document.getElementById('nyxenMicBtn');
+    btn.style.background='#ff4444';btn.style.color='#fff';
+  }).catch(function(){alert('Mic permission denied');});
+}
+
+// ── NYXEN VOICE PLAYBACK (TTS for responses) ──
+var nyxenVoiceOn=false;
+function toggleNyxenVoice(){
+  nyxenVoiceOn=!nyxenVoiceOn;
+  var btn=document.getElementById('nyxenVoiceBtn');
+  if(nyxenVoiceOn){btn.style.background='var(--plum)';btn.style.color='#fff';}
+  else{btn.style.background='var(--gold-lt)';btn.style.color='var(--plum)';}
+}
+async function speakNyxenReply(text){
+  // Nyxen voice playback disabled — will be part of independent Nyxen app
+  return;
+}
 </script>
 </body>
 </html>
