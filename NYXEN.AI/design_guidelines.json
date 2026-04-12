@@ -1,0 +1,175 @@
+{
+  "identity": {
+    "name": "Nyxen",
+    "role": "The Professional Muse",
+    "persona": {
+      "tone": "Professional, Smart, Friendly, Encouraging",
+      "visual_metaphor": "A modern, sun-drenched writer's studio",
+      "voice_description": "Clear, articulate, warm (Kokoro TTS)"
+    }
+  },
+  "theme_strategy": {
+    "mode": "light_preferred",
+    "archetype": "ORGANIC & EARTHY",
+    "emotional_goal": "Focus, Creativity, Serenity",
+    "description": "A clean, distraction-free environment that mimics the feeling of premium paper and fresh ink. Avoids the 'cold tech' look of standard AI tools."
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "name": "Nyxen Cream & Charcoal",
+        "50": "#fbfaf8",
+        "100": "#f5f2eb",
+        "200": "#ebe4d4",
+        "300": "#decfb3",
+        "400": "#cbb28a",
+        "500": "#b69666",
+        "600": "#a88356",
+        "700": "#8c6947",
+        "800": "#73563e",
+        "900": "#5e4735",
+        "950": "#32251a"
+      },
+      "neutral": {
+        "name": "Slate Ink",
+        "50": "#f8fafc",
+        "100": "#f1f5f9",
+        "200": "#e2e8f0",
+        "300": "#cbd5e1",
+        "400": "#94a3b8",
+        "500": "#64748b",
+        "600": "#475569",
+        "700": "#334155",
+        "800": "#1e293b",
+        "900": "#0f172a",
+        "950": "#020617"
+      },
+      "accent": {
+        "name": "Editorial Red",
+        "DEFAULT": "#be123c",
+        "foreground": "#ffffff"
+      }
+    },
+    "semantic": {
+      "background": "#fdfcfb",
+      "foreground": "#1e293b",
+      "card": "#ffffff",
+      "card_foreground": "#1e293b",
+      "popover": "#ffffff",
+      "popover_foreground": "#1e293b",
+      "primary": "#1e293b",
+      "primary_foreground": "#f8fafc",
+      "secondary": "#f1f5f9",
+      "secondary_foreground": "#0f172a",
+      "muted": "#f1f5f9",
+      "muted_foreground": "#64748b",
+      "accent": "#f1f5f9",
+      "accent_foreground": "#0f172a",
+      "destructive": "#ef4444",
+      "destructive_foreground": "#f8fafc",
+      "border": "#e2e8f0",
+      "input": "#e2e8f0",
+      "ring": "#94a3b8"
+    }
+  },
+  "typography": {
+    "strategy": "The Old Money Tech",
+    "fonts": {
+      "heading": {
+        "family": "Playfair Display, serif",
+        "weights": ["400", "600", "700"],
+        "usage": "Headings, Hero Sections, Story Titles"
+      },
+      "body": {
+        "family": "Inter, sans-serif",
+        "weights": ["400", "500"],
+        "usage": "UI Elements, Chat Bubbles, Settings"
+      },
+      "editor": {
+        "family": "Merriweather, serif",
+        "weights": ["300", "400", "700"],
+        "usage": "The main document editor (for reading/writing comfort)"
+      }
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl lg:text-6xl font-serif tracking-tight",
+      "h2": "text-3xl md:text-4xl font-serif tracking-tight",
+      "h3": "text-2xl font-serif",
+      "body": "text-base md:text-lg leading-relaxed",
+      "small": "text-sm font-sans tracking-wide uppercase"
+    }
+  },
+  "layout_strategies": {
+    "spacing_system": {
+      "base": "Generous",
+      "container_padding": "p-6 md:p-12 lg:p-16",
+      "section_gap": "gap-8 md:gap-12",
+      "internal_padding": "p-6"
+    },
+    "grid_system": {
+      "dashboard": "grid-cols-1 md:grid-cols-12 gap-6",
+      "editor": "flex flex-col md:flex-row h-screen overflow-hidden",
+      "card_grid": "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "rounded-full px-8 py-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5",
+      "secondary": "rounded-full px-6 py-3 bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all duration-300",
+      "ghost": "rounded-full px-4 py-2 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+    },
+    "cards": {
+      "style": "bg-card border border-border/40 shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden",
+      "hover_effect": "hover:border-primary/20 hover:-translate-y-1"
+    },
+    "inputs": {
+      "style": "rounded-lg border-border bg-background px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 outline-none placeholder:text-muted-foreground/50"
+    },
+    "chat_interface": {
+      "bubble_user": "bg-primary text-primary-foreground rounded-2xl rounded-tr-sm px-6 py-4 max-w-[80%]",
+      "bubble_ai": "bg-secondary text-secondary-foreground rounded-2xl rounded-tl-sm px-6 py-4 max-w-[80%] shadow-sm",
+      "container": "flex flex-col gap-4 p-4 md:p-6 h-full overflow-y-auto"
+    }
+  },
+  "visual_assets": {
+    "avatar": {
+      "url": "https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg",
+      "alt": "Nyxen AI Assistant",
+      "style": "rounded-full border-2 border-white shadow-lg object-cover"
+    },
+    "templates": [
+      {
+        "category": "Fantasy",
+        "url": "https://images.unsplash.com/photo-1770708126350-1e2da05942bc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHxjcmVhdGl2ZSUyMHdyaXRpbmclMjBzdG9yeXRlbGxpbmclMjBmYW50YXN5JTIwbGFuZHNjYXBlfGVufDB8fHx8MTc3NDM5ODQ4N3ww&ixlib=rb-4.1.0&q=85"
+      },
+      {
+        "category": "Mystery",
+        "url": "https://images.pexels.com/photos/4256852/pexels-photo-4256852.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      },
+      {
+        "category": "Classic",
+        "url": "https://images.pexels.com/photos/7978245/pexels-photo-7978245.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+      }
+    ]
+  },
+  "motion": {
+    "transition_default": "transition-all duration-300 ease-out",
+    "page_transition": "animate-in fade-in slide-in-from-bottom-4 duration-500",
+    "hover_lift": "hover:-translate-y-1 hover:shadow-lg transition-transform duration-300"
+  },
+  "universal_guidelines": {
+    "do_not_use_gradients": "Avoid full-screen gradients. Use solid, warm neutrals.",
+    "typography_first": "Design is 80% typography. Ensure line-height is generous (1.6 to 1.8 for body text).",
+    "shadows": "Use soft, diffuse shadows (shadow-sm, shadow-md). Avoid harsh black shadows.",
+    "borders": "Use subtle borders (border-stone-200). Avoid heavy black borders."
+  },
+  "instructions_to_main_agent": [
+    "Install 'lucide-react' for icons.",
+    "Use 'Playfair Display' from Google Fonts for all headings.",
+    "Use 'Inter' for UI text and 'Merriweather' for the document editor content.",
+    "Ensure the 'Nyxen' avatar is always visible in the chat interface.",
+    "Implement a 'Zen Mode' in the document editor that hides the sidebar.",
+    "Use the provided image URLs for the story templates.",
+    "Make sure the TTS voice visualization (waveform) is prominent when Nyxen is speaking."
+  ]
+}
