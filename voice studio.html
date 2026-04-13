@@ -71,9 +71,12 @@ textarea.inp{resize:vertical;line-height:1.75;}
 .char-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--plum-lt);border:1px solid var(--plum-bd);font-size:.78rem;color:var(--plum);font-weight:600;}
 .char-tag button{background:none;border:none;cursor:pointer;color:var(--plum);font-size:13px;padding:0 2px;line-height:1;}
 .char-tag button:hover{color:var(--red);}
+.role-box{border:1px solid var(--gold-bd);border-radius:10px;padding:12px;background:var(--gold-lt);margin-top:6px;}
+.role-box .lbl{color:var(--plum);font-size:.8rem;}
 </style>
 </head>
 <body>
+
 <!-- BANNER -->
 <div class="banner">
   <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');">
@@ -85,9 +88,9 @@ textarea.inp{resize:vertical;line-height:1.75;}
   </div>
   <nav class="nav-top">
     <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#x1F3E0; Home</a>
-    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/myaccount">My Account</a>
-    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Login</a>
-    <a class="nt-btn logout" href="https://creatives.smcantrellbooks.com/logout">Logout</a>
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/login/myaccount">My Account</a>
+    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
+    <a class="nt-btn logout" href="https://creatives.smcantrellbooks.com/logout">Log Out</a>
   </nav>
   <nav class="nav-bot">
     <div class="nb-inner">
@@ -107,9 +110,9 @@ textarea.inp{resize:vertical;line-height:1.75;}
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+
     <!-- LEFT -->
     <div>
-      <!-- TOP: File Converter / Editor -->
       <div class="panel" style="padding:14px;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
           <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#x1F4D6; File Converter</div>
@@ -130,7 +133,6 @@ textarea.inp{resize:vertical;line-height:1.75;}
         <p style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;">Import your EPUB or DOCX here. Export sends filtered text to the audiobook editor below. Convert to EPUB generates a downloadable EPUB file.</p>
       </div>
 
-      <!-- BOTTOM: Document Editor Panel -->
       <div class="panel" style="padding:14px;">
         <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
           <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#x270E; Document Editor</div>
@@ -146,66 +148,81 @@ textarea.inp{resize:vertical;line-height:1.75;}
           <div><label class="lbl">Author Name</label><input class="inp" type="text" id="authorName" placeholder="S.M. Cantrell"></div>
         </div>
         <div style="display:flex;gap:12px;">
-          <!-- Chapter Nav Sidebar -->
           <div style="width:160px;flex-shrink:0;">
             <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;color:var(--plum);letter-spacing:.1em;margin-bottom:8px;">&#x1F4DA; Chapters</div>
             <div id="chapterNav" style="display:flex;flex-direction:column;gap:4px;max-height:660px;overflow-y:auto;">
               <div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>
             </div>
           </div>
-          <!-- Editor -->
           <div style="flex:1;min-width:0;">
             <div id="docEditor" contenteditable="true" style="min-height:500px;max-height:700px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;" ondragover="event.preventDefault();this.style.borderColor='var(--plum)';" ondragleave="this.style.borderColor='var(--gold-bd)';" ondrop="handleEditorDrop(event)">Start typing or import a file...</div>
           </div>
         </div>
       </div>
 
-      <div class="panel" style="padding:14px;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A7;</span> Audio Player</div>
-        <audio id="generatedAudio" controls style="width:100%;"></audio>
-        <div class="btn-row" style="margin-top:8px;">
-          <button class="btn-gold" onclick="downloadAudio()" style="font-size:.85rem;padding:8px 16px;">&#x2B07; Download</button>
-        </div>
-      </div>
     </div>
 
     <!-- RIGHT -->
     <div>
-      <!-- Voice 1 -->
+
+      <!-- PANEL 1: Voice Preview -->
       <div class="panel" style="padding:14px;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A4;</span> Voice 1</div>
-        <div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;">
-          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;cursor:pointer;"><input type="radio" name="voice1Role" id="voice1RoleNarrator" value="narrator" checked onchange="onVoice1RoleChange()"> Narrator</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;cursor:pointer;"><input type="radio" name="voice1Role" id="voice1RoleBoth" value="both" onchange="onVoice1RoleChange()"> 2nd Voice</label>
-        </div>
-        <div id="voice1RoleDesc" style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-bottom:10px;">Voice 1 narrates the entire book.</div>
-        <div id="voice1CharNameWrap" style="display:none;margin-bottom:10px;">
-          <label class="lbl">Character 1 Name</label>
-          <div style="display:flex;gap:6px;">
-            <input class="inp" type="text" id="voice1CharName" placeholder="e.g. Nyara" style="flex:1;font-size:.9rem;">
-            <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addChar1Name()">+ Add</button>
-          </div>
-          <div id="char1Tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
-        </div>
-        <div id="engine1Tabs" class="engine-tabs"><span class="engine-loading">Loading engines...</span></div>
-        <select class="inp" id="voice1Select" style="font-size:.9rem;padding:8px 10px;"><option value="">Loading voices...</option></select>
-        <button class="btn-plum" style="width:100%;margin-top:6px;" onclick="previewVoice(1)">&#x25B6; Preview Voice 1</button>
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A4;</span> Voice Preview</div>
+        <div id="enginePreviewTabs" class="engine-tabs"><span class="engine-loading">Loading engines...</span></div>
+        <select class="inp" id="voicePreviewSelect" style="font-size:.9rem;padding:8px 10px;"><option value="">Loading voices...</option></select>
+        <button class="btn-plum" style="width:100%;margin-top:6px;" onclick="previewSelectedVoice()">&#x25B6; Preview Voice</button>
       </div>
 
-      <!-- Voice 2 (Character) -->
-      <div class="panel" id="voice2Panel" style="padding:14px;display:none;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A4;</span> Voice 2 — Character</div>
-        <div style="margin-bottom:10px;">
-          <label class="lbl">Character Name</label>
-          <div style="display:flex;gap:6px;">
-            <input class="inp" type="text" id="characterNameInput" placeholder="e.g. Nyara" style="flex:1;">
-            <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addCharacterName()">+ Add</button>
-          </div>
-          <div id="characterTags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+      <!-- PANEL 2: Voice Assignment -->
+      <div class="panel" style="padding:14px;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3AD;</span> Voice Assignment</div>
+
+        <!-- Radio buttons -->
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;cursor:pointer;">
+            <input type="radio" name="voiceRole" value="narrator" checked onchange="onRoleChange()"> Narrator
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;cursor:pointer;">
+            <input type="radio" name="voiceRole" value="character" onchange="onRoleChange()"> Character
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;cursor:pointer;">
+            <input type="radio" name="voiceRole" value="two" onchange="onRoleChange()"> 2nd Voice
+          </label>
         </div>
-        <div id="engine2Tabs" class="engine-tabs"><span class="engine-loading">Loading engines...</span></div>
-        <select class="inp" id="voice2Select" style="font-size:.9rem;padding:8px 10px;"><option value="">— None (single voice) —</option></select>
-        <button class="btn-plum" style="width:100%;margin-top:6px;" onclick="previewVoice(2)">&#x25B6; Preview Voice 2</button>
+
+        <!-- Narrator voice -->
+        <div style="margin-top:14px;">
+          <label class="lbl">Narrator Voice</label>
+          <select class="inp" id="voice1Select" style="font-size:.9rem;padding:8px 10px;"><option value="">Loading voices...</option></select>
+        </div>
+
+        <!-- Character block -->
+        <div id="characterSection" style="display:none;">
+          <div class="role-box">
+            <label class="lbl">Character Voice</label>
+            <select class="inp" id="voice2Select" style="font-size:.9rem;padding:8px 10px;margin-bottom:10px;"><option value="">— None —</option></select>
+            <label class="lbl">Character Name(s)</label>
+            <div style="display:flex;gap:6px;">
+              <input class="inp" type="text" id="characterNameInput" placeholder="e.g. Nyara" style="flex:1;font-size:.9rem;">
+              <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addCharacterName()">+ Add</button>
+            </div>
+            <div id="characterTags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+          </div>
+        </div>
+
+        <!-- 2nd character block -->
+        <div id="character2Section" style="display:none;">
+          <div class="role-box" style="margin-top:8px;">
+            <label class="lbl">2nd Character Voice</label>
+            <select class="inp" id="voice3Select" style="font-size:.9rem;padding:8px 10px;margin-bottom:10px;"><option value="">— None —</option></select>
+            <label class="lbl">2nd Character Name(s)</label>
+            <div style="display:flex;gap:6px;">
+              <input class="inp" type="text" id="char2NameInput" placeholder="e.g. Kael" style="flex:1;font-size:.9rem;">
+              <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addChar2Name()">+ Add</button>
+            </div>
+            <div id="char2Tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Generate -->
@@ -217,13 +234,17 @@ textarea.inp{resize:vertical;line-height:1.75;}
         <div id="genStatus" class="status-msg"></div>
       </div>
 
-      <!-- Quick TTS -->
+      <!-- Audio Player -->
       <div class="panel" style="padding:14px;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F509;</span> Quick TTS</div>
-        <textarea class="inp" id="ttsText" rows="3" placeholder="Type text to hear it spoken..." style="font-size:.9rem;"></textarea>
-        <button class="btn-gold" style="width:100%;margin-top:6px;" onclick="generateTTS()">&#x25B6; Speak</button>
-        <div id="ttsStatus" class="status-msg"></div>
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A7;</span> Audio Player</div>
+        <audio id="rightAudio" controls style="width:100%;"></audio>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn-gold" onclick="downloadAudio()" style="font-size:.85rem;padding:8px 16px;flex:1;">&#x2B07; Download</button>
+          <button class="btn-plum" onclick="saveToCloudflare()" style="font-size:.85rem;padding:8px 16px;flex:1;">&#x2601; Save</button>
+        </div>
+        <div id="cloudSaveStatus" class="status-msg"></div>
       </div>
+
     </div>
   </div>
 </div>
@@ -240,443 +261,441 @@ var API_BASE = 'https://cantrell-creatives.fly.dev';
 var chapters = [];
 var generatedAudioUrl = null;
 var characterNames = [];
-var char1Names = [];
-var engineState = { 1: 'gtts', 2: 'gtts' };
+var char2Names = [];
 var enginesData = {};
+var enginePreviewState = 'gtts';
 
-window.addEventListener('DOMContentLoaded', function(){ loadVoices(); });
-
-function onVoice1RoleChange(){
-  var role = document.querySelector('input[name="voice1Role"]:checked').value;
-  var desc = document.getElementById('voice1RoleDesc');
-  var v2panel = document.getElementById('voice2Panel');
-  var v1charWrap = document.getElementById('voice1CharNameWrap');
-  if(role === 'narrator'){
-    desc.textContent = 'Voice 1 narrates the entire book.';
-    v2panel.style.display = 'none';
-    v1charWrap.style.display = 'none';
-  } else if(role === 'both'){
-    desc.textContent = 'Voice 1 is narrator / character 1. Voice 2 panel below for character 2.';
-    v2panel.style.display = 'block';
-    v1charWrap.style.display = 'block';
-  }
-}
-
-function addCharacterName(){
-  var input = document.getElementById('characterNameInput');
-  var name = input.value.trim();
-  if(!name) return;
-  if(characterNames.indexOf(name) === -1){ characterNames.push(name); renderCharacterTags(); }
-  input.value = '';
-}
-
-document.addEventListener('DOMContentLoaded', function(){
-  document.getElementById('characterNameInput').addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){ e.preventDefault(); addCharacterName(); }
-  });
-  document.getElementById('voice1CharName').addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){ e.preventDefault(); addChar1Name(); }
-  });
+window.addEventListener('DOMContentLoaded', function(){
+  loadVoices();
+  document.getElementById('characterNameInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){e.preventDefault();addCharacterName();} });
+  document.getElementById('char2NameInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){e.preventDefault();addChar2Name();} });
 });
 
-function removeCharacterName(name){
-  characterNames = characterNames.filter(function(n){ return n !== name; });
-  renderCharacterTags();
+/* ── Role change ── */
+function onRoleChange(){
+  var role = document.querySelector('input[name="voiceRole"]:checked').value;
+  document.getElementById('characterSection').style.display  = (role==='character'||role==='two') ? 'block' : 'none';
+  document.getElementById('character2Section').style.display = (role==='two') ? 'block' : 'none';
 }
 
-function renderCharacterTags(){
-  var container = document.getElementById('characterTags');
-  container.innerHTML = '';
-  characterNames.forEach(function(name){
-    var tag = document.createElement('span');
-    tag.className = 'char-tag';
-    tag.innerHTML = name + '<button onclick="removeCharacterName(\'' + name.replace(/'/g,"\\'") + '\')" title="Remove">&times;</button>';
-    container.appendChild(tag);
+/* ── Character tags ── */
+function addCharacterName(){
+  var input=document.getElementById('characterNameInput'); var name=input.value.trim(); if(!name) return;
+  if(characterNames.indexOf(name)===-1){ characterNames.push(name); renderTags('characterTags',characterNames,'removeCharacterName'); }
+  input.value='';
+}
+function removeCharacterName(name){ characterNames=characterNames.filter(function(n){return n!==name;}); renderTags('characterTags',characterNames,'removeCharacterName'); }
+
+function addChar2Name(){
+  var input=document.getElementById('char2NameInput'); var name=input.value.trim(); if(!name) return;
+  if(char2Names.indexOf(name)===-1){ char2Names.push(name); renderTags('char2Tags',char2Names,'removeChar2Name'); }
+  input.value='';
+}
+function removeChar2Name(name){ char2Names=char2Names.filter(function(n){return n!==name;}); renderTags('char2Tags',char2Names,'removeChar2Name'); }
+
+function renderTags(containerId, names, removeFn){
+  var c=document.getElementById(containerId); c.innerHTML='';
+  names.forEach(function(name){
+    var tag=document.createElement('span'); tag.className='char-tag';
+    tag.innerHTML=name+'<button onclick="'+removeFn+'(\''+name.replace(/'/g,"\\'")+'\')" title="Remove">&times;</button>';
+    c.appendChild(tag);
   });
 }
 
-function addChar1Name(){
-  var input = document.getElementById('voice1CharName');
-  var name = input.value.trim();
-  if(!name) return;
-  if(char1Names.indexOf(name) === -1){ char1Names.push(name); renderChar1Tags(); }
-  input.value = '';
-}
-function removeChar1Name(name){
-  char1Names = char1Names.filter(function(n){ return n !== name; });
-  renderChar1Tags();
-}
-function renderChar1Tags(){
-  var container = document.getElementById('char1Tags');
-  container.innerHTML = '';
-  char1Names.forEach(function(name){
-    var tag = document.createElement('span');
-    tag.className = 'char-tag';
-    tag.innerHTML = name + '<button onclick="removeChar1Name(\'' + name.replace(/'/g,"\\'") + '\')" title="Remove">&times;</button>';
-    container.appendChild(tag);
-  });
+/* ── Hardcoded 24 CC Voices ── */
+var CC_VOICES = [
+  {id:'Adam_English-British',                  label:'Adam (British)'},
+  {id:'Andrew_English-US',                     label:'Andrew (American)'},
+  {id:'Carlton_English-African_American',      label:'Carlton (African American)'},
+  {id:'Edith_English-US',                      label:'Edith (American)'},
+  {id:'Eve_English-US',                        label:'Eve (American)'},
+  {id:'Hugh_English-Scottish',                 label:'Hugh (Scottish)'},
+  {id:'Jane_English-British',                  label:'Jane (British)'},
+  {id:'Jessica_Anne_English-US',               label:'Jessica Anne (American)'},
+  {id:'John_D_English-US',                     label:'John D (American)'},
+  {id:'Kelli_English-African_American',        label:'Kelli (African American)'},
+  {id:'Lamin_English-African_American',        label:'Lamin (African American)'},
+  {id:'Linda_English-US',                      label:'Linda (American)'},
+  {id:'Mandla_English-African',                label:'Mandla (African)'},
+  {id:'Ms._Walker_English-African_American',   label:'Ms. Walker (African American)'},
+  {id:'Palesa_English-African',                label:'Palesa (African)'},
+  {id:'Piper_English-Irish',                   label:'Piper (Irish)'},
+  {id:'Reese_English-US',                      label:'Reese (American)'},
+  {id:'Roger_English-US',                      label:'Roger (American)'},
+  {id:'Scott_English-African_American',        label:'Scott (African American)'},
+  {id:'Shayla_English-African_American',       label:'Shayla (African American)'},
+  {id:'Sonya_English-African_American',        label:'Sonya (African American)'},
+  {id:'Tom_English-Irish',                     label:'Tom (Irish)'},
+  {id:'True_English-US',                       label:'True (American)'},
+  {id:'Will_English-US',                       label:'Will (American)'},
+];
+
+/* ── Load voices ── */
+function loadVoices(){
+  enginesData['gtts'] = {label:'CC Voices', voices:CC_VOICES};
+  buildPreviewTabs();
+  populateSelect('voice1Select','gtts',false);
+  populateSelect('voice2Select','gtts',true);
+  populateSelect('voice3Select','gtts',true);
 }
 
-async function loadVoices(){
+function buildPreviewTabs(){
+  var el=document.getElementById('enginePreviewTabs'); el.innerHTML='';
+  Object.keys(enginesData).forEach(function(engineId){
+    var tab=document.createElement('button');
+    tab.className='engine-tab'+(enginePreviewState===engineId?' active':'');
+    tab.textContent=enginesData[engineId].label;
+    tab.onclick=function(){ enginePreviewState=engineId; buildPreviewTabs(); populateSelect('voicePreviewSelect',engineId,false); };
+    el.appendChild(tab);
+  });
+  populateSelect('voicePreviewSelect',enginePreviewState,false);
+}
+
+function populateSelect(selId,engineId,addNone){
+  var sel=document.getElementById(selId);
+  var voices=(enginesData[engineId]&&enginesData[engineId].voices)||[];
+  sel.innerHTML=addNone?'<option value="">— None —</option>':'';
+  voices.forEach(function(v){ var opt=document.createElement('option'); opt.value=v.id; opt.textContent=v.label; sel.appendChild(opt); });
+}
+
+/* ── Preview ── */
+async function previewSelectedVoice(){
+  var voiceName=document.getElementById('voicePreviewSelect').value; if(!voiceName) return;
   try {
-    var resp = await fetch(API_BASE + '/api/voices/custom');
-    if(!resp.ok) throw new Error('API unavailable');
-    var voices = await resp.json();
-    var voiceList = voices.map(function(v){ return { id: v.name, label: v.name }; });
-    enginesData['gtts'] = { label: 'VoiceForge TTS', voices: voiceList };
-    buildEngineTabs(1); buildEngineTabs(2);
-  } catch(e) {
-    enginesData['gtts'] = { label: 'VoiceForge TTS', voices: [{id:'en-us', label:'English US'}] };
-    buildEngineTabs(1); buildEngineTabs(2);
+    var resp=await fetch(API_BASE+'/api/voice-sample/'+encodeURIComponent(voiceName));
+    if(!resp.ok) throw new Error('Server returned '+resp.status);
+    var blob=await resp.blob();
+    var url=URL.createObjectURL(blob);
+    var audio=new Audio(url);
+    audio.play();
+  } catch(err){ alert('Voice preview error: '+err.message); }
+}
+
+/* ── Generate audiobook ── */
+async function generateAudiobook(){
+  var editor=document.getElementById('docEditor');
+  var fullText=(editor.textContent||editor.innerText).trim();
+  if(!fullText||fullText==='Start typing or import a file...'){ showStatus('genStatus','err','Add some text first.'); return; }
+  var role=document.querySelector('input[name="voiceRole"]:checked').value;
+  var voice1=document.getElementById('voice1Select').value;
+  var voice2=document.getElementById('voice2Select').value;
+  var voice3=document.getElementById('voice3Select').value;
+  var chars=[];
+  if(role==='character'||role==='two') characterNames.forEach(function(n){ chars.push({name:n,voice_id:voice2||voice1}); });
+  if(role==='two') char2Names.forEach(function(n){ chars.push({name:n,voice_id:voice3||voice1}); });
+  var btn=document.getElementById('generateBtn');
+  btn.disabled=true; btn.innerHTML='&#x1F3A7; Generating...';
+  var progress=document.getElementById('genProgress'); var fill=document.getElementById('genProgressFill');
+  progress.style.display='block'; fill.style.width='10%';
+  showStatus('genStatus','info','Sending manuscript to audio engine...');
+  var controller=new AbortController();
+  var timeout=setTimeout(function(){ controller.abort(); },300000);
+  try {
+    fill.style.width='30%';
+    showStatus('genStatus','info','Processing audio — this may take a few minutes...');
+    var resp=await fetch(API_BASE+'/api/audiobook',{method:'POST',headers:{'Content-Type':'application/json'},
+      signal:controller.signal,
+      body:JSON.stringify({text:fullText,narrator_voice:voice1,characters:chars,auto_detect:true,format:'mp3'})});
+    clearTimeout(timeout);
+    fill.style.width='80%';
+    if(!resp.ok) throw new Error('Server returned '+resp.status);
+    var blob=await resp.blob(); fill.style.width='100%';
+    generatedAudioUrl=URL.createObjectURL(blob);
+    var player=document.getElementById('rightAudio');
+    player.src=generatedAudioUrl;
+    player.load();
+    player.play().catch(function(){});
+    showStatus('genStatus','ok','&#10003; Audiobook generated!');
+  } catch(err){
+    clearTimeout(timeout);
+    var msg=err.name==='AbortError'?'Request timed out. Try a shorter passage.':'Error: '+err.message;
+    showStatus('genStatus','err',msg); fill.style.width='0%';
+  }
+  btn.disabled=false; btn.innerHTML='&#x1F3A7; Generate Audiobook';
+}
+
+function downloadAudio(){
+  if(!generatedAudioUrl) return;
+  var a=document.createElement('a'); a.href=generatedAudioUrl;
+  a.download=(document.getElementById('bookTitle').value||'audiobook')+'.mp3'; a.click();
+}
+
+async function saveToCloudflare(){
+  if(!generatedAudioUrl){ showStatus('cloudSaveStatus','err','No audio to save. Generate first.'); return; }
+  showStatus('cloudSaveStatus','info','Saving to cloud...');
+  try {
+    var title=(document.getElementById('bookTitle').value||'audiobook').replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_');
+    var filename='audiobooks/'+title+'_'+Date.now()+'.mp3';
+    var audioResp=await fetch(generatedAudioUrl);
+    var blob=await audioResp.blob();
+    var formData=new FormData();
+    formData.append('file', blob, filename);
+    formData.append('path', filename);
+    var resp=await fetch('https://nyxen-video-worker.smcantrellbooks.workers.dev/upload',{
+      method:'POST', body:formData
+    });
+    if(!resp.ok) throw new Error('Server returned '+resp.status);
+    var data=await resp.json();
+    showStatus('cloudSaveStatus','ok','&#10003; Saved to cloud: '+filename);
+  } catch(err){
+    showStatus('cloudSaveStatus','err','Save error: '+err.message);
   }
 }
 
-function buildEngineTabs(slot){
-  var tabsEl = document.getElementById('engine' + slot + 'Tabs');
-  tabsEl.innerHTML = '';
-  Object.keys(enginesData).forEach(function(engineId){
-    var tab = document.createElement('button');
-    tab.className = 'engine-tab' + (engineState[slot] === engineId ? ' active' : '');
-    tab.textContent = enginesData[engineId].label;
-    tab.onclick = function(){ engineState[slot] = engineId; buildEngineTabs(slot); populateVoiceSelect(slot, engineId); };
-    tabsEl.appendChild(tab);
-  });
-  populateVoiceSelect(slot, engineState[slot]);
-}
-
-function populateVoiceSelect(slot, engineId){
-  var sel = document.getElementById('voice' + slot + 'Select');
-  var voices = (enginesData[engineId] && enginesData[engineId].voices) || [];
-  sel.innerHTML = slot === 2 ? '<option value="">— None (single voice) —</option>' : '';
-  voices.forEach(function(v){
-    var opt = document.createElement('option');
-    opt.value = v.id; opt.textContent = v.label;
-    sel.appendChild(opt);
-  });
-}
-
-async function previewVoice(slot){
-  var voiceName = document.getElementById('voice' + slot + 'Select').value;
-  if(!voiceName) return;
-  try {
-    var resp = await fetch(API_BASE + '/api/voice-sample/' + encodeURIComponent(voiceName));
-    if(!resp.ok) throw new Error('Server returned ' + resp.status);
-    var blob = await resp.blob();
-    new Audio(URL.createObjectURL(blob)).play();
-  } catch(err) { alert('Voice preview error: ' + err.message); }
-}
-
-async function generateTTS(){
-  var text = document.getElementById('ttsText').value.trim();
-  if(!text){ showStatus('ttsStatus','err','Enter some text first.'); return; }
-  var voiceName = document.getElementById('voice1Select').value;
-  showStatus('ttsStatus','info','Generating speech...');
-  try {
-    var resp = await fetch(API_BASE + '/api/tts', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:text.substring(0,2000), voice_id:voiceName, format:'mp3'})
-    });
-    if(!resp.ok) throw new Error('Server returned ' + resp.status);
-    var blob = await resp.blob();
-    var url = URL.createObjectURL(blob);
-    document.getElementById('generatedAudio').src = url;
-    generatedAudioUrl = url;
-    showStatus('ttsStatus','ok','&#10003; Speech generated!');
-  } catch(e) { showStatus('ttsStatus','err','Error: ' + e.message); }
-}
-
+/* ── File handling ── */
 function handleFileUpload(e){ var f=e.target.files[0]; if(f) processFile(f); e.target.value=''; }
 function handleEditorDrop(e){ e.preventDefault(); document.getElementById('docEditor').style.borderColor='var(--gold-bd)'; var f=e.dataTransfer.files[0]; if(f) processFile(f); }
 
-// -- EPUB Handler -- loads into top editor --
 function handleEpubUpload(e){
-  var f = e.target.files[0];
-  if(!f) return;
-  e.target.value = '';
-  showStatus('epubStatus','info','Reading EPUB: ' + f.name + '...');
-  if(!document.getElementById('bookTitle').value)
-    document.getElementById('bookTitle').value = f.name.replace(/\.epub$/i,'');
-  if(typeof JSZip === 'undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
-  var reader = new FileReader();
-  reader.onload = function(ev){
+  var f=e.target.files[0]; if(!f) return; e.target.value='';
+  showStatus('epubStatus','info','Reading EPUB: '+f.name+'...');
+  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=f.name.replace(/\.epub$/i,'');
+  if(typeof JSZip==='undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
+  var reader=new FileReader();
+  reader.onload=function(ev){
     JSZip.loadAsync(ev.target.result).then(function(zip){
-      var containerXml = zip.files['META-INF/container.xml'];
+      var containerXml=zip.files['META-INF/container.xml'];
       if(!containerXml) throw new Error('Not a valid EPUB (no container.xml)');
       return containerXml.async('text').then(function(containerText){
-        var opfMatch = containerText.match(/full-path="([^"]+\.opf)"/i);
+        var opfMatch=containerText.match(/full-path="([^"]+\.opf)"/i);
         if(!opfMatch) throw new Error('Cannot find OPF file');
-        var opfPath = opfMatch[1];
-        var opfBase = opfPath.substring(0, opfPath.lastIndexOf('/') + 1);
+        var opfPath=opfMatch[1]; var opfBase=opfPath.substring(0,opfPath.lastIndexOf('/')+1);
         return zip.files[opfPath].async('text').then(function(opfText){
-          var itemMap = {};
-          var itemMatches = opfText.matchAll(/<item\s[^>]*id="([^"]+)"[^>]*href="([^"]+)"[^>]*>/gi);
-          for(var m of itemMatches){ itemMap[m[1]] = opfBase + m[2]; }
-          var spineIds = [];
-          var spineMatches = opfText.matchAll(/<itemref\s[^>]*idref="([^"]+)"/gi);
-          for(var s of spineMatches){ spineIds.push(s[1]); }
-          var promises = spineIds.map(function(id){
-            var href = itemMap[id];
-            if(!href || !zip.files[href]) return Promise.resolve('');
+          var itemMap={};
+          for(var m of opfText.matchAll(/<item\s[^>]*id="([^"]+)"[^>]*href="([^"]+)"[^>]*>/gi)){ itemMap[m[1]]=opfBase+m[2]; }
+          var spineIds=[];
+          for(var s of opfText.matchAll(/<itemref\s[^>]*idref="([^"]+)"/gi)){ spineIds.push(s[1]); }
+          return Promise.all(spineIds.map(function(id){
+            var href=itemMap[id]; if(!href||!zip.files[href]) return Promise.resolve('');
             return zip.files[href].async('text').then(function(html){
-              return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<\/p>/gi,'\n').replace(/<\/h[1-6]>/gi,'\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+              return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
+                .replace(/<\/p>/gi,'\n').replace(/<\/h[1-6]>/gi,'\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,' ')
+                .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+                .replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
             });
-          });
-          return Promise.all(promises);
+          }));
         });
       });
     }).then(function(sections){
-      var fullText = sections.filter(Boolean).join('\n\n');
-      document.getElementById('topEditor').textContent = fullText;
+      document.getElementById('topEditor').textContent=sections.filter(Boolean).join('\n\n');
       showStatus('epubStatus','ok','&#10003; EPUB loaded into converter. Click Export to send to editor.');
-    }).catch(function(err){
-      showStatus('epubStatus','err','EPUB error: ' + err.message);
-    });
+    }).catch(function(err){ showStatus('epubStatus','err','EPUB error: '+err.message); });
   };
   reader.readAsArrayBuffer(f);
 }
 
-// -- Top DOCX Handler -- loads into top editor --
 function handleTopDocxUpload(e){
-  var f = e.target.files[0];
-  if(!f) return;
-  e.target.value = '';
-  showStatus('epubStatus','info','Reading DOCX: ' + f.name + '...');
-  if(!document.getElementById('bookTitle').value)
-    document.getElementById('bookTitle').value = f.name.replace(/\.docx$/i,'');
-  if(typeof JSZip === 'undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
-  var reader = new FileReader();
-  reader.onload = function(ev){
+  var f=e.target.files[0]; if(!f) return; e.target.value='';
+  showStatus('epubStatus','info','Reading DOCX: '+f.name+'...');
+  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=f.name.replace(/\.docx$/i,'');
+  if(typeof JSZip==='undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
+  var reader=new FileReader();
+  reader.onload=function(ev){
     JSZip.loadAsync(ev.target.result).then(function(zip){
-      var doc = zip.files['word/document.xml'];
-      if(!doc) throw new Error('No document.xml found');
+      var doc=zip.files['word/document.xml']; if(!doc) throw new Error('No document.xml found');
       return doc.async('text');
     }).then(function(xml){
-      var text = xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
-      document.getElementById('topEditor').textContent = text;
+      document.getElementById('topEditor').textContent=xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
       showStatus('epubStatus','ok','&#10003; DOCX loaded into converter. Click Export to send to editor.');
-    }).catch(function(err){
-      showStatus('epubStatus','err','DOCX error: ' + err.message);
-    });
+    }).catch(function(err){ showStatus('epubStatus','err','DOCX error: '+err.message); });
   };
   reader.readAsArrayBuffer(f);
 }
 
-function clearTopEditor(){
-  document.getElementById('topEditor').textContent = 'Import an EPUB or DOCX to preview here...';
-  showStatus('epubStatus','','');
-}
+function clearTopEditor(){ document.getElementById('topEditor').textContent='Import an EPUB or DOCX to preview here...'; showStatus('epubStatus','',''); }
 
-// -- Export from top editor to bottom editor, filtering out TOC --
 function exportToBottomEditor(){
-  var topText = (document.getElementById('topEditor').textContent || '').trim();
-  if(!topText || topText === 'Import an EPUB or DOCX to preview here...'){
-    showStatus('epubStatus','err','Nothing to export. Import a file first.');
-    return;
-  }
-  // Filter out Table of Contents section
-  var filtered = topText.replace(/TABLE OF CONTENTS[\s\S]*?(?=\n\s*(CHAPTER|PROLOGUE|EPILOGUE|COPYRIGHT|PART\s))/gi, '');
-  // Also remove standalone TOC line if it's just the heading
-  filtered = filtered.replace(/^TABLE OF CONTENTS[^\n]*\n?/gim, '');
-  filtered = filtered.replace(/\n{3,}/g,'\n\n').trim();
-  loadRawIntoEditor(filtered);
-  detectChapters(filtered);
+  var topText=(document.getElementById('topEditor').textContent||'').trim();
+  if(!topText||topText==='Import an EPUB or DOCX to preview here...'){ showStatus('epubStatus','err','Nothing to export. Import a file first.'); return; }
+  var filtered=topText.replace(/TABLE OF CONTENTS[\s\S]*?(?=\n\s*(CHAPTER|PROLOGUE|EPILOGUE|COPYRIGHT|PART\s))/gi,'')
+    .replace(/^TABLE OF CONTENTS[^\n]*\n?/gim,'').replace(/\n{3,}/g,'\n\n').trim();
+  loadRawIntoEditor(filtered); detectChapters(filtered);
   showStatus('uploadStatus','ok','&#10003; Exported to editor (TOC filtered out).');
-  document.getElementById('docEditor').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('docEditor').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// -- Convert text to EPUB via VoiceForge server --
 async function convertToEpub(){
-  var topText = (document.getElementById('topEditor').textContent || '').trim();
-  if(!topText || topText === 'Import an EPUB or DOCX to preview here...'){
-    showStatus('epubStatus','err','Nothing to convert. Import a file first.');
-    return;
-  }
-  var title = document.getElementById('bookTitle').value.trim() || 'Untitled';
-  var author = document.getElementById('authorName').value.trim() || 'Unknown';
-  showStatus('epubStatus','info','Converting to EPUB...');
+  var topText=(document.getElementById('topEditor').textContent||'').trim();
+  if(!topText||topText==='Import an EPUB or DOCX to preview here...'){ showStatus('epubStatus','err','Nothing to convert. Import a file first.'); return; }
+  if(typeof JSZip==='undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
+  var title=document.getElementById('bookTitle').value.trim()||'Untitled';
+  var author=document.getElementById('authorName').value.trim()||'Unknown';
+  var safeTitle=title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_');
+  showStatus('epubStatus','info','Building EPUB...');
   try {
-    var resp = await fetch(API_BASE + '/api/convert-epub', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:topText, title:title, author:author})
+    var bookId='urn:uuid:'+([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,function(c){ return (c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16); });
+
+    var chapterRegex=/(?:^|\n)\s*(chapter\s+\d+[^\n]*)/gi;
+    var matches=[],m;
+    while((m=chapterRegex.exec(topText))!==null){ matches.push({title:m[1].trim(),index:m.index}); }
+    var epubChapters=[];
+    if(matches.length>0){
+      var before=topText.substring(0,matches[0].index).trim();
+      if(before) epubChapters.push({title:'Preface',text:before});
+      matches.forEach(function(match,i){
+        var end=i+1<matches.length?matches[i+1].index:topText.length;
+        epubChapters.push({title:match.title,text:topText.substring(match.index,end).trim()});
+      });
+    } else {
+      epubChapters=[{title:title,text:topText}];
+    }
+
+    function textToHtml(text){
+      return text.split(/\n\n+/).map(function(p){
+        return '<p>'+p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').trim()+'</p>';
+      }).join('\n');
+    }
+
+    var zip=new JSZip();
+    zip.file('mimetype','application/epub+zip');
+
+    zip.folder('META-INF').file('container.xml',
+      '<?xml version="1.0"?>\n'+
+      '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n'+
+      '  <rootfiles>\n'+
+      '    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n'+
+      '  </rootfiles>\n'+
+      '</container>');
+
+    var oebps=zip.folder('OEBPS');
+
+    var manifestItems='';
+    var spineItems='';
+    var ncxNavPoints='';
+    var playOrder=1;
+    epubChapters.forEach(function(ch,i){
+      var id='chapter'+i;
+      var fname=id+'.xhtml';
+      var chHtml=
+        '<?xml version="1.0" encoding="UTF-8"?>\n'+
+        '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n'+
+        '<html xmlns="http://www.w3.org/1999/xhtml">\n'+
+        '<head><title>'+ch.title.replace(/&/g,'&amp;')+'</title>\n'+
+        '<style>body{font-family:Georgia,serif;line-height:1.8;margin:5% 8%;}h2{margin:1.5em 0 0.5em;}p{margin:0 0 0.8em;text-indent:2em;}p:first-of-type{text-indent:0;}</style>\n'+
+        '</head>\n<body>\n<h2>'+ch.title.replace(/&/g,'&amp;')+'</h2>\n'+textToHtml(ch.text)+'\n</body>\n</html>';
+      oebps.file(fname, chHtml);
+      manifestItems+='    <item id="'+id+'" href="'+fname+'" media-type="application/xhtml+xml"/>\n';
+      spineItems+='    <itemref idref="'+id+'"/>\n';
+      ncxNavPoints+=
+        '  <navPoint id="nav'+i+'" playOrder="'+playOrder+'">\n'+
+        '    <navLabel><text>'+ch.title.replace(/&/g,'&amp;')+'</text></navLabel>\n'+
+        '    <content src="'+fname+'"/>\n'+
+        '  </navPoint>\n';
+      playOrder++;
     });
-    if(!resp.ok) throw new Error('Server returned ' + resp.status);
-    var blob = await resp.blob();
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_') + '.epub';
-    a.click();
-    showStatus('epubStatus','ok','&#10003; EPUB downloaded!');
-  } catch(err){
-    showStatus('epubStatus','err','EPUB conversion error: ' + err.message);
-  }
+
+    var now=new Date().toISOString().split('T')[0];
+    oebps.file('content.opf',
+      '<?xml version="1.0" encoding="UTF-8"?>\n'+
+      '<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="2.0">\n'+
+      '  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">\n'+
+      '    <dc:title>'+title.replace(/&/g,'&amp;')+'</dc:title>\n'+
+      '    <dc:creator>'+author.replace(/&/g,'&amp;')+'</dc:creator>\n'+
+      '    <dc:identifier id="bookid">'+bookId+'</dc:identifier>\n'+
+      '    <dc:language>en</dc:language>\n'+
+      '    <dc:date>'+now+'</dc:date>\n'+
+      '  </metadata>\n'+
+      '  <manifest>\n'+
+      manifestItems+
+      '    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>\n'+
+      '  </manifest>\n'+
+      '  <spine toc="ncx">\n'+
+      spineItems+
+      '  </spine>\n'+
+      '</package>');
+
+    oebps.file('toc.ncx',
+      '<?xml version="1.0" encoding="UTF-8"?>\n'+
+      '<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">\n'+
+      '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">\n'+
+      '  <head><meta name="dtb:uid" content="'+bookId+'"/></head>\n'+
+      '  <docTitle><text>'+title.replace(/&/g,'&amp;')+'</text></docTitle>\n'+
+      '  <navMap>\n'+ncxNavPoints+'  </navMap>\n'+
+      '</ncx>');
+
+    var blob=await zip.generateAsync({type:'blob', mimeType:'application/epub+zip', compression:'DEFLATE', compressionOptions:{level:6}});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a'); a.href=url; a.download=safeTitle+'.epub'; a.click();
+    showStatus('epubStatus','ok','&#10003; EPUB downloaded — '+epubChapters.length+' chapter(s)!');
+  } catch(err){ showStatus('epubStatus','err','EPUB error: '+err.message); }
 }
 
 function processFile(file){
-  var ext = file.name.split('.').pop().toLowerCase();
-  showStatus('uploadStatus','info','Reading ' + file.name + '...');
-  if(!document.getElementById('bookTitle').value)
-    document.getElementById('bookTitle').value = file.name.replace(/\.[^.]+$/,'');
-  if(ext === 'txt'){
-    var r = new FileReader();
-    r.onload = function(ev){ detectChapters(ev.target.result); showStatus('uploadStatus','ok','&#10003; ' + file.name + ' loaded'); };
-    r.readAsText(file);
-  } else if(ext === 'docx'){
-    var fd = new FormData(); fd.append('file', file);
-    fetch(API_BASE + '/api/upload', {method:'POST', body:fd})
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        if(d.content && d.content.length > 10){ loadRawIntoEditor(d.content); showStatus('uploadStatus','ok','&#10003; ' + file.name + ' loaded (server)'); }
-        else { throw new Error('Empty content'); }
-      })
-      .catch(function(){
-        if(typeof JSZip === 'undefined'){ showStatus('uploadStatus','err','JSZip not loaded.'); return; }
-        var r2 = new FileReader();
-        r2.onload = function(ev){
-          JSZip.loadAsync(ev.target.result).then(function(zip){
-            var doc = zip.files['word/document.xml'];
-            if(doc) return doc.async('text');
-            throw new Error('No document.xml');
-          }).then(function(xml){
-            var text = xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
-            loadRawIntoEditor(text);
-            showStatus('uploadStatus','ok','&#10003; ' + file.name + ' loaded');
-          }).catch(function(e){ showStatus('uploadStatus','err','Error: ' + e.message); });
-        };
-        r2.readAsArrayBuffer(file);
-      });
+  var ext=file.name.split('.').pop().toLowerCase();
+  showStatus('uploadStatus','info','Reading '+file.name+'...');
+  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=file.name.replace(/\.[^.]+$/,'');
+  if(ext==='txt'){
+    var r=new FileReader(); r.onload=function(ev){ detectChapters(ev.target.result); showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded'); }; r.readAsText(file);
+  } else if(ext==='docx'){
+    var fd=new FormData(); fd.append('file',file);
+    fetch(API_BASE+'/api/upload',{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(d){
+      if(d.content&&d.content.length>10){ loadRawIntoEditor(d.content); showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded (server)'); } else { throw new Error('Empty'); }
+    }).catch(function(){
+      if(typeof JSZip==='undefined'){ showStatus('uploadStatus','err','JSZip not loaded.'); return; }
+      var r2=new FileReader();
+      r2.onload=function(ev){
+        JSZip.loadAsync(ev.target.result).then(function(zip){
+          var doc=zip.files['word/document.xml']; if(doc) return doc.async('text'); throw new Error('No document.xml');
+        }).then(function(xml){
+          loadRawIntoEditor(xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim());
+          showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded');
+        }).catch(function(e){ showStatus('uploadStatus','err','Error: '+e.message); });
+      };
+      r2.readAsArrayBuffer(file);
+    });
   }
 }
 
-function loadRawIntoEditor(text){
-  chapters = [{ title: 'Full Document', content: text }];
-  document.getElementById('docEditor').textContent = text;
-  renderChapterNav();
-}
+function loadRawIntoEditor(text){ chapters=[{title:'Full Document',content:text}]; document.getElementById('docEditor').textContent=text; renderChapterNav(); }
 
 function detectChapters(text){
-  var chapterRegex = /(?:^|\n)\s*(chapter\s+\d+[^\n]*)/gi;
-  var matches = [], m;
-  while((m = chapterRegex.exec(text)) !== null){ matches.push({ title: m[1].trim(), index: m.index }); }
-  // Filter out TOC
-  var tocRegex = /(?:^|\n)\s*(table of contents|contents)\s*\n/i;
-  var tocMatch = tocRegex.exec(text);
-  if(tocMatch && matches.length > 0){
-    var tocStart = tocMatch.index;
-    var firstChapterStart = matches[0].index;
-    if(tocStart < firstChapterStart){
-      text = text.substring(0, tocStart) + text.substring(firstChapterStart);
-      chapterRegex.lastIndex = 0;
-      matches = [];
-      while((m = chapterRegex.exec(text)) !== null){ matches.push({ title: m[1].trim(), index: m.index }); }
+  var chapterRegex=/(?:^|\n)\s*(chapter\s+\d+[^\n]*)/gi; var matches=[],m;
+  while((m=chapterRegex.exec(text))!==null){ matches.push({title:m[1].trim(),index:m.index}); }
+  var tocRegex=/(?:^|\n)\s*(table of contents|contents)\s*\n/i; var tocMatch=tocRegex.exec(text);
+  if(tocMatch&&matches.length>0){
+    var tocStart=tocMatch.index; var firstChapterStart=matches[0].index;
+    if(tocStart<firstChapterStart){
+      text=text.substring(0,tocStart)+text.substring(firstChapterStart);
+      chapterRegex.lastIndex=0; matches=[];
+      while((m=chapterRegex.exec(text))!==null){ matches.push({title:m[1].trim(),index:m.index}); }
     }
   }
-  if(matches.length > 0){
-    chapters = [];
-    var before = text.substring(0, matches[0].index).trim();
-    if(before) chapters.push({ title: 'Front Matter', content: before });
-    matches.forEach(function(match, i){
-      var end = i+1 < matches.length ? matches[i+1].index : text.length;
-      chapters.push({ title: match.title, content: text.substring(match.index, end).trim() });
-    });
-  } else { chapters = [{ title: 'Full Document', content: text }]; }
+  if(matches.length>0){
+    chapters=[]; var before=text.substring(0,matches[0].index).trim();
+    if(before) chapters.push({title:'Front Matter',content:before});
+    matches.forEach(function(match,i){ var end=i+1<matches.length?matches[i+1].index:text.length; chapters.push({title:match.title,content:text.substring(match.index,end).trim()}); });
+  } else { chapters=[{title:'Full Document',content:text}]; }
   renderEditor(); renderChapterNav();
 }
 
 function renderEditor(){
-  var editor = document.getElementById('docEditor');
-  editor.innerHTML = '';
-  chapters.forEach(function(ch, i){
-    var h = document.createElement('h3'); h.id = 'ch-' + i;
-    h.style.cssText = 'font-family:Cinzel,serif;font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);color:var(--plum);';
-    if(i === 0) h.style.marginTop = '0';
-    h.textContent = ch.title;
-    var block = document.createElement('div');
-    block.style.cssText = 'margin-bottom:16px;white-space:pre-wrap;';
-    var content = ch.content;
-    var headingRegex = new RegExp('^' + ch.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\s*','i');
-    content = content.replace(headingRegex,'').trim();
-    block.textContent = content;
+  var editor=document.getElementById('docEditor'); editor.innerHTML='';
+  chapters.forEach(function(ch,i){
+    var h=document.createElement('h3'); h.id='ch-'+i;
+    h.style.cssText='font-family:Cinzel,serif;font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);color:var(--plum);';
+    if(i===0) h.style.marginTop='0'; h.textContent=ch.title;
+    var block=document.createElement('div'); block.style.cssText='margin-bottom:16px;white-space:pre-wrap;';
+    block.textContent=ch.content.replace(new RegExp('^'+ch.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i'),'').trim();
     editor.appendChild(h); editor.appendChild(block);
   });
 }
 
 function renderChapterNav(){
-  var nav = document.getElementById('chapterNav');
-  if(!chapters.length || (chapters.length === 1 && chapters[0].title === 'Full Document')){
-    nav.innerHTML = '<div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>';
-    return;
-  }
-  nav.innerHTML = '';
-  chapters.forEach(function(ch, i){
-    var item = document.createElement('div');
-    item.style.cssText = 'padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;font-size:.85rem;color:var(--taupe);font-weight:600;transition:all .18s;';
-    item.textContent = ch.title;
-    item.onclick = function(){
-      var el = document.getElementById('ch-' + i);
-      if(el){ var editor = document.getElementById('docEditor'); editor.scrollTop = el.offsetTop - editor.offsetTop - 10; el.style.background = 'var(--gold-lt)'; setTimeout(function(){ el.style.background = ''; }, 1500); }
-    };
+  var nav=document.getElementById('chapterNav');
+  if(!chapters.length||(chapters.length===1&&chapters[0].title==='Full Document')){ nav.innerHTML='<div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>'; return; }
+  nav.innerHTML='';
+  chapters.forEach(function(ch,i){
+    var item=document.createElement('div');
+    item.style.cssText='padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;font-size:.85rem;color:var(--taupe);font-weight:600;transition:all .18s;';
+    item.textContent=ch.title;
+    item.onclick=function(){ var el=document.getElementById('ch-'+i); if(el){ var ed=document.getElementById('docEditor'); ed.scrollTop=el.offsetTop-ed.offsetTop-10; el.style.background='var(--gold-lt)'; setTimeout(function(){el.style.background='';},1500); } };
     nav.appendChild(item);
   });
 }
 
-function clearEditor(){
-  if(!confirm('Clear the editor?')) return;
-  document.getElementById('docEditor').innerHTML = 'Start typing or import a file...';
-  chapters = []; renderChapterNav();
-}
+function clearEditor(){ if(!confirm('Clear the editor?')) return; document.getElementById('docEditor').innerHTML='Start typing or import a file...'; chapters=[]; renderChapterNav(); }
 
-async function generateAudiobook(){
-  var editor = document.getElementById('docEditor');
-  var fullText = (editor.textContent || editor.innerText).trim();
-  if(!fullText || fullText === 'Start typing or import a file...'){ showStatus('genStatus','err','Add some text first.'); return; }
-  var voice1 = document.getElementById('voice1Select').value;
-  var voice2 = document.getElementById('voice2Select').value;
-  var btn = document.getElementById('generateBtn');
-  btn.disabled = true; btn.innerHTML = '&#x1F3A7; Generating...';
-  var progress = document.getElementById('genProgress');
-  var fill = document.getElementById('genProgressFill');
-  progress.style.display = 'block'; fill.style.width = '10%';
-  showStatus('genStatus','info','Sending manuscript to audio engine...');
-  try {
-    fill.style.width = '30%';
-    var resp = await fetch(API_BASE + '/api/audiobook', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ text: fullText, narrator_voice: voice1, characters: characterNames.map(function(n){ return {name:n, voice_id: voice2 || voice1}; }), auto_detect: true, format: 'mp3' })
-    });
-    fill.style.width = '80%';
-    if(!resp.ok) throw new Error('Server returned ' + resp.status);
-    var blob = await resp.blob();
-    fill.style.width = '100%';
-    generatedAudioUrl = URL.createObjectURL(blob);
-    document.getElementById('generatedAudio').src = generatedAudioUrl;
-    showStatus('genStatus','ok','&#10003; Audiobook generated!');
-  } catch(err) { showStatus('genStatus','err','Error: ' + err.message); fill.style.width = '0%'; }
-  btn.disabled = false; btn.innerHTML = '&#x1F3A7; Generate Audiobook';
-}
-
-function downloadAudio(){
-  if(!generatedAudioUrl) return;
-  var a = document.createElement('a'); a.href = generatedAudioUrl;
-  a.download = (document.getElementById('bookTitle').value || 'audiobook') + '.mp3'; a.click();
-}
-
-function exportEpubToEditor(){
-  var preview = document.getElementById('epubPreview');
-  var fullText = preview._fullText || preview.textContent;
-  if(!fullText) return;
-  loadRawIntoEditor(fullText);
-  showStatus('uploadStatus','ok','&#10003; EPUB exported to editor.');
-  document.getElementById('docEditor').scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-function showStatus(id, type, text){
-  var el = document.getElementById(id);
-  if(!el) return;
-  el.className = 'status-msg ' + type;
-  el.innerHTML = text;
-}
+function showStatus(id,type,text){ var el=document.getElementById(id); if(!el) return; el.className='status-msg '+type; el.innerHTML=text; }
 </script>
 </body>
 </html>
