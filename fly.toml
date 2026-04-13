@@ -1,5 +1,5 @@
 # fly.toml -- Cantrell Creatives Voice Studio API
-app = "cantrell-creatives"
+app = "cantrell-creatives-zfildq"
 primary_region = "iad"
 
 [build]
