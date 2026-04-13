@@ -4,80 +4,197 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Voice Studio — Cantrell Creatives</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;max-width:100%;overflow-x:hidden;min-height:100vh;background:#F9F4ED;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--taupe);}
-.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,
-[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],
-[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none !important;}
-:root{
-  --taupe:#2D1F2D;--taupe-lt:rgba(45,31,45,.65);
-  --gold:#C9A961;--gold2:#e8c97a;--gold-lt:rgba(201,169,97,.15);--gold-bd:rgba(201,169,97,.4);
-  --cream:#FBF7F2;--card:#FFFCF8;
-  --plum:#7B5C7B;--plum2:#9b7a9b;--plum-lt:rgba(123,92,123,.1);--plum-bd:rgba(123,92,123,.3);
-  --oak:#F5EDE0;--oak-dark:#EDE0CC;
-  --green:#2a6b3c;--red:#c03c3c;
+:root {
+  --bg: #F9F4ED;
+  --surface: #FFFCF8;
+  --surface-el: #FBF7F2;
+  --border: rgba(201,169,97,.4);
+  --border-hover: rgba(201,169,97,.7);
+  --text-primary: #2D1F2D;
+  --text-secondary: rgba(45,31,45,.90);
+  --text-tertiary: rgba(45,31,45,.70);
+  --accent: #7B5C7B;
+  --accent-hover: #5a3d5a;
+  --gold: #C9A961;
+  --gold-lt: rgba(201,169,97,.15);
+  --plum: #7B5C7B;
+  --plum-lt: rgba(123,92,123,.1);
+  --plum-bd: rgba(123,92,123,.3);
+  --success: #2a6b3c;
+  --error: #c03c3c;
+  --oak-dark: #EDE0CC;
 }
-.banner{position:relative;overflow:hidden;display:block;width:100%;}
-.banner-img{display:block;width:100%;height:360px;object-fit:cover;object-position:center;}
-.nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:100;}
-.nt-btn{padding:5px 18px;border-radius:999px;border:1px solid rgba(201,169,97,.5);background:rgba(40,20,40,.32);color:rgba(232,201,122,.95);font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:17px;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none !important;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+::-webkit-scrollbar-thumb:hover{background:var(--border-hover);}
+.banner{position:relative;overflow:hidden;display:block;width:100%;height:300px;}
+.banner-img{position:absolute;top:0;left:0;width:100%;height:300px;object-fit:cover;object-position:center;transform:none !important;transition:none !important;will-change:auto !important;}
+.title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
+.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:var(--plum);line-height:1;text-shadow:rgba(255,255,255,.6) 0 2px 16px;letter-spacing:6px;}
+.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:var(--plum);line-height:.95;text-shadow:rgba(255,255,255,.6) 0 2px 16px;margin-left:8px;}
+.title-tagline{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(90,58,90,.85);margin-top:8px;}
+.gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--plum),transparent);margin-top:8px;border-radius:999px;}
+.nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:200;}
+.nt-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(201,169,97,.5);background:rgba(40,20,40,.32);color:rgba(232,201,122,.95);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
 .nt-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);}
 .nt-btn.login{background:rgb(201,169,97);border-color:rgb(201,169,97);color:rgb(45,31,45);font-weight:800;}
 .nt-btn.logout{background:rgba(192,60,60,.7);border-color:rgba(192,60,60,.8);color:#fff;font-weight:800;}
 .nt-btn.logout:hover{background:rgba(192,60,60,.9);}
-.title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
-.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:var(--plum);line-height:1;text-shadow:rgba(255,255,255,.6) 0 2px 16px;letter-spacing:6px;}
-.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:var(--plum);line-height:.95;text-shadow:rgba(255,255,255,.6) 0 2px 16px;margin-left:8px;}
-.title-tagline{font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(90,58,90,.85);margin-top:8px;}
-.gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--plum),transparent);margin-top:8px;border-radius:999px;}
 .nav-bot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(60,30,60,.78) 0%,rgba(60,30,60,.3) 55%,transparent 100%);z-index:100;}
 .nb-inner{display:flex;align-items:center;gap:10px;padding:10px 28px 14px;}
-.nb-btn{padding:7px 22px;border-radius:999px;border:1px solid rgba(201,169,97,.45);background:rgba(40,20,40,.28);color:rgba(232,201,122,.95);font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.nb-btn{padding:7px 22px;border-radius:999px;border:1px solid rgba(201,169,97,.45);background:rgba(40,20,40,.28);color:rgba(232,201,122,.95);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;display:inline-block;white-space:nowrap;}
 .nb-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);transform:translateY(-1px);}
 .gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,rgba(201,169,97,.3) 10%,rgb(201,169,97) 30%,rgb(232,201,122) 50%,rgb(201,169,97) 70%,rgba(201,169,97,.3) 90%,transparent 100%);background-size:200%;animation:shimmer 4s linear infinite;}
 @keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
-.page-wrap{max-width:1400px;margin:0 auto;padding:28px 24px 60px;}
-.panel{background:var(--card);border:1px solid var(--gold-bd);border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.09);display:flex;flex-direction:column;gap:16px;margin-bottom:16px;}
-.panel-title{display:flex;align-items:center;gap:9px;font-family:'Cinzel',serif;color:var(--plum);font-size:1.05rem;font-weight:700;border-bottom:1px solid var(--plum-bd);padding-bottom:10px;}
-.panel-icon{font-size:14px;color:var(--gold);}
-.lbl{display:block;font-size:.85rem;color:var(--taupe);font-weight:700;margin-bottom:5px;}
-.inp,select.inp,textarea.inp{width:100%;padding:10px 12px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--taupe);background:#fff;outline:none;transition:border .18s;}
-.inp:focus{border-color:var(--gold);}
-textarea.inp{resize:vertical;line-height:1.75;}
-.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.btn-gold{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;border:none;background:var(--gold);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.btn-gold:hover{background:#d4b870;transform:translateY(-1px);}
-.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.btn-sec{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:600;white-space:nowrap;}
-.btn-sec:hover{background:rgba(201,169,97,.28);}
-.btn-plum{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--plum-bd);background:var(--plum-lt);color:var(--plum);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:700;}
-.btn-plum:hover{background:var(--plum);color:#fff;}
-.btn-generate{width:100%;padding:14px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--plum),#5a3d5a);color:#fff;font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-generate:hover{background:linear-gradient(135deg,#5a3d5a,var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.35);}
+.nav-tabs-bar{display:flex;align-items:center;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;flex-wrap:wrap;}
+.nav-tab{background:none;border:none;color:var(--text-tertiary);font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:14px 18px;cursor:pointer;transition:color 150ms,border-color 150ms;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.nav-tab:hover{color:var(--text-secondary);}
+.nav-tab.active{color:var(--plum);border-bottom-color:var(--gold);}
+.nav-status{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse-glow 2s infinite;}
+@keyframes pulse-glow{0%,100%{opacity:1;}50%{opacity:.4;}}
+.main{min-height:calc(100vh - 340px);}
+.tab-content{display:none;padding:32px 24px;max-width:1440px;margin:0 auto;}
+.tab-content.active{display:block;}
+.section-header{margin-bottom:32px;}
+.section-title{font-family:'Cinzel',serif;font-weight:700;font-size:2rem;letter-spacing:.02em;line-height:1;margin-bottom:8px;color:var(--plum);}
+.section-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase;}
+.voice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.voice-card{background:var(--surface);padding:20px;cursor:pointer;transition:background 150ms;display:flex;flex-direction:column;gap:12px;}
+.voice-card:hover{background:var(--surface-el);}
+.voice-card-header{display:flex;align-items:center;gap:12px;}
+.voice-avatar{width:40px;height:40px;background:var(--plum-lt);border:1px solid var(--plum-bd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:var(--plum);flex-shrink:0;}
+.voice-card-info{flex:1;min-width:0;}
+.voice-name{font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:var(--text-primary);}
+.voice-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase;}
+.voice-desc{font-size:14px;color:var(--text-secondary);line-height:1.4;}
+.voice-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.voice-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--text-tertiary);border-radius:4px;}
+.voice-card-actions{display:flex;gap:8px;margin-top:auto;}
+.btn-play,.btn-select{flex:1;padding:8px 12px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all 150ms;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:6px;}
+.btn-play:hover{border-color:var(--plum);color:var(--plum);}
+.btn-play.playing{background:var(--plum);color:#fff;border-color:var(--plum);}
+.btn-select:hover{border-color:var(--gold);color:var(--gold);}
+.tts-layout{display:grid;grid-template-columns:1fr 360px;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;min-height:500px;}
+@media(max-width:768px){.tts-layout{grid-template-columns:1fr;}}
+.tts-editor{background:var(--surface);display:flex;flex-direction:column;}
+.tts-textarea{flex:1;background:transparent;border:none;color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.8;padding:24px;resize:none;outline:none;min-height:300px;}
+.tts-textarea::placeholder{color:var(--text-tertiary);}
+.tts-editor-footer{padding:12px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.char-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);}
+.tts-controls{background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:20px;}
+.control-group{display:flex;flex-direction:column;gap:8px;}
+.control-label{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
+.control-select{background:#fff;border:1px solid var(--border);color:var(--text-primary);padding:10px 12px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;cursor:pointer;border-radius:8px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237B5C7B'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.control-select:focus{border-color:var(--plum);}
+.speed-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;}
+.speed-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--plum);border-radius:50%;cursor:pointer;}
+.speed-value{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--gold);text-align:center;}
+.btn-generate{width:100%;padding:14px;background:linear-gradient(135deg,var(--plum),var(--accent-hover));color:#fff;border:none;font-family:'Cinzel',serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:8px;}
+.btn-generate:hover{background:linear-gradient(135deg,var(--accent-hover),var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.3);}
+.btn-generate:active{transform:scale(.98);}
 .btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-.status-msg{font-size:.82rem;padding:4px 0;min-height:18px;}
-.status-msg.ok{color:var(--green);}
-.status-msg.err{color:var(--red);}
-.status-msg.info{color:var(--plum);}
-.engine-tabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
-.engine-tab{padding:5px 14px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Segoe UI',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:.18s;}
-.engine-tab:hover{background:var(--gold-lt);}
-.engine-tab.active{background:var(--plum);color:#fff;border-color:var(--plum);}
-.engine-loading{font-size:.82rem;color:var(--taupe-lt);font-style:italic;padding:6px 0;}
-.char-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--plum-lt);border:1px solid var(--plum-bd);font-size:.78rem;color:var(--plum);font-weight:600;}
-.char-tag button{background:none;border:none;cursor:pointer;color:var(--plum);font-size:13px;padding:0 2px;line-height:1;}
-.char-tag button:hover{color:var(--red);}
-.role-box{border:1px solid var(--gold-bd);border-radius:10px;padding:12px;background:var(--gold-lt);margin-top:6px;}
-.role-box .lbl{color:var(--plum);font-size:.8rem;}
+.audio-result{border:1px solid var(--border);background:var(--surface);padding:20px;display:none;flex-direction:column;gap:12px;margin-top:24px;border-radius:10px;}
+.audio-result.visible{display:flex;}
+.audio-result audio{width:100%;height:40px;outline:none;}
+.audio-result-info{display:flex;justify-content:space-between;align-items:center;}
+.btn-download{padding:8px 16px;background:transparent;border:1px solid var(--border);color:var(--text-secondary);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all 150ms;border-radius:6px;}
+.btn-download:hover{border-color:var(--gold);color:var(--gold);}
+.audiobook-layout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+@media(max-width:900px){.audiobook-layout{grid-template-columns:1fr;}}
+.audiobook-input,.audiobook-config{background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:20px;}
+.upload-zone{border:1px dashed var(--border);padding:32px;text-align:center;cursor:pointer;transition:border-color 150ms;position:relative;border-radius:10px;background:var(--surface-el);}
+.upload-zone:hover{border-color:var(--plum);}
+.upload-zone-icon{font-size:32px;color:var(--text-tertiary);margin-bottom:8px;}
+.upload-zone-text{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.audiobook-textarea{flex:1;background:#fff;border:1px solid var(--border);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.7;padding:16px;resize:vertical;outline:none;min-height:200px;border-radius:8px;}
+.audiobook-textarea:focus{border-color:var(--plum);}
+.segments-preview{max-height:200px;overflow-y:auto;border:1px solid var(--border);background:var(--surface-el);border-radius:8px;}
+.segment-item{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;font-size:13px;}
+.segment-item:last-child{border-bottom:none;}
+.segment-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border:1px solid;flex-shrink:0;margin-top:2px;border-radius:3px;}
+.segment-badge.narration{color:var(--text-tertiary);border-color:var(--border);}
+.segment-badge.dialogue{color:var(--gold);border-color:var(--gold);}
+.segment-text{color:var(--text-secondary);line-height:1.4;}
+.chat-layout{border:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;height:calc(100vh - 400px);max-height:600px;border-radius:12px;overflow:hidden;}
+.chat-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface-el);}
+.chat-header-title{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--plum);}
+.chat-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
+.chat-msg{max-width:80%;display:flex;flex-direction:column;gap:4px;}
+.chat-msg.user{align-self:flex-end;}
+.chat-msg.assistant{align-self:flex-start;}
+.chat-msg-role{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
+.chat-msg-content{padding:12px 16px;font-size:15px;line-height:1.6;border-radius:10px;}
+.chat-msg.user .chat-msg-content{background:var(--plum);color:#fff;}
+.chat-msg.assistant .chat-msg-content{background:var(--surface-el);border:1px solid var(--border);color:var(--text-secondary);}
+.chat-input-area{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.chat-input{flex:1;background:#fff;border:1px solid var(--border);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:15px;padding:10px 14px;outline:none;border-radius:8px;}
+.chat-input:focus{border-color:var(--plum);}
+.btn-send{padding:10px 20px;background:var(--plum);border:none;color:#fff;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background 150ms;border-radius:8px;}
+.btn-send:hover{background:var(--accent-hover);}
+.btn-send:disabled{opacity:.5;cursor:not-allowed;}
+.loading-indicator{display:inline-flex;gap:4px;align-items:center;}
+.loading-indicator span{width:6px;height:6px;background:var(--plum);border-radius:50%;animation:blink 1.2s infinite;}
+.loading-indicator span:nth-child(2){animation-delay:.2s;}
+.loading-indicator span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,60%,100%{opacity:.2;}30%{opacity:1;}}
+.empty-state{text-align:center;padding:80px 24px;color:var(--text-tertiary);}
+.empty-state-icon{font-size:48px;margin-bottom:16px;opacity:.3;}
+.empty-state-text{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+.char-voice-option,.compare-voice-option{display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer;transition:background 150ms;font-size:14px;color:var(--text-secondary);border-radius:6px;}
+.char-voice-option:hover,.compare-voice-option:hover{background:var(--surface-el);}
+.char-voice-option input[type="checkbox"],.compare-voice-option input[type="checkbox"]{-webkit-appearance:none;appearance:none;width:14px;height:14px;border:1px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;position:relative;border-radius:3px;}
+.char-voice-option input[type="checkbox"]:checked{background:var(--plum);border-color:var(--plum);}
+.compare-voice-option input[type="checkbox"]:checked{background:#60A5FA;border-color:#60A5FA;}
+.char-voice-option input[type="checkbox"]:checked::after,.compare-voice-option input[type="checkbox"]:checked::after{content:'';position:absolute;top:1px;left:4px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+.waveform-canvas{width:100%;height:80px;background:var(--surface-el);border:1px solid var(--border);display:block;border-radius:8px;}
+.history-table{width:100%;border:1px solid var(--border);background:var(--surface);border-radius:12px;overflow:hidden;}
+.history-header{display:grid;grid-template-columns:60px 100px 120px 1fr 160px 80px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-el);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
+.history-row{display:grid;grid-template-columns:60px 100px 120px 1fr 160px 80px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 150ms;cursor:pointer;font-size:14px;}
+.history-row:hover{background:var(--surface-el);}
+.history-row:last-child{border-bottom:none;}
+.history-type-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border:1px solid;display:inline-block;text-align:center;border-radius:4px;}
+.history-type-badge.tts{color:var(--plum);border-color:var(--plum);}
+.history-type-badge.audiobook{color:var(--gold);border-color:var(--gold);}
+.history-type-badge.compare{color:#60A5FA;border-color:#60A5FA;}
+.history-type-badge.batch{color:#A78BFA;border-color:#A78BFA;}
+.history-type-badge.stream{color:var(--success);border-color:var(--success);}
+.history-voice{color:var(--text-secondary);font-weight:600;}
+.history-text{color:var(--text-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;}
+.history-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);}
+.history-play-btn{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all 150ms;text-transform:uppercase;letter-spacing:.05em;border-radius:4px;}
+.history-play-btn:hover{border-color:var(--plum);color:var(--plum);}
+.history-empty{text-align:center;padding:60px 24px;color:var(--text-tertiary);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;}
+.compare-result-card{background:var(--surface);padding:20px;display:flex;flex-direction:column;gap:12px;}
+.compare-result-card .card-header{display:flex;align-items:center;gap:10px;}
+.compare-result-card .card-name{font-family:'Cinzel',serif;font-weight:700;font-size:16px;}
+.compare-result-card .card-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
+.compare-result-card audio{width:100%;height:36px;}
+.chat-msg.assistant .chat-msg-content h1,.chat-msg.assistant .chat-msg-content h2,.chat-msg.assistant .chat-msg-content h3{font-family:'Cinzel',serif;font-weight:700;margin:12px 0 6px;line-height:1.3;}
+.chat-msg.assistant .chat-msg-content p{margin:8px 0;line-height:1.6;}
+.chat-msg.assistant .chat-msg-content ul,.chat-msg.assistant .chat-msg-content ol{margin:8px 0;padding-left:20px;}
+.chat-msg.assistant .chat-msg-content li{margin:4px 0;line-height:1.5;}
+.chat-msg.assistant .chat-msg-content strong{color:var(--text-primary);font-weight:600;}
+.chat-msg.assistant .chat-msg-content code{background:var(--surface-el);border:1px solid var(--border);padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--plum);border-radius:3px;}
+.chat-msg.assistant .chat-msg-content pre{background:var(--surface-el);border:1px solid var(--border);padding:12px;overflow-x:auto;margin:8px 0;border-radius:6px;}
+@media(max-width:768px){.history-header,.history-row{grid-template-columns:60px 100px 1fr 80px;}.history-header>:nth-child(4),.history-row>:nth-child(4),.history-header>:nth-child(5),.history-row>:nth-child(5){display:none;}}
+@media(max-width:640px){.nav-tab{padding:10px 10px;font-size:10px;}.section-title{font-size:1.5rem;}.tab-content{padding:20px 12px;}.voice-grid{grid-template-columns:1fr;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.fade-in{animation:fadeIn 200ms ease-out forwards;}
 </style>
 </head>
 <body>
 
-<!-- BANNER -->
 <div class="banner">
   <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');">
   <div class="title-block">
@@ -94,608 +211,469 @@ textarea.inp{resize:vertical;line-height:1.75;}
   </nav>
   <nav class="nav-bot">
     <div class="nb-inner">
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">&#x1F3AC; Studio</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#x270D;&#xFE0F; Publisher</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">&#x1F4DA; Collections</a>
-      <a class="nb-btn" href="https://smcantrellbooks.com">&#x1F30E; Main Site</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">✍️ Publisher Workspace</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">📚 Collections</a>
+      <a class="nb-btn" href="https://smcantrellbooks.com">🌎 Main Site</a>
     </div>
   </nav>
 </div>
 <div class="gold-line"></div>
 
-<div class="page-wrap">
-  <div style="margin-bottom:24px;">
-    <h1 style="font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--plum);margin-bottom:6px;">Voice Studio</h1>
-    <p style="font-size:1rem;color:var(--taupe-lt);font-style:italic;">Upload your manuscript, preview voices, and generate your audiobook.</p>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
-
-    <!-- LEFT -->
-    <div>
-      <div class="panel" style="padding:14px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
-          <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#x1F4D6; File Converter</div>
-          <div style="display:flex;gap:6px;">
-            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('epubInput').click()">&#x1F4D6; Import EPUB</button>
-            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('topDocxInput').click()">&#x1F4E5; Import DOCX</button>
-            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearTopEditor()">&#x1F5D1; Clear</button>
-          </div>
-        </div>
-        <input type="file" id="epubInput" accept=".epub" hidden onchange="handleEpubUpload(event)">
-        <input type="file" id="topDocxInput" accept=".docx" hidden onchange="handleTopDocxUpload(event)">
-        <div id="epubStatus" class="status-msg"></div>
-        <div id="topEditor" contenteditable="true" style="min-height:300px;max-height:500px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;">Import an EPUB or DOCX to preview here...</div>
-        <div style="display:flex;gap:6px;margin-top:8px;">
-          <button class="btn-gold" style="flex:1;" onclick="exportToBottomEditor()">&#x2B07; Export to Audiobook Editor (filters TOC)</button>
-          <button class="btn-plum" style="flex:1;" onclick="convertToEpub()">&#x1F4D6; Convert to EPUB</button>
-        </div>
-        <p style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;">Import your EPUB or DOCX here. Export sends filtered text to the audiobook editor below. Convert to EPUB generates a downloadable EPUB file.</p>
-      </div>
-
-      <div class="panel" style="padding:14px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
-          <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#x270E; Document Editor</div>
-          <div style="display:flex;gap:6px;">
-            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('fileInput').click()">&#x1F4E5; Import File</button>
-            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearEditor()">&#x1F5D1; Clear</button>
-          </div>
-        </div>
-        <input type="file" id="fileInput" accept=".txt,.docx" hidden onchange="handleFileUpload(event)">
-        <div id="uploadStatus" class="status-msg"></div>
-        <div class="inp-grid" style="margin-bottom:8px;">
-          <div><label class="lbl">Book Title</label><input class="inp" type="text" id="bookTitle" placeholder="Your Book Title"></div>
-          <div><label class="lbl">Author Name</label><input class="inp" type="text" id="authorName" placeholder="S.M. Cantrell"></div>
-        </div>
-        <div style="display:flex;gap:12px;">
-          <div style="width:160px;flex-shrink:0;">
-            <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;color:var(--plum);letter-spacing:.1em;margin-bottom:8px;">&#x1F4DA; Chapters</div>
-            <div id="chapterNav" style="display:flex;flex-direction:column;gap:4px;max-height:660px;overflow-y:auto;">
-              <div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>
-            </div>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <div id="docEditor" contenteditable="true" style="min-height:500px;max-height:700px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;" ondragover="event.preventDefault();this.style.borderColor='var(--plum)';" ondragleave="this.style.borderColor='var(--gold-bd)';" ondrop="handleEditorDrop(event)">Start typing or import a file...</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- RIGHT -->
-    <div>
-
-      <!-- PANEL 1: Voice Preview -->
-      <div class="panel" style="padding:14px;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A4;</span> Voice Preview</div>
-        <div id="enginePreviewTabs" class="engine-tabs"><span class="engine-loading">Loading engines...</span></div>
-        <select class="inp" id="voicePreviewSelect" style="font-size:.9rem;padding:8px 10px;"><option value="">Loading voices...</option></select>
-        <button class="btn-plum" style="width:100%;margin-top:6px;" onclick="previewSelectedVoice()">&#x25B6; Preview Voice</button>
-      </div>
-
-      <!-- PANEL 2: Voice Assignment -->
-      <div class="panel" style="padding:14px;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3AD;</span> Voice Assignment</div>
-
-        <!-- Radio buttons -->
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;cursor:pointer;">
-            <input type="radio" name="voiceRole" value="narrator" checked onchange="onRoleChange()"> Narrator
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;cursor:pointer;">
-            <input type="radio" name="voiceRole" value="character" onchange="onRoleChange()"> Character
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:.88rem;font-weight:700;cursor:pointer;">
-            <input type="radio" name="voiceRole" value="two" onchange="onRoleChange()"> 2nd Voice
-          </label>
-        </div>
-
-        <!-- Narrator voice -->
-        <div style="margin-top:14px;">
-          <label class="lbl">Narrator Voice</label>
-          <select class="inp" id="voice1Select" style="font-size:.9rem;padding:8px 10px;"><option value="">Loading voices...</option></select>
-        </div>
-
-        <!-- Character block -->
-        <div id="characterSection" style="display:none;">
-          <div class="role-box">
-            <label class="lbl">Character Voice</label>
-            <select class="inp" id="voice2Select" style="font-size:.9rem;padding:8px 10px;margin-bottom:10px;"><option value="">— None —</option></select>
-            <label class="lbl">Character Name(s)</label>
-            <div style="display:flex;gap:6px;">
-              <input class="inp" type="text" id="characterNameInput" placeholder="e.g. Nyara" style="flex:1;font-size:.9rem;">
-              <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addCharacterName()">+ Add</button>
-            </div>
-            <div id="characterTags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
-          </div>
-        </div>
-
-        <!-- 2nd character block -->
-        <div id="character2Section" style="display:none;">
-          <div class="role-box" style="margin-top:8px;">
-            <label class="lbl">2nd Character Voice</label>
-            <select class="inp" id="voice3Select" style="font-size:.9rem;padding:8px 10px;margin-bottom:10px;"><option value="">— None —</option></select>
-            <label class="lbl">2nd Character Name(s)</label>
-            <div style="display:flex;gap:6px;">
-              <input class="inp" type="text" id="char2NameInput" placeholder="e.g. Kael" style="flex:1;font-size:.9rem;">
-              <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addChar2Name()">+ Add</button>
-            </div>
-            <div id="char2Tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Generate -->
-      <div class="panel" style="padding:14px;">
-        <button class="btn-generate" id="generateBtn" onclick="generateAudiobook()">&#x1F3A7; Generate Audiobook</button>
-        <div style="height:6px;background:var(--gold-bd);border-radius:999px;overflow:hidden;margin:8px 0;display:none;" id="genProgress">
-          <div id="genProgressFill" style="height:100%;background:linear-gradient(to right,var(--plum),var(--gold));border-radius:999px;transition:width .4s ease;width:0%;"></div>
-        </div>
-        <div id="genStatus" class="status-msg"></div>
-      </div>
-
-      <!-- Audio Player -->
-      <div class="panel" style="padding:14px;">
-        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A7;</span> Audio Player</div>
-        <audio id="rightAudio" controls style="width:100%;"></audio>
-        <div class="btn-row" style="margin-top:8px;">
-          <button class="btn-gold" onclick="downloadAudio()" style="font-size:.85rem;padding:8px 16px;flex:1;">&#x2B07; Download</button>
-          <button class="btn-plum" onclick="saveToCloudflare()" style="font-size:.85rem;padding:8px 16px;flex:1;">&#x2601; Save</button>
-        </div>
-        <div id="cloudSaveStatus" class="status-msg"></div>
-      </div>
-
-    </div>
-  </div>
+<div class="nav-tabs-bar">
+  <button class="nav-tab active" data-tab="voices"><i class="ph ph-waveform" style="font-size:14px;"></i> Voices</button>
+  <button class="nav-tab" data-tab="tts"><i class="ph ph-microphone" style="font-size:14px;"></i> TTS Studio</button>
+  <button class="nav-tab" data-tab="audiobook"><i class="ph ph-book-open" style="font-size:14px;"></i> Audiobook</button>
+  <button class="nav-tab" data-tab="chat"><i class="ph ph-chat-circle" style="font-size:14px;"></i> Chat</button>
+  <button class="nav-tab" data-tab="compare"><i class="ph ph-scales" style="font-size:14px;"></i> Compare</button>
+  <button class="nav-tab" data-tab="history"><i class="ph ph-clock-counter-clockwise" style="font-size:14px;"></i> History</button>
+  <div class="nav-status"><span class="status-dot"></span><span id="health-status">CHECKING...</span></div>
 </div>
 
-<footer style="border-top:1px solid var(--gold-bd);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;">
-  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions" style="font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;">Publishing Terms</a> &middot;
-  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure" style="font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;">Audio Disclosures</a> &middot;
-  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;">Our Philosophy</a>
+<main class="main">
+
+  <section id="voices-tab" class="tab-content active">
+    <div class="section-header">
+      <h1 class="section-title">Voice Library</h1>
+      <p class="section-sub">24 custom voice profiles / zero-shot cloning engine</p>
+    </div>
+    <div id="voice-grid" class="voice-grid"></div>
+  </section>
+
+  <section id="tts-tab" class="tab-content">
+    <div class="section-header">
+      <h1 class="section-title">TTS Studio</h1>
+      <p class="section-sub">Text-to-speech generation / HD quality / custom voice profiles</p>
+    </div>
+    <div class="tts-layout">
+      <div class="tts-editor">
+        <textarea id="tts-text" class="tts-textarea" placeholder="Enter your text here. Up to 4,096 characters supported..." maxlength="4096"></textarea>
+        <div class="tts-editor-footer"><span id="tts-char-count" class="char-count">0 / 4096</span></div>
+      </div>
+      <div class="tts-controls">
+        <div class="control-group"><label class="control-label">Voice Profile</label><select id="tts-voice-select" class="control-select"></select></div>
+        <div class="control-group"><label class="control-label">Speed</label><input type="range" id="tts-speed" class="speed-slider" min="0.25" max="4.0" step="0.05" value="1.0"><div id="tts-speed-value" class="speed-value">1.00x</div></div>
+        <div class="control-group"><label class="control-label">Model</label><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-tertiary);padding:8px 0;">tts-1-hd <span style="color:var(--success);font-size:10px;">ACTIVE</span></div></div>
+        <div style="flex:1;"></div>
+        <button id="tts-generate-btn" class="btn-generate">Generate Speech</button>
+      </div>
+    </div>
+    <div id="tts-result" class="audio-result">
+      <canvas id="tts-waveform" class="waveform-canvas"></canvas>
+      <audio controls></audio>
+      <div class="audio-result-info"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);"></span><button class="btn-download"><i class="ph ph-download-simple"></i> Download MP3</button></div>
+    </div>
+  </section>
+
+  <section id="audiobook-tab" class="tab-content">
+    <div class="section-header">
+      <h1 class="section-title">Audiobook Studio</h1>
+      <p class="section-sub">Full manuscript generation / auto dialogue detection / multi-voice</p>
+    </div>
+    <div class="audiobook-layout">
+      <div class="audiobook-input">
+        <div class="control-group">
+          <label class="control-label">Upload Manuscript</label>
+          <div class="upload-zone">
+            <div class="upload-zone-icon"><i class="ph ph-file-doc"></i></div>
+            <div class="upload-zone-text">Drop .docx file or click to upload</div>
+            <input type="file" id="audiobook-file" accept=".docx">
+          </div>
+          <div id="upload-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--success);margin-top:4px;"></div>
+        </div>
+        <div class="control-group"><label class="control-label">Or Paste Text</label><textarea id="audiobook-text" class="audiobook-textarea" placeholder='Paste your manuscript here. Use "quotation marks" for dialogue...'></textarea></div>
+        <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid var(--border);color:var(--text-tertiary);">Preview Segments</button>
+        <div id="segments-preview" class="segments-preview" style="display:none;"></div>
+      </div>
+      <div class="audiobook-config">
+        <div class="control-group"><label class="control-label">Narrator Voice</label><select id="narrator-voice-select" class="control-select"></select></div>
+        <div class="control-group">
+          <label class="control-label">Character Voices (optional)</label>
+          <div id="char-voices-list" style="max-height:260px;overflow-y:auto;border:1px solid var(--border);background:#fff;padding:8px;display:flex;flex-direction:column;gap:4px;border-radius:8px;"></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);margin-top:4px;">Leave empty for auto-assignment</div>
+        </div>
+        <div style="flex:1;"></div>
+        <button id="audiobook-generate-btn" class="btn-generate">Generate Audiobook</button>
+      </div>
+    </div>
+    <div id="audiobook-result" class="audio-result">
+      <canvas id="audiobook-waveform" class="waveform-canvas"></canvas>
+      <audio controls></audio>
+      <div class="audio-result-info"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);"></span><button class="btn-download"><i class="ph ph-download-simple"></i> Download MP3</button></div>
+    </div>
+  </section>
+
+  <section id="chat-tab" class="tab-content">
+    <div class="section-header">
+      <h1 class="section-title">AI Assistant</h1>
+      <p class="section-sub">Voice platform guidance / creative writing help</p>
+    </div>
+    <div class="chat-layout">
+      <div class="chat-header"><i class="ph ph-chat-circle-dots" style="color:var(--plum);font-size:18px;"></i><span class="chat-header-title">Voice Studio Assistant</span></div>
+      <div id="chat-messages" class="chat-messages">
+        <div class="empty-state"><div class="empty-state-icon"><i class="ph ph-chat-circle-dots"></i></div><div class="empty-state-text">Ask me anything about voice cloning, TTS, or audiobooks</div></div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Type your message..." autocomplete="off">
+        <button id="chat-send-btn" class="btn-send">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="compare-tab" class="tab-content">
+    <div class="section-header">
+      <h1 class="section-title">Voice Compare</h1>
+      <p class="section-sub">Side-by-side comparison / same text, different voices</p>
+    </div>
+    <div style="border:1px solid var(--border);background:var(--surface);padding:24px;margin-bottom:24px;border-radius:12px;">
+      <div class="control-group" style="margin-bottom:20px;"><label class="control-label">Comparison Text</label><textarea id="compare-text" class="audiobook-textarea" placeholder="Enter text to hear in multiple voices..." style="min-height:100px;"></textarea></div>
+      <div class="control-group" style="margin-bottom:20px;">
+        <label class="control-label">Select Voices to Compare (2-6)</label>
+        <div id="compare-voices-list" style="max-height:220px;overflow-y:auto;border:1px solid var(--border);background:#fff;padding:8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px;border-radius:8px;"></div>
+        <div id="compare-selected-count" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);margin-top:4px;">0 voices selected</div>
+      </div>
+      <button id="compare-generate-btn" class="btn-generate">Compare Voices</button>
+    </div>
+    <div id="compare-results" style="display:none;">
+      <div class="control-label" style="margin-bottom:12px;">Comparison Results</div>
+      <div id="compare-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;"></div>
+    </div>
+  </section>
+
+  <section id="history-tab" class="tab-content">
+    <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div><h1 class="section-title">Generation History</h1><p class="section-sub">All generated audio / TTS and audiobooks / playback and download</p></div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button id="export-json-btn" class="btn-download" style="padding:8px 14px;"><i class="ph ph-file-json"></i> Export JSON</button>
+        <button id="export-csv-btn" class="btn-download" style="padding:8px 14px;"><i class="ph ph-file-csv"></i> Export CSV</button>
+      </div>
+    </div>
+    <div id="history-container"><div class="empty-state"><div class="empty-state-icon"><i class="ph ph-clock-counter-clockwise"></i></div><div class="empty-state-text">No generations yet</div></div></div>
+    <div id="history-player" class="audio-result">
+      <canvas id="history-waveform" class="waveform-canvas"></canvas>
+      <audio controls></audio>
+      <div class="audio-result-info"><span id="history-player-info" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);"></span><button class="btn-download"><i class="ph ph-download-simple"></i> Download MP3</button></div>
+    </div>
+  </section>
+
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;">
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Publishing Terms</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Audio Disclosures</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Our Philosophy</a>
 </footer>
 
 <script src='https://cdn.jotfor.ms/agent/embedjs/019d3d3c3a537add8379214c3060726a324e/embed.js'></script>
 <script>
-var API_BASE = 'https://cantrell-creatives-zfildq.fly.dev';
-var chapters = [];
-var generatedAudioUrl = null;
-var characterNames = [];
-var char2Names = [];
-var enginesData = {};
-var enginePreviewState = 'gtts';
+var API = 'https://cantrell-creatives.fly.dev/api';
+var voices = [];
+var activeTab = 'voices';
+var chatSessionId = null;
+var currentAudio = null;
+var currentPlayingCard = null;
 
-window.addEventListener('DOMContentLoaded', function(){
-  loadVoices();
-  document.getElementById('characterNameInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){e.preventDefault();addCharacterName();} });
-  document.getElementById('char2NameInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){e.preventDefault();addChar2Name();} });
-});
-
-/* ── Role change ── */
-function onRoleChange(){
-  var role = document.querySelector('input[name="voiceRole"]:checked').value;
-  document.getElementById('characterSection').style.display  = (role==='character'||role==='two') ? 'block' : 'none';
-  document.getElementById('character2Section').style.display = (role==='two') ? 'block' : 'none';
+function WaveformViz(canvasId) {
+  this.canvas = document.getElementById(canvasId);
+  if (!this.canvas) return;
+  this.ctx = this.canvas.getContext('2d');
+  this.audioCtx = null; this.analyser = null; this.source = null; this.animationId = null; this.connectedAudio = null;
 }
-
-/* ── Character tags ── */
-function addCharacterName(){
-  var input=document.getElementById('characterNameInput'); var name=input.value.trim(); if(!name) return;
-  if(characterNames.indexOf(name)===-1){ characterNames.push(name); renderTags('characterTags',characterNames,'removeCharacterName'); }
-  input.value='';
-}
-function removeCharacterName(name){ characterNames=characterNames.filter(function(n){return n!==name;}); renderTags('characterTags',characterNames,'removeCharacterName'); }
-
-function addChar2Name(){
-  var input=document.getElementById('char2NameInput'); var name=input.value.trim(); if(!name) return;
-  if(char2Names.indexOf(name)===-1){ char2Names.push(name); renderTags('char2Tags',char2Names,'removeChar2Name'); }
-  input.value='';
-}
-function removeChar2Name(name){ char2Names=char2Names.filter(function(n){return n!==name;}); renderTags('char2Tags',char2Names,'removeChar2Name'); }
-
-function renderTags(containerId, names, removeFn){
-  var c=document.getElementById(containerId); c.innerHTML='';
-  names.forEach(function(name){
-    var tag=document.createElement('span'); tag.className='char-tag';
-    tag.innerHTML=name+'<button onclick="'+removeFn+'(\''+name.replace(/'/g,"\\'")+'\')" title="Remove">&times;</button>';
-    c.appendChild(tag);
-  });
-}
-
-/* ── Hardcoded 24 CC Voices ── */
-var CC_VOICES = [
-  {id:'Adam_English-British',                  label:'Adam (British)'},
-  {id:'Andrew_English-US',                     label:'Andrew (American)'},
-  {id:'Carlton_English-African_American',      label:'Carlton (African American)'},
-  {id:'Edith_English-US',                      label:'Edith (American)'},
-  {id:'Eve_English-US',                        label:'Eve (American)'},
-  {id:'Hugh_English-Scottish',                 label:'Hugh (Scottish)'},
-  {id:'Jane_English-British',                  label:'Jane (British)'},
-  {id:'Jessica_Anne_English-US',               label:'Jessica Anne (American)'},
-  {id:'John_D_English-US',                     label:'John D (American)'},
-  {id:'Kelli_English-African_American',        label:'Kelli (African American)'},
-  {id:'Lamin_English-African_American',        label:'Lamin (African American)'},
-  {id:'Linda_English-US',                      label:'Linda (American)'},
-  {id:'Mandla_English-African',                label:'Mandla (African)'},
-  {id:'Ms._Walker_English-African_American',   label:'Ms. Walker (African American)'},
-  {id:'Palesa_English-African',                label:'Palesa (African)'},
-  {id:'Piper_English-Irish',                   label:'Piper (Irish)'},
-  {id:'Reese_English-US',                      label:'Reese (American)'},
-  {id:'Roger_English-US',                      label:'Roger (American)'},
-  {id:'Scott_English-African_American',        label:'Scott (African American)'},
-  {id:'Shayla_English-African_American',       label:'Shayla (African American)'},
-  {id:'Sonya_English-African_American',        label:'Sonya (African American)'},
-  {id:'Tom_English-Irish',                     label:'Tom (Irish)'},
-  {id:'True_English-US',                       label:'True (American)'},
-  {id:'Will_English-US',                       label:'Will (American)'},
-];
-
-/* ── Load voices ── */
-function loadVoices(){
-  enginesData['gtts'] = {label:'CC Voices', voices:CC_VOICES};
-  buildPreviewTabs();
-  populateSelect('voice1Select','gtts',false);
-  populateSelect('voice2Select','gtts',true);
-  populateSelect('voice3Select','gtts',true);
-}
-
-function buildPreviewTabs(){
-  var el=document.getElementById('enginePreviewTabs'); el.innerHTML='';
-  Object.keys(enginesData).forEach(function(engineId){
-    var tab=document.createElement('button');
-    tab.className='engine-tab'+(enginePreviewState===engineId?' active':'');
-    tab.textContent=enginesData[engineId].label;
-    tab.onclick=function(){ enginePreviewState=engineId; buildPreviewTabs(); populateSelect('voicePreviewSelect',engineId,false); };
-    el.appendChild(tab);
-  });
-  populateSelect('voicePreviewSelect',enginePreviewState,false);
-}
-
-function populateSelect(selId,engineId,addNone){
-  var sel=document.getElementById(selId);
-  var voices=(enginesData[engineId]&&enginesData[engineId].voices)||[];
-  sel.innerHTML=addNone?'<option value="">— None —</option>':'';
-  voices.forEach(function(v){ var opt=document.createElement('option'); opt.value=v.id; opt.textContent=v.label; sel.appendChild(opt); });
-}
-
-/* ── Preview ── */
-async function previewSelectedVoice(){
-  var voiceName=document.getElementById('voicePreviewSelect').value; if(!voiceName) return;
-  try {
-    var resp=await fetch(API_BASE+'/api/voice-sample/'+encodeURIComponent(voiceName));
-    if(!resp.ok) throw new Error('Server returned '+resp.status);
-    var blob=await resp.blob();
-    var url=URL.createObjectURL(blob);
-    var audio=new Audio(url);
-    audio.play();
-  } catch(err){ alert('Voice preview error: '+err.message); }
-}
-
-/* ── Generate audiobook ── */
-async function generateAudiobook(){
-  var editor=document.getElementById('docEditor');
-  var fullText=(editor.textContent||editor.innerText).trim();
-  if(!fullText||fullText==='Start typing or import a file...'){ showStatus('genStatus','err','Add some text first.'); return; }
-  var role=document.querySelector('input[name="voiceRole"]:checked').value;
-  var voice1=document.getElementById('voice1Select').value;
-  var voice2=document.getElementById('voice2Select').value;
-  var voice3=document.getElementById('voice3Select').value;
-  var chars=[];
-  if(role==='character'||role==='two') characterNames.forEach(function(n){ chars.push({name:n,voice_id:voice2||voice1}); });
-  if(role==='two') char2Names.forEach(function(n){ chars.push({name:n,voice_id:voice3||voice1}); });
-  var btn=document.getElementById('generateBtn');
-  btn.disabled=true; btn.innerHTML='&#x1F3A7; Generating...';
-  var progress=document.getElementById('genProgress'); var fill=document.getElementById('genProgressFill');
-  progress.style.display='block'; fill.style.width='10%';
-  showStatus('genStatus','info','Sending manuscript to audio engine...');
-  var controller=new AbortController();
-  var timeout=setTimeout(function(){ controller.abort(); },300000);
-  try {
-    fill.style.width='30%';
-    showStatus('genStatus','info','Processing audio — this may take a few minutes...');
-    var resp=await fetch(API_BASE+'/api/audiobook',{method:'POST',headers:{'Content-Type':'application/json'},
-      signal:controller.signal,
-      body:JSON.stringify({text:fullText,narrator_voice:voice1,characters:chars,auto_detect:true,format:'mp3'})});
-    clearTimeout(timeout);
-    fill.style.width='80%';
-    if(!resp.ok) throw new Error('Server returned '+resp.status);
-    var blob=await resp.blob(); fill.style.width='100%';
-    generatedAudioUrl=URL.createObjectURL(blob);
-    var player=document.getElementById('rightAudio');
-    player.src=generatedAudioUrl;
-    player.load();
-    player.play().catch(function(){});
-    showStatus('genStatus','ok','&#10003; Audiobook generated!');
-  } catch(err){
-    clearTimeout(timeout);
-    var msg=err.name==='AbortError'?'Request timed out. Try a shorter passage.':'Error: '+err.message;
-    showStatus('genStatus','err',msg); fill.style.width='0%';
-  }
-  btn.disabled=false; btn.innerHTML='&#x1F3A7; Generate Audiobook';
-}
-
-function downloadAudio(){
-  if(!generatedAudioUrl) return;
-  var a=document.createElement('a'); a.href=generatedAudioUrl;
-  a.download=(document.getElementById('bookTitle').value||'audiobook')+'.mp3'; a.click();
-}
-
-async function saveToCloudflare(){
-  if(!generatedAudioUrl){ showStatus('cloudSaveStatus','err','No audio to save. Generate first.'); return; }
-  showStatus('cloudSaveStatus','info','Saving to cloud...');
-  try {
-    var title=(document.getElementById('bookTitle').value||'audiobook').replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_');
-    var filename='audiobooks/'+title+'_'+Date.now()+'.mp3';
-    var audioResp=await fetch(generatedAudioUrl);
-    var blob=await audioResp.blob();
-    var formData=new FormData();
-    formData.append('file', blob, filename);
-    formData.append('path', filename);
-    var resp=await fetch('https://nyxen-video-worker.smcantrellbooks.workers.dev/upload',{
-      method:'POST', body:formData
-    });
-    if(!resp.ok) throw new Error('Server returned '+resp.status);
-    var data=await resp.json();
-    showStatus('cloudSaveStatus','ok','&#10003; Saved to cloud: '+filename);
-  } catch(err){
-    showStatus('cloudSaveStatus','err','Save error: '+err.message);
-  }
-}
-
-/* ── File handling ── */
-function handleFileUpload(e){ var f=e.target.files[0]; if(f) processFile(f); e.target.value=''; }
-function handleEditorDrop(e){ e.preventDefault(); document.getElementById('docEditor').style.borderColor='var(--gold-bd)'; var f=e.dataTransfer.files[0]; if(f) processFile(f); }
-
-function handleEpubUpload(e){
-  var f=e.target.files[0]; if(!f) return; e.target.value='';
-  showStatus('epubStatus','info','Reading EPUB: '+f.name+'...');
-  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=f.name.replace(/\.epub$/i,'');
-  if(typeof JSZip==='undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    JSZip.loadAsync(ev.target.result).then(function(zip){
-      var containerXml=zip.files['META-INF/container.xml'];
-      if(!containerXml) throw new Error('Not a valid EPUB (no container.xml)');
-      return containerXml.async('text').then(function(containerText){
-        var opfMatch=containerText.match(/full-path="([^"]+\.opf)"/i);
-        if(!opfMatch) throw new Error('Cannot find OPF file');
-        var opfPath=opfMatch[1]; var opfBase=opfPath.substring(0,opfPath.lastIndexOf('/')+1);
-        return zip.files[opfPath].async('text').then(function(opfText){
-          var itemMap={};
-          for(var m of opfText.matchAll(/<item\s[^>]*id="([^"]+)"[^>]*href="([^"]+)"[^>]*>/gi)){ itemMap[m[1]]=opfBase+m[2]; }
-          var spineIds=[];
-          for(var s of opfText.matchAll(/<itemref\s[^>]*idref="([^"]+)"/gi)){ spineIds.push(s[1]); }
-          return Promise.all(spineIds.map(function(id){
-            var href=itemMap[id]; if(!href||!zip.files[href]) return Promise.resolve('');
-            return zip.files[href].async('text').then(function(html){
-              return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
-                .replace(/<\/p>/gi,'\n').replace(/<\/h[1-6]>/gi,'\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,' ')
-                .replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
-                .replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
-            });
-          }));
-        });
-      });
-    }).then(function(sections){
-      document.getElementById('topEditor').textContent=sections.filter(Boolean).join('\n\n');
-      showStatus('epubStatus','ok','&#10003; EPUB loaded into converter. Click Export to send to editor.');
-    }).catch(function(err){ showStatus('epubStatus','err','EPUB error: '+err.message); });
-  };
-  reader.readAsArrayBuffer(f);
-}
-
-function handleTopDocxUpload(e){
-  var f=e.target.files[0]; if(!f) return; e.target.value='';
-  showStatus('epubStatus','info','Reading DOCX: '+f.name+'...');
-  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=f.name.replace(/\.docx$/i,'');
-  if(typeof JSZip==='undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    JSZip.loadAsync(ev.target.result).then(function(zip){
-      var doc=zip.files['word/document.xml']; if(!doc) throw new Error('No document.xml found');
-      return doc.async('text');
-    }).then(function(xml){
-      document.getElementById('topEditor').textContent=xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
-      showStatus('epubStatus','ok','&#10003; DOCX loaded into converter. Click Export to send to editor.');
-    }).catch(function(err){ showStatus('epubStatus','err','DOCX error: '+err.message); });
-  };
-  reader.readAsArrayBuffer(f);
-}
-
-function clearTopEditor(){ document.getElementById('topEditor').textContent='Import an EPUB or DOCX to preview here...'; showStatus('epubStatus','',''); }
-
-function exportToBottomEditor(){
-  var topText=(document.getElementById('topEditor').textContent||'').trim();
-  if(!topText||topText==='Import an EPUB or DOCX to preview here...'){ showStatus('epubStatus','err','Nothing to export. Import a file first.'); return; }
-  var filtered=topText.replace(/TABLE OF CONTENTS[\s\S]*?(?=\n\s*(CHAPTER|PROLOGUE|EPILOGUE|COPYRIGHT|PART\s))/gi,'')
-    .replace(/^TABLE OF CONTENTS[^\n]*\n?/gim,'').replace(/\n{3,}/g,'\n\n').trim();
-  loadRawIntoEditor(filtered); detectChapters(filtered);
-  showStatus('uploadStatus','ok','&#10003; Exported to editor (TOC filtered out).');
-  document.getElementById('docEditor').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-async function convertToEpub(){
-  var topText=(document.getElementById('topEditor').textContent||'').trim();
-  if(!topText||topText==='Import an EPUB or DOCX to preview here...'){ showStatus('epubStatus','err','Nothing to convert. Import a file first.'); return; }
-  if(typeof JSZip==='undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
-  var title=document.getElementById('bookTitle').value.trim()||'Untitled';
-  var author=document.getElementById('authorName').value.trim()||'Unknown';
-  var safeTitle=title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_');
-  showStatus('epubStatus','info','Building EPUB...');
-  try {
-    var bookId='urn:uuid:'+([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,function(c){ return (c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16); });
-
-    var chapterRegex=/(?:^|\n)\s*(chapter\s+\d+[^\n]*)/gi;
-    var matches=[],m;
-    while((m=chapterRegex.exec(topText))!==null){ matches.push({title:m[1].trim(),index:m.index}); }
-    var epubChapters=[];
-    if(matches.length>0){
-      var before=topText.substring(0,matches[0].index).trim();
-      if(before) epubChapters.push({title:'Preface',text:before});
-      matches.forEach(function(match,i){
-        var end=i+1<matches.length?matches[i+1].index:topText.length;
-        epubChapters.push({title:match.title,text:topText.substring(match.index,end).trim()});
-      });
-    } else {
-      epubChapters=[{title:title,text:topText}];
-    }
-
-    function textToHtml(text){
-      return text.split(/\n\n+/).map(function(p){
-        return '<p>'+p.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').trim()+'</p>';
-      }).join('\n');
-    }
-
-    var zip=new JSZip();
-    zip.file('mimetype','application/epub+zip');
-
-    zip.folder('META-INF').file('container.xml',
-      '<?xml version="1.0"?>\n'+
-      '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n'+
-      '  <rootfiles>\n'+
-      '    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n'+
-      '  </rootfiles>\n'+
-      '</container>');
-
-    var oebps=zip.folder('OEBPS');
-
-    var manifestItems='';
-    var spineItems='';
-    var ncxNavPoints='';
-    var playOrder=1;
-    epubChapters.forEach(function(ch,i){
-      var id='chapter'+i;
-      var fname=id+'.xhtml';
-      var chHtml=
-        '<?xml version="1.0" encoding="UTF-8"?>\n'+
-        '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\n'+
-        '<html xmlns="http://www.w3.org/1999/xhtml">\n'+
-        '<head><title>'+ch.title.replace(/&/g,'&amp;')+'</title>\n'+
-        '<style>body{font-family:Georgia,serif;line-height:1.8;margin:5% 8%;}h2{margin:1.5em 0 0.5em;}p{margin:0 0 0.8em;text-indent:2em;}p:first-of-type{text-indent:0;}</style>\n'+
-        '</head>\n<body>\n<h2>'+ch.title.replace(/&/g,'&amp;')+'</h2>\n'+textToHtml(ch.text)+'\n</body>\n</html>';
-      oebps.file(fname, chHtml);
-      manifestItems+='    <item id="'+id+'" href="'+fname+'" media-type="application/xhtml+xml"/>\n';
-      spineItems+='    <itemref idref="'+id+'"/>\n';
-      ncxNavPoints+=
-        '  <navPoint id="nav'+i+'" playOrder="'+playOrder+'">\n'+
-        '    <navLabel><text>'+ch.title.replace(/&/g,'&amp;')+'</text></navLabel>\n'+
-        '    <content src="'+fname+'"/>\n'+
-        '  </navPoint>\n';
-      playOrder++;
-    });
-
-    var now=new Date().toISOString().split('T')[0];
-    oebps.file('content.opf',
-      '<?xml version="1.0" encoding="UTF-8"?>\n'+
-      '<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="2.0">\n'+
-      '  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">\n'+
-      '    <dc:title>'+title.replace(/&/g,'&amp;')+'</dc:title>\n'+
-      '    <dc:creator>'+author.replace(/&/g,'&amp;')+'</dc:creator>\n'+
-      '    <dc:identifier id="bookid">'+bookId+'</dc:identifier>\n'+
-      '    <dc:language>en</dc:language>\n'+
-      '    <dc:date>'+now+'</dc:date>\n'+
-      '  </metadata>\n'+
-      '  <manifest>\n'+
-      manifestItems+
-      '    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>\n'+
-      '  </manifest>\n'+
-      '  <spine toc="ncx">\n'+
-      spineItems+
-      '  </spine>\n'+
-      '</package>');
-
-    oebps.file('toc.ncx',
-      '<?xml version="1.0" encoding="UTF-8"?>\n'+
-      '<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">\n'+
-      '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">\n'+
-      '  <head><meta name="dtb:uid" content="'+bookId+'"/></head>\n'+
-      '  <docTitle><text>'+title.replace(/&/g,'&amp;')+'</text></docTitle>\n'+
-      '  <navMap>\n'+ncxNavPoints+'  </navMap>\n'+
-      '</ncx>');
-
-    var blob=await zip.generateAsync({type:'blob', mimeType:'application/epub+zip', compression:'DEFLATE', compressionOptions:{level:6}});
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a'); a.href=url; a.download=safeTitle+'.epub'; a.click();
-    showStatus('epubStatus','ok','&#10003; EPUB downloaded — '+epubChapters.length+' chapter(s)!');
-  } catch(err){ showStatus('epubStatus','err','EPUB error: '+err.message); }
-}
-
-function processFile(file){
-  var ext=file.name.split('.').pop().toLowerCase();
-  showStatus('uploadStatus','info','Reading '+file.name+'...');
-  if(!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=file.name.replace(/\.[^.]+$/,'');
-  if(ext==='txt'){
-    var r=new FileReader(); r.onload=function(ev){ detectChapters(ev.target.result); showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded'); }; r.readAsText(file);
-  } else if(ext==='docx'){
-    var fd=new FormData(); fd.append('file',file);
-    fetch(API_BASE+'/api/upload',{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(d){
-      if(d.content&&d.content.length>10){ loadRawIntoEditor(d.content); showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded (server)'); } else { throw new Error('Empty'); }
-    }).catch(function(){
-      if(typeof JSZip==='undefined'){ showStatus('uploadStatus','err','JSZip not loaded.'); return; }
-      var r2=new FileReader();
-      r2.onload=function(ev){
-        JSZip.loadAsync(ev.target.result).then(function(zip){
-          var doc=zip.files['word/document.xml']; if(doc) return doc.async('text'); throw new Error('No document.xml');
-        }).then(function(xml){
-          loadRawIntoEditor(xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim());
-          showStatus('uploadStatus','ok','&#10003; '+file.name+' loaded');
-        }).catch(function(e){ showStatus('uploadStatus','err','Error: '+e.message); });
-      };
-      r2.readAsArrayBuffer(file);
-    });
-  }
-}
-
-function loadRawIntoEditor(text){ chapters=[{title:'Full Document',content:text}]; document.getElementById('docEditor').textContent=text; renderChapterNav(); }
-
-function detectChapters(text){
-  var chapterRegex=/(?:^|\n)\s*(chapter\s+\d+[^\n]*)/gi; var matches=[],m;
-  while((m=chapterRegex.exec(text))!==null){ matches.push({title:m[1].trim(),index:m.index}); }
-  var tocRegex=/(?:^|\n)\s*(table of contents|contents)\s*\n/i; var tocMatch=tocRegex.exec(text);
-  if(tocMatch&&matches.length>0){
-    var tocStart=tocMatch.index; var firstChapterStart=matches[0].index;
-    if(tocStart<firstChapterStart){
-      text=text.substring(0,tocStart)+text.substring(firstChapterStart);
-      chapterRegex.lastIndex=0; matches=[];
-      while((m=chapterRegex.exec(text))!==null){ matches.push({title:m[1].trim(),index:m.index}); }
+WaveformViz.prototype.connect = function(audioEl) {
+  if (!this.canvas) return;
+  if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (this.source) { try { this.source.disconnect(); } catch(e) {} }
+  if (this.connectedAudio === audioEl) { this.audioCtx.resume(); return; }
+  this.analyser = this.audioCtx.createAnalyser(); this.analyser.fftSize = 256;
+  this.source = this.audioCtx.createMediaElementSource(audioEl);
+  this.source.connect(this.analyser); this.analyser.connect(this.audioCtx.destination);
+  this.connectedAudio = audioEl;
+};
+WaveformViz.prototype.start = function() {
+  if (!this.analyser || !this.canvas) return;
+  var self = this;
+  function draw() {
+    self.animationId = requestAnimationFrame(draw);
+    var bl = self.analyser.frequencyBinCount, da = new Uint8Array(bl);
+    self.analyser.getByteFrequencyData(da);
+    var w = self.canvas.width = self.canvas.offsetWidth * 2, h = self.canvas.height = self.canvas.offsetHeight * 2;
+    self.ctx.clearRect(0, 0, w, h);
+    var bw = (w / bl) * 1.5, x = 0;
+    for (var i = 0; i < bl; i++) {
+      var v = da[i] / 255, bh = v * h * 0.85;
+      var ratio = i / bl;
+      self.ctx.fillStyle = 'rgba(' + Math.round(123*(1-ratio)+201*ratio) + ',' + Math.round(92*(1-ratio)+169*ratio) + ',' + Math.round(123*(1-ratio)+97*ratio) + ',' + (0.6+v*0.4) + ')';
+      self.ctx.fillRect(x, h - bh, bw - 2, bh);
+      x += bw;
     }
   }
-  if(matches.length>0){
-    chapters=[]; var before=text.substring(0,matches[0].index).trim();
-    if(before) chapters.push({title:'Front Matter',content:before});
-    matches.forEach(function(match,i){ var end=i+1<matches.length?matches[i+1].index:text.length; chapters.push({title:match.title,content:text.substring(match.index,end).trim()}); });
-  } else { chapters=[{title:'Full Document',content:text}]; }
-  renderEditor(); renderChapterNav();
-}
+  draw();
+};
+WaveformViz.prototype.stop = function() {
+  if (this.animationId) { cancelAnimationFrame(this.animationId); this.animationId = null; }
+  if (this.canvas) this.drawIdle();
+};
+WaveformViz.prototype.drawIdle = function() {
+  if (!this.canvas) return;
+  var w = this.canvas.width = this.canvas.offsetWidth * 2, h = this.canvas.height = this.canvas.offsetHeight * 2;
+  this.ctx.clearRect(0, 0, w, h);
+  for (var i = 0; i < 64; i++) {
+    var v = 0.05 + Math.sin(i * 0.3) * 0.04;
+    this.ctx.fillStyle = 'rgba(201,169,97,0.3)';
+    this.ctx.fillRect(i * (w/64), h - v*h, (w/64) - 2, v*h);
+  }
+};
 
-function renderEditor(){
-  var editor=document.getElementById('docEditor'); editor.innerHTML='';
-  chapters.forEach(function(ch,i){
-    var h=document.createElement('h3'); h.id='ch-'+i;
-    h.style.cssText='font-family:Cinzel,serif;font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);color:var(--plum);';
-    if(i===0) h.style.marginTop='0'; h.textContent=ch.title;
-    var block=document.createElement('div'); block.style.cssText='margin-bottom:16px;white-space:pre-wrap;';
-    block.textContent=ch.content.replace(new RegExp('^'+ch.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*','i'),'').trim();
-    editor.appendChild(h); editor.appendChild(block);
+var ttsWaveform = new WaveformViz('tts-waveform');
+var audiobookWaveform = new WaveformViz('audiobook-waveform');
+var historyWaveform = new WaveformViz('history-waveform');
+
+document.addEventListener('DOMContentLoaded', init);
+function init() {
+  setupTabs();
+  loadVoices().then(function() {
+    renderVoices(); populateVoiceSelects(); setupTTSForm(); setupAudiobookForm();
+    setupChatForm(); setupCompareForm(); setupHistoryExport(); setupWaveforms(); checkHealth();
   });
 }
 
-function renderChapterNav(){
-  var nav=document.getElementById('chapterNav');
-  if(!chapters.length||(chapters.length===1&&chapters[0].title==='Full Document')){ nav.innerHTML='<div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>'; return; }
-  nav.innerHTML='';
-  chapters.forEach(function(ch,i){
-    var item=document.createElement('div');
-    item.style.cssText='padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;font-size:.85rem;color:var(--taupe);font-weight:600;transition:all .18s;';
-    item.textContent=ch.title;
-    item.onclick=function(){ var el=document.getElementById('ch-'+i); if(el){ var ed=document.getElementById('docEditor'); ed.scrollTop=el.offsetTop-ed.offsetTop-10; el.style.background='var(--gold-lt)'; setTimeout(function(){el.style.background='';},1500); } };
-    nav.appendChild(item);
+function setupTabs() {
+  document.querySelectorAll('.nav-tab').forEach(function(btn) {
+    btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
+  });
+}
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+  document.getElementById(tab + '-tab').classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(function(btn) { btn.classList.toggle('active', btn.dataset.tab === tab); });
+  if (tab === 'history') loadHistory();
+}
+
+function checkHealth() {
+  fetch(API + '/health').then(function(r) { return r.json(); }).then(function(d) {
+    var el = document.getElementById('health-status');
+    if (el) { el.textContent = d.status === 'healthy' ? 'ONLINE' : 'OFFLINE'; el.previousElementSibling.style.background = d.status === 'healthy' ? '#2a6b3c' : '#c03c3c'; }
+  }).catch(function() { var el = document.getElementById('health-status'); if (el) { el.textContent = 'OFFLINE'; el.previousElementSibling.style.background = '#c03c3c'; } });
+}
+
+function loadVoices() {
+  return fetch(API + '/voices').then(function(r) { return r.json(); }).then(function(d) { voices = d.voices || d; }).catch(function() { voices = []; });
+}
+
+function renderVoices() {
+  var grid = document.getElementById('voice-grid'); if (!grid) return; grid.innerHTML = '';
+  voices.forEach(function(voice, idx) {
+    var card = document.createElement('div'); card.className = 'voice-card fade-in'; card.style.animationDelay = (idx*30) + 'ms';
+    var initials = voice.name.substring(0,2).toUpperCase();
+    card.innerHTML = '<div class="voice-card-header"><div class="voice-avatar">' + initials + '</div><div class="voice-card-info"><div class="voice-name">' + voice.name + '</div><div class="voice-id">' + voice.id + ' / ' + voice.accent + '</div></div></div><div class="voice-desc">' + voice.description + '</div><div class="voice-tags"><span class="voice-tag">' + voice.style + '</span><span class="voice-tag">' + voice.gender + '</span><span class="voice-tag">' + voice.accent + '</span></div><div class="voice-card-actions"><button class="btn-play"><i class="ph ph-play"></i> Play</button><button class="btn-select"><i class="ph ph-arrow-right"></i> Use</button></div>';
+    card.querySelector('.btn-play').addEventListener('click', function(e) { e.stopPropagation(); playSample(voice.id, card.querySelector('.btn-play')); });
+    card.querySelector('.btn-select').addEventListener('click', function(e) { e.stopPropagation(); selectVoiceForTTS(voice.id); });
+    grid.appendChild(card);
   });
 }
 
-function clearEditor(){ if(!confirm('Clear the editor?')) return; document.getElementById('docEditor').innerHTML='Start typing or import a file...'; chapters=[]; renderChapterNav(); }
+function playSample(voiceId, btn) {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; if (currentPlayingCard) { currentPlayingCard.classList.remove('playing'); currentPlayingCard.innerHTML = '<i class="ph ph-play"></i> Play'; } }
+  if (currentPlayingCard === btn) { currentPlayingCard = null; return; }
+  btn.classList.add('playing'); btn.innerHTML = '<i class="ph ph-spinner"></i> Loading';
+  var audio = new Audio(API + '/voice-sample/' + voiceId);
+  currentAudio = audio; currentPlayingCard = btn;
+  audio.addEventListener('canplay', function() { btn.innerHTML = '<i class="ph ph-stop"></i> Stop'; audio.play(); });
+  audio.addEventListener('ended', function() { btn.classList.remove('playing'); btn.innerHTML = '<i class="ph ph-play"></i> Play'; currentAudio = null; currentPlayingCard = null; });
+  audio.addEventListener('error', function() { btn.classList.remove('playing'); btn.innerHTML = '<i class="ph ph-play"></i> Play'; currentAudio = null; currentPlayingCard = null; });
+}
 
-function showStatus(id,type,text){ var el=document.getElementById(id); if(!el) return; el.className='status-msg '+type; el.innerHTML=text; }
+function selectVoiceForTTS(voiceId) {
+  var sel = document.getElementById('tts-voice-select'); if (sel) sel.value = voiceId;
+  switchTab('tts');
+}
+
+function populateVoiceSelects() {
+  ['tts-voice-select','narrator-voice-select'].forEach(function(id) {
+    var sel = document.getElementById(id); if (!sel) return; sel.innerHTML = '';
+    voices.forEach(function(v) { var opt = document.createElement('option'); opt.value = v.id; opt.textContent = v.name + ' — ' + v.style + ' (' + v.accent + ')'; sel.appendChild(opt); });
+  });
+  var charC = document.getElementById('char-voices-list');
+  if (charC) { charC.innerHTML = ''; voices.forEach(function(v) { var l = document.createElement('label'); l.className = 'char-voice-option'; l.innerHTML = '<input type="checkbox" value="' + v.id + '"><span>' + v.name + '</span>'; charC.appendChild(l); }); }
+  var compC = document.getElementById('compare-voices-list');
+  if (compC) { compC.innerHTML = ''; voices.forEach(function(v) { var l = document.createElement('label'); l.className = 'compare-voice-option'; l.innerHTML = '<input type="checkbox" value="' + v.id + '"><span>' + v.name + ' <span style="color:var(--text-tertiary);font-size:11px;">(' + v.accent + ')</span></span>'; l.querySelector('input').addEventListener('change', updateCompareCount); compC.appendChild(l); }); }
+}
+
+function setupTTSForm() {
+  var ta = document.getElementById('tts-text'), cc = document.getElementById('tts-char-count'), ss = document.getElementById('tts-speed'), sv = document.getElementById('tts-speed-value'), gb = document.getElementById('tts-generate-btn');
+  if (ta && cc) ta.addEventListener('input', function() { cc.textContent = ta.value.length + ' / 4096'; });
+  if (ss && sv) ss.addEventListener('input', function() { sv.textContent = parseFloat(ss.value).toFixed(2) + 'x'; });
+  if (gb) gb.addEventListener('click', generateTTS);
+}
+
+function generateTTS() {
+  var text = document.getElementById('tts-text').value.trim(), voiceId = document.getElementById('tts-voice-select').value, speed = parseFloat(document.getElementById('tts-speed').value), btn = document.getElementById('tts-generate-btn'), result = document.getElementById('tts-result');
+  if (!text) return; btn.disabled = true; btn.textContent = 'GENERATING...';
+  fetch(API + '/tts', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({text:text,voice_id:voiceId,speed:speed}) })
+  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
+  .then(function(data) {
+    result.classList.add('visible'); setTimeout(function() { ttsWaveform.drawIdle && ttsWaveform.drawIdle(); }, 50);
+    var url = API + '/audio/' + data.id; result.querySelector('audio').src = url;
+    var info = result.querySelector('.audio-result-info span'); if (info) info.textContent = 'Voice: ' + data.voice_name + ' | ' + data.text_length + ' chars';
+    var dl = result.querySelector('.btn-download'); if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-' + data.id + '.mp3'; a.click(); };
+  }).catch(function(e) { alert('TTS Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'GENERATE SPEECH'; });
+}
+
+function setupAudiobookForm() {
+  var fi = document.getElementById('audiobook-file'), ta = document.getElementById('audiobook-text'), pb = document.getElementById('audiobook-preview-btn'), gb = document.getElementById('audiobook-generate-btn');
+  if (fi) fi.addEventListener('change', function(e) {
+    var file = e.target.files[0]; if (!file) return; var fd = new FormData(); fd.append('file', file);
+    fetch(API + '/upload', {method:'POST',body:fd}).then(function(r) { return r.json(); }).then(function(d) {
+      if (!d.text) throw new Error('Upload failed'); ta.value = d.text;
+      var info = document.getElementById('upload-info'); if (info) { info.textContent = d.filename + ' — ' + d.word_count + ' words'; info.style.display = 'block'; }
+    }).catch(function(e) { alert('Upload Error: ' + e.message); });
+  });
+  if (pb) pb.addEventListener('click', previewSegments);
+  if (gb) gb.addEventListener('click', generateAudiobook);
+}
+
+function previewSegments() {
+  var text = document.getElementById('audiobook-text').value.trim(), c = document.getElementById('segments-preview'); if (!text||!c) return;
+  var parts = text.split(/(\u201c[^\u201d]*\u201d|"[^"]*"|'[^']*')/); c.innerHTML = '';
+  parts.forEach(function(p) { p = p.trim(); if (!p) return;
+    var isDlg = (p.startsWith('"')&&p.endsWith('"'))||(p.startsWith("'")&&p.endsWith("'"))||(p.startsWith('\u201c')&&p.endsWith('\u201d'));
+    var d = document.createElement('div'); d.className = 'segment-item';
+    d.innerHTML = '<span class="segment-badge ' + (isDlg?'dialogue':'narration') + '">' + (isDlg?'DLG':'NAR') + '</span><span class="segment-text">' + escapeHtml(p.substring(0,120)) + (p.length>120?'...':'') + '</span>';
+    c.appendChild(d);
+  });
+  c.style.display = 'block';
+}
+
+function generateAudiobook() {
+  var text = document.getElementById('audiobook-text').value.trim(), nid = document.getElementById('narrator-voice-select').value, btn = document.getElementById('audiobook-generate-btn'), result = document.getElementById('audiobook-result');
+  if (!text) return;
+  var cbs = document.querySelectorAll('#char-voices-list input[type="checkbox"]:checked'), cvids = Array.from(cbs).map(function(cb) { return cb.value; });
+  btn.disabled = true; btn.textContent = 'GENERATING AUDIOBOOK...';
+  var body = {text:text,narrator_voice_id:nid}; if (cvids.length>0) body.character_voice_ids = cvids;
+  fetch(API + '/audiobook', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
+  .then(function(data) {
+    result.classList.add('visible'); setTimeout(function() { audiobookWaveform.drawIdle && audiobookWaveform.drawIdle(); }, 50);
+    var url = API + '/audio/' + data.id; result.querySelector('audio').src = url;
+    var info = result.querySelector('.audio-result-info span'); if (info) info.textContent = data.segments_count + ' segments | Narrator: ' + data.narrator_voice;
+    var dl = result.querySelector('.btn-download'); if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-audiobook-' + data.id + '.mp3'; a.click(); };
+  }).catch(function(e) { alert('Audiobook Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK'; });
+}
+
+function setupChatForm() {
+  var sb = document.getElementById('chat-send-btn'), ci = document.getElementById('chat-input');
+  if (sb) sb.addEventListener('click', sendChat);
+  if (ci) ci.addEventListener('keydown', function(e) { if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendChat(); } });
+}
+
+function sendChat() {
+  var ci = document.getElementById('chat-input'), msg = ci.value.trim(); if (!msg) return;
+  var mc = document.getElementById('chat-messages'), sb = document.getElementById('chat-send-btn');
+  appendChatMsg('user', msg); ci.value = ''; sb.disabled = true;
+  var lid = 'ld-' + Date.now(), ld = document.createElement('div'); ld.className = 'chat-msg assistant'; ld.id = lid;
+  ld.innerHTML = '<div class="chat-msg-role">assistant</div><div class="chat-msg-content"><div class="loading-indicator"><span></span><span></span><span></span></div></div>';
+  mc.appendChild(ld); mc.scrollTop = mc.scrollHeight;
+  fetch(API + '/chat', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:chatSessionId})})
+  .then(function(r) { if (!r.ok) return r.json().then(function(d) { throw new Error(d.detail||'Chat failed'); }); return r.json(); })
+  .then(function(d) { chatSessionId = d.session_id; var l = document.getElementById(lid); if (l) l.remove(); appendChatMsg('assistant', d.response); })
+  .catch(function(e) { var l = document.getElementById(lid); if (l) l.remove(); appendChatMsg('assistant', 'Error: ' + e.message); })
+  .finally(function() { sb.disabled = false; ci.focus(); });
+}
+
+function appendChatMsg(role, content) {
+  var c = document.getElementById('chat-messages'), d = document.createElement('div'); d.className = 'chat-msg ' + role + ' fade-in';
+  var rendered = role==='assistant' ? parseMarkdown(content) : escapeHtml(content);
+  d.innerHTML = '<div class="chat-msg-role">' + role + '</div><div class="chat-msg-content">' + rendered + '</div>';
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+  var empty = c.querySelector('.empty-state'); if (empty) empty.remove();
+}
+
+function setupWaveforms() {
+  [ttsWaveform,audiobookWaveform,historyWaveform].forEach(function(wf) { wf.drawIdle && wf.drawIdle(); });
+  var ta = document.querySelector('#tts-result audio');
+  if (ta) { ta.addEventListener('play', function() { ttsWaveform.connect(ta); ttsWaveform.start(); }); ta.addEventListener('pause', function() { ttsWaveform.stop(); }); ta.addEventListener('ended', function() { ttsWaveform.stop(); }); }
+  var ab = document.querySelector('#audiobook-result audio');
+  if (ab) { ab.addEventListener('play', function() { audiobookWaveform.connect(ab); audiobookWaveform.start(); }); ab.addEventListener('pause', function() { audiobookWaveform.stop(); }); ab.addEventListener('ended', function() { audiobookWaveform.stop(); }); }
+  var hi = document.querySelector('#history-player audio');
+  if (hi) { hi.addEventListener('play', function() { historyWaveform.connect(hi); historyWaveform.start(); }); hi.addEventListener('pause', function() { historyWaveform.stop(); }); hi.addEventListener('ended', function() { historyWaveform.stop(); }); }
+}
+
+function loadHistory() {
+  var c = document.getElementById('history-container'); if (!c) return;
+  fetch(API + '/history').then(function(r) { return r.json(); }).then(function(data) {
+    var gens = data.generations || [];
+    if (gens.length===0) { c.innerHTML = '<div class="history-empty"><i class="ph ph-clock-counter-clockwise" style="font-size:40px;display:block;margin-bottom:12px;opacity:0.3;"></i>No generations yet.</div>'; return; }
+    var html = '<div class="history-table"><div class="history-header"><span>#</span><span>Type</span><span>Voice</span><span>Text</span><span>Date</span><span>Action</span></div>';
+    gens.forEach(function(g, i) {
+      var date = g.created_at ? new Date(g.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+      var tp = g.text ? g.text.substring(0,80) + (g.text.length>80?'...':'') : '—';
+      html += '<div class="history-row fade-in" style="animation-delay:' + (i*30) + 'ms" data-audio-url="' + g.audio_url + '" data-gen-id="' + g.id + '" data-voice="' + g.voice_name + '" data-type="' + g.type + '"><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text-tertiary);">' + String(i+1).padStart(2,'0') + '</span><span><span class="history-type-badge ' + g.type + '">' + g.type + '</span></span><span class="history-voice">' + g.voice_name + '</span><span class="history-text">' + escapeHtml(tp) + '</span><span class="history-date">' + date + '</span><span><button class="history-play-btn"><i class="ph ph-play"></i> Play</button></span></div>';
+    });
+    html += '</div>'; c.innerHTML = html;
+    c.querySelectorAll('.history-play-btn').forEach(function(btn) { btn.addEventListener('click', function(e) { e.stopPropagation(); var r = btn.closest('.history-row'); playHistoryItem(r.dataset.audioUrl,r.dataset.voice,r.dataset.type,r.dataset.genId); }); });
+  }).catch(function(e) { c.innerHTML = '<div class="history-empty">Failed to load: ' + e.message + '</div>'; });
+}
+
+function playHistoryItem(audioUrl, voiceName, type, genId) {
+  var p = document.getElementById('history-player'), a = p.querySelector('audio'), info = document.getElementById('history-player-info'), dl = p.querySelector('.btn-download');
+  var fullUrl = API.replace('/api','') + audioUrl; a.src = fullUrl; a.play(); p.classList.add('visible');
+  setTimeout(function() { historyWaveform.drawIdle && historyWaveform.drawIdle(); }, 50);
+  info.textContent = type.toUpperCase() + ' | Voice: ' + voiceName;
+  dl.onclick = function() { var a2 = document.createElement('a'); a2.href = fullUrl; a2.download = 'voicestudio-' + type + '-' + genId + '.mp3'; a2.click(); };
+}
+
+function updateCompareCount() {
+  var checked = document.querySelectorAll('#compare-voices-list input:checked');
+  var el = document.getElementById('compare-selected-count'); if (el) el.textContent = checked.length + ' voices selected';
+}
+
+function setupCompareForm() { var btn = document.getElementById('compare-generate-btn'); if (btn) btn.addEventListener('click', generateComparison); }
+
+function generateComparison() {
+  var text = document.getElementById('compare-text').value.trim(), cbs = document.querySelectorAll('#compare-voices-list input:checked'), vids = Array.from(cbs).map(function(cb) { return cb.value; }), btn = document.getElementById('compare-generate-btn'), rd = document.getElementById('compare-results'), grid = document.getElementById('compare-grid');
+  if (!text) { alert('Enter comparison text'); return; } if (vids.length<2) { alert('Select at least 2 voices'); return; }
+  btn.disabled = true; btn.textContent = 'GENERATING...'; rd.style.display = 'none';
+  fetch(API + '/compare', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_ids:vids})})
+  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
+  .then(function(data) {
+    grid.innerHTML = '';
+    data.results.forEach(function(r) {
+      var card = document.createElement('div'); card.className = 'compare-result-card fade-in';
+      if (r.audio_url) {
+        var url = API.replace('/api','') + r.audio_url;
+        card.innerHTML = '<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">' + r.voice_name.substring(0,2).toUpperCase() + '</div><div><div class="card-name">' + r.voice_name + '</div><div class="card-meta">' + r.accent + ' / ' + r.style + '</div></div></div><audio controls src="' + url + '"></audio><button class="btn-download"><i class="ph ph-download-simple"></i> Download</button>';
+        card.querySelector('.btn-download').onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'compare-' + r.voice_name + '.mp3'; a.click(); };
+      } else {
+        card.innerHTML = '<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">' + r.voice_name.substring(0,2).toUpperCase() + '</div><div><div class="card-name">' + r.voice_name + '</div><div class="card-meta" style="color:var(--error);">Generation failed</div></div></div>';
+      }
+      grid.appendChild(card);
+    });
+    rd.style.display = 'block';
+  }).catch(function(e) { alert('Compare Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'COMPARE VOICES'; });
+}
+
+function setupHistoryExport() {
+  var jb = document.getElementById('export-json-btn'), cb = document.getElementById('export-csv-btn');
+  if (jb) jb.addEventListener('click', function() { exportHistory('json'); });
+  if (cb) cb.addEventListener('click', function() { exportHistory('csv'); });
+}
+function exportHistory(fmt) { var a = document.createElement('a'); a.href = API + '/history/export?format=' + fmt; a.download = 'voicestudio_history.' + fmt; a.click(); }
+
+function escapeHtml(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+function parseMarkdown(t) {
+  if (!t) return '';
+  var h = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  h = h.replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>');
+  h = h.replace(/`([^`]+)`/g,'<code>$1</code>');
+  h = h.replace(/^### (.+)$/gm,'<h3>$1</h3>'); h = h.replace(/^## (.+)$/gm,'<h2>$1</h2>'); h = h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  h = h.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>'); h = h.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+  h = h.replace(/^---$/gm,'<hr>');
+  h = h.replace(/^[\s]*[-]\s+(.+)$/gm,'<li>$1</li>');
+  h = h.replace(/\n\n+/g,'</p><p>'); h = h.replace(/\n/g,'<br>');
+  if (!h.startsWith('<')) h = '<p>' + h + '</p>';
+  return h;
+}
 </script>
 </body>
 </html>
