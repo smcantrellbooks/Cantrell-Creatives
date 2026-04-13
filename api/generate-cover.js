@@ -2,7 +2,9 @@
  * POST /api/generate-cover
  *
  * Accepts book metadata and optional style preferences, builds a structured
- * prompt, and calls an image-generation service to return 3-4 cover options.
+ * prompt, and routes the image generation request through the Nyxen worker
+ * at nyxen-video-worker.smcantrellbooks.workers.dev which already has the
+ * OpenAI API keys configured.
  *
  * Expected body (JSON):
  *   title        - string (required)
@@ -14,16 +16,11 @@
  *   colorTheme   - string (optional)  e.g. "gold and black"
  *
  * Returns { images: [url, url, ...] }
- *
- * Set the COVER_GEN_API_KEY environment variable to authenticate with the
- * upstream image provider.  The COVER_GEN_PROVIDER env var selects the
- * provider ("openai" | "stability" | "placeholder").  When no key is
- * configured the endpoint falls back to a deterministic placeholder service
- * so the UI can be developed and tested without credentials.
  */
 
+const NYXEN_WORKER = 'https://nyxen-video-worker.smcantrellbooks.workers.dev';
+
 module.exports = async (req, res) => {
-  // CORS / method guard
   res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'OPTIONS') {
@@ -47,17 +44,12 @@ module.exports = async (req, res) => {
     const prompt = buildPrompt({ title, author, category, style, mood, subject, colorTheme });
     const numImages = 4;
 
-    const provider = (process.env.COVER_GEN_PROVIDER || '').toLowerCase();
-    const apiKey = process.env.COVER_GEN_API_KEY || '';
-
     let images;
 
-    if (provider === 'openai' && apiKey) {
-      images = await generateWithOpenAI(prompt, numImages, apiKey);
-    } else if (provider === 'stability' && apiKey) {
-      images = await generateWithStability(prompt, numImages, apiKey);
-    } else {
-      // Fallback: deterministic placeholder covers for development / demo
+    try {
+      images = await generateViaWorker(prompt, numImages);
+    } catch (workerErr) {
+      console.error('[generate-cover] Worker error, falling back to placeholders:', workerErr.message);
       images = generatePlaceholders(title, author, category, numImages);
     }
 
@@ -71,7 +63,7 @@ module.exports = async (req, res) => {
 /* ---------- Prompt builder ---------- */
 
 function buildPrompt({ title, author, category, style, mood, subject, colorTheme }) {
-  let parts = [
+  const parts = [
     `Professional book cover design for a ${category || 'fiction'} novel titled "${title}" by ${author}.`,
     'The cover should look like a real published book you would find on Amazon KDP or in a bookstore.',
     'Include the title text and author name on the cover.',
@@ -86,79 +78,43 @@ function buildPrompt({ title, author, category, style, mood, subject, colorTheme
   return parts.join(' ');
 }
 
-/* ---------- OpenAI DALL-E provider ---------- */
+/* ---------- Nyxen Worker image generation ---------- */
 
-async function generateWithOpenAI(prompt, n, apiKey) {
-  const resp = await fetch('https://api.openai.com/v1/images/generations', {
+async function generateViaWorker(prompt, numImages) {
+  // Call the Nyxen worker's generate-cover endpoint.
+  // The worker has the OpenAI API key and can call DALL-E directly.
+  const resp = await fetch(`${NYXEN_WORKER}/generate-cover`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'dall-e-3',
       prompt,
-      n: Math.min(n, 4),
-      size: '1024x1792',
-      quality: 'standard',
-      response_format: 'url'
+      n: Math.min(numImages, 4),
+      size: '1024x1792'
     })
   });
 
   if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
-    throw new Error(err.error?.message || 'OpenAI request failed');
+    const errData = await resp.json().catch(() => ({}));
+    throw new Error(errData.error || `Worker returned ${resp.status}`);
   }
 
   const data = await resp.json();
-  return (data.data || []).map((img) => img.url);
-}
 
-/* ---------- Stability AI provider ---------- */
-
-async function generateWithStability(prompt, n, apiKey) {
-  const urls = [];
-  // Stability generates one image per request, so loop
-  const count = Math.min(n, 4);
-  for (let i = 0; i < count; i++) {
-    const resp = await fetch(
-      'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-          Accept: 'application/json'
-        },
-        body: JSON.stringify({
-          text_prompts: [{ text: prompt, weight: 1 }],
-          cfg_scale: 7,
-          width: 768,
-          height: 1152,
-          samples: 1,
-          steps: 30
-        })
-      }
-    );
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(() => ({}));
-      throw new Error(err.message || 'Stability AI request failed');
-    }
-
-    const data = await resp.json();
-    if (data.artifacts && data.artifacts[0]) {
-      // Return as data URI since Stability returns base64
-      urls.push(`data:image/png;base64,${data.artifacts[0].base64}`);
-    }
+  // The worker may return images in different shapes depending on
+  // whether it proxies DALL-E directly or wraps the response.
+  if (data.images && Array.isArray(data.images)) {
+    return data.images;
   }
-  return urls;
+  if (data.data && Array.isArray(data.data)) {
+    return data.data.map((img) => img.url || img.b64_json);
+  }
+
+  throw new Error('Unexpected response shape from worker');
 }
 
 /* ---------- Placeholder fallback ---------- */
 
 function generatePlaceholders(title, author, category, n) {
-  // Use a placeholder image service to render realistic-looking cover mockups
   const colors = [
     { bg: '1a1a2e', fg: 'C9A040' },
     { bg: '3d0c02', fg: 'e8c97a' },
@@ -170,7 +126,6 @@ function generatePlaceholders(title, author, category, n) {
   for (let i = 0; i < Math.min(n, 4); i++) {
     const c = colors[i % colors.length];
     const text = encodeURIComponent(`${title}\nby ${author}\n[${category}]`);
-    // Using placehold.co for deterministic placeholder covers
     images.push(
       `https://placehold.co/600x900/${c.bg}/${c.fg}?text=${text}&font=playfair-display`
     );
