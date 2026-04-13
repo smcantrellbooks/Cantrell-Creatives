@@ -1,0 +1,11 @@
+.git
+.gitignore
+.kiro
+frontend
+api
+audiobook_maker
+*.txt
+*.md
+*.html
+backend/generations/*.mp3
+backend/openvoice.db
