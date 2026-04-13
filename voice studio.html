@@ -235,7 +235,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <section id="voices-tab" class="tab-content active">
     <div class="section-header">
       <h1 class="section-title">Voice Library</h1>
-      <p class="section-sub">24 custom voice profiles / zero-shot cloning engine</p>
+      <p class="section-sub">9 OpenAI TTS voices / HD quality engine</p>
     </div>
     <div id="voice-grid" class="voice-grid"></div>
   </section>
@@ -467,8 +467,10 @@ function renderVoices() {
     var card = document.createElement('div'); card.className = 'voice-card fade-in'; card.style.animationDelay = (idx*30) + 'ms';
     var initials = voice.name.substring(0,2).toUpperCase();
     card.innerHTML = '<div class="voice-card-header"><div class="voice-avatar">' + initials + '</div><div class="voice-card-info"><div class="voice-name">' + voice.name + '</div><div class="voice-id">' + voice.id + ' / ' + voice.accent + '</div></div></div><div class="voice-desc">' + voice.description + '</div><div class="voice-tags"><span class="voice-tag">' + voice.style + '</span><span class="voice-tag">' + voice.gender + '</span><span class="voice-tag">' + voice.accent + '</span></div><div class="voice-card-actions"><button class="btn-play"><i class="ph ph-play"></i> Play</button><button class="btn-select"><i class="ph ph-arrow-right"></i> Use</button></div>';
-    card.querySelector('.btn-play').addEventListener('click', function(e) { e.stopPropagation(); playSample(voice.id, card.querySelector('.btn-play')); });
-    card.querySelector('.btn-select').addEventListener('click', function(e) { e.stopPropagation(); selectVoiceForTTS(voice.id); });
+    (function(vid, c) {
+      c.querySelector('.btn-play').addEventListener('click', function(e) { e.stopPropagation(); playSample(vid, c.querySelector('.btn-play')); });
+      c.querySelector('.btn-select').addEventListener('click', function(e) { e.stopPropagation(); selectVoiceForTTS(vid); });
+    })(voice.id, card);
     grid.appendChild(card);
   });
 }
@@ -511,12 +513,31 @@ function generateTTS() {
   var text = document.getElementById('tts-text').value.trim(), voiceId = document.getElementById('tts-voice-select').value, speed = parseFloat(document.getElementById('tts-speed').value), btn = document.getElementById('tts-generate-btn'), result = document.getElementById('tts-result');
   if (!text) return; btn.disabled = true; btn.textContent = 'GENERATING...';
   fetch(API + '/tts', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({text:text,voice_id:voiceId,speed:speed}) })
-  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
+  .then(function(r) {
+    var ct = r.headers.get('content-type') || '';
+    if (!r.ok) return r.json().then(function(d) { throw new Error(d.detail||'Failed'); });
+    if (ct.indexOf('audio') !== -1) return r.blob().then(function(blob) { return {blob:blob}; });
+    return r.json();
+  })
   .then(function(data) {
     result.classList.add('visible'); setTimeout(function() { ttsWaveform.drawIdle && ttsWaveform.drawIdle(); }, 50);
-    var url = API + '/audio/' + data.id; result.querySelector('audio').src = url;
-    var info = result.querySelector('.audio-result-info span'); if (info) info.textContent = 'Voice: ' + data.voice_name + ' | ' + data.text_length + ' chars';
-    var dl = result.querySelector('.btn-download'); if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-' + data.id + '.mp3'; a.click(); };
+    var url, voiceName = voiceId, textLen = text.length;
+    if (data.blob) {
+      url = URL.createObjectURL(data.blob);
+    } else {
+      url = API + '/audio/' + data.id;
+      voiceName = data.voice_name || voiceId;
+      textLen = data.text_length || text.length;
+    }
+    var audioEl = result.querySelector('audio');
+    audioEl.pause();
+    audioEl.removeAttribute('src');
+    audioEl.load();
+    audioEl.src = url;
+    audioEl.load();
+    audioEl.play().catch(function(){});
+    var info = result.querySelector('.audio-result-info span'); if (info) info.textContent = 'Voice: ' + voiceName + ' | ' + textLen + ' chars';
+    var dl = result.querySelector('.btn-download'); if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-tts.mp3'; a.click(); };
   }).catch(function(e) { alert('TTS Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'GENERATE SPEECH'; });
 }
 
