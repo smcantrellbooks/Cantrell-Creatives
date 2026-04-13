@@ -35,13 +35,21 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { title, author, category, style, mood, subject, colorTheme } = req.body || {};
+    const {
+      title, author, category, series,
+      style, mood, subject, colorTheme,
+      includeTitle, includeAuthor, includeSeries
+    } = req.body || {};
 
     if (!title || !author) {
       return res.status(400).json({ error: 'Title and author are required.' });
     }
 
-    const prompt = buildPrompt({ title, author, category, style, mood, subject, colorTheme });
+    const prompt = buildPrompt({
+      title, author, category, series,
+      style, mood, subject, colorTheme,
+      includeTitle, includeAuthor, includeSeries
+    });
     const numImages = 4;
 
     let images;
@@ -62,13 +70,29 @@ module.exports = async (req, res) => {
 
 /* ---------- Prompt builder ---------- */
 
-function buildPrompt({ title, author, category, style, mood, subject, colorTheme }) {
+function buildPrompt({ title, author, category, series, style, mood, subject, colorTheme, includeTitle, includeAuthor, includeSeries }) {
   const parts = [
     `Professional book cover design for a ${category || 'fiction'} novel titled "${title}" by ${author}.`,
     'The cover should look like a real published book you would find on Amazon KDP or in a bookstore.',
-    'Include the title text and author name on the cover.',
     'High resolution, print quality, 2:3 portrait aspect ratio.'
   ];
+
+  // Text overlay instructions
+  const textElements = [];
+  if (includeTitle !== false) textElements.push(`the title "${title}" prominently displayed`);
+  if (includeAuthor !== false) textElements.push(`the author name "${author}"`);
+  if (includeSeries && series) textElements.push(`the series name "${series}"`);
+
+  if (textElements.length > 0) {
+    parts.push(`The cover MUST include the following text rendered clearly and legibly: ${textElements.join(', ')}.`);
+    parts.push('The text should be styled with professional typography that fits the genre and mood.');
+  } else {
+    parts.push('The cover should focus on imagery only, with no text overlay.');
+  }
+
+  if (series && includeSeries) {
+    parts.push(`This book is part of the "${series}" series.`);
+  }
 
   if (style) parts.push(`Style: ${style}.`);
   if (mood) parts.push(`Mood: ${mood}.`);

@@ -313,8 +313,23 @@ button{cursor:pointer;}a{text-decoration:none;color:inherit;}
           Cover Generator
         </h4>
         <div class="cover-gen-context" id="coverGenContext">
-          Using: <strong id="genCtxTitle">The Enchanted Relic</strong> by <strong id="genCtxAuthor">S.M. Cantrell</strong> &middot; <strong id="genCtxCategory">Fantasy</strong>
+          Using: <strong id="genCtxTitle">The Enchanted Relic</strong> by <strong id="genCtxAuthor">S.M. Cantrell</strong> &middot; <strong id="genCtxCategory">Fantasy</strong><span id="genCtxSeriesWrap" class="hidden"> &middot; Series: <strong id="genCtxSeries"></strong></span>
         </div>
+
+        <!-- Text overlay options -->
+        <div class="preview-label" style="margin-bottom:6px;margin-top:2px;">Text on Cover</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:.82rem;">
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:600;color:var(--text);">
+            <input type="checkbox" id="genIncludeTitle" checked style="accent-color:#C9A040;width:15px;height:15px;"> Title
+          </label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:600;color:var(--text);">
+            <input type="checkbox" id="genIncludeAuthor" checked style="accent-color:#C9A040;width:15px;height:15px;"> Author
+          </label>
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:600;color:var(--text);">
+            <input type="checkbox" id="genIncludeSeries" style="accent-color:#C9A040;width:15px;height:15px;"> Series
+          </label>
+        </div>
+
         <div class="cover-gen-row">
           <div class="form-group">
             <label>Style</label>
@@ -726,9 +741,12 @@ function updateGenContext() {
   const title = document.getElementById('title').value || 'Book Title';
   const author = document.getElementById('authorName').value || 'Author Name';
   const category = document.getElementById('categories').value || 'Fiction';
+  const series = document.getElementById('seriesName').value || '';
   document.getElementById('genCtxTitle').textContent = title;
   document.getElementById('genCtxAuthor').textContent = author;
   document.getElementById('genCtxCategory').textContent = category;
+  document.getElementById('genCtxSeries').textContent = series;
+  document.getElementById('genCtxSeriesWrap').classList.toggle('hidden', !series);
 }
 
 async function generateCover() {
@@ -741,10 +759,16 @@ async function generateCover() {
   const title = document.getElementById('title').value || 'Untitled';
   const author = document.getElementById('authorName').value || 'Unknown Author';
   const category = document.getElementById('categories').value || 'Fiction';
+  const series = document.getElementById('seriesName').value || '';
   const style = document.getElementById('genStyle').value;
   const mood = document.getElementById('genMood').value;
   const subject = document.getElementById('genSubject').value;
   const colorTheme = document.getElementById('genColor').value;
+
+  // Text overlay options
+  const includeTitle = document.getElementById('genIncludeTitle').checked;
+  const includeAuthor = document.getElementById('genIncludeAuthor').checked;
+  const includeSeries = document.getElementById('genIncludeSeries').checked;
 
   // Disable button, show loading
   btn.disabled = true;
@@ -755,7 +779,7 @@ async function generateCover() {
     const resp = await fetch('/api/generate-cover', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, author, category, style, mood, subject, colorTheme })
+      body: JSON.stringify({ title, author, category, series, style, mood, subject, colorTheme, includeTitle, includeAuthor, includeSeries })
     });
 
     if (!resp.ok) {
@@ -815,7 +839,7 @@ function selectGeneratedCover(url, clickedImg) {
 }
 
 // Keep context in sync with form inputs
-['title', 'authorName', 'categories'].forEach(id => {
+['title', 'authorName', 'categories', 'seriesName'].forEach(id => {
   document.getElementById(id).addEventListener('input', updateGenContext);
   document.getElementById(id).addEventListener('change', updateGenContext);
 });
