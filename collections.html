@@ -144,6 +144,8 @@ button{cursor:pointer;}a{text-decoration:none;color:inherit;}
 
 .cover-gen-error{background:#fff5f5;border:1px solid #fed7d7;color:#c53030;padding:10px 12px;border-radius:6px;font-size:.82rem;margin-top:10px;text-align:center;}
 
+.cover-text-overlay{border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:8px;background:rgba(253,251,247,.6);}
+
 .cover-gen-context{font-size:.72rem;color:var(--muted);margin-bottom:8px;padding:6px 8px;background:rgba(0,0,0,.02);border-radius:4px;}
 .cover-gen-context strong{color:var(--text);}
 
@@ -297,12 +299,50 @@ button{cursor:pointer;}a{text-decoration:none;color:inherit;}
 
       <!-- Upload Mode (default) -->
       <div id="coverUploadPanel">
-        <input type="file" id="coverUpload" accept="image/*" hidden onchange="handleFileUpload(event,'coverUpload','coverStatus','coverPreviewImg')">
+        <input type="file" id="coverUpload" accept="image/*" hidden onchange="handleCoverUpload(event)">
         <div class="upload-box" style="margin-bottom:10px;" onclick="document.getElementById('coverUpload').click()">
           <svg class="icon" style="width:28px;height:28px;color:var(--muted);" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
           <p>Upload Cover Image</p><span class="small">JPG, PNG (1600x2400 recommended)</span>
           <div id="coverStatus" style="font-size:.75rem;color:#C9A040;margin-top:4px;"></div>
           <img id="coverPreviewImg" style="display:none;max-width:100%;margin-top:8px;border-radius:4px;max-height:120px;object-fit:contain;">
+        </div>
+
+        <!-- Text overlay for uploaded covers -->
+        <div id="uploadTextOverlay" class="cover-text-overlay hidden">
+          <div class="preview-label" style="margin-bottom:6px;">Add Text to Cover</div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;font-size:.82rem;">
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:600;color:var(--text);">
+              <input type="checkbox" id="uploadIncludeTitle" onchange="renderTextOverlay()" style="accent-color:#C9A040;width:15px;height:15px;"> Title
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:600;color:var(--text);">
+              <input type="checkbox" id="uploadIncludeAuthor" onchange="renderTextOverlay()" style="accent-color:#C9A040;width:15px;height:15px;"> Author
+            </label>
+            <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:600;color:var(--text);">
+              <input type="checkbox" id="uploadIncludeSeries" onchange="renderTextOverlay()" style="accent-color:#C9A040;width:15px;height:15px;"> Series
+            </label>
+          </div>
+          <div class="cover-gen-row">
+            <div class="form-group">
+              <label>Text Color</label>
+              <select id="overlayTextColor" onchange="renderTextOverlay()">
+                <option value="#FFFFFF">White</option>
+                <option value="#C9A040">Gold</option>
+                <option value="#000000">Black</option>
+                <option value="#e8c97a">Light Gold</option>
+                <option value="#d4d4d4">Silver</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Text Position</label>
+              <select id="overlayTextPosition" onchange="renderTextOverlay()">
+                <option value="bottom">Bottom</option>
+                <option value="top">Top</option>
+                <option value="center">Center</option>
+              </select>
+            </div>
+          </div>
+          <canvas id="coverCanvas" style="display:none;"></canvas>
+          <img id="coverWithText" style="display:none;max-width:100%;margin-top:8px;border-radius:4px;max-height:200px;object-fit:contain;">
         </div>
       </div>
 
@@ -842,6 +882,134 @@ function selectGeneratedCover(url, clickedImg) {
 ['title', 'authorName', 'categories', 'seriesName'].forEach(id => {
   document.getElementById(id).addEventListener('input', updateGenContext);
   document.getElementById(id).addEventListener('change', updateGenContext);
+});
+
+/* ===== COVER TEXT OVERLAY (canvas-based) ===== */
+let uploadedCoverDataUrl = null; // stores the raw uploaded image
+
+function handleCoverUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const status = document.getElementById('coverStatus');
+  status.textContent = '\u2713 ' + file.name;
+
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    uploadedCoverDataUrl = ev.target.result;
+    const preview = document.getElementById('coverPreviewImg');
+    preview.src = uploadedCoverDataUrl;
+    preview.style.display = 'block';
+
+    // Show text overlay controls
+    document.getElementById('uploadTextOverlay').classList.remove('hidden');
+
+    // Update asset status
+    updateAssetStatus('Cover Image', 'Uploaded \u2713');
+
+    // If any text checkboxes are checked, render overlay
+    renderTextOverlay();
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderTextOverlay() {
+  const srcUrl = uploadedCoverDataUrl;
+  if (!srcUrl) return;
+
+  const includeTitle = document.getElementById('uploadIncludeTitle').checked;
+  const includeAuthor = document.getElementById('uploadIncludeAuthor').checked;
+  const includeSeries = document.getElementById('uploadIncludeSeries').checked;
+
+  // If nothing checked, show the original image
+  if (!includeTitle && !includeAuthor && !includeSeries) {
+    document.getElementById('coverWithText').style.display = 'none';
+    document.getElementById('coverPreviewImg').src = srcUrl;
+    document.getElementById('coverPreviewImg').style.display = 'block';
+    return;
+  }
+
+  const title = document.getElementById('title').value || 'Untitled';
+  const author = document.getElementById('authorName').value || 'Author';
+  const series = document.getElementById('seriesName').value || '';
+  const textColor = document.getElementById('overlayTextColor').value;
+  const position = document.getElementById('overlayTextPosition').value;
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    const canvas = document.getElementById('coverCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.drawImage(img, 0, 0);
+
+    // Build text lines
+    const lines = [];
+    if (includeTitle) lines.push({ text: title, size: Math.round(canvas.width * 0.06), weight: 'bold' });
+    if (includeSeries && series) lines.push({ text: series, size: Math.round(canvas.width * 0.035), weight: 'normal' });
+    if (includeAuthor) lines.push({ text: author, size: Math.round(canvas.width * 0.04), weight: 'normal' });
+
+    // Calculate total text block height
+    const lineSpacing = 1.4;
+    let totalHeight = 0;
+    lines.forEach(l => { totalHeight += l.size * lineSpacing; });
+
+    // Determine Y start based on position
+    let startY;
+    if (position === 'top') {
+      startY = canvas.height * 0.08;
+    } else if (position === 'center') {
+      startY = (canvas.height - totalHeight) / 2;
+    } else {
+      // bottom
+      startY = canvas.height - totalHeight - canvas.height * 0.08;
+    }
+
+    // Draw semi-transparent backdrop behind text
+    const padding = canvas.width * 0.03;
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fillRect(0, startY - padding, canvas.width, totalHeight + padding * 2);
+
+    // Draw each line
+    let y = startY;
+    lines.forEach(line => {
+      ctx.font = line.weight + ' ' + line.size + 'px serif';
+      ctx.fillStyle = textColor;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+
+      // Text shadow for legibility
+      ctx.shadowColor = 'rgba(0,0,0,0.7)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+
+      ctx.fillText(line.text, canvas.width / 2, y, canvas.width * 0.9);
+      y += line.size * lineSpacing;
+    });
+
+    // Reset shadow
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // Show the composited result
+    const resultUrl = canvas.toDataURL('image/png');
+    const coverWithText = document.getElementById('coverWithText');
+    coverWithText.src = resultUrl;
+    coverWithText.style.display = 'block';
+
+    // Also update the main preview
+    document.getElementById('coverPreviewImg').src = resultUrl;
+    document.getElementById('coverPreviewImg').style.display = 'block';
+  };
+  img.src = srcUrl;
+}
+
+// Re-render text overlay when form fields change
+['title', 'authorName', 'seriesName'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderTextOverlay);
 });
 
 function handleFileUpload(e, inputId, statusId, previewId){
