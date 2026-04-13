@@ -22,17 +22,15 @@ load_dotenv(ROOT_DIR / '.env')
 from voices import VOICE_PROFILES, get_voice_by_id
 
 # Directories
-SAMPLES_DIR = ROOT_DIR / "voice_samples"
 GENERATIONS_DIR = ROOT_DIR / "generations"
 UPLOADS_DIR = ROOT_DIR / "uploads"
-SAMPLES_DIR.mkdir(exist_ok=True)
 GENERATIONS_DIR.mkdir(exist_ok=True)
 UPLOADS_DIR.mkdir(exist_ok=True)
 
 # Database
 DB_PATH = str(ROOT_DIR / "openvoice.db")
 
-# Clients -- uses standard OpenAI SDK (no emergent wrapper)
+# Clients
 openai_client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 app = FastAPI()
@@ -43,7 +41,6 @@ logger = logging.getLogger(__name__)
 
 
 async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
-    """Generate speech using OpenAI TTS API directly."""
     response = await openai_client.audio.speech.create(
         model="tts-1-hd",
         voice=voice,
@@ -54,7 +51,6 @@ async def generate_speech(text: str, voice: str, speed: float = 1.0, response_fo
     return response.content
 
 
-# Database initialization
 async def init_db():
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("""
@@ -78,7 +74,6 @@ async def init_db():
         await db.commit()
 
 
-# Request models
 class TTSRequest(BaseModel):
     text: str
     voice_id: str
@@ -118,7 +113,6 @@ class EpubRequest(BaseModel):
     author: str = "Unknown"
 
 
-# Helper: find voice by name (for frontend that sends voice names)
 def get_voice_by_name(name: str):
     for voice in VOICE_PROFILES:
         if voice["name"].lower() == name.lower():
@@ -126,7 +120,6 @@ def get_voice_by_name(name: str):
     return None
 
 
-# Helper: resolve voice from id or name
 def resolve_voice(identifier: str):
     voice = get_voice_by_id(identifier)
     if not voice:
@@ -134,7 +127,6 @@ def resolve_voice(identifier: str):
     return voice
 
 
-# Helper: split text into chunks at sentence boundaries
 def split_text_into_chunks(text, chunk_size=4000):
     chunks = []
     while text:
@@ -152,7 +144,6 @@ def split_text_into_chunks(text, chunk_size=4000):
     return chunks
 
 
-# Helper: parse dialogue segments
 def parse_dialogue(text: str):
     segments = []
     pattern = r'(\u201c[^\u201d]*\u201d|"[^"]*"|\'[^\']*\')'
@@ -199,7 +190,6 @@ async def get_voices():
 
 @api_router.get("/voices/custom")
 async def get_custom_voices():
-    """Endpoint used by the Voice Studio frontend to load voice list."""
     return [
         {"name": v["name"], "id": v["id"], "gender": v["gender"],
          "accent": v["accent"], "style": v["style"], "description": v["description"]}
@@ -213,11 +203,24 @@ async def get_voice_sample(voice_id: str):
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
 
-    sample_path = SAMPLES_DIR / voice["sample_file"]
-    if not sample_path.exists():
-        raise HTTPException(status_code=404, detail="Voice sample file not found")
+    sample_text = f"Hi, I'm {voice['name']}. {voice['description']}"
 
-    return FileResponse(sample_path, media_type="audio/wav", filename=f"{voice['name']}.wav")
+    try:
+        audio_bytes = await generate_speech(
+            text=sample_text,
+            voice=voice["openai_voice"],
+            speed=voice["speed"],
+            response_format="mp3"
+        )
+    except Exception as e:
+        logger.error(f"Voice sample generation failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate voice sample")
+
+    return StreamingResponse(
+        io.BytesIO(audio_bytes),
+        media_type="audio/mpeg",
+        headers={"Content-Disposition": f"inline; filename={voice['name']}.mp3"}
+    )
 
 
 @api_router.post("/tts")
@@ -256,7 +259,6 @@ async def generate_tts(request: TTSRequest):
         )
         await db.commit()
 
-    # Return audio file directly for the frontend
     return FileResponse(output_path, media_type="audio/mpeg", filename=f"{gen_id}.mp3")
 
 
@@ -270,14 +272,12 @@ async def serve_audio(gen_id: str):
 
 @api_router.post("/audiobook")
 async def generate_audiobook(request: AudiobookRequest):
-    # Resolve narrator voice (supports both voice_id and voice name)
     narrator = None
     if request.narrator_voice:
         narrator = resolve_voice(request.narrator_voice)
     if not narrator and request.narrator_voice_id:
         narrator = resolve_voice(request.narrator_voice_id)
     if not narrator:
-        # Default to first voice
         narrator = VOICE_PROFILES[0] if VOICE_PROFILES else None
     if not narrator:
         raise HTTPException(status_code=404, detail="Narrator voice not found")
@@ -286,7 +286,6 @@ async def generate_audiobook(request: AudiobookRequest):
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
 
-    # Get character voices
     char_voices = []
     if request.characters:
         for char in request.characters:
@@ -301,20 +300,13 @@ async def generate_audiobook(request: AudiobookRequest):
                 char_voices.append(v)
 
     if not char_voices:
-        char_voices = [
-            get_voice_by_id("voice_07"),
-            get_voice_by_id("voice_13"),
-            get_voice_by_id("voice_19"),
-        ]
-        char_voices = [v for v in char_voices if v]
+        char_voices = [v for v in [get_voice_by_id("voice_06"), get_voice_by_id("voice_03"), get_voice_by_id("voice_08")] if v]
 
-    # Split into manageable chunks and generate
     chunks = split_text_into_chunks(text, 4000)
     gen_id = str(uuid.uuid4())
     all_audio = []
 
     if request.auto_detect and char_voices:
-        # Parse dialogue for multi-voice
         segments = parse_dialogue(text)
         char_index = 0
         for segment in segments:
@@ -327,27 +319,18 @@ async def generate_audiobook(request: AudiobookRequest):
                 voice = char_voices[char_index % len(char_voices)] if char_voices else narrator
                 char_index += 1
             try:
-                audio_bytes = await generate_speech(
-                    text=seg_text,
-                    voice=voice["openai_voice"],
-                    speed=voice["speed"],
-                )
+                audio_bytes = await generate_speech(text=seg_text, voice=voice["openai_voice"], speed=voice["speed"])
                 all_audio.append(audio_bytes)
             except Exception as e:
                 logger.error(f"Audiobook segment failed: {e}")
                 continue
     else:
-        # Single voice, chunked
         for chunk in chunks:
             chunk = chunk.strip()
             if not chunk:
                 continue
             try:
-                audio_bytes = await generate_speech(
-                    text=chunk,
-                    voice=narrator["openai_voice"],
-                    speed=narrator["speed"],
-                )
+                audio_bytes = await generate_speech(text=chunk, voice=narrator["openai_voice"], speed=narrator["speed"])
                 all_audio.append(audio_bytes)
             except Exception as e:
                 logger.error(f"Audiobook chunk failed: {e}")
@@ -368,7 +351,6 @@ async def generate_audiobook(request: AudiobookRequest):
         )
         await db.commit()
 
-    # Return audio file directly
     return FileResponse(output_path, media_type="audio/mpeg", filename=f"{gen_id}.mp3")
 
 
@@ -398,98 +380,6 @@ async def upload_docx(file: UploadFile = File(...)):
         "word_count": len(text.split()),
         "paragraph_count": len(paragraphs)
     }
-
-
-@api_router.post("/convert-epub")
-async def convert_epub(request: EpubRequest):
-    """Convert plain text to a basic EPUB file."""
-    import zipfile
-
-    text = request.text
-    title = request.title
-    author = request.author
-
-    # Split into chapters if possible
-    chapter_regex = re.compile(r'(?:^|\n)\s*(chapter\s+\d+[^\n]*)', re.IGNORECASE)
-    matches = list(chapter_regex.finditer(text))
-
-    chapters = []
-    if matches:
-        for i, match in enumerate(matches):
-            start = match.start()
-            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
-            ch_title = match.group(1).strip()
-            ch_content = text[start:end].strip()
-            # Remove the chapter heading from content
-            ch_content = ch_content[len(ch_title):].strip()
-            chapters.append({"title": ch_title, "content": ch_content})
-    else:
-        chapters.append({"title": title, "content": text})
-
-    # Build EPUB in memory
-    buf = io.BytesIO()
-    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
-        # mimetype must be first and uncompressed
-        zf.writestr('mimetype', 'application/epub+zip', compress_type=zipfile.ZIP_STORED)
-
-        # container.xml
-        zf.writestr('META-INF/container.xml', '''<?xml version="1.0" encoding="UTF-8"?>
-<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-  <rootfiles>
-    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
-  </rootfiles>
-</container>''')
-
-        # Build chapter XHTML files
-        manifest_items = []
-        spine_items = []
-        for i, ch in enumerate(chapters):
-            fname = f"chapter{i+1}.xhtml"
-            content_html = ch["content"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            paragraphs = content_html.split("\n")
-            body = "\n".join(f"<p>{p.strip()}</p>" for p in paragraphs if p.strip())
-            ch_title_escaped = ch["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            xhtml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>{ch_title_escaped}</title></head>
-<body>
-<h1>{ch_title_escaped}</h1>
-{body}
-</body>
-</html>'''
-            zf.writestr(f'OEBPS/{fname}', xhtml)
-            manifest_items.append(f'<item id="ch{i+1}" href="{fname}" media-type="application/xhtml+xml"/>')
-            spine_items.append(f'<itemref idref="ch{i+1}"/>')
-
-        # content.opf
-        title_escaped = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        author_escaped = author.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        opf = f'''<?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>
-    <dc:title>{title_escaped}</dc:title>
-    <dc:creator>{author_escaped}</dc:creator>
-    <dc:language>en</dc:language>
-    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>
-  </metadata>
-  <manifest>
-    {"".join(manifest_items)}
-  </manifest>
-  <spine>
-    {"".join(spine_items)}
-  </spine>
-</package>'''
-        zf.writestr('OEBPS/content.opf', opf)
-
-    buf.seek(0)
-    safe_title = re.sub(r'[^a-zA-Z0-9 ]', '', title).replace(' ', '_') or 'book'
-    return StreamingResponse(
-        buf,
-        media_type="application/epub+zip",
-        headers={"Content-Disposition": f'attachment; filename="{safe_title}.epub"'}
-    )
 
 
 @api_router.get("/history")
@@ -565,11 +455,7 @@ async def compare_voices(request: CompareRequest):
             continue
         gen_id = str(uuid.uuid4())
         try:
-            audio_bytes = await generate_speech(
-                text=text,
-                voice=voice["openai_voice"],
-                speed=voice["speed"],
-            )
+            audio_bytes = await generate_speech(text=text, voice=voice["openai_voice"], speed=voice["speed"])
             output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
             with open(output_path, "wb") as f:
                 f.write(audio_bytes)
@@ -624,11 +510,7 @@ async def batch_tts(request: BatchTTSRequest):
         if not chunk:
             continue
         try:
-            audio_bytes = await generate_speech(
-                text=chunk,
-                voice=voice["openai_voice"],
-                speed=voice["speed"],
-            )
+            audio_bytes = await generate_speech(text=chunk, voice=voice["openai_voice"], speed=voice["speed"])
             all_audio.append(audio_bytes)
         except Exception as e:
             logger.error(f"Batch TTS chunk failed: {e}")
@@ -658,10 +540,77 @@ async def batch_tts(request: BatchTTSRequest):
     }
 
 
+@api_router.post("/convert-epub")
+async def convert_epub(request: EpubRequest):
+    import zipfile
+    text = request.text
+    title = request.title
+    author = request.author
+
+    chapter_regex = re.compile(r'(?:^|\n)\s*(chapter\s+\d+[^\n]*)', re.IGNORECASE)
+    matches = list(chapter_regex.finditer(text))
+    chapters = []
+    if matches:
+        for i, match in enumerate(matches):
+            start = match.start()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            ch_title = match.group(1).strip()
+            ch_content = text[start:end].strip()[len(ch_title):].strip()
+            chapters.append({"title": ch_title, "content": ch_content})
+    else:
+        chapters.append({"title": title, "content": text})
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr('mimetype', 'application/epub+zip', compress_type=zipfile.ZIP_STORED)
+        zf.writestr('META-INF/container.xml', '''<?xml version="1.0" encoding="UTF-8"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+  </rootfiles>
+</container>''')
+        manifest_items = []
+        spine_items = []
+        for i, ch in enumerate(chapters):
+            fname = f"chapter{i+1}.xhtml"
+            content_html = ch["content"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            body = "\n".join(f"<p>{p.strip()}</p>" for p in content_html.split("\n") if p.strip())
+            ch_title_escaped = ch["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            xhtml = f'''<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>{ch_title_escaped}</title></head>
+<body><h1>{ch_title_escaped}</h1>{body}</body>
+</html>'''
+            zf.writestr(f'OEBPS/{fname}', xhtml)
+            manifest_items.append(f'<item id="ch{i+1}" href="{fname}" media-type="application/xhtml+xml"/>')
+            spine_items.append(f'<itemref idref="ch{i+1}"/>')
+
+        title_escaped = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        author_escaped = author.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        opf = f'''<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>
+    <dc:title>{title_escaped}</dc:title>
+    <dc:creator>{author_escaped}</dc:creator>
+    <dc:language>en</dc:language>
+    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>
+  </metadata>
+  <manifest>{"".join(manifest_items)}</manifest>
+  <spine>{"".join(spine_items)}</spine>
+</package>'''
+        zf.writestr('OEBPS/content.opf', opf)
+
+    buf.seek(0)
+    safe_title = re.sub(r'[^a-zA-Z0-9 ]', '', title).replace(' ', '_') or 'book'
+    return StreamingResponse(buf, media_type="application/epub+zip",
+        headers={"Content-Disposition": f'attachment; filename="{safe_title}.epub"'})
+
+
 # Include router
 app.include_router(api_router)
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
