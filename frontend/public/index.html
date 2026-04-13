@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="description" content="OpenVoice Clone — Zero-shot voice cloning TTS system" />
+    <title>OpenVoice | Voice Cloning TTS</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <!-- Marked.js for Markdown rendering - inline fallback -->
+    <!-- Parser is in app.js -->
+
+    <!-- Tailwind CDN (for utility classes alongside custom CSS) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Cabinet Grotesk', 'sans-serif'],
+            body: ['IBM Plex Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            bg: '#0A0A0A',
+            surface: '#141414',
+            'surface-el': '#1A1A1A',
+            accent: '#FF3B30',
+            'accent-hover': '#D63026',
+            volt: '#E2FF4A',
+          }
+        }
+      }
+    }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/style.css" />
+
+    <!-- Error handler -->
+    <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
+    <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
+</head>
+<body>
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav class="nav" data-testid="main-nav">
+        <div class="nav-logo">
+            <span class="dot"></span>
+            OPENVOICE
+        </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="voices" data-testid="tab-voices">
+                <i class="ph ph-waveform" style="margin-right:6px;font-size:14px;"></i> Voices
+            </button>
+            <button class="nav-tab" data-tab="tts" data-testid="tab-tts">
+                <i class="ph ph-microphone" style="margin-right:6px;font-size:14px;"></i> TTS Studio
+            </button>
+            <button class="nav-tab" data-tab="audiobook" data-testid="tab-audiobook">
+                <i class="ph ph-book-open" style="margin-right:6px;font-size:14px;"></i> Audiobook
+            </button>
+            <button class="nav-tab" data-tab="chat" data-testid="tab-chat">
+                <i class="ph ph-chat-circle" style="margin-right:6px;font-size:14px;"></i> Chat
+            </button>
+            <button class="nav-tab" data-tab="compare" data-testid="tab-compare">
+                <i class="ph ph-scales" style="margin-right:6px;font-size:14px;"></i> Compare
+            </button>
+            <button class="nav-tab" data-tab="history" data-testid="tab-history">
+                <i class="ph ph-clock-counter-clockwise" style="margin-right:6px;font-size:14px;"></i> History
+            </button>
+        </div>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            <span id="health-status" data-testid="health-status">CHECKING...</span>
+        </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="main">
+
+        <!-- ═══ VOICES TAB ═══ -->
+        <section id="voices-tab" class="tab-content active" data-testid="voices-section">
+            <div class="section-header">
+                <h1 class="section-title">Voice Library</h1>
+                <p class="section-sub">24 custom voice profiles / zero-shot cloning engine</p>
+            </div>
+            <div id="voice-grid" class="voice-grid" data-testid="voice-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- ═══ TTS STUDIO TAB ═══ -->
+        <section id="tts-tab" class="tab-content" data-testid="tts-section">
+            <div class="section-header">
+                <h1 class="section-title">TTS Studio</h1>
+                <p class="section-sub">Text-to-speech generation / HD quality / custom voice profiles</p>
+            </div>
+            <div class="tts-layout">
+                <div class="tts-editor">
+                    <textarea
+                        id="tts-text"
+                        class="tts-textarea"
+                        data-testid="tts-text-input"
+                        placeholder="Enter your text here. Up to 4,096 characters supported. The voice synthesis engine will transform your words into lifelike speech using the selected voice profile..."
+                        maxlength="4096"
+                    ></textarea>
+                    <div class="tts-editor-footer">
+                        <span id="tts-char-count" class="char-count" data-testid="tts-char-count">0 / 4096</span>
+                    </div>
+                </div>
+                <div class="tts-controls">
+                    <div class="control-group">
+                        <label class="control-label">Voice Profile</label>
+                        <select id="tts-voice-select" class="control-select" data-testid="tts-voice-select">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Speed</label>
+                        <input
+                            type="range"
+                            id="tts-speed"
+                            class="speed-slider"
+                            data-testid="tts-speed-slider"
+                            min="0.25"
+                            max="4.0"
+                            step="0.05"
+                            value="1.0"
+                        />
+                        <div id="tts-speed-value" class="speed-value" data-testid="tts-speed-value">1.00x</div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Model</label>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A1A1AA;padding:8px 0;">
+                            tts-1-hd <span style="color:#22C55E;font-size:10px;">ACTIVE</span>
+                        </div>
+                    </div>
+                    <div style="flex:1;"></div>
+                    <button
+                        id="tts-generate-btn"
+                        class="btn-generate"
+                        data-testid="tts-generate-btn"
+                    >
+                        GENERATE SPEECH
+                    </button>
+                </div>
+            </div>
+            <div id="tts-result" class="audio-result" data-testid="tts-result">
+                <canvas id="tts-waveform" class="waveform-canvas" data-testid="tts-waveform"></canvas>
+                <audio controls data-testid="tts-audio-player"></audio>
+                <div class="audio-result-info">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
+                    <button class="btn-download" data-testid="tts-download-btn">
+                        <i class="ph ph-download-simple"></i> Download MP3
+                    </button>
+                </div>
+            </div>
+
+            <!-- Streaming TTS Section -->
+            <div style="margin-top:24px;border:1px solid #333;background:#141414;padding:24px;">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                    <i class="ph ph-broadcast" style="color:#E2FF4A;font-size:18px;"></i>
+                    <span class="control-label" style="margin:0;">Streaming Generation (Long Text)</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#22C55E;border:1px solid #22C55E;padding:2px 6px;letter-spacing:0.1em;">REAL-TIME</span>
+                </div>
+                <p style="font-size:13px;color:#A1A1AA;margin-bottom:16px;line-height:1.5;">
+                    Progressive playback — audio starts playing as soon as the first chunk is generated. No waiting for the full text to finish.
+                </p>
+                <textarea
+                    id="stream-text"
+                    class="audiobook-textarea"
+                    data-testid="stream-text-input"
+                    placeholder="Paste your long text here. Chunks will be generated and played in real-time as they arrive..."
+                    style="min-height:140px;"
+                ></textarea>
+                <div style="display:flex;gap:12px;align-items:center;margin-top:12px;">
+                    <select id="stream-voice-select" class="control-select" data-testid="stream-voice-select" style="flex:1;"></select>
+                    <span id="stream-char-count" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#52525B;">0 chars</span>
+                    <button id="stream-generate-btn" class="btn-generate" data-testid="stream-generate-btn" style="width:auto;padding:12px 24px;">
+                        <i class="ph ph-broadcast"></i> STREAM GENERATE
+                    </button>
+                </div>
+                <div id="stream-progress" style="display:none;margin-top:16px;" data-testid="stream-progress">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span class="control-label" style="margin:0;">Streaming Progress</span>
+                        <span id="stream-progress-text" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E2FF4A;"></span>
+                    </div>
+                    <div style="height:4px;background:#333;width:100%;">
+                        <div id="stream-progress-bar" style="height:100%;background:linear-gradient(90deg,#FF3B30,#E2FF4A);width:0%;transition:width 300ms;"></div>
+                    </div>
+                </div>
+                <div id="stream-chunks" style="display:none;margin-top:16px;" data-testid="stream-chunks">
+                    <div class="control-label" style="margin-bottom:8px;">Chunk Playlist</div>
+                    <div id="stream-chunk-list" style="display:flex;flex-direction:column;gap:1px;background:#333;border:1px solid #333;max-height:300px;overflow-y:auto;"></div>
+                </div>
+                <div id="stream-combined" class="audio-result" data-testid="stream-combined">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                        <i class="ph ph-check-circle" style="color:#22C55E;font-size:16px;"></i>
+                        <span class="control-label" style="margin:0;color:#22C55E;">Combined Audio</span>
+                    </div>
+                    <audio controls data-testid="stream-combined-audio"></audio>
+                    <div class="audio-result-info">
+                        <span id="stream-combined-info" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
+                        <button class="btn-download" data-testid="stream-download-btn">
+                            <i class="ph ph-download-simple"></i> Download Full MP3
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="audiobook-tab" class="tab-content" data-testid="audiobook-section">
+            <div class="section-header">
+                <h1 class="section-title">Audiobook Studio</h1>
+                <p class="section-sub">Full manuscript generation / auto dialogue detection / multi-voice</p>
+            </div>
+            <div class="audiobook-layout">
+                <div class="audiobook-input">
+                    <div class="control-group">
+                        <label class="control-label">Upload Manuscript</label>
+                        <div class="upload-zone" data-testid="audiobook-upload-zone">
+                            <div class="upload-zone-icon"><i class="ph ph-file-doc"></i></div>
+                            <div class="upload-zone-text">Drop .docx file or click to upload</div>
+                            <input type="file" id="audiobook-file" accept=".docx" data-testid="audiobook-file-input" />
+                        </div>
+                        <div id="upload-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:#22C55E;margin-top:4px;" data-testid="upload-info"></div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Or Paste Text</label>
+                        <textarea
+                            id="audiobook-text"
+                            class="audiobook-textarea"
+                            data-testid="audiobook-text-input"
+                            placeholder='Paste your manuscript here. Use "quotation marks" for dialogue to enable automatic character voice assignment...'
+                        ></textarea>
+                    </div>
+                    <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid #333333;color:#A1A1AA;" data-testid="audiobook-preview-btn">
+                        PREVIEW SEGMENTS
+                    </button>
+                    <div id="segments-preview" class="segments-preview" style="display:none;" data-testid="segments-preview">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                <div class="audiobook-config">
+                    <div class="control-group">
+                        <label class="control-label">Narrator Voice</label>
+                        <select id="narrator-voice-select" class="control-select" data-testid="narrator-voice-select">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Character Voices (optional)</label>
+                        <div id="char-voices-list" data-testid="char-voices-list" style="
+                            max-height:260px;
+                            overflow-y:auto;
+                            border:1px solid #333333;
+                            background:#0A0A0A;
+                            padding:8px;
+                            display:flex;
+                            flex-direction:column;
+                            gap:4px;
+                        ">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#52525B;margin-top:4px;">
+                            Leave empty for auto-assignment
+                        </div>
+                    </div>
+                    <div style="flex:1;"></div>
+                    <button
+                        id="audiobook-generate-btn"
+                        class="btn-generate"
+                        data-testid="audiobook-generate-btn"
+                    >
+                        GENERATE AUDIOBOOK
+                    </button>
+                </div>
+            </div>
+            <div id="audiobook-result" class="audio-result" data-testid="audiobook-result">
+                <canvas id="audiobook-waveform" class="waveform-canvas" data-testid="audiobook-waveform"></canvas>
+                <audio controls data-testid="audiobook-audio-player"></audio>
+                <div class="audio-result-info">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
+                    <button class="btn-download" data-testid="audiobook-download-btn">
+                        <i class="ph ph-download-simple"></i> Download MP3
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ CHAT TAB ═══ -->
+        <section id="chat-tab" class="tab-content" data-testid="chat-section">
+            <div class="section-header">
+                <h1 class="section-title">AI Assistant</h1>
+                <p class="section-sub">Groq / openai/gpt-oss-20b / voice platform guidance</p>
+            </div>
+            <div class="chat-layout">
+                <div class="chat-header">
+                    <i class="ph ph-terminal" style="color:#FF3B30;font-size:18px;"></i>
+                    <span class="chat-header-title">OpenVoice Assistant</span>
+                    <span class="chat-header-model">gpt-oss-20b</span>
+                </div>
+                <div id="chat-messages" class="chat-messages" data-testid="chat-messages">
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="ph ph-chat-circle-dots"></i></div>
+                        <div class="empty-state-text">Ask me anything about voice cloning, TTS, or audiobooks</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input
+                        type="text"
+                        id="chat-input"
+                        class="chat-input"
+                        data-testid="chat-input"
+                        placeholder="Type your message..."
+                        autocomplete="off"
+                    />
+                    <button id="chat-send-btn" class="btn-send" data-testid="chat-send-btn">
+                        SEND
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ COMPARE TAB ═══ -->
+        <section id="compare-tab" class="tab-content" data-testid="compare-section">
+            <div class="section-header">
+                <h1 class="section-title">Voice Compare</h1>
+                <p class="section-sub">Side-by-side comparison / same text, different voices / find your perfect match</p>
+            </div>
+            <div style="border:1px solid #333;background:#141414;padding:24px;margin-bottom:24px;">
+                <div class="control-group" style="margin-bottom:20px;">
+                    <label class="control-label">Comparison Text</label>
+                    <textarea
+                        id="compare-text"
+                        class="audiobook-textarea"
+                        data-testid="compare-text-input"
+                        placeholder="Enter the text you want to hear in multiple voices. Keep it short for quick comparison..."
+                        style="min-height:100px;"
+                    ></textarea>
+                </div>
+                <div class="control-group" style="margin-bottom:20px;">
+                    <label class="control-label">Select Voices to Compare (2-6)</label>
+                    <div id="compare-voices-list" data-testid="compare-voices-list" style="
+                        max-height:220px;overflow-y:auto;border:1px solid #333;background:#0A0A0A;padding:8px;
+                        display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px;">
+                    </div>
+                    <div id="compare-selected-count" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#52525B;margin-top:4px;">0 voices selected</div>
+                </div>
+                <button id="compare-generate-btn" class="btn-generate" data-testid="compare-generate-btn">
+                    COMPARE VOICES
+                </button>
+            </div>
+            <div id="compare-results" data-testid="compare-results" style="display:none;">
+                <div class="control-label" style="margin-bottom:12px;">Comparison Results</div>
+                <div id="compare-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:#333;border:1px solid #333;"></div>
+            </div>
+        </section>
+
+        <!-- ═══ HISTORY TAB ═══ -->
+        <section id="history-tab" class="tab-content" data-testid="history-section">
+            <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
+                <div>
+                    <h1 class="section-title">Generation History</h1>
+                    <p class="section-sub">All generated audio / TTS and audiobooks / playback and download</p>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button id="export-json-btn" class="btn-download" data-testid="export-json-btn" style="padding:8px 14px;">
+                        <i class="ph ph-file-json"></i> Export JSON
+                    </button>
+                    <button id="export-csv-btn" class="btn-download" data-testid="export-csv-btn" style="padding:8px 14px;">
+                        <i class="ph ph-file-csv"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+            <div id="history-container" data-testid="history-container">
+                <div class="empty-state">
+                    <div class="empty-state-icon"><i class="ph ph-clock-counter-clockwise"></i></div>
+                    <div class="empty-state-text">No generations yet</div>
+                </div>
+            </div>
+            <div id="history-player" class="audio-result" data-testid="history-player">
+                <canvas id="history-waveform" class="waveform-canvas" data-testid="history-waveform"></canvas>
+                <audio controls data-testid="history-audio-player"></audio>
+                <div class="audio-result-info">
+                    <span id="history-player-info" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
+                    <button class="btn-download" data-testid="history-download-btn">
+                        <i class="ph ph-download-simple"></i> Download MP3
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CRA React root (disabled) -->
+    <div id="root"></div>
+
+    <!-- Emergent Badge -->
+    <a id="emergent-badge" target="_blank" href="https://app.emergent.sh/?utm_source=emergent-badge" style="display:inline-flex !important;box-sizing:border-box;width:178px;height:40px;padding:8px 12px;align-items:center !important;gap:8px;border-radius:50px !important;background:#000 !important;position:fixed !important;bottom:16px;right:16px;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif !important;font-size:12px !important;z-index:9999 !important;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M15.5702 8.13142C15.7729 8.0412 16.0007 8.18878 15.9892 8.4103C15.8374 11.3192 14.0965 14.0405 11.2531 15.3065C8.40964 16.5725 5.2224 16.0453 2.95912 14.2117C2.78676 14.072 2.82955 13.804 3.03219 13.7137L4.95677 12.8568C5.04866 12.8159 5.15446 12.823 5.24204 12.8725C6.73377 13.7153 8.59176 13.8649 10.2772 13.1145C11.9626 12.3641 13.0947 10.8833 13.4665 9.21075C13.4883 9.11256 13.5539 9.02918 13.6457 8.98827L15.5702 8.13142Z" fill="white"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.3066 4.74698L15.5067 5.19653C15.5759 5.35178 15.5061 5.53366 15.3508 5.60278L1.29992 11.8586C1.14467 11.9278 0.962794 11.8579 0.893675 11.7027L0.701732 11.2716L0.693457 11.2531C-1.10317 7.21778 0.711626 2.49007 4.74692 0.693443C8.78221 -1.10318 13.51 0.711693 15.3066 4.74698ZM2.82356 8.55367C2.63552 8.63739 2.41991 8.51617 2.40853 8.31065C2.28373 6.05724 3.53858 3.85787 5.72286 2.88536C7.90715 1.91286 10.3813 2.45199 11.9724 4.05256C12.1175 4.19854 12.0633 4.43988 11.8753 4.5236L2.82356 8.55367Z" fill="white"/>
+        </svg>
+        <p style="color:#FFF !important;font-family:'Inter',sans-serif !important;font-size:13px !important;font-weight:600 !important;line-height:20px !important;margin:0 !important;white-space:nowrap !important;">Made with Emergent</p>
+    </a>
+
+    <!-- PostHog -->
+    <script>
+    !(function(t,e){var o,n,p,r;e.__SV||((window.posthog=e),(e._i=[]),(e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&((t=t[o[0]]),(e=o[1])),(t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))})}((p=t.createElement("script")).type="text/javascript"),(p.crossOrigin="anonymous"),(p.async=!0),(p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js"),(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?(u=e[a]=[]):a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}),(e.__SV=1))})(document,window.posthog||[]);
+    posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs",{api_host:"https://us.i.posthog.com",person_profiles:"identified_only",session_recording:{recordCrossOriginIframes:true,capturePerformance:false}});
+    </script>
+
+    <!-- API Base URL from CRA environment -->
+    <script>
+    window.API_BASE = '%REACT_APP_BACKEND_URL%' + '/api';
+    </script>
+
+    <!-- App JavaScript -->
+    <script src="%PUBLIC_URL%/app.js?v=13"></script>
+</body>
+</html>

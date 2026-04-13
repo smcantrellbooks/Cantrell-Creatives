@@ -1,0 +1,92 @@
+{
+  "project_context": {
+    "domain": "AI Audio Generation & Voice Cloning",
+    "theme": "Dark",
+    "archetype": "Archetype 4: Swiss & High-Contrast (The 'Control Room' Variant)",
+    "vibe": "Audio hardware synthesizer, Teenage Engineering inspired, brutalist, precise, functional studio equipment."
+  },
+  "colors": {
+    "background": "#0A0A0A",
+    "surface": "#141414",
+    "surface_elevated": "#1A1A1A",
+    "border": "#333333",
+    "border_hover": "#555555",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#A1A1AA",
+    "text_tertiary": "#52525B",
+    "accent_primary": "#FF3B30",
+    "accent_secondary": "#E2FF4A",
+    "focus_ring": "#FF3B30",
+    "success": "#22C55E",
+    "error": "#FF3B30",
+    "gradient_forbidden": true
+  },
+  "typography": {
+    "headings_font": "'Cabinet Grotesk', sans-serif",
+    "body_font": "'IBM Plex Sans', sans-serif",
+    "mono_font": "'JetBrains Mono', monospace",
+    "font_imports": [
+      "https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500,400&display=swap",
+      "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    ],
+    "h1_size": "text-5xl md:text-6xl tracking-tighter font-black uppercase",
+    "h2_size": "text-3xl md:text-4xl tracking-tight font-bold",
+    "h3_size": "text-xl md:text-2xl tracking-tight font-semibold",
+    "body_size": "text-base leading-relaxed font-light",
+    "mono_size": "text-xs tracking-[0.1em] uppercase font-mono",
+    "anti_pattern_avoidance": "Do not use Inter. Keep headings stark, heavily weighted, and tightly tracked. Data numbers must use JetBrains Mono."
+  },
+  "spacing_and_layout": {
+    "philosophy": "Dense and deliberate. The 'Control Room' grid. Like a physical mixing console.",
+    "grid_system": "Grid layout with tight spacing. Use 'grid-cols-1 md:grid-cols-3 lg:grid-cols-4' with 'gap-4' or 'gap-px' to mimic hardware modules. For main layout panes, use CSS Grid to partition screen space exactly.",
+    "padding": "Generous internal padding (p-6, p-8) inside panels, but zero wasted space between structural bounds.",
+    "border_radius": "rounded-none or maximum rounded-sm (2px). No soft curves. It must feel like cut metal or plastic hardware."
+  },
+  "surface_strategies": {
+    "panels_and_cards": "Flat background (bg-[#141414]), sharp 1px solid border (border-[#333333]), NO shadow. On hover, border brightens to border-[#555555].",
+    "headers": "Solid #0A0A0A background with a strict 1px bottom border (#333333). No glassmorphism. Structural and rigid.",
+    "inputs_and_textareas": "Square corners, bg-[#0A0A0A] or bg-transparent, sharp borders. Focus state must have a 1px solid ring of #FF3B30. Textareas for TTS should feel like a code editor or raw data terminal.",
+    "buttons": "Brutalist block elements. Primary action: bg-[#FF3B30] text-white hover:bg-[#D63026]. Secondary action: bg-transparent border border-[#333333] hover:border-white text-white. All buttons must have an active/pressed state that shrinks them slightly."
+  },
+  "components_and_interactions": {
+    "voice_explorer": "A dense bento grid of voice profiles. Each item is a rigid card with a minimalist portrait, monospaced ID label, and a stark play button. Hover reveals audio waveforms or specs.",
+    "audio_player": "Custom minimalist HTML5 audio player. Build the visual representation using absolute positioned divs or canvas for waveforms. Monospaced timecodes.",
+    "tts_playground": "Split screen: left side is a massive, borderless textarea for script input; right side is a dense column of sliders (pitch, speed, stability) styled as hardware faders.",
+    "audiobook_studio": "File upload zone that looks like a technical drop zone. Timeline visualization for dialogue parsing. Distinct, color-coded markers for different character voices.",
+    "chat_assistant": "Terminal CLI vibe. Monospaced user inputs, precise AI responses.",
+    "animations": "No bouncy or slow animations. Use 100ms or 150ms durations for hover states. Crisp, instant feedback."
+  },
+  "image_urls": {
+    "hero_abstract": {
+      "url": "https://images.unsplash.com/photo-1761446812363-f3edd68c5919?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2ODl8MHwxfHNlYXJjaHwxfHxtaW5pbWFsaXN0JTIwcmVjb3JkaW5nJTIwc3R1ZGlvJTIwZXF1aXBtZW50fGVufDB8fHx8MTc3NTg2OTc2Nnww&ixlib=rb-4.1.0&q=85",
+      "description": "Minimalist headphone silhouette for the main hero or studio header visual."
+    },
+    "voice_avatar_1": {
+      "url": "https://images.unsplash.com/photo-1763551229510-d477a99acc58?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwxfHxleHByZXNzaXZlJTIwcG9ydHJhaXQlMjBzdHVkaW8lMjBsaWdodGluZ3xlbnwwfHx8fDE3NzU4Njk3NjZ8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Voice Profile 1 - Expressive female"
+    },
+    "voice_avatar_2": {
+      "url": "https://images.unsplash.com/photo-1742540425845-8d8dabe893ca?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwyfHxleHByZXNzaXZlJTIwcG9ydHJhaXQlMjBzdHVkaW8lMjBsaWdodGluZ3xlbnwwfHx8fDE3NzU4Njk3NjZ8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Voice Profile 2 - Vibrant female"
+    },
+    "voice_avatar_3": {
+      "url": "https://images.unsplash.com/photo-1772529406467-b652da4b3e99?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHwzfHxleHByZXNzaXZlJTIwcG9ydHJhaXQlMjBzdHVkaW8lMjBsaWdodGluZ3xlbnwwfHx8fDE3NzU4Njk3NjZ8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Voice Profile 3 - Deep male"
+    },
+    "voice_avatar_4": {
+      "url": "https://images.unsplash.com/photo-1761792363126-9355048c908c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzZ8MHwxfHNlYXJjaHw0fHxleHByZXNzaXZlJTIwcG9ydHJhaXQlMjBzdHVkaW8lMjBsaWdodGluZ3xlbnwwfHx8fDE3NzU4Njk3NjZ8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Voice Profile 4 - Ambient male"
+    },
+    "equipment_texture": {
+      "url": "https://images.unsplash.com/photo-1584132214565-4afec6219d43?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2ODl8MHwxfHNlYXJjaHwzfHxtaW5pbWFsaXN0JTIwcmVjb3JkaW5nJTIwc3R1ZGlvJTIwZXF1aXBtZW50fGVufDB8fHx8MTc3NTg2OTc2Nnww&ixlib=rb-4.1.0&q=85",
+      "description": "Subtle studio keyboard texture. Use as a darkened background header element if needed."
+    }
+  },
+  "instructions_to_main_agent": {
+    "framework_constraints": "CRITICAL: The frontend MUST be vanilla HTML/CSS/JS. DO NOT initialize React, Next.js, or use Shadcn UI. You must construct the UI entirely with standard DOM structures and JavaScript logic.",
+    "styling_approach": "Use Tailwind CSS via CDN (<script src=\"https://cdn.tailwindcss.com\"></script>) or build step. Extend the Tailwind config in your script to include the custom colors and fonts defined above.",
+    "iconography": "Use Phosphor Icons via CDN (e.g., script tag for Phosphor icons) or basic inline SVGs. Do not attempt to run yarn add for React packages.",
+    "testing_attributes": "All interactive elements (buttons, voice cards, file inputs, textareas) MUST include 'data-testid' attributes (e.g., data-testid='voice-card-1', data-testid='play-tts-button').",
+    "structure": "Create separate logical containers using IDs in HTML, and attach event listeners in a centralized JS file. Ensure separation of concerns even without a framework."
+  }
+}

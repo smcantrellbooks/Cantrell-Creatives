@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-04-11T02:59:09.891439",
+  "total_tests": 15,
+  "passed_tests": 15,
+  "success_rate": "100.0%",
+  "test_details": [
+    {
+      "test": "Health Check",
+      "success": true,
+      "details": "Status: healthy, Voices: 24",
+      "error": ""
+    },
+    {
+      "test": "Get Voices",
+      "success": true,
+      "details": "Retrieved 24 voices with all required fields",
+      "error": ""
+    },
+    {
+      "test": "Voice Sample (voice_01)",
+      "success": true,
+      "details": "Audio file received, size: 737664 bytes",
+      "error": ""
+    },
+    {
+      "test": "Voice Sample (voice_12)",
+      "success": true,
+      "details": "Audio file received, size: 844444 bytes",
+      "error": ""
+    },
+    {
+      "test": "TTS Generation",
+      "success": true,
+      "details": "Generated audio for Adam, 61 chars",
+      "error": ""
+    },
+    {
+      "test": "File Upload",
+      "success": true,
+      "details": "Endpoint responds correctly (mock file rejected as expected)",
+      "error": ""
+    },
+    {
+      "test": "Chat",
+      "success": true,
+      "details": "Response: 1708 chars, Has markdown: True",
+      "error": ""
+    },
+    {
+      "test": "History Endpoint",
+      "success": true,
+      "details": "Found 29 generations",
+      "error": ""
+    },
+    {
+      "test": "Audiobook Generation",
+      "success": true,
+      "details": "Generated 3 segments, narrator: Adam",
+      "error": ""
+    },
+    {
+      "test": "Voice Compare",
+      "success": true,
+      "details": "Compared 2 voices successfully",
+      "error": ""
+    },
+    {
+      "test": "Batch TTS",
+      "success": true,
+      "details": "Generated 3/3 chunks, 2050 chars",
+      "error": ""
+    },
+    {
+      "test": "History Export JSON",
+      "success": true,
+      "details": "JSON export successful, 33 generations",
+      "error": ""
+    },
+    {
+      "test": "History Export CSV",
+      "success": true,
+      "details": "CSV export successful, 34 rows",
+      "error": ""
+    },
+    {
+      "test": "Stream TTS Short",
+      "success": true,
+      "details": "Received 1 chunks, total: 1",
+      "error": ""
+    },
+    {
+      "test": "Stream TTS Long",
+      "success": true,
+      "details": "Generated 4 chunks progressively, combined audio accessible",
+      "error": ""
+    }
+  ]
+}
