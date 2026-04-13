@@ -1,429 +1,682 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0A0A0A" />
-    <meta name="description" content="OpenVoice Clone — Zero-shot voice cloning TTS system" />
-    <title>OpenVoice | Voice Cloning TTS</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-
-    <!-- Marked.js for Markdown rendering - inline fallback -->
-    <!-- Parser is in app.js -->
-
-    <!-- Tailwind CDN (for utility classes alongside custom CSS) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            heading: ['Cabinet Grotesk', 'sans-serif'],
-            body: ['IBM Plex Sans', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            bg: '#0A0A0A',
-            surface: '#141414',
-            'surface-el': '#1A1A1A',
-            accent: '#FF3B30',
-            'accent-hover': '#D63026',
-            volt: '#E2FF4A',
-          }
-        }
-      }
-    }
-    </script>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="%PUBLIC_URL%/style.css" />
-
-    <!-- Error handler -->
-    <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
-    <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Studio — Cantrell Creatives</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;max-width:100%;overflow-x:hidden;min-height:100vh;background:#F9F4ED;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--taupe);}
+.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,
+[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],
+[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none !important;}
+:root{
+  --taupe:#2D1F2D;--taupe-lt:rgba(45,31,45,.65);
+  --gold:#C9A961;--gold2:#e8c97a;--gold-lt:rgba(201,169,97,.15);--gold-bd:rgba(201,169,97,.4);
+  --cream:#FBF7F2;--card:#FFFCF8;
+  --plum:#7B5C7B;--plum2:#9b7a9b;--plum-lt:rgba(123,92,123,.1);--plum-bd:rgba(123,92,123,.3);
+  --oak:#F5EDE0;--oak-dark:#EDE0CC;
+  --green:#2a6b3c;--red:#c03c3c;
+}
+.banner{position:relative;overflow:hidden;display:block;width:100%;}
+.banner-img{display:block;width:100%;height:360px;object-fit:cover;object-position:center;}
+.nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:100;}
+.nt-btn{padding:5px 18px;border-radius:999px;border:1px solid rgba(201,169,97,.5);background:rgba(40,20,40,.32);color:rgba(232,201,122,.95);font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.nt-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);}
+.nt-btn.login{background:rgb(201,169,97);border-color:rgb(201,169,97);color:rgb(45,31,45);font-weight:800;}
+.nt-btn.logout{background:rgba(192,60,60,.7);border-color:rgba(192,60,60,.8);color:#fff;font-weight:800;}
+.nt-btn.logout:hover{background:rgba(192,60,60,.9);}
+.title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
+.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:var(--plum);line-height:1;text-shadow:rgba(255,255,255,.6) 0 2px 16px;letter-spacing:6px;}
+.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:var(--plum);line-height:.95;text-shadow:rgba(255,255,255,.6) 0 2px 16px;margin-left:8px;}
+.title-tagline{font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(90,58,90,.85);margin-top:8px;}
+.gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--plum),transparent);margin-top:8px;border-radius:999px;}
+.nav-bot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(60,30,60,.78) 0%,rgba(60,30,60,.3) 55%,transparent 100%);z-index:100;}
+.nb-inner{display:flex;align-items:center;gap:10px;padding:10px 28px 14px;}
+.nb-btn{padding:7px 22px;border-radius:999px;border:1px solid rgba(201,169,97,.45);background:rgba(40,20,40,.28);color:rgba(232,201,122,.95);font-family:'Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;display:inline-block;white-space:nowrap;}
+.nb-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);transform:translateY(-1px);}
+.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,rgba(201,169,97,.3) 10%,rgb(201,169,97) 30%,rgb(232,201,122) 50%,rgb(201,169,97) 70%,rgba(201,169,97,.3) 90%,transparent 100%);background-size:200%;animation:shimmer 4s linear infinite;}
+@keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+.page-wrap{max-width:1400px;margin:0 auto;padding:28px 24px 60px;}
+.panel{background:var(--card);border:1px solid var(--gold-bd);border-radius:14px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.09);display:flex;flex-direction:column;gap:16px;margin-bottom:16px;}
+.panel-title{display:flex;align-items:center;gap:9px;font-family:'Cinzel',serif;color:var(--plum);font-size:1.05rem;font-weight:700;border-bottom:1px solid var(--plum-bd);padding-bottom:10px;}
+.panel-icon{font-size:14px;color:var(--gold);}
+.lbl{display:block;font-size:.85rem;color:var(--taupe);font-weight:700;margin-bottom:5px;}
+.inp,select.inp,textarea.inp{width:100%;padding:10px 12px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--taupe);background:#fff;outline:none;transition:border .18s;}
+.inp:focus{border-color:var(--gold);}
+textarea.inp{resize:vertical;line-height:1.75;}
+.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-gold{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:8px;border:none;background:var(--gold);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-gold:hover{background:#d4b870;transform:translateY(-1px);}
+.btn-gold:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-sec{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:600;white-space:nowrap;}
+.btn-sec:hover{background:rgba(201,169,97,.28);}
+.btn-plum{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;border:1px solid var(--plum-bd);background:var(--plum-lt);color:var(--plum);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .2s;font-weight:700;}
+.btn-plum:hover{background:var(--plum);color:#fff;}
+.btn-generate{width:100%;padding:14px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--plum),#5a3d5a);color:#fff;font-family:'Cinzel',serif;font-size:.88rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .22s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-generate:hover{background:linear-gradient(135deg,#5a3d5a,var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.35);}
+.btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.status-msg{font-size:.82rem;padding:4px 0;min-height:18px;}
+.status-msg.ok{color:var(--green);}
+.status-msg.err{color:var(--red);}
+.status-msg.info{color:var(--plum);}
+.engine-tabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
+.engine-tab{padding:5px 14px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Segoe UI',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:.18s;}
+.engine-tab:hover{background:var(--gold-lt);}
+.engine-tab.active{background:var(--plum);color:#fff;border-color:var(--plum);}
+.engine-loading{font-size:.82rem;color:var(--taupe-lt);font-style:italic;padding:6px 0;}
+.char-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--plum-lt);border:1px solid var(--plum-bd);font-size:.78rem;color:var(--plum);font-weight:600;}
+.char-tag button{background:none;border:none;cursor:pointer;color:var(--plum);font-size:13px;padding:0 2px;line-height:1;}
+.char-tag button:hover{color:var(--red);}
+</style>
 </head>
 <body>
-    <!-- ═══ NAVIGATION ═══ -->
-    <nav class="nav" data-testid="main-nav">
-        <div class="nav-logo">
-            <span class="dot"></span>
-            OPENVOICE
+<!-- BANNER -->
+<div class="banner">
+  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');">
+  <div class="title-block">
+    <div class="title-voice">VOICE</div>
+    <div class="title-studio">Studio</div>
+    <div class="title-tagline">Clone &middot; Narrate &middot; Publish</div>
+    <div class="gold-wave"></div>
+  </div>
+  <nav class="nav-top">
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#x1F3E0; Home</a>
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/myaccount">My Account</a>
+    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Login</a>
+    <a class="nt-btn logout" href="https://creatives.smcantrellbooks.com/logout">Logout</a>
+  </nav>
+  <nav class="nav-bot">
+    <div class="nb-inner">
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">&#x1F3AC; Studio</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#x270D;&#xFE0F; Publisher</a>
+      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">&#x1F4DA; Collections</a>
+      <a class="nb-btn" href="https://smcantrellbooks.com">&#x1F30E; Main Site</a>
+    </div>
+  </nav>
+</div>
+<div class="gold-line"></div>
+
+<div class="page-wrap">
+  <div style="margin-bottom:24px;">
+    <h1 style="font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--plum);margin-bottom:6px;">Voice Studio</h1>
+    <p style="font-size:1rem;color:var(--taupe-lt);font-style:italic;">Upload your manuscript, preview voices, and generate your audiobook.</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;">
+    <!-- LEFT -->
+    <div>
+      <!-- TOP: File Converter / Editor -->
+      <div class="panel" style="padding:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
+          <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#x1F4D6; File Converter</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('epubInput').click()">&#x1F4D6; Import EPUB</button>
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('topDocxInput').click()">&#x1F4E5; Import DOCX</button>
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearTopEditor()">&#x1F5D1; Clear</button>
+          </div>
         </div>
-        <div class="nav-tabs">
-            <button class="nav-tab active" data-tab="voices" data-testid="tab-voices">
-                <i class="ph ph-waveform" style="margin-right:6px;font-size:14px;"></i> Voices
-            </button>
-            <button class="nav-tab" data-tab="tts" data-testid="tab-tts">
-                <i class="ph ph-microphone" style="margin-right:6px;font-size:14px;"></i> TTS Studio
-            </button>
-            <button class="nav-tab" data-tab="audiobook" data-testid="tab-audiobook">
-                <i class="ph ph-book-open" style="margin-right:6px;font-size:14px;"></i> Audiobook
-            </button>
-            <button class="nav-tab" data-tab="chat" data-testid="tab-chat">
-                <i class="ph ph-chat-circle" style="margin-right:6px;font-size:14px;"></i> Chat
-            </button>
-            <button class="nav-tab" data-tab="compare" data-testid="tab-compare">
-                <i class="ph ph-scales" style="margin-right:6px;font-size:14px;"></i> Compare
-            </button>
-            <button class="nav-tab" data-tab="history" data-testid="tab-history">
-                <i class="ph ph-clock-counter-clockwise" style="margin-right:6px;font-size:14px;"></i> History
-            </button>
+        <input type="file" id="epubInput" accept=".epub" hidden onchange="handleEpubUpload(event)">
+        <input type="file" id="topDocxInput" accept=".docx" hidden onchange="handleTopDocxUpload(event)">
+        <div id="epubStatus" class="status-msg"></div>
+        <div id="topEditor" contenteditable="true" style="min-height:300px;max-height:500px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;">Import an EPUB or DOCX to preview here...</div>
+        <div style="display:flex;gap:6px;margin-top:8px;">
+          <button class="btn-gold" style="flex:1;" onclick="exportToBottomEditor()">&#x2B07; Export to Audiobook Editor (filters TOC)</button>
+          <button class="btn-plum" style="flex:1;" onclick="convertToEpub()">&#x1F4D6; Convert to EPUB</button>
         </div>
-        <div class="nav-status">
-            <span class="status-dot"></span>
-            <span id="health-status" data-testid="health-status">CHECKING...</span>
+        <p style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;">Import your EPUB or DOCX here. Export sends filtered text to the audiobook editor below. Convert to EPUB generates a downloadable EPUB file.</p>
+      </div>
+
+      <!-- BOTTOM: Document Editor Panel -->
+      <div class="panel" style="padding:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--plum-bd);margin-bottom:8px;">
+          <div class="panel-title" style="font-size:.85rem;padding-bottom:0;border-bottom:none;margin:0;">&#x270E; Document Editor</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="document.getElementById('fileInput').click()">&#x1F4E5; Import File</button>
+            <button class="btn-sec" style="padding:6px 14px;font-size:.78rem;" onclick="clearEditor()">&#x1F5D1; Clear</button>
+          </div>
         </div>
-    </nav>
+        <input type="file" id="fileInput" accept=".txt,.docx" hidden onchange="handleFileUpload(event)">
+        <div id="uploadStatus" class="status-msg"></div>
+        <div class="inp-grid" style="margin-bottom:8px;">
+          <div><label class="lbl">Book Title</label><input class="inp" type="text" id="bookTitle" placeholder="Your Book Title"></div>
+          <div><label class="lbl">Author Name</label><input class="inp" type="text" id="authorName" placeholder="S.M. Cantrell"></div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <!-- Chapter Nav Sidebar -->
+          <div style="width:160px;flex-shrink:0;">
+            <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;color:var(--plum);letter-spacing:.1em;margin-bottom:8px;">&#x1F4DA; Chapters</div>
+            <div id="chapterNav" style="display:flex;flex-direction:column;gap:4px;max-height:660px;overflow-y:auto;">
+              <div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>
+            </div>
+          </div>
+          <!-- Editor -->
+          <div style="flex:1;min-width:0;">
+            <div id="docEditor" contenteditable="true" style="min-height:500px;max-height:700px;overflow-y:auto;padding:16px;border:1px solid var(--gold-bd);border-radius:10px;background:#fff;font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.8;color:var(--taupe);outline:none;white-space:pre-wrap;" ondragover="event.preventDefault();this.style.borderColor='var(--plum)';" ondragleave="this.style.borderColor='var(--gold-bd)';" ondrop="handleEditorDrop(event)">Start typing or import a file...</div>
+          </div>
+        </div>
+      </div>
 
-    <!-- ═══ MAIN CONTENT ═══ -->
-    <main class="main">
+      <div class="panel" style="padding:14px;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A7;</span> Audio Player</div>
+        <audio id="generatedAudio" controls style="width:100%;"></audio>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn-gold" onclick="downloadAudio()" style="font-size:.85rem;padding:8px 16px;">&#x2B07; Download</button>
+        </div>
+      </div>
+    </div>
 
-        <!-- ═══ VOICES TAB ═══ -->
-        <section id="voices-tab" class="tab-content active" data-testid="voices-section">
-            <div class="section-header">
-                <h1 class="section-title">Voice Library</h1>
-                <p class="section-sub">24 custom voice profiles / zero-shot cloning engine</p>
-            </div>
-            <div id="voice-grid" class="voice-grid" data-testid="voice-grid">
-                <!-- Dynamically populated -->
-            </div>
-        </section>
+    <!-- RIGHT -->
+    <div>
+      <!-- Voice 1 -->
+      <div class="panel" style="padding:14px;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A4;</span> Voice 1</div>
+        <div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;cursor:pointer;"><input type="radio" name="voice1Role" id="voice1RoleNarrator" value="narrator" checked onchange="onVoice1RoleChange()"> Narrator</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;cursor:pointer;"><input type="radio" name="voice1Role" id="voice1RoleBoth" value="both" onchange="onVoice1RoleChange()"> 2nd Voice</label>
+        </div>
+        <div id="voice1RoleDesc" style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;margin-bottom:10px;">Voice 1 narrates the entire book.</div>
+        <div id="voice1CharNameWrap" style="display:none;margin-bottom:10px;">
+          <label class="lbl">Character 1 Name</label>
+          <div style="display:flex;gap:6px;">
+            <input class="inp" type="text" id="voice1CharName" placeholder="e.g. Nyara" style="flex:1;font-size:.9rem;">
+            <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addChar1Name()">+ Add</button>
+          </div>
+          <div id="char1Tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+        </div>
+        <div id="engine1Tabs" class="engine-tabs"><span class="engine-loading">Loading engines...</span></div>
+        <select class="inp" id="voice1Select" style="font-size:.9rem;padding:8px 10px;"><option value="">Loading voices...</option></select>
+        <button class="btn-plum" style="width:100%;margin-top:6px;" onclick="previewVoice(1)">&#x25B6; Preview Voice 1</button>
+      </div>
 
-        <!-- ═══ TTS STUDIO TAB ═══ -->
-        <section id="tts-tab" class="tab-content" data-testid="tts-section">
-            <div class="section-header">
-                <h1 class="section-title">TTS Studio</h1>
-                <p class="section-sub">Text-to-speech generation / HD quality / custom voice profiles</p>
-            </div>
-            <div class="tts-layout">
-                <div class="tts-editor">
-                    <textarea
-                        id="tts-text"
-                        class="tts-textarea"
-                        data-testid="tts-text-input"
-                        placeholder="Enter your text here. Up to 4,096 characters supported. The voice synthesis engine will transform your words into lifelike speech using the selected voice profile..."
-                        maxlength="4096"
-                    ></textarea>
-                    <div class="tts-editor-footer">
-                        <span id="tts-char-count" class="char-count" data-testid="tts-char-count">0 / 4096</span>
-                    </div>
-                </div>
-                <div class="tts-controls">
-                    <div class="control-group">
-                        <label class="control-label">Voice Profile</label>
-                        <select id="tts-voice-select" class="control-select" data-testid="tts-voice-select">
-                            <!-- Populated by JS -->
-                        </select>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">Speed</label>
-                        <input
-                            type="range"
-                            id="tts-speed"
-                            class="speed-slider"
-                            data-testid="tts-speed-slider"
-                            min="0.25"
-                            max="4.0"
-                            step="0.05"
-                            value="1.0"
-                        />
-                        <div id="tts-speed-value" class="speed-value" data-testid="tts-speed-value">1.00x</div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">Model</label>
-                        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#A1A1AA;padding:8px 0;">
-                            tts-1-hd <span style="color:#22C55E;font-size:10px;">ACTIVE</span>
-                        </div>
-                    </div>
-                    <div style="flex:1;"></div>
-                    <button
-                        id="tts-generate-btn"
-                        class="btn-generate"
-                        data-testid="tts-generate-btn"
-                    >
-                        GENERATE SPEECH
-                    </button>
-                </div>
-            </div>
-            <div id="tts-result" class="audio-result" data-testid="tts-result">
-                <canvas id="tts-waveform" class="waveform-canvas" data-testid="tts-waveform"></canvas>
-                <audio controls data-testid="tts-audio-player"></audio>
-                <div class="audio-result-info">
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
-                    <button class="btn-download" data-testid="tts-download-btn">
-                        <i class="ph ph-download-simple"></i> Download MP3
-                    </button>
-                </div>
-            </div>
+      <!-- Voice 2 (Character) -->
+      <div class="panel" id="voice2Panel" style="padding:14px;display:none;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F3A4;</span> Voice 2 — Character</div>
+        <div style="margin-bottom:10px;">
+          <label class="lbl">Character Name</label>
+          <div style="display:flex;gap:6px;">
+            <input class="inp" type="text" id="characterNameInput" placeholder="e.g. Nyara" style="flex:1;">
+            <button class="btn-sec" style="padding:8px 14px;font-size:.85rem;" onclick="addCharacterName()">+ Add</button>
+          </div>
+          <div id="characterTags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+        </div>
+        <div id="engine2Tabs" class="engine-tabs"><span class="engine-loading">Loading engines...</span></div>
+        <select class="inp" id="voice2Select" style="font-size:.9rem;padding:8px 10px;"><option value="">— None (single voice) —</option></select>
+        <button class="btn-plum" style="width:100%;margin-top:6px;" onclick="previewVoice(2)">&#x25B6; Preview Voice 2</button>
+      </div>
 
-            <!-- Streaming TTS Section -->
-            <div style="margin-top:24px;border:1px solid #333;background:#141414;padding:24px;">
-                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-                    <i class="ph ph-broadcast" style="color:#E2FF4A;font-size:18px;"></i>
-                    <span class="control-label" style="margin:0;">Streaming Generation (Long Text)</span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#22C55E;border:1px solid #22C55E;padding:2px 6px;letter-spacing:0.1em;">REAL-TIME</span>
-                </div>
-                <p style="font-size:13px;color:#A1A1AA;margin-bottom:16px;line-height:1.5;">
-                    Progressive playback — audio starts playing as soon as the first chunk is generated. No waiting for the full text to finish.
-                </p>
-                <textarea
-                    id="stream-text"
-                    class="audiobook-textarea"
-                    data-testid="stream-text-input"
-                    placeholder="Paste your long text here. Chunks will be generated and played in real-time as they arrive..."
-                    style="min-height:140px;"
-                ></textarea>
-                <div style="display:flex;gap:12px;align-items:center;margin-top:12px;">
-                    <select id="stream-voice-select" class="control-select" data-testid="stream-voice-select" style="flex:1;"></select>
-                    <span id="stream-char-count" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#52525B;">0 chars</span>
-                    <button id="stream-generate-btn" class="btn-generate" data-testid="stream-generate-btn" style="width:auto;padding:12px 24px;">
-                        <i class="ph ph-broadcast"></i> STREAM GENERATE
-                    </button>
-                </div>
-                <div id="stream-progress" style="display:none;margin-top:16px;" data-testid="stream-progress">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                        <span class="control-label" style="margin:0;">Streaming Progress</span>
-                        <span id="stream-progress-text" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#E2FF4A;"></span>
-                    </div>
-                    <div style="height:4px;background:#333;width:100%;">
-                        <div id="stream-progress-bar" style="height:100%;background:linear-gradient(90deg,#FF3B30,#E2FF4A);width:0%;transition:width 300ms;"></div>
-                    </div>
-                </div>
-                <div id="stream-chunks" style="display:none;margin-top:16px;" data-testid="stream-chunks">
-                    <div class="control-label" style="margin-bottom:8px;">Chunk Playlist</div>
-                    <div id="stream-chunk-list" style="display:flex;flex-direction:column;gap:1px;background:#333;border:1px solid #333;max-height:300px;overflow-y:auto;"></div>
-                </div>
-                <div id="stream-combined" class="audio-result" data-testid="stream-combined">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                        <i class="ph ph-check-circle" style="color:#22C55E;font-size:16px;"></i>
-                        <span class="control-label" style="margin:0;color:#22C55E;">Combined Audio</span>
-                    </div>
-                    <audio controls data-testid="stream-combined-audio"></audio>
-                    <div class="audio-result-info">
-                        <span id="stream-combined-info" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
-                        <button class="btn-download" data-testid="stream-download-btn">
-                            <i class="ph ph-download-simple"></i> Download Full MP3
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="audiobook-tab" class="tab-content" data-testid="audiobook-section">
-            <div class="section-header">
-                <h1 class="section-title">Audiobook Studio</h1>
-                <p class="section-sub">Full manuscript generation / auto dialogue detection / multi-voice</p>
-            </div>
-            <div class="audiobook-layout">
-                <div class="audiobook-input">
-                    <div class="control-group">
-                        <label class="control-label">Upload Manuscript</label>
-                        <div class="upload-zone" data-testid="audiobook-upload-zone">
-                            <div class="upload-zone-icon"><i class="ph ph-file-doc"></i></div>
-                            <div class="upload-zone-text">Drop .docx file or click to upload</div>
-                            <input type="file" id="audiobook-file" accept=".docx" data-testid="audiobook-file-input" />
-                        </div>
-                        <div id="upload-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:#22C55E;margin-top:4px;" data-testid="upload-info"></div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">Or Paste Text</label>
-                        <textarea
-                            id="audiobook-text"
-                            class="audiobook-textarea"
-                            data-testid="audiobook-text-input"
-                            placeholder='Paste your manuscript here. Use "quotation marks" for dialogue to enable automatic character voice assignment...'
-                        ></textarea>
-                    </div>
-                    <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid #333333;color:#A1A1AA;" data-testid="audiobook-preview-btn">
-                        PREVIEW SEGMENTS
-                    </button>
-                    <div id="segments-preview" class="segments-preview" style="display:none;" data-testid="segments-preview">
-                        <!-- Dynamically populated -->
-                    </div>
-                </div>
-                <div class="audiobook-config">
-                    <div class="control-group">
-                        <label class="control-label">Narrator Voice</label>
-                        <select id="narrator-voice-select" class="control-select" data-testid="narrator-voice-select">
-                            <!-- Populated by JS -->
-                        </select>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">Character Voices (optional)</label>
-                        <div id="char-voices-list" data-testid="char-voices-list" style="
-                            max-height:260px;
-                            overflow-y:auto;
-                            border:1px solid #333333;
-                            background:#0A0A0A;
-                            padding:8px;
-                            display:flex;
-                            flex-direction:column;
-                            gap:4px;
-                        ">
-                            <!-- Populated by JS -->
-                        </div>
-                        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#52525B;margin-top:4px;">
-                            Leave empty for auto-assignment
-                        </div>
-                    </div>
-                    <div style="flex:1;"></div>
-                    <button
-                        id="audiobook-generate-btn"
-                        class="btn-generate"
-                        data-testid="audiobook-generate-btn"
-                    >
-                        GENERATE AUDIOBOOK
-                    </button>
-                </div>
-            </div>
-            <div id="audiobook-result" class="audio-result" data-testid="audiobook-result">
-                <canvas id="audiobook-waveform" class="waveform-canvas" data-testid="audiobook-waveform"></canvas>
-                <audio controls data-testid="audiobook-audio-player"></audio>
-                <div class="audio-result-info">
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
-                    <button class="btn-download" data-testid="audiobook-download-btn">
-                        <i class="ph ph-download-simple"></i> Download MP3
-                    </button>
-                </div>
-            </div>
-        </section>
+      <!-- Generate -->
+      <div class="panel" style="padding:14px;">
+        <button class="btn-generate" id="generateBtn" onclick="generateAudiobook()">&#x1F3A7; Generate Audiobook</button>
+        <div style="height:6px;background:var(--gold-bd);border-radius:999px;overflow:hidden;margin:8px 0;display:none;" id="genProgress">
+          <div id="genProgressFill" style="height:100%;background:linear-gradient(to right,var(--plum),var(--gold));border-radius:999px;transition:width .4s ease;width:0%;"></div>
+        </div>
+        <div id="genStatus" class="status-msg"></div>
+      </div>
 
-        <!-- ═══ CHAT TAB ═══ -->
-        <section id="chat-tab" class="tab-content" data-testid="chat-section">
-            <div class="section-header">
-                <h1 class="section-title">AI Assistant</h1>
-                <p class="section-sub">Groq / openai/gpt-oss-20b / voice platform guidance</p>
-            </div>
-            <div class="chat-layout">
-                <div class="chat-header">
-                    <i class="ph ph-terminal" style="color:#FF3B30;font-size:18px;"></i>
-                    <span class="chat-header-title">OpenVoice Assistant</span>
-                    <span class="chat-header-model">gpt-oss-20b</span>
-                </div>
-                <div id="chat-messages" class="chat-messages" data-testid="chat-messages">
-                    <div class="empty-state">
-                        <div class="empty-state-icon"><i class="ph ph-chat-circle-dots"></i></div>
-                        <div class="empty-state-text">Ask me anything about voice cloning, TTS, or audiobooks</div>
-                    </div>
-                </div>
-                <div class="chat-input-area">
-                    <input
-                        type="text"
-                        id="chat-input"
-                        class="chat-input"
-                        data-testid="chat-input"
-                        placeholder="Type your message..."
-                        autocomplete="off"
-                    />
-                    <button id="chat-send-btn" class="btn-send" data-testid="chat-send-btn">
-                        SEND
-                    </button>
-                </div>
-            </div>
-        </section>
+      <!-- Quick TTS -->
+      <div class="panel" style="padding:14px;">
+        <div class="panel-title" style="font-size:.85rem;padding-bottom:8px;"><span class="panel-icon">&#x1F509;</span> Quick TTS</div>
+        <textarea class="inp" id="ttsText" rows="3" placeholder="Type text to hear it spoken..." style="font-size:.9rem;"></textarea>
+        <button class="btn-gold" style="width:100%;margin-top:6px;" onclick="generateTTS()">&#x25B6; Speak</button>
+        <div id="ttsStatus" class="status-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- ═══ COMPARE TAB ═══ -->
-        <section id="compare-tab" class="tab-content" data-testid="compare-section">
-            <div class="section-header">
-                <h1 class="section-title">Voice Compare</h1>
-                <p class="section-sub">Side-by-side comparison / same text, different voices / find your perfect match</p>
-            </div>
-            <div style="border:1px solid #333;background:#141414;padding:24px;margin-bottom:24px;">
-                <div class="control-group" style="margin-bottom:20px;">
-                    <label class="control-label">Comparison Text</label>
-                    <textarea
-                        id="compare-text"
-                        class="audiobook-textarea"
-                        data-testid="compare-text-input"
-                        placeholder="Enter the text you want to hear in multiple voices. Keep it short for quick comparison..."
-                        style="min-height:100px;"
-                    ></textarea>
-                </div>
-                <div class="control-group" style="margin-bottom:20px;">
-                    <label class="control-label">Select Voices to Compare (2-6)</label>
-                    <div id="compare-voices-list" data-testid="compare-voices-list" style="
-                        max-height:220px;overflow-y:auto;border:1px solid #333;background:#0A0A0A;padding:8px;
-                        display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px;">
-                    </div>
-                    <div id="compare-selected-count" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#52525B;margin-top:4px;">0 voices selected</div>
-                </div>
-                <button id="compare-generate-btn" class="btn-generate" data-testid="compare-generate-btn">
-                    COMPARE VOICES
-                </button>
-            </div>
-            <div id="compare-results" data-testid="compare-results" style="display:none;">
-                <div class="control-label" style="margin-bottom:12px;">Comparison Results</div>
-                <div id="compare-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:#333;border:1px solid #333;"></div>
-            </div>
-        </section>
+<footer style="border-top:1px solid var(--gold-bd);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;">
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions" style="font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;">Publishing Terms</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure" style="font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;">Audio Disclosures</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.8rem;color:var(--taupe-lt);margin:0 10px;text-decoration:none;">Our Philosophy</a>
+</footer>
 
-        <!-- ═══ HISTORY TAB ═══ -->
-        <section id="history-tab" class="tab-content" data-testid="history-section">
-            <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
-                <div>
-                    <h1 class="section-title">Generation History</h1>
-                    <p class="section-sub">All generated audio / TTS and audiobooks / playback and download</p>
-                </div>
-                <div style="display:flex;gap:8px;margin-top:8px;">
-                    <button id="export-json-btn" class="btn-download" data-testid="export-json-btn" style="padding:8px 14px;">
-                        <i class="ph ph-file-json"></i> Export JSON
-                    </button>
-                    <button id="export-csv-btn" class="btn-download" data-testid="export-csv-btn" style="padding:8px 14px;">
-                        <i class="ph ph-file-csv"></i> Export CSV
-                    </button>
-                </div>
-            </div>
-            <div id="history-container" data-testid="history-container">
-                <div class="empty-state">
-                    <div class="empty-state-icon"><i class="ph ph-clock-counter-clockwise"></i></div>
-                    <div class="empty-state-text">No generations yet</div>
-                </div>
-            </div>
-            <div id="history-player" class="audio-result" data-testid="history-player">
-                <canvas id="history-waveform" class="waveform-canvas" data-testid="history-waveform"></canvas>
-                <audio controls data-testid="history-audio-player"></audio>
-                <div class="audio-result-info">
-                    <span id="history-player-info" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#A1A1AA;"></span>
-                    <button class="btn-download" data-testid="history-download-btn">
-                        <i class="ph ph-download-simple"></i> Download MP3
-                    </button>
-                </div>
-            </div>
-        </section>
+<script src='https://cdn.jotfor.ms/agent/embedjs/019d3d3c3a537add8379214c3060726a324e/embed.js'></script>
+<script>
+var API_BASE = 'https://rvc-voices.fly.dev';
+var chapters = [];
+var generatedAudioUrl = null;
+var characterNames = [];
+var char1Names = [];
+var engineState = { 1: 'gtts', 2: 'gtts' };
+var enginesData = {};
 
-    </main>
+window.addEventListener('DOMContentLoaded', function(){ loadVoices(); });
 
-    <!-- CRA React root (disabled) -->
-    <div id="root"></div>
+function onVoice1RoleChange(){
+  var role = document.querySelector('input[name="voice1Role"]:checked').value;
+  var desc = document.getElementById('voice1RoleDesc');
+  var v2panel = document.getElementById('voice2Panel');
+  var v1charWrap = document.getElementById('voice1CharNameWrap');
+  if(role === 'narrator'){
+    desc.textContent = 'Voice 1 narrates the entire book.';
+    v2panel.style.display = 'none';
+    v1charWrap.style.display = 'none';
+  } else if(role === 'both'){
+    desc.textContent = 'Voice 1 is narrator / character 1. Voice 2 panel below for character 2.';
+    v2panel.style.display = 'block';
+    v1charWrap.style.display = 'block';
+  }
+}
 
-    <!-- Emergent Badge -->
-    <a id="emergent-badge" target="_blank" href="https://app.emergent.sh/?utm_source=emergent-badge" style="display:inline-flex !important;box-sizing:border-box;width:178px;height:40px;padding:8px 12px;align-items:center !important;gap:8px;border-radius:50px !important;background:#000 !important;position:fixed !important;bottom:16px;right:16px;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif !important;font-size:12px !important;z-index:9999 !important;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M15.5702 8.13142C15.7729 8.0412 16.0007 8.18878 15.9892 8.4103C15.8374 11.3192 14.0965 14.0405 11.2531 15.3065C8.40964 16.5725 5.2224 16.0453 2.95912 14.2117C2.78676 14.072 2.82955 13.804 3.03219 13.7137L4.95677 12.8568C5.04866 12.8159 5.15446 12.823 5.24204 12.8725C6.73377 13.7153 8.59176 13.8649 10.2772 13.1145C11.9626 12.3641 13.0947 10.8833 13.4665 9.21075C13.4883 9.11256 13.5539 9.02918 13.6457 8.98827L15.5702 8.13142Z" fill="white"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.3066 4.74698L15.5067 5.19653C15.5759 5.35178 15.5061 5.53366 15.3508 5.60278L1.29992 11.8586C1.14467 11.9278 0.962794 11.8579 0.893675 11.7027L0.701732 11.2716L0.693457 11.2531C-1.10317 7.21778 0.711626 2.49007 4.74692 0.693443C8.78221 -1.10318 13.51 0.711693 15.3066 4.74698ZM2.82356 8.55367C2.63552 8.63739 2.41991 8.51617 2.40853 8.31065C2.28373 6.05724 3.53858 3.85787 5.72286 2.88536C7.90715 1.91286 10.3813 2.45199 11.9724 4.05256C12.1175 4.19854 12.0633 4.43988 11.8753 4.5236L2.82356 8.55367Z" fill="white"/>
-        </svg>
-        <p style="color:#FFF !important;font-family:'Inter',sans-serif !important;font-size:13px !important;font-weight:600 !important;line-height:20px !important;margin:0 !important;white-space:nowrap !important;">Made with Emergent</p>
-    </a>
+function addCharacterName(){
+  var input = document.getElementById('characterNameInput');
+  var name = input.value.trim();
+  if(!name) return;
+  if(characterNames.indexOf(name) === -1){ characterNames.push(name); renderCharacterTags(); }
+  input.value = '';
+}
 
-    <!-- PostHog -->
-    <script>
-    !(function(t,e){var o,n,p,r;e.__SV||((window.posthog=e),(e._i=[]),(e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&((t=t[o[0]]),(e=o[1])),(t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))})}((p=t.createElement("script")).type="text/javascript"),(p.crossOrigin="anonymous"),(p.async=!0),(p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js"),(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?(u=e[a]=[]):a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}),(e.__SV=1))})(document,window.posthog||[]);
-    posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs",{api_host:"https://us.i.posthog.com",person_profiles:"identified_only",session_recording:{recordCrossOriginIframes:true,capturePerformance:false}});
-    </script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('characterNameInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); addCharacterName(); }
+  });
+  document.getElementById('voice1CharName').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); addChar1Name(); }
+  });
+});
 
-    <!-- API Base URL from CRA environment -->
-    <script>
-    window.API_BASE = '%REACT_APP_BACKEND_URL%' + '/api';
-    </script>
+function removeCharacterName(name){
+  characterNames = characterNames.filter(function(n){ return n !== name; });
+  renderCharacterTags();
+}
 
-    <!-- App JavaScript -->
-    <script src="%PUBLIC_URL%/app.js?v=13"></script>
+function renderCharacterTags(){
+  var container = document.getElementById('characterTags');
+  container.innerHTML = '';
+  characterNames.forEach(function(name){
+    var tag = document.createElement('span');
+    tag.className = 'char-tag';
+    tag.innerHTML = name + '<button onclick="removeCharacterName(\'' + name.replace(/'/g,"\\'") + '\')" title="Remove">&times;</button>';
+    container.appendChild(tag);
+  });
+}
+
+function addChar1Name(){
+  var input = document.getElementById('voice1CharName');
+  var name = input.value.trim();
+  if(!name) return;
+  if(char1Names.indexOf(name) === -1){ char1Names.push(name); renderChar1Tags(); }
+  input.value = '';
+}
+function removeChar1Name(name){
+  char1Names = char1Names.filter(function(n){ return n !== name; });
+  renderChar1Tags();
+}
+function renderChar1Tags(){
+  var container = document.getElementById('char1Tags');
+  container.innerHTML = '';
+  char1Names.forEach(function(name){
+    var tag = document.createElement('span');
+    tag.className = 'char-tag';
+    tag.innerHTML = name + '<button onclick="removeChar1Name(\'' + name.replace(/'/g,"\\'") + '\')" title="Remove">&times;</button>';
+    container.appendChild(tag);
+  });
+}
+
+async function loadVoices(){
+  try {
+    var resp = await fetch(API_BASE + '/api/voices/custom');
+    if(!resp.ok) throw new Error('API unavailable');
+    var voices = await resp.json();
+    var voiceList = voices.map(function(v){ return { id: v.name, label: v.name }; });
+    enginesData['gtts'] = { label: 'VoiceForge TTS', voices: voiceList };
+    buildEngineTabs(1); buildEngineTabs(2);
+  } catch(e) {
+    enginesData['gtts'] = { label: 'VoiceForge TTS', voices: [{id:'en-us', label:'English US'}] };
+    buildEngineTabs(1); buildEngineTabs(2);
+  }
+}
+
+function buildEngineTabs(slot){
+  var tabsEl = document.getElementById('engine' + slot + 'Tabs');
+  tabsEl.innerHTML = '';
+  Object.keys(enginesData).forEach(function(engineId){
+    var tab = document.createElement('button');
+    tab.className = 'engine-tab' + (engineState[slot] === engineId ? ' active' : '');
+    tab.textContent = enginesData[engineId].label;
+    tab.onclick = function(){ engineState[slot] = engineId; buildEngineTabs(slot); populateVoiceSelect(slot, engineId); };
+    tabsEl.appendChild(tab);
+  });
+  populateVoiceSelect(slot, engineState[slot]);
+}
+
+function populateVoiceSelect(slot, engineId){
+  var sel = document.getElementById('voice' + slot + 'Select');
+  var voices = (enginesData[engineId] && enginesData[engineId].voices) || [];
+  sel.innerHTML = slot === 2 ? '<option value="">— None (single voice) —</option>' : '';
+  voices.forEach(function(v){
+    var opt = document.createElement('option');
+    opt.value = v.id; opt.textContent = v.label;
+    sel.appendChild(opt);
+  });
+}
+
+async function previewVoice(slot){
+  var voiceName = document.getElementById('voice' + slot + 'Select').value;
+  if(!voiceName) return;
+  try {
+    var resp = await fetch(API_BASE + '/api/voice-sample/' + encodeURIComponent(voiceName));
+    if(!resp.ok) throw new Error('Server returned ' + resp.status);
+    var blob = await resp.blob();
+    new Audio(URL.createObjectURL(blob)).play();
+  } catch(err) { alert('Voice preview error: ' + err.message); }
+}
+
+async function generateTTS(){
+  var text = document.getElementById('ttsText').value.trim();
+  if(!text){ showStatus('ttsStatus','err','Enter some text first.'); return; }
+  var voiceName = document.getElementById('voice1Select').value;
+  showStatus('ttsStatus','info','Generating speech...');
+  try {
+    var resp = await fetch(API_BASE + '/api/tts', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text:text.substring(0,2000), voice_id:voiceName, format:'mp3'})
+    });
+    if(!resp.ok) throw new Error('Server returned ' + resp.status);
+    var blob = await resp.blob();
+    var url = URL.createObjectURL(blob);
+    document.getElementById('generatedAudio').src = url;
+    generatedAudioUrl = url;
+    showStatus('ttsStatus','ok','&#10003; Speech generated!');
+  } catch(e) { showStatus('ttsStatus','err','Error: ' + e.message); }
+}
+
+function handleFileUpload(e){ var f=e.target.files[0]; if(f) processFile(f); e.target.value=''; }
+function handleEditorDrop(e){ e.preventDefault(); document.getElementById('docEditor').style.borderColor='var(--gold-bd)'; var f=e.dataTransfer.files[0]; if(f) processFile(f); }
+
+// -- EPUB Handler -- loads into top editor --
+function handleEpubUpload(e){
+  var f = e.target.files[0];
+  if(!f) return;
+  e.target.value = '';
+  showStatus('epubStatus','info','Reading EPUB: ' + f.name + '...');
+  if(!document.getElementById('bookTitle').value)
+    document.getElementById('bookTitle').value = f.name.replace(/\.epub$/i,'');
+  if(typeof JSZip === 'undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    JSZip.loadAsync(ev.target.result).then(function(zip){
+      var containerXml = zip.files['META-INF/container.xml'];
+      if(!containerXml) throw new Error('Not a valid EPUB (no container.xml)');
+      return containerXml.async('text').then(function(containerText){
+        var opfMatch = containerText.match(/full-path="([^"]+\.opf)"/i);
+        if(!opfMatch) throw new Error('Cannot find OPF file');
+        var opfPath = opfMatch[1];
+        var opfBase = opfPath.substring(0, opfPath.lastIndexOf('/') + 1);
+        return zip.files[opfPath].async('text').then(function(opfText){
+          var itemMap = {};
+          var itemMatches = opfText.matchAll(/<item\s[^>]*id="([^"]+)"[^>]*href="([^"]+)"[^>]*>/gi);
+          for(var m of itemMatches){ itemMap[m[1]] = opfBase + m[2]; }
+          var spineIds = [];
+          var spineMatches = opfText.matchAll(/<itemref\s[^>]*idref="([^"]+)"/gi);
+          for(var s of spineMatches){ spineIds.push(s[1]); }
+          var promises = spineIds.map(function(id){
+            var href = itemMap[id];
+            if(!href || !zip.files[href]) return Promise.resolve('');
+            return zip.files[href].async('text').then(function(html){
+              return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<\/p>/gi,'\n').replace(/<\/h[1-6]>/gi,'\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+            });
+          });
+          return Promise.all(promises);
+        });
+      });
+    }).then(function(sections){
+      var fullText = sections.filter(Boolean).join('\n\n');
+      document.getElementById('topEditor').textContent = fullText;
+      showStatus('epubStatus','ok','&#10003; EPUB loaded into converter. Click Export to send to editor.');
+    }).catch(function(err){
+      showStatus('epubStatus','err','EPUB error: ' + err.message);
+    });
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+// -- Top DOCX Handler -- loads into top editor --
+function handleTopDocxUpload(e){
+  var f = e.target.files[0];
+  if(!f) return;
+  e.target.value = '';
+  showStatus('epubStatus','info','Reading DOCX: ' + f.name + '...');
+  if(!document.getElementById('bookTitle').value)
+    document.getElementById('bookTitle').value = f.name.replace(/\.docx$/i,'');
+  if(typeof JSZip === 'undefined'){ showStatus('epubStatus','err','JSZip not loaded.'); return; }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    JSZip.loadAsync(ev.target.result).then(function(zip){
+      var doc = zip.files['word/document.xml'];
+      if(!doc) throw new Error('No document.xml found');
+      return doc.async('text');
+    }).then(function(xml){
+      var text = xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
+      document.getElementById('topEditor').textContent = text;
+      showStatus('epubStatus','ok','&#10003; DOCX loaded into converter. Click Export to send to editor.');
+    }).catch(function(err){
+      showStatus('epubStatus','err','DOCX error: ' + err.message);
+    });
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+function clearTopEditor(){
+  document.getElementById('topEditor').textContent = 'Import an EPUB or DOCX to preview here...';
+  showStatus('epubStatus','','');
+}
+
+// -- Export from top editor to bottom editor, filtering out TOC --
+function exportToBottomEditor(){
+  var topText = (document.getElementById('topEditor').textContent || '').trim();
+  if(!topText || topText === 'Import an EPUB or DOCX to preview here...'){
+    showStatus('epubStatus','err','Nothing to export. Import a file first.');
+    return;
+  }
+  // Filter out Table of Contents section
+  var filtered = topText.replace(/TABLE OF CONTENTS[\s\S]*?(?=\n\s*(CHAPTER|PROLOGUE|EPILOGUE|COPYRIGHT|PART\s))/gi, '');
+  // Also remove standalone TOC line if it's just the heading
+  filtered = filtered.replace(/^TABLE OF CONTENTS[^\n]*\n?/gim, '');
+  filtered = filtered.replace(/\n{3,}/g,'\n\n').trim();
+  loadRawIntoEditor(filtered);
+  detectChapters(filtered);
+  showStatus('uploadStatus','ok','&#10003; Exported to editor (TOC filtered out).');
+  document.getElementById('docEditor').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// -- Convert text to EPUB via VoiceForge server --
+async function convertToEpub(){
+  var topText = (document.getElementById('topEditor').textContent || '').trim();
+  if(!topText || topText === 'Import an EPUB or DOCX to preview here...'){
+    showStatus('epubStatus','err','Nothing to convert. Import a file first.');
+    return;
+  }
+  var title = document.getElementById('bookTitle').value.trim() || 'Untitled';
+  var author = document.getElementById('authorName').value.trim() || 'Unknown';
+  showStatus('epubStatus','info','Converting to EPUB...');
+  try {
+    var resp = await fetch(API_BASE + '/api/convert-epub', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text:topText, title:title, author:author})
+    });
+    if(!resp.ok) throw new Error('Server returned ' + resp.status);
+    var blob = await resp.blob();
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_') + '.epub';
+    a.click();
+    showStatus('epubStatus','ok','&#10003; EPUB downloaded!');
+  } catch(err){
+    showStatus('epubStatus','err','EPUB conversion error: ' + err.message);
+  }
+}
+
+function processFile(file){
+  var ext = file.name.split('.').pop().toLowerCase();
+  showStatus('uploadStatus','info','Reading ' + file.name + '...');
+  if(!document.getElementById('bookTitle').value)
+    document.getElementById('bookTitle').value = file.name.replace(/\.[^.]+$/,'');
+  if(ext === 'txt'){
+    var r = new FileReader();
+    r.onload = function(ev){ detectChapters(ev.target.result); showStatus('uploadStatus','ok','&#10003; ' + file.name + ' loaded'); };
+    r.readAsText(file);
+  } else if(ext === 'docx'){
+    var fd = new FormData(); fd.append('file', file);
+    fetch(API_BASE + '/api/upload', {method:'POST', body:fd})
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d.content && d.content.length > 10){ loadRawIntoEditor(d.content); showStatus('uploadStatus','ok','&#10003; ' + file.name + ' loaded (server)'); }
+        else { throw new Error('Empty content'); }
+      })
+      .catch(function(){
+        if(typeof JSZip === 'undefined'){ showStatus('uploadStatus','err','JSZip not loaded.'); return; }
+        var r2 = new FileReader();
+        r2.onload = function(ev){
+          JSZip.loadAsync(ev.target.result).then(function(zip){
+            var doc = zip.files['word/document.xml'];
+            if(doc) return doc.async('text');
+            throw new Error('No document.xml');
+          }).then(function(xml){
+            var text = xml.replace(/<\/w:p>/gi,'\n').replace(/<w:br[^>]*\/>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n /g,'\n').replace(/ \n/g,'\n').trim();
+            loadRawIntoEditor(text);
+            showStatus('uploadStatus','ok','&#10003; ' + file.name + ' loaded');
+          }).catch(function(e){ showStatus('uploadStatus','err','Error: ' + e.message); });
+        };
+        r2.readAsArrayBuffer(file);
+      });
+  }
+}
+
+function loadRawIntoEditor(text){
+  chapters = [{ title: 'Full Document', content: text }];
+  document.getElementById('docEditor').textContent = text;
+  renderChapterNav();
+}
+
+function detectChapters(text){
+  var chapterRegex = /(?:^|\n)\s*(chapter\s+\d+[^\n]*)/gi;
+  var matches = [], m;
+  while((m = chapterRegex.exec(text)) !== null){ matches.push({ title: m[1].trim(), index: m.index }); }
+  // Filter out TOC
+  var tocRegex = /(?:^|\n)\s*(table of contents|contents)\s*\n/i;
+  var tocMatch = tocRegex.exec(text);
+  if(tocMatch && matches.length > 0){
+    var tocStart = tocMatch.index;
+    var firstChapterStart = matches[0].index;
+    if(tocStart < firstChapterStart){
+      text = text.substring(0, tocStart) + text.substring(firstChapterStart);
+      chapterRegex.lastIndex = 0;
+      matches = [];
+      while((m = chapterRegex.exec(text)) !== null){ matches.push({ title: m[1].trim(), index: m.index }); }
+    }
+  }
+  if(matches.length > 0){
+    chapters = [];
+    var before = text.substring(0, matches[0].index).trim();
+    if(before) chapters.push({ title: 'Front Matter', content: before });
+    matches.forEach(function(match, i){
+      var end = i+1 < matches.length ? matches[i+1].index : text.length;
+      chapters.push({ title: match.title, content: text.substring(match.index, end).trim() });
+    });
+  } else { chapters = [{ title: 'Full Document', content: text }]; }
+  renderEditor(); renderChapterNav();
+}
+
+function renderEditor(){
+  var editor = document.getElementById('docEditor');
+  editor.innerHTML = '';
+  chapters.forEach(function(ch, i){
+    var h = document.createElement('h3'); h.id = 'ch-' + i;
+    h.style.cssText = 'font-family:Cinzel,serif;font-size:1.1rem;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--plum-bd);color:var(--plum);';
+    if(i === 0) h.style.marginTop = '0';
+    h.textContent = ch.title;
+    var block = document.createElement('div');
+    block.style.cssText = 'margin-bottom:16px;white-space:pre-wrap;';
+    var content = ch.content;
+    var headingRegex = new RegExp('^' + ch.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\s*','i');
+    content = content.replace(headingRegex,'').trim();
+    block.textContent = content;
+    editor.appendChild(h); editor.appendChild(block);
+  });
+}
+
+function renderChapterNav(){
+  var nav = document.getElementById('chapterNav');
+  if(!chapters.length || (chapters.length === 1 && chapters[0].title === 'Full Document')){
+    nav.innerHTML = '<div style="font-size:.78rem;color:var(--taupe-lt);font-style:italic;padding:8px 0;text-align:center;">No chapters yet.</div>';
+    return;
+  }
+  nav.innerHTML = '';
+  chapters.forEach(function(ch, i){
+    var item = document.createElement('div');
+    item.style.cssText = 'padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:#fff;cursor:pointer;font-size:.85rem;color:var(--taupe);font-weight:600;transition:all .18s;';
+    item.textContent = ch.title;
+    item.onclick = function(){
+      var el = document.getElementById('ch-' + i);
+      if(el){ var editor = document.getElementById('docEditor'); editor.scrollTop = el.offsetTop - editor.offsetTop - 10; el.style.background = 'var(--gold-lt)'; setTimeout(function(){ el.style.background = ''; }, 1500); }
+    };
+    nav.appendChild(item);
+  });
+}
+
+function clearEditor(){
+  if(!confirm('Clear the editor?')) return;
+  document.getElementById('docEditor').innerHTML = 'Start typing or import a file...';
+  chapters = []; renderChapterNav();
+}
+
+async function generateAudiobook(){
+  var editor = document.getElementById('docEditor');
+  var fullText = (editor.textContent || editor.innerText).trim();
+  if(!fullText || fullText === 'Start typing or import a file...'){ showStatus('genStatus','err','Add some text first.'); return; }
+  var voice1 = document.getElementById('voice1Select').value;
+  var voice2 = document.getElementById('voice2Select').value;
+  var btn = document.getElementById('generateBtn');
+  btn.disabled = true; btn.innerHTML = '&#x1F3A7; Generating...';
+  var progress = document.getElementById('genProgress');
+  var fill = document.getElementById('genProgressFill');
+  progress.style.display = 'block'; fill.style.width = '10%';
+  showStatus('genStatus','info','Sending manuscript to audio engine...');
+  try {
+    fill.style.width = '30%';
+    var resp = await fetch(API_BASE + '/api/audiobook', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ text: fullText, narrator_voice: voice1, characters: characterNames.map(function(n){ return {name:n, voice_id: voice2 || voice1}; }), auto_detect: true, format: 'mp3' })
+    });
+    fill.style.width = '80%';
+    if(!resp.ok) throw new Error('Server returned ' + resp.status);
+    var blob = await resp.blob();
+    fill.style.width = '100%';
+    generatedAudioUrl = URL.createObjectURL(blob);
+    document.getElementById('generatedAudio').src = generatedAudioUrl;
+    showStatus('genStatus','ok','&#10003; Audiobook generated!');
+  } catch(err) { showStatus('genStatus','err','Error: ' + err.message); fill.style.width = '0%'; }
+  btn.disabled = false; btn.innerHTML = '&#x1F3A7; Generate Audiobook';
+}
+
+function downloadAudio(){
+  if(!generatedAudioUrl) return;
+  var a = document.createElement('a'); a.href = generatedAudioUrl;
+  a.download = (document.getElementById('bookTitle').value || 'audiobook') + '.mp3'; a.click();
+}
+
+function exportEpubToEditor(){
+  var preview = document.getElementById('epubPreview');
+  var fullText = preview._fullText || preview.textContent;
+  if(!fullText) return;
+  loadRawIntoEditor(fullText);
+  showStatus('uploadStatus','ok','&#10003; EPUB exported to editor.');
+  document.getElementById('docEditor').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function showStatus(id, type, text){
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.className = 'status-msg ' + type;
+  el.innerHTML = text;
+}
+</script>
 </body>
 </html>
