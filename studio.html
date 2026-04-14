@@ -4,775 +4,133 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Studio — Cantrell Creatives</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Pinyon+Script&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-
 :root{
-  --bg:#0e0a06;
-  --bg2:#14100a;
-  --bg3:#1c1510;
-  --panel:#1f1812;
-  --panel2:#261e14;
-  --border:#3d2e1a;
-  --border2:#5a4226;
-  --gold:#C9A040;
-  --gold2:#e8c060;
-  --gold3:#f5d878;
+  --bg:#FBF7F0;
+  --bg2:#F3EBE0;
+  --bg3:#EAE0D0;
+  --panel:#FFFCF8;
+  --panel2:#F7F0E6;
+  --border:#D4C4A8;
+  --border2:#C4B08C;
+  --gold:#B8942E;
+  --gold2:#D4AA38;
+  --gold3:#E8C050;
   --cream:#FFF8EE;
   --cream2:#E8D9BE;
-  --muted:#9a8870;
-  --plum:#8a4663;
-  --plum2:#b05878;
-  --green:#3d6b3a;
-  --green2:#52a04e;
-  --red:#b04040;
-  --red2:#d05555;
-  --text:#FFF8EE;
+  --muted:#8A7A64;
+  --plum:#7B5C7B;
+  --plum2:#9B7A9B;
+  --green:#3D6B3A;
+  --green2:#52A04E;
+  --red:#B04040;
+  --red2:#D05555;
+  --text:#1A0F1A;
+  --text2:#2D1F1A;
+  --dark:#1A1410;
+  --dark2:#2D2418;
 }
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:18px;overflow-x:hidden;}
 
-html,body{
-  width:100%;
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px;
-  overflow-x:hidden;
-}
-
-/* ═══════════════════════════════════════
-   BANNER
-═══════════════════════════════════════ */
-.banner{
-  position:relative;
-  width:100%;
-  min-height:320px;
-  background:linear-gradient(135deg,#0e0a06 0%,#1c1208 40%,#261808 70%,#0e0a06 100%);
-  border-bottom:1px solid var(--border2);
-  overflow:hidden;
-}
-.banner::before{
-  content:'';
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 60% 100% at 20% 50%, rgba(201,160,64,.08) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 80% at 80% 50%, rgba(138,70,99,.06) 0%, transparent 60%);
-  pointer-events:none;
-}
-.banner-inner{
-  max-width:1440px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  align-items:center;
-  padding:0 40px;
-  height:320px;
-  position:relative;
-  z-index:2;
-}
-.banner-logo{
-  display:flex;align-items:center;gap:14px;
-}
-.banner-logo-mark{
-  width:42px;height:42px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Cinzel',serif;font-size:16px;font-weight:900;
-  color:#0e0a06;letter-spacing:.05em;
-  box-shadow:0 0 24px rgba(201,160,64,.3);
-}
-.banner-logo-text{
-  display:flex;flex-direction:column;
-}
-.banner-logo-name{
-  font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);
-}
-.banner-logo-sub{
-  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--muted);margin-top:1px;
-}
-.banner-nav{
-  display:flex;align-items:center;gap:6px;
-}
-.bnav-link{
-  padding:6px 16px;border-radius:999px;
-  border:1px solid transparent;
-  background:transparent;
-  color:var(--cream2);
-  font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;
-  letter-spacing:.12em;text-transform:uppercase;
-  cursor:pointer;text-decoration:none;
-  transition:all .2s;white-space:nowrap;
-}
-.bnav-link:hover{border-color:var(--border2);color:var(--gold2);}
+/* BANNER */
+.banner{position:relative;display:block;width:100%;border-bottom:1px solid var(--border2);}
+.banner-img{display:block;width:100%;height:260px;object-fit:cover;object-position:center 30%;}
+.banner-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,20,16,.7) 0%,rgba(26,20,16,.35) 50%,rgba(26,20,16,.7) 100%);}
+.banner-inner{position:absolute;bottom:0;left:0;right:0;max-width:1440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;z-index:2;}
+.banner-logo{display:flex;align-items:center;gap:14px;}
+.banner-logo-mark{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:#0e0a06;letter-spacing:.05em;box-shadow:0 0 24px rgba(184,148,46,.4);}
+.banner-logo-text{display:flex;flex-direction:column;}
+.banner-logo-name{font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);}
+.banner-logo-sub{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,238,.6);margin-top:1px;}
+.banner-nav{display:flex;align-items:center;gap:6px;}
+.bnav-link{padding:6px 16px;border-radius:999px;border:1px solid transparent;background:transparent;color:rgba(255,248,238,.8);font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;}
+.bnav-link:hover{border-color:rgba(184,148,46,.4);color:var(--gold2);}
 .bnav-link.active{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:700;}
-.banner-right{
-  display:flex;align-items:center;gap:10px;
-}
-.br-btn{
-  padding:7px 18px;border-radius:999px;
-  border:1px solid var(--border2);
-  background:transparent;color:var(--cream2);
-  font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;
-  cursor:pointer;transition:all .2s;text-decoration:none;
-}
+.banner-right{display:flex;align-items:center;gap:10px;}
+.br-btn{padding:7px 18px;border-radius:999px;border:1px solid rgba(184,148,46,.4);background:transparent;color:rgba(255,248,238,.8);font-family:'Cinzel',serif;font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;text-decoration:none;}
 .br-btn:hover{border-color:var(--gold);color:var(--gold);}
 .br-btn.login{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:700;}
 .br-btn.login:hover{background:var(--gold2);}
-.gold-bar{
-  width:100%;height:2px;
-  background:linear-gradient(to right,transparent,var(--border2) 15%,var(--gold) 40%,var(--gold2) 50%,var(--gold) 60%,var(--border2) 85%,transparent);
-}
+.gold-bar{width:100%;height:3px;background:linear-gradient(to right,transparent,var(--border2) 15%,var(--gold) 40%,var(--gold2) 50%,var(--gold) 60%,var(--border2) 85%,transparent);}
 
-/* ═══════════════════════════════════════
-   STUDIO LAYOUT
-═══════════════════════════════════════ */
-.studio-wrap{
-  display:flex;
-  min-height:calc(100vh - 322px);
-}
-
-/* LEFT SIDEBAR */
-.lsb{
-  width:200px;flex-shrink:0;
-  background:var(--bg2);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:sticky;top:122px;height:calc(100vh - 122px);
-}
-.lsb-logo{
-  padding:20px 16px 14px;
-  border-bottom:1px solid var(--border);
-}
-.lsb-title{
-  font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
-}
+/* STUDIO LAYOUT */
+.studio-wrap{display:flex;min-height:calc(100vh - 343px);}
+.lsb{width:240px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:calc(100vh);}
+.lsb-logo{padding:20px 16px 14px;border-bottom:1px solid var(--border);}
+.lsb-title{font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);}
 .lsb-nav{padding:10px 8px;display:flex;flex-direction:column;gap:2px;flex:1;}
-.lbtn{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:8px;
-  border:none;background:transparent;
-  color:var(--cream2);cursor:pointer;
-  font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;
-  text-align:left;width:100%;transition:all .15s;
-  letter-spacing:.02em;
-}
-.lbtn:hover{background:var(--panel2);color:var(--cream);}
-.lbtn.on{background:linear-gradient(90deg,rgba(201,160,64,.18),transparent);color:var(--gold2);border-left:2px solid var(--gold);}
+.lbtn{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:none;background:transparent;color:var(--text2);cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:600;text-align:left;width:100%;transition:all .15s;letter-spacing:.02em;}
+.lbtn:hover{background:var(--bg2);color:var(--text);}
+.lbtn.on{background:linear-gradient(90deg,rgba(184,148,46,.15),transparent);color:var(--gold);border-left:2px solid var(--gold);}
 .lbtn-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
 .lsb-foot{padding:12px 8px;border-top:1px solid var(--border);}
 
-/* MAIN CONTENT */
+/* MAIN */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;}
-
-/* TOOLBAR */
-.toolbar{
-  height:44px;flex-shrink:0;
-  background:var(--panel);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;
-  padding:0 16px;gap:8px;
-}
+.toolbar{height:44px;flex-shrink:0;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:8px;}
 .toolbar-sep{width:1px;height:22px;background:var(--border);margin:0 4px;}
-.tbtn{
-  padding:5px 13px;border-radius:6px;
-  border:1px solid transparent;background:transparent;
-  color:var(--cream2);cursor:pointer;
-  font-family:'Cormorant Garamond',serif;font-size:.88rem;font-weight:600;
-  transition:all .15s;white-space:nowrap;
-}
-.tbtn:hover{background:var(--panel2);border-color:var(--border2);color:var(--cream);}
-.tbtn.prim{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:700;}
+.tbtn{padding:5px 13px;border-radius:6px;border:1px solid transparent;background:transparent;color:var(--text2);cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.88rem;font-weight:600;transition:all .15s;white-space:nowrap;}
+.tbtn:hover{background:var(--bg2);border-color:var(--border);color:var(--text);}
+.tbtn.prim{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700;}
 .tbtn.prim:hover{background:var(--gold2);}
 .tbtn.danger{color:var(--red2);}
-.tbtn.danger:hover{background:rgba(176,64,64,.15);border-color:var(--red);}
-.toolbar-title{
-  font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;
-  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
-  margin-right:8px;
-}
+.tbtn.danger:hover{background:rgba(176,64,64,.1);border-color:var(--red);}
+.toolbar-title{font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-right:8px;}
 .tspacer{flex:1;}
 
 /* PANELS */
 .panel{display:none;flex:1;flex-direction:column;min-height:0;}
 .panel.on{display:flex;}
-
-/* ═══════════════════════════════════════
-   IMAGE STUDIO PANEL
-═══════════════════════════════════════ */
-.img-layout{display:grid;grid-template-columns:1fr 300px;flex:1;min-height:0;overflow:hidden;}
-
-.canvas-area{
-  position:relative;
-  background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  padding:24px;overflow:auto;
-}
-.canvas-box{
-  position:relative;
-  width:100%;max-width:860px;
-  aspect-ratio:16/9;
-  background:var(--panel);
-  border:1px solid var(--border2);
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 8px 40px rgba(0,0,0,.6),inset 0 0 0 1px rgba(201,160,64,.1);
-}
-.canvas-empty{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:12px;color:var(--muted);text-align:center;padding:32px;z-index:1;
-  pointer-events:none;
-}
-.canvas-empty.hide{display:none!important;}
-.ce-icon{font-size:48px;opacity:.4;}
-.ce-title{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;}
-.ce-desc{font-size:.82rem;line-height:1.6;max-width:260px;opacity:.7;}
-
-#cImg{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:contain;
-  border-radius:12px;
-  display:none;z-index:5;
-}
-#cImg.vis{display:block!important;}
-
-.canvas-loader{
-  position:absolute;inset:0;
-  background:rgba(14,10,6,.75);
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;z-index:20;border-radius:12px;backdrop-filter:blur(4px);
-}
-.canvas-loader.show{display:flex!important;}
-.spin{
-  width:44px;height:44px;
-  border:3px solid var(--border2);
-  border-top-color:var(--gold);
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-.spin-txt{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream2);}
-
-.img-controls{
-  background:var(--bg2);
-  border-left:1px solid var(--border);
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-}
-.ic-section{padding:16px;border-bottom:1px solid var(--border);}
-.ic-label{
-  font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:10px;display:block;
-}
-.ic-input{
-  width:100%;padding:9px 11px;
-  border-radius:7px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--text);
-  font-family:'Cormorant Garamond',serif;font-size:.95rem;
-  outline:none;resize:vertical;
-  transition:border-color .18s;
-}
-.ic-input:focus{border-color:var(--gold);}
-.ic-input::placeholder{color:var(--muted);}
-.ic-select{
-  width:100%;padding:8px 10px;
-  border-radius:7px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--text);
-  font-family:'Cormorant Garamond',serif;font-size:.92rem;
-  outline:none;cursor:pointer;
-}
-.ic-btn{
-  width:100%;padding:10px;border-radius:8px;border:none;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#0e0a06;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
-  transition:all .2s;margin-top:8px;
-}
-.ic-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:translateY(-1px);}
-.ic-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
-.ic-btn-sec{
-  width:100%;padding:9px;border-radius:8px;
-  border:1px solid var(--border2);background:transparent;
-  color:var(--cream2);font-family:'Cormorant Garamond',serif;font-size:.92rem;
-  cursor:pointer;transition:all .2s;margin-top:6px;
-}
-.ic-btn-sec:hover{border-color:var(--gold);color:var(--gold);}
-
-.img-pbar{
-  border-top:1px solid var(--border);padding:12px 16px;
-  background:var(--panel);display:flex;gap:8px;align-items:center;
-  flex-shrink:0;
-}
-.img-pbar input{
-  flex:1;padding:9px 14px;border-radius:999px;
-  border:1px solid var(--border2);background:var(--panel2);
-  color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.95rem;
-  outline:none;transition:border-color .18s;
-}
-.img-pbar input:focus{border-color:var(--gold);}
-.img-pbar input::placeholder{color:var(--muted);}
-
-/* ═══════════════════════════════════════
-   VOICEOVER PANEL
-═══════════════════════════════════════ */
-.vo-layout{display:grid;grid-template-columns:1fr 320px;flex:1;min-height:0;overflow:hidden;}
-.vo-main{padding:24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;}
-.vo-label{
-  font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:8px;display:block;
-}
-.vo-textarea{
-  width:100%;padding:14px;border-radius:10px;
-  border:1px solid var(--border2);background:var(--panel2);
-  color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1rem;
-  outline:none;resize:vertical;min-height:220px;line-height:1.7;
-  transition:border-color .18s;
-}
-.vo-textarea:focus{border-color:var(--gold);}
-.vo-textarea::placeholder{color:var(--muted);}
-
-/* AUDIO PLAYER — professional */
-.audio-player-wrap{
-  background:var(--panel2);
-  border:1px solid var(--border2);
-  border-radius:12px;
-  overflow:hidden;
-  display:none;
-}
-.audio-player-wrap.on{display:block;}
-.apl-header{
-  padding:12px 16px;
-  background:linear-gradient(90deg,rgba(201,160,64,.12),transparent);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.apl-title{
-  font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;
-  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
-}
-.apl-status{font-size:.78rem;color:var(--muted);font-style:italic;}
-.apl-body{padding:14px 16px;}
-#aPrev{
-  width:100%;height:36px;
-  accent-color:var(--gold2);
-  border-radius:4px;
-}
-.apl-actions{display:flex;gap:8px;margin-top:12px;}
-.apl-btn{
-  padding:7px 16px;border-radius:7px;
-  border:1px solid var(--border2);background:transparent;
-  color:var(--cream2);font-family:'Cormorant Garamond',serif;
-  font-size:.88rem;cursor:pointer;transition:all .15s;
-}
-.apl-btn:hover{border-color:var(--gold);color:var(--gold);}
-.apl-btn.dl{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:700;}
-.apl-btn.dl:hover{background:var(--gold2);}
-
-.vo-right{
-  border-left:1px solid var(--border);
-  background:var(--bg2);
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-}
-.vo-section{padding:16px;border-bottom:1px solid var(--border);}
-.vo-input{
-  width:100%;padding:9px 11px;
-  border-radius:7px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--text);
-  font-family:'Cormorant Garamond',serif;font-size:.92rem;
-  outline:none;transition:border-color .18s;
-}
-.vo-input:focus{border-color:var(--gold);}
-.vo-input::placeholder{color:var(--muted);}
-.vo-select{
-  width:100%;padding:8px 10px;
-  border-radius:7px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--text);
-  font-family:'Cormorant Garamond',serif;font-size:.92rem;
-  outline:none;cursor:pointer;
-}
-.vo-hint{font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;}
-
-.vo-gen-btn{
-  width:100%;padding:11px;border-radius:9px;border:none;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:#0e0a06;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;
-  letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
-  transition:all .2s;box-shadow:0 4px 16px rgba(201,160,64,.2);
-}
-.vo-gen-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,160,64,.3);}
-.vo-gen-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
-
-.vo-statusbar{
-  padding:10px 16px;background:var(--panel);
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:8px;
-  font-size:.8rem;color:var(--muted);flex-shrink:0;
-}
-.sdot{width:7px;height:7px;border-radius:50%;background:var(--green2);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;}
-.sdot.y{background:var(--gold);animation:pulse-dot .8s ease-in-out infinite;}
-.sdot.r{background:var(--red2);animation:none;}
-@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-/* ═══════════════════════════════════════
-   VIDEO PANEL
-═══════════════════════════════════════ */
-.vid-layout{display:grid;grid-template-columns:1fr 300px;flex:1;min-height:0;overflow:hidden;}
-.vid-area{
-  position:relative;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  padding:24px;overflow:auto;
-}
-.vid-box{
-  position:relative;width:100%;max-width:860px;
-  aspect-ratio:16/9;background:var(--panel);
-  border:1px solid var(--border2);border-radius:12px;overflow:hidden;
-  box-shadow:0 8px 40px rgba(0,0,0,.6);
-}
-#cVid{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:contain;border-radius:12px;display:none;z-index:5;
-}
-.vid-pbar{
-  border-top:1px solid var(--border);padding:12px 16px;
-  background:var(--panel);display:flex;gap:8px;align-items:center;flex-shrink:0;
-}
-.vid-pbar input{
-  flex:1;padding:9px 14px;border-radius:999px;
-  border:1px solid var(--border2);background:var(--panel2);
-  color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.95rem;
-  outline:none;transition:border-color .18s;
-}
-.vid-pbar input:focus{border-color:var(--gold);}
-.vid-pbar input::placeholder{color:var(--muted);}
-
-/* ═══════════════════════════════════════
-   ASSETS PANEL
-═══════════════════════════════════════ */
-.assets-wrap{flex:1;padding:24px;overflow-y:auto;}
-.assets-section-title{
-  font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;
-  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);
-}
-.assets-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:10px;margin-bottom:28px;
-}
-.asset-item{
-  border-radius:9px;overflow:hidden;
-  border:1px solid var(--border2);aspect-ratio:16/9;
-  background:var(--panel2);cursor:pointer;
-  transition:all .2s;position:relative;
-}
-.asset-item:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.4);}
-.asset-item img,.asset-item video{width:100%;height:100%;object-fit:cover;display:block;}
-.asset-item-label{
-  position:absolute;bottom:0;left:0;right:0;
-  padding:5px 7px;background:rgba(0,0,0,.75);
-  color:var(--cream2);font-size:.7rem;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.assets-empty{
-  color:var(--muted);text-align:center;
-  padding:50px 20px;font-size:.9rem;line-height:1.7;
-  grid-column:1/-1;border:1px dashed var(--border2);border-radius:10px;
-}
-
-/* ═══════════════════════════════════════
-   SETTINGS PANEL (SLIDE-IN)
-═══════════════════════════════════════ */
-.settings-panel{
-  position:fixed;right:0;top:74px;bottom:0;width:320px;
-  background:var(--bg2);border-left:1px solid var(--border2);
-  transform:translateX(100%);transition:transform .3s ease;
-  z-index:200;display:flex;flex-direction:column;overflow-y:auto;
-  box-shadow:-8px 0 32px rgba(0,0,0,.5);
-}
-.settings-panel.open{transform:translateX(0);}
-.sp-hdr{
-  padding:16px 18px;background:var(--panel);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-}
-.sp-title{font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
-.sp-close{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:22px;line-height:1;padding:0;transition:.15s;}
-.sp-close:hover{color:var(--cream);}
-.sp-body{padding:20px;}
-.sp-section{margin-bottom:22px;}
-.sp-label{font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;}
-.sp-input{
-  width:100%;padding:9px 11px;border-radius:7px;
-  border:1px solid var(--border2);background:var(--panel2);
-  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.78rem;
-  outline:none;transition:border-color .18s;
-}
-.sp-input:focus{border-color:var(--gold);}
-.sp-input::placeholder{color:var(--muted);}
-.sp-btn{
-  width:100%;padding:9px;border-radius:7px;border:none;
-  background:var(--gold);color:#0e0a06;
-  font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
-  transition:all .18s;margin-top:6px;
-}
-.sp-btn:hover{background:var(--gold2);}
-.sp-hint{font-size:.75rem;color:var(--muted);margin-top:6px;line-height:1.5;}
-
-.sp-slider-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.sp-slider-row label{font-size:.8rem;color:var(--cream2);min-width:80px;}
-.sp-slider-row input[type=range]{flex:1;accent-color:var(--gold);}
-.sp-slider-val{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gold2);min-width:32px;text-align:right;}
-
-/* ═══════════════════════════════════════
-   NYXEN BUBBLE
-═══════════════════════════════════════ */
-.nyxen-bubble-wrap{
-  position:fixed;bottom:24px;right:24px;
-  z-index:9000;display:flex;flex-direction:column;
-  align-items:flex-end;gap:10px;
-}
-.nyxen-toggle{
-  width:56px;height:56px;border-radius:50%;
-  background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat,
-             linear-gradient(135deg,var(--gold),var(--gold2));
-  border:2px solid var(--gold);
-  cursor:pointer;
-  box-shadow:0 4px 20px rgba(201,160,64,.35);
-  transition:all .2s;flex-shrink:0;
-}
-.nyxen-toggle:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(201,160,64,.45);}
-.nyxen-panel{
-  width:360px;height:520px;
-  border-radius:16px;overflow:hidden;
-  box-shadow:0 12px 48px rgba(0,0,0,.7);
-  border:1px solid var(--border2);
-  display:none;flex-direction:column;
-  background:var(--bg2);
-}
-.nyxen-panel.open{display:flex;}
-.nyxen-hdr{
-  display:flex;align-items:center;gap:10px;
-  padding:11px 14px;
-  background:linear-gradient(90deg,rgba(201,160,64,.15),transparent);
-  border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.nyxen-av{
-  width:34px;height:34px;border-radius:50%;
-  background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;
-  border:1.5px solid var(--gold);flex-shrink:0;
-}
-.nyxen-hdr-name{font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
-.nyxen-hdr-status{font-size:.68rem;color:var(--muted);font-style:italic;}
-.nyxen-close{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;margin-left:auto;padding:0;line-height:1;transition:.15s;}
-.nyxen-close:hover{color:var(--cream);}
-.nyxen-feed{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth;}
-.nyxen-feed::-webkit-scrollbar{width:3px;}
-.nyxen-feed::-webkit-scrollbar-thumb{background:var(--border2);border-radius:999px;}
-.nmsg{padding:8px 12px;border-radius:10px;font-size:.82rem;line-height:1.55;max-width:85%;}
-.nmsg.ai{background:var(--panel2);border:1px solid var(--border2);color:var(--cream2);align-self:flex-start;border-bottom-left-radius:3px;}
-.nmsg.ai .nlbl{font-size:.6rem;letter-spacing:.15em;color:var(--gold);margin-bottom:2px;font-weight:700;}
-.nmsg.user{background:#3a2a1a;border:1px solid var(--border2);color:var(--cream);align-self:flex-end;border-bottom-right-radius:3px;text-align:right;}
-.nyxen-input{
-  display:flex;align-items:center;gap:6px;
-  padding:10px 12px;background:var(--panel);
-  border-top:1px solid var(--border);flex-shrink:0;
-}
-.nyxen-tbox{
-  flex:1;padding:7px 12px;border-radius:999px;
-  border:1px solid var(--border2);background:var(--bg);
-  color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.9rem;
-  outline:none;transition:border-color .18s;
-}
-.nyxen-tbox:focus{border-color:var(--gold);}
-.nyxen-tbox::placeholder{color:var(--muted);}
-.nyxen-send{
-  width:34px;height:34px;border-radius:50%;border:none;
-  background:var(--gold);color:#0e0a06;font-size:.95rem;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .15s;
-}
-.nyxen-send:hover{background:var(--gold2);}
-
-/* ═══════════════════════════════════════
-   TOAST
-═══════════════════════════════════════ */
-.toast{
-  position:fixed;bottom:24px;left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:var(--panel2);border:1px solid var(--border2);
-  color:var(--text);padding:9px 22px;border-radius:999px;
-  font-size:.82rem;opacity:0;transition:all .28s;
-  pointer-events:none;z-index:9999;white-space:nowrap;
-}
-.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.ok{border-color:var(--green2);}
-.toast.err{border-color:var(--red2);}
-
-/* ═══════════════════════════════════════
-   RESOURCES
-═══════════════════════════════════════ */
-.resources-wrap{flex:1;padding:24px;overflow-y:auto;}
-.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
-.res-card{
-  background:var(--panel);border:1px solid var(--border2);
-  border-radius:12px;padding:18px;
-  transition:border-color .2s;
-}
-.res-card:hover{border-color:var(--gold);}
-.res-card-title{
-  font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;
-  letter-spacing:.15em;text-transform:uppercase;color:var(--gold);
-  margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);
-}
-.res-link{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:7px 0;font-size:.88rem;color:var(--cream2);
-  text-decoration:none;border-bottom:1px solid rgba(93,68,38,.3);
-  transition:color .18s;
-}
-.res-link:last-child{border-bottom:none;}
-.res-link:hover{color:var(--gold);}
-
-/* ═══════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════ */
-@media(max-width:900px){
-  .lsb{display:none;}
-  .img-layout,.vo-layout,.vid-layout{grid-template-columns:1fr;}
-  .img-controls,.vo-right{border-left:none;border-top:1px solid var(--border);}
-  .banner-inner{padding:0 16px;}
-  .banner-nav{display:none;}
-}
-#imgFile,#vidFile{display:none;}
-.edit-filter-btn{
-  padding:5px 4px;border-radius:5px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--cream2);
-  font-family:'Cormorant Garamond',serif;font-size:.78rem;
-  cursor:pointer;transition:all .15s;text-align:center;
-}
-.edit-filter-btn:hover{border-color:var(--gold);color:var(--gold);}
-.edit-filter-btn.active{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:700;}
-.edit-transform-btn{
-  padding:7px;border-radius:6px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--cream2);font-size:1rem;
-  cursor:pointer;transition:all .15s;text-align:center;
-}
-.edit-transform-btn:hover{border-color:var(--gold);color:var(--gold);}
-
-/* CANVAS EDIT BAR */
-.canvas-edit-bar{
-  background:var(--panel);border-top:1px solid var(--border2);
-  padding:8px 12px;display:flex;align-items:center;gap:6px;
-  flex-wrap:wrap;flex-shrink:0;
-}
-.ceb-group{display:flex;align-items:center;gap:4px;padding:0 8px;border-right:1px solid var(--border2);}
-.ceb-group:last-child{border-right:none;}
-.ceb-label{font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-right:4px;white-space:nowrap;}
-.ceb-btn{
-  padding:4px 10px;border-radius:5px;border:1px solid var(--border2);
-  background:var(--panel2);color:var(--cream2);
-  font-family:'Cormorant Garamond',serif;font-size:.82rem;
-  cursor:pointer;transition:all .15s;white-space:nowrap;
-}
-.ceb-btn:hover{border-color:var(--gold);color:var(--gold);}
-.ceb-btn.active{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:700;}
-.ceb-slider{width:80px;accent-color:var(--gold);cursor:pointer;}
-.ceb-val{font-family:monospace;font-size:.7rem;color:var(--gold2);min-width:28px;}
-
-/* FLOATING CONTROLS */
-.float-ctrl{
-  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
-  background:rgba(14,10,6,.92);border:1px solid var(--gold);
-  border-radius:999px;padding:10px 18px;
-  display:flex;align-items:center;gap:8px;
-  backdrop-filter:blur(16px);z-index:9000;
-  box-shadow:0 8px 32px rgba(0,0,0,.8),0 0 24px rgba(201,160,64,.2);
-}
-.float-ctrl input{
-  background:var(--panel2);border:1px solid var(--border2);
-  border-radius:999px;padding:7px 14px;color:var(--text);
-  font-family:'Cormorant Garamond',serif;font-size:.95rem;
-  outline:none;width:280px;transition:border-color .18s;
-}
-.float-ctrl input:focus{border-color:var(--gold);}
-.float-ctrl input::placeholder{color:var(--muted);}
-.float-ctrl-btn{
-  padding:7px 16px;border-radius:999px;border:none;
-  background:var(--gold);color:#0e0a06;
-  font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
-  transition:all .2s;white-space:nowrap;
-}
-.float-ctrl-btn:hover{background:var(--gold2);}
 </style>
 </head>
 <body>
 
-<!-- ═══ BANNER ═══ -->
-<header class="banner" style="position:relative;overflow:hidden;">
-  <img src="https://cdn1.site-media.eu/images/0/24210477/productionstudio-exNcCqtD9HBdKb6WpgQg_g.png" 
-    alt="Production Studio" 
-    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:0;"
-    onerror="this.style.display='none'">
-  <div style="position:relative;z-index:1;background:linear-gradient(135deg,rgba(14,10,6,.65) 0%,rgba(14,10,6,.3) 50%,rgba(14,10,6,.65) 100%);">
+<!-- BANNER -->
+<header class="banner">
+  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24508205/studiobannerblank-gbvaNSHz4F7-O2ZlQ3wTzQ.png" alt="Studio Banner" onerror="this.style.background='linear-gradient(135deg,#1a1410,#3a2a18)';this.removeAttribute('src');">
+  <div class="banner-overlay"></div>
+  <!-- TITLE TEXT -->
+  <div style="position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);z-index:3;text-align:center;pointer-events:none;">
+    <div style="font-family:'Cinzel',serif;font-size:2.8rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;line-height:1.1;background:linear-gradient(180deg,#fff 0%,#e8d9be 40%,#d4aa38 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 12px rgba(0,0,0,.7));">Production Studio</div>
+    <div style="font-family:'Pinyon Script',cursive;font-size:1.8rem;color:var(--gold2);letter-spacing:.08em;margin-top:4px;text-shadow:0 1px 10px rgba(0,0,0,.6),0 0 30px rgba(184,148,46,.25);">Where Vision Becomes Stories</div>
+  </div>
+  <!-- TOP RIGHT BUTTONS -->
+  <div style="position:absolute;top:14px;right:28px;z-index:4;display:flex;align-items:center;gap:10px;">
+    <a class="br-btn" href="https://creatives.smcantrellbooks.com/myaccount">My Account</a>
+    <a class="br-btn login" href="https://creatives.smcantrellbooks.com/login">Login</a>
+    <a class="br-btn" style="background:rgba(192,60,60,.7);border-color:rgba(192,60,60,.8);color:#fff;font-weight:700;" href="https://creatives.smcantrellbooks.com/logout">Logout</a>
+  </div>
+  <!-- NAV -->
   <div class="banner-inner">
     <div class="banner-logo">
-      <div class="banner-logo-mark">CC</div>
-      <div class="banner-logo-text">
-        <span class="banner-logo-name">Cantrell Creatives</span>
-        <span class="banner-logo-sub">Creator-Owned Publishing</span>
-      </div>
+      <img src="https://cdn1.site-media.eu/images/0/24164391/studiobanner-gd7SYxSwRAfHeIRC_CNYyA.png" alt="Cantrell Creatives" style="height:40px;border-radius:6px;">
     </div>
     <nav class="banner-nav">
       <a class="bnav-link" href="https://creatives.smcantrellbooks.com">Home</a>
-      <a class="bnav-link active" href="#">Studio</a>
+      <a class="bnav-link" href="https://creatives.smcantrellbooks.com/publisher-workspace">Publisher Workspace</a>
       <a class="bnav-link" href="https://creatives.smcantrellbooks.com/voice-studio">Voice Studio</a>
-      <a class="bnav-link" href="https://creatives.smcantrellbooks.com/publisher">Publisher</a>
       <a class="bnav-link" href="https://creatives.smcantrellbooks.com/collections">Collections</a>
+      <a class="bnav-link" href="https://smcantrellbooks.com">Main Site</a>
     </nav>
-    <div class="banner-right">
-      <a class="br-btn" href="https://creatives.smcantrellbooks.com/my-account">My Account</a>
-      <a class="br-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
-    </div>
-  </div>
-  <div class="gold-bar"></div>
   </div>
 </header>
+<div class="gold-bar"></div>
 
-<!-- ═══ STUDIO LAYOUT ═══ -->
+<!-- STUDIO LAYOUT -->
 <div class="studio-wrap">
 
   <!-- LEFT SIDEBAR -->
   <aside class="lsb">
-    <div class="lsb-logo">
-      <div class="lsb-title">Studio</div>
-    </div>
+    <div class="lsb-logo"><div class="lsb-title">Studio</div></div>
     <nav class="lsb-nav">
-      <button class="lbtn on" onclick="switchPanel('image',this)">
-        <span class="lbtn-icon">🖼</span> Image Gen
-      </button>
-      <button class="lbtn" onclick="switchPanel('voice',this)">
-        <span class="lbtn-icon">🎙</span> Voiceover
-      </button>
-      <button class="lbtn" onclick="switchPanel('video',this)">
-        <span class="lbtn-icon">🎬</span> Video
-      </button>
-      <button class="lbtn" onclick="switchPanel('assets',this)">
-        <span class="lbtn-icon">📁</span> Assets
-      </button>
-      <button class="lbtn" onclick="switchPanel('resources',this)">
-        <span class="lbtn-icon">📚</span> Resources
-      </button>
+      <button class="lbtn on" onclick="switchPanel('image',this)"><span class="lbtn-icon">🖼</span> Image Gen</button>
+      <button class="lbtn" onclick="switchPanel('voice',this)"><span class="lbtn-icon">🎙</span> Voiceover</button>
+      <button class="lbtn" onclick="switchPanel('music',this)"><span class="lbtn-icon">🎵</span> Music</button>
+      <button class="lbtn" onclick="switchPanel('video',this)"><span class="lbtn-icon">🎬</span> Video</button>
+      <button class="lbtn" onclick="switchPanel('assets',this)"><span class="lbtn-icon">📁</span> Assets</button>
+      <button class="lbtn" onclick="switchPanel('resources',this)"><span class="lbtn-icon">📚</span> Resources</button>
     </nav>
     <div class="lsb-foot">
       <button class="tbtn" style="width:100%;text-align:left;padding:8px 10px;" onclick="toggleSettings()">⚙ Settings</button>
@@ -781,13 +139,12 @@ html,body{
 
   <!-- MAIN -->
   <main class="main">
-
-    <!-- TOOLBAR -->
     <div class="toolbar">
       <span class="toolbar-title" id="toolbarTitle">Image Generation</span>
       <div class="toolbar-sep"></div>
       <button class="tbtn" onclick="newProject()">＋ New</button>
-      <button class="tbtn" id="importBtn" onclick="triggerImport()">⬆ Import</button>
+      <button class="tbtn" id="importBtn" onclick="triggerImport()">⬆ Import Image</button>
+      <button class="tbtn" onclick="document.getElementById('vidFile').click()">🎬 Import Video</button>
       <div class="toolbar-sep"></div>
       <button class="tbtn prim" id="generateBtn" onclick="triggerGenerate()">✦ Generate</button>
       <div class="tspacer"></div>
@@ -795,357 +152,365 @@ html,body{
     </div>
 
     <!-- IMAGE PANEL -->
-    <div class="panel on" id="pImage" style="display:flex;flex-direction:column;overflow:hidden;">
-
-      <!-- TOP: CANVAS + SIDE PREVIEW STRIP -->
+    <div class="panel on" id="pImage" style="flex-direction:column;overflow:hidden;">
       <div style="display:flex;flex:1;min-height:0;overflow:hidden;">
-
-        <!-- CANVAS COLUMN -->
         <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
-
-          <!-- MAIN CANVAS -->
-          <div style="flex:1;min-height:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:12px 12px 0;">
-            <div class="canvas-box" id="CB" style="width:100%;max-width:100%;aspect-ratio:16/9;position:relative;">
-              <div class="canvas-empty" id="ES">
-                <div class="ce-icon">✦</div>
-                <div class="ce-title">Canvas Ready</div>
-                <div class="ce-desc">Type a prompt below and click Generate</div>
+          <div style="flex:1;min-height:0;overflow:auto;background:var(--bg2);display:flex;align-items:center;justify-content:center;padding:12px 12px 0;">
+            <div id="CB" style="position:relative;width:100%;max-width:860px;aspect-ratio:16/9;background:var(--dark);border:1px solid var(--border2);border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.15);">
+              <div id="ES" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;padding:32px;z-index:1;pointer-events:none;">
+                <div style="font-size:48px;opacity:.4;">✦</div>
+                <div style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,248,238,.7);">Canvas Ready</div>
+                <div style="font-size:.82rem;line-height:1.6;max-width:260px;opacity:.7;color:rgba(255,248,238,.5);">Type a prompt below and click Generate</div>
               </div>
-              <video id="bgVideo" autoplay muted loop playsinline
-                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;border-radius:12px;">
+              <video id="bgVideo" autoplay muted loop playsinline controls crossorigin="anonymous" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;border-radius:12px;">
                 <source src="https://cdn1.site-media.eu/images/0/24222931/CREATIVEAD-QC6foCjFn790nXCJ4AR1jw.mp4" type="video/mp4">
               </video>
-              <img id="cImg" alt="Generated image" style="z-index:3;">
-              <div class="canvas-loader" id="LC">
-                <div class="spin"></div>
-                <div class="spin-txt">Generating…</div>
+              <img id="cImg" alt="Generated image" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:12px;display:none;z-index:5;">
+              <div id="LC" style="position:absolute;inset:0;background:rgba(26,20,16,.75);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;border-radius:12px;backdrop-filter:blur(4px);">
+                <div style="width:44px;height:44px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;"></div>
+                <div style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cream2);">Generating…</div>
               </div>
             </div>
           </div>
-
-          <!-- WAVEFORM — directly under canvas -->
-          <div style="background:var(--panel);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);padding:5px 14px;display:flex;align-items:center;gap:10px;height:46px;flex-shrink:0;margin:0 12px;">
-            <span style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);white-space:nowrap;">Studio</span>
-            <canvas id="waveCanvas" style="flex:1;height:32px;border-radius:3px;"></canvas>
-            <span id="waveTimer" style="font-family:monospace;font-size:.7rem;color:var(--gold2);white-space:nowrap;">00:00</span>
+          <!-- MULTI-CLIP TIMELINE -->
+          <div id="timelineWrap" style="background:var(--dark);border-top:1px solid var(--border2);flex-shrink:0;margin:0 12px;display:flex;flex-direction:column;">
+            <!-- Timeline toolbar -->
+            <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(26,20,16,.95);border-bottom:1px solid rgba(184,148,46,.15);">
+              <span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);white-space:nowrap;">Timeline</span>
+              <div style="flex:1;"></div>
+              <button class="tl-btn" onclick="tlPlayAll()" id="tlPlayBtn" title="Play sequence">▶ Play</button>
+              <button class="tl-btn" onclick="tlStopAll()" title="Stop">⏹ Stop</button>
+              <button class="tl-btn" onclick="tlRemoveClip()" title="Remove selected clip">🗑 Remove</button>
+              <button class="tl-btn" onclick="tlClearAll()" title="Clear all clips">✕ Clear</button>
+              <span id="tlTime" style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--gold);white-space:nowrap;min-width:110px;text-align:right;">0 clips · 0:00</span>
+            </div>
+            <!-- Clip track -->
+            <div id="tlTrack" style="display:flex;align-items:stretch;min-height:64px;background:rgba(26,20,16,.6);overflow-x:auto;gap:3px;padding:4px 6px;">
+              <div id="tlEmpty" style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(184,148,46,.35);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;pointer-events:none;">Generate or import videos to build your sequence</div>
+            </div>
           </div>
-
           <!-- PROMPT BAR -->
-          <div class="img-pbar" style="margin:0 12px 12px;border-radius:0 0 8px 8px;">
-            <input type="text" id="promptInput" placeholder="Describe your image…" onkeydown="if(event.key==='Enter')generateImage()">
-            <button class="tbtn prim" onclick="generateImage()">✦ Generate</button>
-            <button class="tbtn" onclick="importImage()">⬆ Import</button>
-          </div>
-
-        </div>
-
-        <!-- SIDE PREVIEW STRIP -->
-        <div style="width:90px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding:8px 6px;gap:6px;" id="sidePreviewStrip">
-          <div style="font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:4px;font-family:'Cinzel',serif;">Assets</div>
-          <div id="sidePreviewList" style="display:flex;flex-direction:column;gap:6px;">
-            <div style="font-size:.65rem;color:var(--muted);text-align:center;padding:8px 0;line-height:1.5;">Generated assets appear here</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FLOATING EDIT CONTROL PANEL -->
-      <div id="floatEditPanel" style="position:fixed;top:200px;right:24px;width:240px;background:rgba(14,10,6,.97);border:1px solid var(--border2);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.7);z-index:8000;overflow:hidden;cursor:move;" onmousedown="startDrag(event)">
-        <!-- Header -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(201,160,64,.12);border-bottom:1px solid var(--border2);user-select:none;">
-          <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);">✦ Edit Panel</span>
-          <button onclick="toggleEditPanel()" style="border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.9rem;padding:0;line-height:1;">✕</button>
-        </div>
-        <!-- Body -->
-        <div style="padding:10px 12px;max-height:420px;overflow-y:auto;" id="floatEditBody">
-          <!-- Style -->
-          <div style="margin-bottom:8px;">
-            <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Style</div>
-            <select class="ic-select" id="imageStyle" style="font-size:.82rem;padding:5px 8px;">
-              <option value="cinematic realism">Cinematic Realism</option>
+          <div style="background:var(--panel);border-top:1px solid var(--border);padding:12px 16px;display:flex;gap:8px;align-items:center;margin:0 12px 12px;border-radius:0 0 8px 8px;">
+            <input type="text" id="promptInput" placeholder="Describe your image…" onkeydown="if(event.key==='Enter')generateImage()" style="flex:1;padding:9px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.95rem;outline:none;">
+            <select id="imageModel" style="padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.82rem;outline:none;">
+              <optgroup label="── Generate ──">
+              <option value="black-forest-labs/flux-1-schnell">Flux Schnell (Fast)</option>
+              <option value="google/imagen-4">Imagen 4</option>
+              <option value="bytedance/seedream-4.5">Seedream 4.5</option>
+              <option value="wan-ai/wan2.6-image">Wan 2.6 Image</option>
+              <option value="ideogram-ai/ideogram-v2a-turbo">Ideogram v2a (Text)</option>
+              <option value="ideogram-ai/ideogram-character">Ideogram Character</option>
+              <option value="xai/grok-imagine-image/edit">Grok Imagine</option>
+              <option value="hidream-ai/hidream-e1-1">HiDream E1</option>
+              </optgroup>
+              <optgroup label="── Edit (needs source image) ──">
+              <option value="bytedance/seedream-4.5/edit">Seedream 4.5 Edit</option>
+              <option value="ideogram-ai/ideogram-v2-turbo/edit">Ideogram v2 Edit</option>
+              <option value="wan-ai/wan2.6-image-edit">Wan 2.6 Edit</option>
+              <option value="black-forest-labs/flux-2-flash/edit">Flux 2 Flash Edit</option>
+              </optgroup>
+            </select>
+            <select id="imageStyle" style="padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.82rem;outline:none;">
+              <option value="cinematic realism">Cinematic</option>
               <option value="dark fantasy illustration">Dark Fantasy</option>
-              <option value="urban noir photography">Urban Noir</option>
-              <option value="supernatural atmospheric">Supernatural</option>
               <option value="book cover art professional">Book Cover</option>
               <option value="character portrait detailed">Portrait</option>
               <option value="watercolor painterly">Watercolor</option>
               <option value="digital art vibrant">Digital Art</option>
             </select>
+            <button class="tbtn prim" onclick="generateImage()">✦ Generate</button>
           </div>
-          <!-- Ratio -->
-          <div style="margin-bottom:10px;">
-            <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Ratio</div>
-            <select class="ic-select" id="imageRatio" onchange="applyRatio()" style="font-size:.82rem;padding:5px 8px;">
-              <option value="16/9">16:9 Wide</option>
-              <option value="2/3">2:3 Book Cover</option>
-              <option value="1/1">1:1 Square</option>
-              <option value="4/3">4:3 Standard</option>
-              <option value="21/9">21:9 Cinema</option>
-            </select>
-          </div>
-          <div style="height:1px;background:var(--border2);margin:8px 0;"></div>
-          <!-- Filters -->
-          <div style="margin-bottom:8px;">
-            <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Filter</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
-              <button class="edit-filter-btn active" onclick="applyFilter('none',this)">None</button>
-              <button class="edit-filter-btn" onclick="applyFilter('cinematic',this)">Cinematic</button>
-              <button class="edit-filter-btn" onclick="applyFilter('noir',this)">Noir</button>
-              <button class="edit-filter-btn" onclick="applyFilter('warm',this)">Warm</button>
-              <button class="edit-filter-btn" onclick="applyFilter('cool',this)">Cool</button>
-              <button class="edit-filter-btn" onclick="applyFilter('vintage',this)">Vintage</button>
-              <button class="edit-filter-btn" onclick="applyFilter('dramatic',this)">Dramatic</button>
-              <button class="edit-filter-btn" onclick="applyFilter('fade',this)">Fade</button>
+        </div>
+        <div style="width:280px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;">
+          <!-- EDIT CONTROLS -->
+          <div style="padding:10px 10px 6px;border-bottom:1px solid var(--border);">
+            <div style="font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-family:'Cinzel',serif;">✦ Edit</div>
+            <div style="font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Filter</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:6px;">
+              <button class="efb active" onclick="applyFilter('none',this)">None</button>
+              <button class="efb" onclick="applyFilter('cinematic',this)">Cinematic</button>
+              <button class="efb" onclick="applyFilter('noir',this)">Noir</button>
+              <button class="efb" onclick="applyFilter('warm',this)">Warm</button>
+              <button class="efb" onclick="applyFilter('cool',this)">Cool</button>
+              <button class="efb" onclick="applyFilter('vintage',this)">Vintage</button>
+              <button class="efb" onclick="applyFilter('dramatic',this)">Dramatic</button>
+              <button class="efb" onclick="applyFilter('fade',this)">Fade</button>
             </div>
-          </div>
-          <!-- Sliders -->
-          <div style="margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;"><span style="font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Brightness</span><span style="font-family:monospace;font-size:.65rem;color:var(--gold2);" id="brightnessVal">100%</span></div>
-            <input type="range" min="0" max="200" value="100" id="brightnessSlider" oninput="applyAdjustments();document.getElementById('brightnessVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
-          </div>
-          <div style="margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;"><span style="font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Contrast</span><span style="font-family:monospace;font-size:.65rem;color:var(--gold2);" id="contrastVal">100%</span></div>
-            <input type="range" min="0" max="200" value="100" id="contrastSlider" oninput="applyAdjustments();document.getElementById('contrastVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
-          </div>
-          <div style="margin-bottom:6px;">
-            <div style="display:flex;justify-content:space-between;"><span style="font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Saturation</span><span style="font-family:monospace;font-size:.65rem;color:var(--gold2);" id="saturationVal">100%</span></div>
-            <input type="range" min="0" max="200" value="100" id="saturationSlider" oninput="applyAdjustments();document.getElementById('saturationVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
-          </div>
-          <div style="margin-bottom:8px;">
-            <div style="display:flex;justify-content:space-between;"><span style="font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Opacity</span><span style="font-family:monospace;font-size:.65rem;color:var(--gold2);" id="opacityVal">100%</span></div>
-            <input type="range" min="0" max="100" value="100" id="opacitySlider" oninput="applyAdjustments();document.getElementById('opacityVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
-          </div>
-          <div style="height:1px;background:var(--border2);margin:8px 0;"></div>
-          <!-- Transform -->
-          <div style="margin-bottom:8px;">
-            <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Transform</div>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;">
-              <button class="edit-transform-btn" onclick="rotateImg(-90)">↺</button>
-              <button class="edit-transform-btn" onclick="rotateImg(90)">↻</button>
-              <button class="edit-transform-btn" onclick="flipImg('h')">↔</button>
-              <button class="edit-transform-btn" onclick="flipImg('v')">↕</button>
+            <div style="margin-bottom:4px;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Brightness</span><span style="font-family:monospace;font-size:.6rem;color:var(--gold);" id="brightnessVal">100%</span></div>
+              <input type="range" min="0" max="200" value="100" id="brightnessSlider" oninput="applyAdjustments();document.getElementById('brightnessVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
             </div>
-          </div>
-          <!-- Text Overlay -->
-          <div style="margin-bottom:8px;">
-            <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;">Text Overlay</div>
-            <input type="text" id="overlayText" placeholder="Add title…" style="width:100%;padding:5px 8px;border-radius:5px;border:1px solid var(--border2);background:var(--panel2);color:var(--text);font-size:.82rem;outline:none;margin-bottom:4px;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:4px;">
-              <select id="overlayPosition" style="padding:4px 6px;border-radius:5px;border:1px solid var(--border2);background:var(--panel2);color:var(--text);font-size:.75rem;outline:none;">
-                <option value="top">Top</option>
-                <option value="center">Center</option>
-                <option value="bottom" selected>Bottom</option>
+            <div style="margin-bottom:4px;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Contrast</span><span style="font-family:monospace;font-size:.6rem;color:var(--gold);" id="contrastVal">100%</span></div>
+              <input type="range" min="0" max="200" value="100" id="contrastSlider" oninput="applyAdjustments();document.getElementById('contrastVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
+            </div>
+            <div style="margin-bottom:4px;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Saturation</span><span style="font-family:monospace;font-size:.6rem;color:var(--gold);" id="saturationVal">100%</span></div>
+              <input type="range" min="0" max="200" value="100" id="saturationSlider" oninput="applyAdjustments();document.getElementById('saturationVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
+            </div>
+            <div style="margin-bottom:4px;">
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;">Opacity</span><span style="font-family:monospace;font-size:.6rem;color:var(--gold);" id="opacityVal">100%</span></div>
+              <input type="range" min="0" max="100" value="100" id="opacitySlider" oninput="applyAdjustments();document.getElementById('opacityVal').textContent=this.value+'%'" style="width:100%;accent-color:var(--gold);">
+            </div>
+            <div style="font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:4px 0;">Transform</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:6px;">
+              <button class="efb" onclick="rotateImg(-90)">↺</button>
+              <button class="efb" onclick="rotateImg(90)">↻</button>
+              <button class="efb" onclick="flipImg('h')">↔</button>
+              <button class="efb" onclick="flipImg('v')">↕</button>
+            </div>
+            <div style="font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Text Overlay</div>
+            <input type="text" id="overlayText" placeholder="Add title…" style="width:100%;padding:4px 6px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.78rem;outline:none;margin-bottom:3px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:3px;">
+              <select id="overlayPosition" style="padding:3px 4px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.7rem;outline:none;">
+                <option value="top">Top</option><option value="center">Center</option><option value="bottom" selected>Bottom</option>
               </select>
-              <select id="overlaySize" style="padding:4px 6px;border-radius:5px;border:1px solid var(--border2);background:var(--panel2);color:var(--text);font-size:.75rem;outline:none;">
-                <option value="small">Small</option>
-                <option value="medium" selected>Medium</option>
-                <option value="large">Large</option>
+              <select id="overlaySize" style="padding:3px 4px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.7rem;outline:none;">
+                <option value="small">Small</option><option value="medium" selected>Medium</option><option value="large">Large</option>
               </select>
             </div>
-            <button class="ic-btn" onclick="applyTextOverlay()" style="width:100%;padding:6px;font-size:.65rem;">Add Text</button>
-            <button class="ic-btn-sec" onclick="clearTextOverlay()" style="width:100%;padding:5px;font-size:.65rem;margin-top:3px;">Clear</button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:4px;">
+              <button class="efb" onclick="applyTextOverlay()">Add Text</button>
+              <button class="efb" onclick="clearTextOverlay()">Clear</button>
+            </div>
+            <button class="efb" onclick="resetAdjustments()" style="width:100%;">↺ Reset All</button>
           </div>
-          <button class="ic-btn-sec" onclick="resetAdjustments()" style="width:100%;padding:6px;font-size:.65rem;">↺ Reset All</button>
+          <!-- ASSET PREVIEWS -->
+          <div style="padding:8px 6px;flex:1;">
+            <div style="font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:4px;font-family:'Cinzel',serif;">Assets</div>
+            <div id="sidePreviewList" style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:.65rem;color:var(--muted);text-align:center;padding:8px 0;line-height:1.5;">Generated assets appear here</div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- EDIT PANEL TOGGLE (when panel is hidden) -->
-      <button id="editPanelToggle" onclick="toggleEditPanel()" style="display:none;position:fixed;top:200px;right:24px;padding:8px 14px;border-radius:999px;border:1px solid var(--gold);background:rgba(14,10,6,.92);color:var(--gold);font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;z-index:8000;backdrop-filter:blur(8px);">✦ Edit</button>
-
     </div>
 
     <!-- VOICEOVER PANEL -->
     <div class="panel" id="pVoice">
-      <div class="vo-layout">
-        <div class="vo-main">
+      <div style="display:grid;grid-template-columns:1fr 340px;flex:1;min-height:0;overflow:hidden;">
+        <div style="padding:24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;">
           <div>
-            <span class="vo-label">Script / Text</span>
-            <textarea class="vo-textarea" id="voScript" placeholder="Enter your script, chapter text, or any text to convert to speech…"></textarea>
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block;">Script / Text</span>
+            <textarea id="voScript" placeholder="Enter your script, chapter text, or any text to convert to speech…" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;resize:vertical;min-height:220px;line-height:1.7;"></textarea>
           </div>
-          <div class="audio-player-wrap" id="audBox">
-            <div class="apl-header">
-              <span class="apl-title">Audio Output</span>
-              <span class="apl-status" id="apl-status">Ready to play</span>
+          <div id="audBox" style="background:var(--panel2);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;">
+            <div style="padding:12px 16px;background:linear-gradient(90deg,rgba(184,148,46,.1),transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);">Audio Output</span>
+              <span style="font-size:.78rem;color:var(--muted);font-style:italic;" id="apl-status">Ready to play</span>
             </div>
-            <div class="apl-body">
-              <audio id="aPrev" controls></audio>
-              <div class="apl-actions">
-                <button class="apl-btn dl" onclick="downloadAudio()">⬇ Download MP3</button>
-                <button class="apl-btn" onclick="clearAudio()">✕ Clear</button>
+            <div style="padding:14px 16px;">
+              <audio id="aPrev" controls style="width:100%;height:36px;"></audio>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <button onclick="downloadAudio()" style="padding:7px 16px;border-radius:7px;border:none;background:var(--gold);color:#fff;font-family:'Cormorant Garamond',serif;font-size:.88rem;font-weight:700;cursor:pointer;">⬇ Download</button>
+                <button onclick="clearAudio()" style="padding:7px 16px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text2);font-family:'Cormorant Garamond',serif;font-size:.88rem;cursor:pointer;">✕ Clear</button>
               </div>
             </div>
           </div>
         </div>
-        <div class="vo-right">
-          <div class="vo-section">
-            <span class="vo-label">Platform</span>
-            <select class="vo-select" id="voPlatform" onchange="updateVoPlatform()">
-              <option value="" selected disabled>— Select Platform —</option>
-              <option value="azure">Microsoft Azure</option>
-            </select>
-          </div>
-          <div class="vo-section" id="elVoiceSection" style="display:none;">
-            <span class="vo-label">ElevenLabs Voice</span>
-            <select class="vo-select" id="voiceSelect">
-              <option value="fmDXULUSLjz40zUFS5DZ">Nyxen</option>
-              <option value="7gkqFqcUPnUKE9zHiirp">Sonya</option>
-              <optgroup label="── African American ──">
-              <option value="u0REnIJvUgcGQYW2Ux8K">MS HARRIS (African American Female)</option>
-              <option value="p4M8XW4N954o56wN9vKM">SHAYLA (African American Female)</option>
-              <option value="YjlcD3XHztjJEo2wNszv">TYRE (African American Male)</option>
-              <option value="6lFJckDSEktt4WvIkDxs">NYXEN (African American Female)</option>
-              <option value="riqnCDqBJCxuKuDEeenv">CARLTON C-WELL (African American Male)</option>
-              <option value="hILdTfuUq4LRBMrxHERr">LAMIN (African American Male)</option>
+        <div style="border-left:1px solid var(--border);background:var(--panel);display:flex;flex-direction:column;overflow-y:auto;">
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Voice</span>
+            <select id="voiceSelect" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.92rem;outline:none;">
+              <optgroup label="── Neutral ──">
+              <option value="voice_01">Alloy — Neutral, balanced</option>
               </optgroup>
-              <optgroup label="── Other Voices ──">
-              <option value="21m00Tcm4TlvDq8ikWAM">Rachel</option>
-              <option value="AZnzlk1XvdvUeBnXmlld">Domi</option>
-              <option value="EXAVITQu4vr4xnSDxMaL">Bella</option>
-              <option value="MF3mGyEYCl7XYWbV9V6O">Elli</option>
-              <option value="ErXwobaYiN019PkySvjV">Antoni</option>
-              <option value="TxGEqnHWrfWFTfGW9XjX">Josh</option>
-              <option value="VR6AewLTigWG4xSOukaG">Arnold</option>
-              <option value="pNInz6obpgDQGcFmaJgB">Adam</option>
-              <option value="yoZ06aMxZJJ28mfd3POQ">Sam</option>
-              <option value="onwK4e9ZLuTAKqWW03F9">Daniel (British)</option>
-              <option value="XB0fDUnXU5powFXDhCwa">Charlotte (British)</option>
-              <option value="N2lVS1w4EtoT3dr4eOWO">Callum (British)</option>
-              <option value="XrExE9yKIg1WjnnlVkGX">Matilda (Australian)</option>
-              <option value="9BWtsMINqrJLrRacOk9x">Aria</option>
-              <option value="CwhRBWXzGAHq8TQ4Fs17">Roger</option>
-              <option value="FGY2WhTYpPnrIDTdsKH5">Laura</option>
-              <option value="JBFqnCBsd6RMkjVDRZzb">George (British)</option>
-              <option value="TX3LPaxmHKxFdv7VOQHJ">Liam</option>
+              <optgroup label="── Male ──">
+              <option value="voice_02">Ash — Clear narrator</option>
+              <option value="voice_04">Echo — Smooth, calm</option>
+              <option value="voice_05" selected>Fable — British storyteller</option>
+              <option value="voice_07">Onyx — Deep, authoritative</option>
+              </optgroup>
+              <optgroup label="── Female ──">
+              <option value="voice_03">Coral — Warm, friendly</option>
+              <option value="voice_06">Nova — Bright, energetic</option>
+              <option value="voice_08">Sage — Professional</option>
+              <option value="voice_09">Shimmer — Cheerful, articulate</option>
               </optgroup>
             </select>
-            <p class="vo-hint">Your cloned voices are at the top. Save your API key in Settings.</p>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;">OpenAI TTS HD — powered by Cantrell Creatives Voice Studio</p>
           </div>
-          <div class="vo-section" id="azVoiceSection" style="display:none;">
-            <span class="vo-label">Azure Voice</span>
-            <select class="vo-select" id="azVoiceSelect">
-              <option value="en-US-JennyNeural">Jenny (US Female)</option>
-              <option value="en-US-GuyNeural">Guy (US Male)</option>
-              <option value="en-US-AriaNeural">Aria (US Female)</option>
-              <option value="en-US-DavisNeural">Davis (US Male)</option>
-              <option value="en-US-AmberNeural">Amber (US Female)</option>
-              <option value="en-US-MonicaNeural">Monica (US Female)</option>
-              <option value="en-US-TonyNeural">Tony (US Male)</option>
-              <option value="en-US-NancyNeural">Nancy (US Female)</option>
-              <option value="en-US-RogerNeural">Roger (US Male)</option>
-              <option value="en-US-SaraNeural">Sara (US Female)</option>
-              <option value="en-US-SteffanNeural">Steffan (US Male)</option>
-              <option value="en-GB-LibbyNeural">Libby (UK Female)</option>
-              <option value="en-GB-RyanNeural">Ryan (UK Male)</option>
-              <option value="en-GB-SoniaNeural">Sonia (UK Female)</option>
-              <option value="en-AU-NatashaNeural">Natasha (AU Female)</option>
-              <option value="en-AU-WilliamNeural">William (AU Male)</option>
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Purpose</span>
+            <select id="voPurpose" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.92rem;outline:none;">
+              <option value="narration">📖 Narration / Audiobook</option>
+              <option value="commercial">📣 Commercial</option>
+              <option value="ad">🎯 Advertisement</option>
+              <option value="podcast">🎙 Podcast</option>
+              <option value="explainer">💡 Explainer / Tutorial</option>
+              <option value="promo">✨ Promo / Announcement</option>
             </select>
           </div>
-          <div class="vo-section">
-            <span class="vo-label">Voice Settings</span>
-            <div class="sp-slider-row">
-              <label>Stability</label>
-              <input type="range" min="0" max="100" value="50" id="voiceStability" oninput="document.getElementById('stabVal').textContent=(this.value/100).toFixed(2)">
-              <span class="sp-slider-val" id="stabVal">0.50</span>
-            </div>
-            <div class="sp-slider-row">
-              <label>Clarity</label>
-              <input type="range" min="0" max="100" value="75" id="voiceClarity" oninput="document.getElementById('clarVal').textContent=(this.value/100).toFixed(2)">
-              <span class="sp-slider-val" id="clarVal">0.75</span>
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Speed</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input type="range" min="25" max="400" value="100" id="voiceSpeed" oninput="document.getElementById('speedVal').textContent=(this.value/100).toFixed(2)+'x'" style="flex:1;accent-color:var(--gold);">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gold);min-width:38px;text-align:right;" id="speedVal">1.00x</span>
             </div>
           </div>
-          <div class="vo-section">
-            <button class="vo-gen-btn" id="voGenBtn" onclick="generateVoiceover()">✦ Generate Voiceover</button>
+          <div style="padding:16px;">
+            <button id="voGenBtn" onclick="generateVoiceover()" style="width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(184,148,46,.2);">✦ Generate Voiceover</button>
           </div>
         </div>
       </div>
-      <div class="vo-statusbar">
-        <div class="sdot" id="statusDot"></div>
+      <div style="padding:10px 16px;background:var(--panel);border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted);flex-shrink:0;">
+        <div id="statusDot" style="width:7px;height:7px;border-radius:50%;background:var(--green2);flex-shrink:0;"></div>
         <span id="statusText">Ready — Enter a script and click Generate</span>
+      </div>
+    </div>
+
+    <!-- MUSIC PANEL -->
+    <div class="panel" id="pMusic">
+      <div style="display:grid;grid-template-columns:1fr 340px;flex:1;min-height:0;overflow:hidden;">
+        <div style="padding:24px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;">
+          <div>
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block;">Song Description</span>
+            <textarea id="musicPrompt" placeholder="Describe the song you want… e.g. 'dark ambient cinematic score, haunting piano, slow build'" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;resize:vertical;min-height:160px;line-height:1.7;"></textarea>
+          </div>
+          <div>
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block;">Lyrics (optional)</span>
+            <textarea id="musicLyrics" placeholder="Add lyrics if you want a vocal track…" style="width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;resize:vertical;min-height:100px;line-height:1.7;"></textarea>
+          </div>
+          <div id="musicAudBox" style="background:var(--panel2);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none;">
+            <div style="padding:12px 16px;background:linear-gradient(90deg,rgba(184,148,46,.1),transparent);border-bottom:1px solid var(--border);"><span style="font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);">Music Output</span></div>
+            <div style="padding:14px 16px;">
+              <audio id="musicPrev" controls style="width:100%;height:36px;"></audio>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <button onclick="downloadMusic()" style="padding:7px 16px;border-radius:7px;border:none;background:var(--gold);color:#fff;font-family:'Cormorant Garamond',serif;font-size:.88rem;font-weight:700;cursor:pointer;">⬇ Download</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="border-left:1px solid var(--border);background:var(--panel);display:flex;flex-direction:column;overflow-y:auto;">
+          <div style="padding:16px;">
+            <button id="musicGenBtn" onclick="generateMusic()" style="width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;">✦ Generate Song</button>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;">Mureka AI via apifree — generates full songs with optional lyrics</p>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- VIDEO PANEL -->
     <div class="panel" id="pVideo">
-      <div class="vid-layout">
-        <div class="vid-area">
-          <div class="vid-box" id="VB">
-            <div class="canvas-empty" id="VES">
-              <div class="ce-icon">🎬</div>
-              <div class="ce-title">Video Canvas</div>
-              <div class="ce-desc">Generate a cinematic frame or import a video file</div>
-            </div>
-            <video id="cVid" controls></video>
-            <div class="canvas-loader" id="VLC">
-              <div class="spin"></div>
-              <div class="spin-txt">Generating cinematic frame…</div>
-            </div>
+      <div style="display:flex;flex:1;min-height:0;overflow:hidden;">
+        <div style="flex:1;overflow-y:auto;padding:20px;background:var(--bg2);display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:flex-start;">
+          <div style="width:100%;max-width:500px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;">
+            <div style="font-size:48px;margin-bottom:10px;">🎬</div>
+            <div style="font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Video Generation</div>
+            <div style="font-size:.88rem;color:var(--muted);line-height:1.6;">Configure your video settings on the right, then click Generate. Your video will appear on the main canvas.</div>
           </div>
         </div>
-        <div class="img-controls">
-          <div class="ic-section">
-            <span class="ic-label">Video Style</span>
-            <select class="ic-select" id="videoStyle">
-              <option value="cinematic">Cinematic</option>
-              <option value="dark fantasy">Dark Fantasy</option>
-              <option value="urban noir">Urban Noir</option>
-              <option value="supernatural horror">Supernatural</option>
-              <option value="action thriller">Action Thriller</option>
+        <div style="border-left:1px solid var(--border);background:var(--panel);display:flex;flex-direction:column;overflow-y:auto;width:340px;flex-shrink:0;">
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Video Prompt</span>
+            <textarea id="videoPromptInput" placeholder="Describe your cinematic scene…" style="width:100%;padding:10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.92rem;outline:none;resize:vertical;min-height:100px;line-height:1.6;"></textarea>
+          </div>
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block;">Model</span>
+            <select id="t2vModel" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;">
+              <option value="wan-ai/wan2.2-t2v-a14b/turbo" selected>Wan 2.2 Turbo</option>
+              <option value="klingai/kling-v2.6/pro/text-to-video">Kling v2.6 Pro</option>
+              <option value="lightricks/ltx-2-19b/text-to-video">LTX 2 19B</option>
             </select>
           </div>
-          <div class="ic-section">
-            <button class="ic-btn" onclick="importVideo()">⬆ Import Video</button>
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block;">Resolution</span>
+            <select id="t2vResolution" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;">
+              <option value="720p" selected>720p</option>
+              <option value="1080p">1080p</option>
+            </select>
+          </div>
+          <div style="padding:16px;border-bottom:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block;">Duration</span>
+            <select id="t2vDuration" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;">
+              <option value="5" selected>5 seconds</option>
+              <option value="10">10 seconds</option>
+            </select>
+          </div>
+          <div style="padding:16px;">
+            <button id="genVidBtn" onclick="generateVideo()" style="width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;">✦ Generate Video</button>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;">Wan AI via apifree — text-to-video generation</p>
+          </div>
+          <!-- Image to Video -->
+          <div style="padding:16px;border-top:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Image to Video</span>
+            <input type="text" id="i2vImageUrl" placeholder="Paste image URL…" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;margin-bottom:8px;">
+            <div style="text-align:center;margin-bottom:8px;font-size:.75rem;color:var(--muted);">— or —</div>
+            <button onclick="document.getElementById('i2vFileInput').click()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;cursor:pointer;margin-bottom:8px;">📁 Upload Image</button>
+            <input type="file" id="i2vFileInput" accept="image/*" hidden onchange="handleI2vUpload(event)">
+            <div id="i2vPreview" style="margin-bottom:8px;"></div>
+            <textarea id="i2vPrompt" placeholder="Describe the motion…" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;resize:vertical;min-height:60px;margin-bottom:8px;"></textarea>
+            <select id="i2vModel" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;margin-bottom:8px;">
+              <option value="wan-ai/wan2.6-i2v-flash" selected>Wan 2.6 i2v Flash</option>
+              <option value="klingai/kling-v2.6/pro/image-to-video">Kling v2.6 Pro i2v</option>
+              <option value="lightricks/ltx-2-19b-distilled/image-to-video">LTX 2 19B i2v</option>
+            </select>
+            <select id="i2vDuration" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;margin-bottom:8px;">
+              <option value="5" selected>5 seconds</option>
+              <option value="10">10 seconds</option>
+            </select>
+            <button id="genI2vBtn" onclick="generateI2V()" style="width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;">✦ Image → Video</button>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;">Animate any image with AI</p>
+          </div>
+          <!-- Video to Video -->
+          <div style="padding:16px;border-top:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Video to Video</span>
+            <button onclick="document.getElementById('v2vFileInput').click()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;cursor:pointer;margin-bottom:8px;">🎬 Upload Source Video</button>
+            <input type="file" id="v2vFileInput" accept="video/*" hidden onchange="handleV2vUpload(event)">
+            <div id="v2vPreview" style="margin-bottom:8px;"></div>
+            <textarea id="v2vPrompt" placeholder="Describe the style transformation…" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;resize:vertical;min-height:60px;margin-bottom:8px;"></textarea>
+            <button id="genV2vBtn" onclick="generateV2V()" style="width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;">✦ Video → Video</button>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;">Restyle or transform existing video</p>
+          </div>
+          <!-- Face Swap -->
+          <div style="padding:16px;border-top:1px solid var(--border);">
+            <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Face Swap</span>
+            <input type="text" id="faceSwapTarget" placeholder="Target image URL…" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;margin-bottom:8px;">
+            <button onclick="document.getElementById('faceSwapFile').click()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;cursor:pointer;margin-bottom:8px;">📁 Upload Face Image</button>
+            <input type="file" id="faceSwapFile" accept="image/*" hidden onchange="handleFaceSwapUpload(event)">
+            <div id="faceSwapPreview" style="margin-bottom:8px;"></div>
+            <input type="text" id="faceSwapSource" placeholder="Source face URL…" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.85rem;outline:none;margin-bottom:8px;">
+            <button id="genFaceSwapBtn" onclick="generateFaceSwap()" style="width:100%;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;">✦ Swap Face</button>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:10px;line-height:1.5;">Swap faces in images (coming soon)</p>
           </div>
         </div>
-      </div>
-      <div class="vid-pbar">
-        <input type="text" id="videoPromptInput" placeholder="Describe your cinematic scene…" onkeydown="if(event.key==='Enter')generateVideo()">
-        <button class="tbtn prim" onclick="generateVideo()" id="genVidBtn">✦ Generate Frame</button>
-        <button class="tbtn" onclick="importVideo()">⬆ Import</button>
       </div>
     </div>
 
     <!-- ASSETS PANEL -->
     <div class="panel" id="pAssets">
-      <div class="assets-wrap">
-        <div class="assets-section-title">Your Assets</div>
-        <div class="assets-grid" id="assetGrid">
-          <div class="assets-empty">No assets yet. Generate or import images and videos.</div>
+      <div style="flex:1;padding:24px;overflow-y:auto;">
+        <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);">Your Assets</div>
+        <div id="assetGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;">
+          <div style="color:var(--muted);text-align:center;padding:50px 20px;font-size:.9rem;line-height:1.7;grid-column:1/-1;border:1px dashed var(--border);border-radius:10px;">No assets yet. Generate or import images and videos.</div>
         </div>
       </div>
     </div>
 
     <!-- RESOURCES PANEL -->
     <div class="panel" id="pResources">
-      <div class="resources-wrap">
+      <div style="flex:1;padding:24px;overflow-y:auto;">
         <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border);">Resources & Tools</div>
-        <div class="res-grid">
-          <div class="res-card">
-            <div class="res-card-title">🎙 Voice & Audio</div>
-            <a class="res-link" href="https://elevenlabs.io" target="_blank">ElevenLabs <span>→</span></a>
-            <a class="res-link" href="https://azure.microsoft.com/en-us/products/ai-services/text-to-speech" target="_blank">Azure Speech Studio <span>→</span></a>
-            <a class="res-link" href="https://www.acx.com" target="_blank">ACX Audiobook <span>→</span></a>
-            <a class="res-link" href="https://findawayvoices.com" target="_blank">Findaway Voices <span>→</span></a>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">🎙 Voice & Audio</div>
+            <a href="https://www.acx.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;border-bottom:1px solid rgba(212,196,168,.3);">ACX Audiobook <span>→</span></a>
+            <a href="https://findawayvoices.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;">Findaway Voices <span>→</span></a>
           </div>
-          <div class="res-card">
-            <div class="res-card-title">🖼 Image & Design</div>
-            <a class="res-link" href="https://image.pollinations.ai" target="_blank">Pollinations AI <span>→</span></a>
-            <a class="res-link" href="https://www.canva.com" target="_blank">Canva <span>→</span></a>
-            <a class="res-link" href="https://kdp.amazon.com/en_US/cover-calculator" target="_blank">KDP Cover Calculator <span>→</span></a>
-            <a class="res-link" href="https://www.adobe.com/express" target="_blank">Adobe Express <span>→</span></a>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">🖼 Image & Design</div>
+            <a href="https://www.canva.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;border-bottom:1px solid rgba(212,196,168,.3);">Canva <span>→</span></a>
+            <a href="https://kdp.amazon.com/en_US/cover-calculator" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;">KDP Cover Calculator <span>→</span></a>
           </div>
-          <div class="res-card">
-            <div class="res-card-title">📖 Publishing</div>
-            <a class="res-link" href="https://kdp.amazon.com" target="_blank">Amazon KDP <span>→</span></a>
-            <a class="res-link" href="https://draft2digital.com" target="_blank">Draft2Digital <span>→</span></a>
-            <a class="res-link" href="https://calibre-ebook.com" target="_blank">Calibre EPUB Editor <span>→</span></a>
-            <a class="res-link" href="https://www.epubcheck.org" target="_blank">EPUB Validator <span>→</span></a>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">📖 Publishing</div>
+            <a href="https://kdp.amazon.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;border-bottom:1px solid rgba(212,196,168,.3);">Amazon KDP <span>→</span></a>
+            <a href="https://draft2digital.com" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;">Draft2Digital <span>→</span></a>
           </div>
-          <div class="res-card">
-            <div class="res-card-title">🌍 Cantrell Creatives</div>
-            <a class="res-link" href="https://creatives.smcantrellbooks.com/voice-studio">Voice Studio <span>→</span></a>
-            <a class="res-link" href="https://creatives.smcantrellbooks.com/publisher">Publisher's Workspace <span>→</span></a>
-            <a class="res-link" href="https://creatives.smcantrellbooks.com/collections">Collections <span>→</span></a>
-            <a class="res-link" href="https://smcantrellbooks.com" target="_blank">S.M. Cantrell Books <span>→</span></a>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;">
+            <div style="font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">🌍 Cantrell Creatives</div>
+            <a href="https://creatives.smcantrellbooks.com/voice-studio" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;border-bottom:1px solid rgba(212,196,168,.3);">Voice Studio <span>→</span></a>
+            <a href="https://creatives.smcantrellbooks.com/collections" style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;font-size:.88rem;color:var(--text2);text-decoration:none;">Collections <span>→</span></a>
           </div>
         </div>
       </div>
@@ -1154,676 +519,1196 @@ html,body{
   </main>
 </div>
 
-<!-- SETTINGS PANEL -->
-<div class="settings-panel" id="settingsPanel">
-  <div class="sp-hdr">
-    <span class="sp-title">Settings</span>
-    <button class="sp-close" onclick="toggleSettings()">✕</button>
+
+
+<!-- STUDIO SHOWCASE -->
+<div style="background:var(--bg2);border-top:1px solid var(--border);padding:16px 24px;">
+  <div style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Studio Showcase</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;">
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
+        <source src="https://cdn1.site-media.eu/images/0/24771216/manrunning-hXnQg19SLSG2KZu9paE93w.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
+        <source src="https://cdn1.site-media.eu/images/0/24761681/actionpack-Nbml9D2BiSeWZag6PWozyA.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
+        <source src="https://cdn1.site-media.eu/images/0/24761678/blueshelby-BgsJJCL3jSspvsK6vcanpw.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
+        <source src="https://cdn1.site-media.eu/images/0/24771235/cclogovideo-NZYKIX4KCbCypKAhhYC1cQ.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
-  <div class="sp-body">
-    <div class="sp-section">
-      <span class="sp-label">Azure TTS Voice</span>
-      <p class="sp-hint">Azure Speech is configured via your Cloudflare Worker secrets. Select your voice from the Voiceover panel.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;max-width:720px;margin:0 auto;">
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24771291/moonlightpreditor-SYPnv7GDNZAciW7ImkmnQA.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Moonlight Predator"></div>
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24771227/broughttoyouby-fLKTtm0B1zlcDmqM4eZjVw.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Brought to You By"></div>
+    <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24771222/fieldofpurpleroses-d6VVFWKib4EaOzsipUbVUQ.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Field of Purple Roses"></div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel" style="position:fixed;right:0;top:0;bottom:0;width:320px;background:var(--panel);border-left:1px solid var(--border2);transform:translateX(100%);transition:transform .3s ease;z-index:200;display:flex;flex-direction:column;overflow-y:auto;box-shadow:-8px 0 32px rgba(0,0,0,.15);">
+  <div style="padding:16px 18px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <span style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);">Account & Usage</span>
+    <button onclick="toggleSettings()" style="border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:22px;line-height:1;padding:0;">✕</button>
+  </div>
+  <div style="padding:20px;display:flex;flex-direction:column;gap:18px;">
+    <!-- Tier -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Current Plan</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span id="settingsTier" style="font-size:1.1rem;font-weight:700;color:var(--text);">Free Tier</span>
+        <a href="https://creatives.smcantrellbooks.com/myaccount" style="font-size:.78rem;color:var(--gold);text-decoration:none;">Upgrade →</a>
+      </div>
     </div>
-    <div class="sp-section">
-      <span class="sp-label">Canvas Background</span>
-      <select class="vo-select" id="canvasBg" onchange="applyCanvasBg()">
-        <option value="#0e0a06">Dark (default)</option>
-        <option value="#1a1a1a">Near Black</option>
-        <option value="#ffffff">White</option>
-        <option value="#f5f0e8">Cream</option>
-        <option value="transparent">Transparent</option>
-      </select>
+    <!-- Video Usage -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Video Generation</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:.85rem;color:var(--text2);">Videos this week</span>
+        <span style="font-size:.85rem;font-weight:700;color:var(--text);"><span id="settingsVidUsed">0</span> / <span id="settingsVidLimit">4</span></span>
+      </div>
+      <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:4px;">
+        <div id="settingsVidBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .3s;"></div>
+      </div>
+      <div id="settingsVidSec" style="font-size:.7rem;color:var(--muted);">15s max each</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:2px;">Extra: 4×15s = $5 · 2×60s = $7</div>
     </div>
+    <!-- Image Usage -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Image Generation</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:.85rem;color:var(--text2);">Images this week</span>
+        <span style="font-size:.85rem;font-weight:700;color:var(--text);"><span id="settingsImgUsed">0</span> / <span id="settingsImgLimit">5</span></span>
+      </div>
+      <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;">
+        <div id="settingsImgBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .3s;"></div>
+      </div>
+    </div>
+    <!-- Music Usage -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Music Generation</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <span style="font-size:.85rem;color:var(--text2);">Generated today</span>
+        <span id="settingsMusicCount" style="font-size:.85rem;font-weight:700;color:var(--text);">0</span>
+      </div>
+    </div>
+    <!-- TTS Usage -->
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Voiceover</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <span style="font-size:.85rem;color:var(--text2);">Generated today</span>
+        <span id="settingsTtsCount" style="font-size:.85rem;font-weight:700;color:var(--text);">0</span>
+      </div>
+    </div>
+    <!-- Account Link -->
+    <a href="https://creatives.smcantrellbooks.com/myaccount" style="display:block;text-align:center;padding:10px;border-radius:8px;background:var(--gold);color:#fff;font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;">Manage Account</a>
   </div>
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="T"></div>
+<div id="T" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel);border:1px solid var(--border);color:var(--text);padding:9px 22px;border-radius:999px;font-size:.82rem;opacity:0;transition:all .28s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.15);"></div>
 
-<!-- ASSET PLACEMENTS — BOTTOM OF PAGE -->
-<div style="background:var(--bg2);border-top:1px solid var(--border);padding:16px 24px;">
-  <div style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Studio Showcase</div>
-  <!-- ASSETS BOTTOM ROW -->
-  <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:8px;">
-    <!-- Video previews -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
-      <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border2);aspect-ratio:16/9;background:var(--panel2);">
-        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
-          <source src="https://cdn1.site-media.eu/images/0/24214800/slowmo-CUu8c3_I0hWmum3R0wu20w.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border2);aspect-ratio:16/9;background:var(--panel2);">
-        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
-          <source src="https://cdn1.site-media.eu/images/0/24214783/blackleo-3qva1hpXhWt_Q7DGesUPhg.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border2);aspect-ratio:16/9;background:var(--panel2);">
-        <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;">
-          <source src="https://cdn1.site-media.eu/images/0/24223083/CULTIVATION1-XNgE-oODrr8-uuvMNBKD5A.mp4" type="video/mp4">
-        </video>
-      </div>
-    </div>
-    <!-- Image placements -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-      <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border2);">
-        <img src="https://cdn1.site-media.eu/images/0/24211014/SNOCHAMP-lr--9uCDS1IC0CV9_N3ugQ.png" style="width:100%;display:block;object-fit:cover;" alt="Placement 1">
-      </div>
-      <div style="border-radius:7px;overflow:hidden;border:1px solid var(--border2);">
-        <img src="https://cdn1.site-media.eu/images/0/24210896/studioplacement2-q1Ic9LYH5khAHOjM9nMpjw.png" style="width:100%;display:block;object-fit:cover;" alt="Placement 2">
-      </div>
-    </div>
-  </div>
 
-</div>
 
-<!-- NYXEN -->
-<div class="nyxen-bubble-wrap">
-  <div class="nyxen-panel" id="nyxPanel">
-    <div class="nyxen-hdr">
-      <div class="nyxen-av"></div>
-      <div>
-        <div class="nyxen-hdr-name">Nyxen</div>
-        <div class="nyxen-hdr-status" id="nyxStatus">Your creative assistant</div>
-      </div>
-      <button class="nyxen-close" onclick="toggleNyxen()">✕</button>
-    </div>
-    <div class="nyxen-feed" id="nyxFeed"></div>
-    <div class="nyxen-input">
-      <input class="nyxen-tbox" type="text" id="nyxInput" placeholder="Ask Nyxen anything…" onkeydown="if(event.key==='Enter')sendNyxen()">
-      <button class="nyxen-send" onclick="sendNyxen()">➤</button>
-    </div>
-  </div>
-  <button class="nyxen-toggle" onclick="toggleNyxen()" title="Chat with Nyxen"></button>
-</div>
 
-<input type="file" id="imgFile" accept="image/*" onchange="handleImageUpload(event)">
-<input type="file" id="vidFile" accept="video/*" onchange="handleVideoUpload(event)">
+<input type="file" id="imgFile" accept="image/*" onchange="handleImageUpload(event)" style="display:none;">
+<input type="file" id="vidFile" accept="video/*" onchange="handleVideoUpload(event)" style="display:none;">
 
-<!-- FLOATING CONTROL PANEL -->
-
+<style>
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast-ok{border-color:var(--green2)!important;}
+.toast-err{border-color:var(--red2)!important;}
+.efb{padding:5px 4px;border-radius:5px;border:1px solid var(--border);background:var(--bg);color:var(--text2);font-family:'Cormorant Garamond',serif;font-size:.78rem;cursor:pointer;transition:all .15s;text-align:center;}
+.efb:hover{border-color:var(--gold);color:var(--gold);}
+.efb.active{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700;}
+.tl-btn{padding:3px 8px;border-radius:4px;border:1px solid rgba(184,148,46,.3);background:rgba(184,148,46,.1);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.6rem;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.tl-btn:hover{background:rgba(184,148,46,.25);border-color:var(--gold);}
+.tl-clip{position:relative;min-width:80px;height:56px;border-radius:5px;border:2px solid rgba(184,148,46,.3);background:rgba(26,20,16,.8);overflow:hidden;cursor:grab;flex-shrink:0;transition:border-color .15s,box-shadow .15s;display:flex;align-items:stretch;}
+.tl-clip:hover{border-color:var(--gold);}
+.tl-clip.selected{border-color:var(--gold);box-shadow:0 0 8px rgba(184,148,46,.4);}
+.tl-clip.dragging{opacity:.6;cursor:grabbing;}
+.tl-clip-thumb{height:100%;width:100%;object-fit:cover;pointer-events:none;}
+.tl-clip-label{position:absolute;bottom:0;left:0;right:0;padding:2px 5px;background:rgba(0,0,0,.7);font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tl-clip-dur{position:absolute;top:2px;right:3px;font-family:'JetBrains Mono',monospace;font-size:.5rem;color:#fff;background:rgba(0,0,0,.6);padding:1px 4px;border-radius:3px;}
+.tl-drop-zone{width:4px;flex-shrink:0;background:transparent;transition:all .15s;border-radius:2px;}
+.tl-drop-zone.active{width:6px;background:var(--gold);box-shadow:0 0 8px rgba(184,148,46,.5);}
+@media(max-width:900px){
+  .lsb{display:none;}
+  .banner-nav{display:none;}
+}
+</style>
 
 <script>
+/* ═══ CONFIG ═══ */
+var APIFREE_KEY = 'sk-peDA9ErrJtAwG7hD4WTCKEHWMi3Y1';
+var APIFREE_BASE = 'https://api.apifree.ai';
 var assets = [];
 var currentPanel = 'image';
-var nyxOpen = false;
+var usage={vid:0,img:0,music:0,tts:0,tier:'free',vidLimitWeekly:4,vidMaxSec:15,imgLimitWeekly:5};
+function updateUsagePanel(){
+  var tierNames={free:'Free Access',visual:'Visual Membership',publication:'Publication Membership',vip:'Creator VIP'};
+  document.getElementById('settingsTier').textContent=tierNames[usage.tier]||'Free Access';
+  document.getElementById('settingsVidUsed').textContent=usage.vid;
+  document.getElementById('settingsVidLimit').textContent=usage.vidLimitWeekly;
+  document.getElementById('settingsVidBar').style.width=Math.min(100,usage.vid/usage.vidLimitWeekly*100)+'%';
+  document.getElementById('settingsVidSec').textContent=usage.vidMaxSec+'s max each';
+  document.getElementById('settingsImgUsed').textContent=usage.img;
+  document.getElementById('settingsImgLimit').textContent=usage.imgLimitWeekly;
+  document.getElementById('settingsImgBar').style.width=Math.min(100,usage.img/usage.imgLimitWeekly*100)+'%';
+  document.getElementById('settingsMusicCount').textContent=usage.music;
+  document.getElementById('settingsTtsCount').textContent=usage.tts;
+}
+function setTier(t){
+  usage.tier=t;
+  if(t==='free'){usage.vidLimitWeekly=4;usage.vidMaxSec=15;usage.imgLimitWeekly=5;}
+  else if(t==='visual'){usage.vidLimitWeekly=8;usage.vidMaxSec=60;usage.imgLimitWeekly=20;}
+  else if(t==='publication'){usage.vidLimitWeekly=6;usage.vidMaxSec=60;usage.imgLimitWeekly=10;}
+  else if(t==='vip'){usage.vidLimitWeekly=8;usage.vidMaxSec=60;usage.imgLimitWeekly=20;}
+  updateUsagePanel();
+}
 
 /* ═══ PANEL SWITCHING ═══ */
 function switchPanel(id, btn){
   document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
   document.querySelectorAll('.lbtn').forEach(function(b){ b.classList.remove('on'); });
-  document.getElementById('p'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('on');
+  var panelMap = {image:'pImage',voice:'pVoice',music:'pMusic',video:'pVideo',assets:'pAssets',resources:'pResources'};
+  var el = document.getElementById(panelMap[id]);
+  if(el) el.classList.add('on');
   if(btn) btn.classList.add('on');
   currentPanel = id;
-  var titles = {image:'Image Generation',voice:'Voiceover Studio',video:'Video Studio',assets:'Asset Library',resources:'Resources'};
+  var titles = {image:'Image Generation',voice:'Voiceover Studio',music:'Music Studio',video:'Video Studio',assets:'Asset Library',resources:'Resources'};
   document.getElementById('toolbarTitle').textContent = titles[id]||'Studio';
 }
 
 function triggerGenerate(){
-  if(currentPanel==='image'){
-    var prompt = document.getElementById('promptInput').value.trim();
-    if(!prompt){ document.getElementById('promptInput').focus(); showToast('Enter a description in the prompt bar below','err'); return; }
-    generateImage();
-  }
+  if(currentPanel==='image') generateImage();
   else if(currentPanel==='voice') generateVoiceover();
-  else if(currentPanel==='video'){
-    var vp = document.getElementById('videoPromptInput').value.trim();
-    if(!vp){ document.getElementById('videoPromptInput').focus(); showToast('Enter a description in the prompt bar below','err'); return; }
-    generateVideo();
-  }
+  else if(currentPanel==='music') generateMusic();
+  else if(currentPanel==='video') generateVideo();
 }
 function triggerImport(){
-  if(currentPanel==='image') importImage();
-  else if(currentPanel==='video') importVideo();
+  if(currentPanel==='video') document.getElementById('vidFile').click();
+  else document.getElementById('imgFile').click();
 }
 function downloadCurrent(){
-  if(currentPanel==='image'){
-    var img = document.getElementById('cImg');
-    if(!img.src||img.style.display==='none'){ showToast('Nothing to download','err'); return; }
-    var a=document.createElement('a'); a.href=img.src; a.download='studio-image.jpg'; a.click();
-  } else if(currentPanel==='voice'){
-    downloadAudio();
-  }
-}
-
-/* ═══ IMAGE GENERATION ═══ */
-var imgTimeout = null;
-var currentFilter = 'none';
-var currentRotation = 0;
-var flipH = false, flipV = false;
-
-function generateImage(){
-  var prompt = document.getElementById('promptInput').value.trim();
-  if(!prompt){ showToast('Please enter a description','err'); return; }
-  var lc=document.getElementById('LC'), es=document.getElementById('ES'), img=document.getElementById('cImg');
-  var bgVid = document.getElementById('bgVideo');
-  es.classList.add('hide');
-  img.style.display='none'; img.classList.remove('vis');
-  lc.classList.add('show');
-
-  var style = document.getElementById('imageStyle').value;
-  var fullPrompt = prompt+', '+style+', high quality, detailed, professional';
-  var seed = Math.floor(Math.random()*999999);
-  var ratio = document.getElementById('imageRatio').value;
-  var w=1280,h=720;
-  if(ratio==='2/3'){w=800;h=1200;}else if(ratio==='1/1'){w=1024;h=1024;}else if(ratio==='4/3'){w=1024;h=768;}else if(ratio==='21/9'){w=1680;h=720;}
-
-  // Use multiple image services as fallback
-  var services = [
-    'https://image.pollinations.ai/prompt/'+encodeURIComponent(fullPrompt)+'?width='+w+'&height='+h+'&seed='+seed+'&nologo=true&enhance=true',
-    'https://image.pollinations.ai/prompt/'+encodeURIComponent(fullPrompt)+'?width='+w+'&height='+h+'&seed='+(seed+1)+'&nologo=true',
-    'https://image.pollinations.ai/prompt/'+encodeURIComponent(prompt+', '+style)+'?width='+w+'&height='+h+'&seed='+(seed+2)+'&nologo=true'
-  ];
-  var attempt = 0;
-
-  function tryLoad(){
-    if(attempt >= services.length){
-      lc.classList.remove('show'); es.classList.remove('hide');
-      showToast('Generation failed — please try again','err');
+  if(currentPanel==='image'||currentPanel==='video'){
+    // Check for video first (mainVid on canvas)
+    var mainVid=document.getElementById('mainVid');
+    if(mainVid&&window._lastVideoBlob){
+      var blobUrl=URL.createObjectURL(window._lastVideoBlob);
+      var a=document.createElement('a');a.href=blobUrl;a.download='studio-video.mp4';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
       return;
     }
-    var url = services[attempt++];
-    var loader = new Image();
-    loader.onload = function(){
-      if(imgTimeout) clearTimeout(imgTimeout);
-      lc.classList.remove('show');
-      // Hide background video
-      if(bgVid) bgVid.style.display='none';
-      img.src=url;
-      img.style.cssText='display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
-      img.classList.add('vis');
-      es.classList.add('hide');
-      addAsset({type:'image',src:url,name:prompt.substring(0,30)});
-      addRecentImage(url,prompt.substring(0,20));
-      applyAdjustments();
-      showToast('Image generated!','ok');
-    };
-    loader.onerror = function(){ tryLoad(); };
-    loader.src = url;
+    // Then check for image
+    var img=document.getElementById('cImg');
+    if(img&&img.src&&img.style.display!=='none'){
+      fetch(img.src)
+      .then(function(r){return r.blob();})
+      .then(function(blob){
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a');a.href=url;a.download='studio-image.png';
+        document.body.appendChild(a);a.click();document.body.removeChild(a);
+        setTimeout(function(){URL.revokeObjectURL(url);},1000);
+      })
+      .catch(function(){
+        // Fallback direct download
+        var a=document.createElement('a');a.href=img.src;a.download='studio-image.png';
+        document.body.appendChild(a);a.click();document.body.removeChild(a);
+      });
+      return;
+    }
+    showToast('Nothing to download — generate something first','err');
+  } else if(currentPanel==='voice') downloadAudio();
+  else if(currentPanel==='music') downloadMusic();
+}
+function newProject(){
+  if(!confirm('Start a new project? This will clear your current canvas.')) return;
+  var img=document.getElementById('cImg');img.style.display='none';
+  document.getElementById('ES').style.display='';
+  document.getElementById('promptInput').value='';
+  showToast('New project started!','ok');
+}
+function toggleSettings(){document.getElementById('settingsPanel').style.transform=document.getElementById('settingsPanel').style.transform==='translateX(0px)'?'translateX(100%)':'translateX(0px)';}
+
+/* ═══ IMAGE GENERATION (apifree Flux) ═══ */
+async function generateImage(){
+  var prompt=document.getElementById('promptInput').value.trim();
+  if(!prompt){showToast('Enter a description','err');return;}
+  var lc=document.getElementById('LC'),es=document.getElementById('ES'),img=document.getElementById('cImg');
+  var bgVid=document.getElementById('bgVideo');
+  es.style.display='none';img.style.display='none';
+  lc.style.display='flex';
+  var style=document.getElementById('imageStyle').value;
+  var fullPrompt=prompt+', '+style+', high quality, detailed';
+
+  try {
+    // Build request body
+    var selectedModel=document.getElementById('imageModel').value;
+    var isEdit=selectedModel.indexOf('/edit')>-1||selectedModel.indexOf('-edit')>-1;
+    var reqBody={model:selectedModel,prompt:fullPrompt,num_images:1,width:1024,height:1024};
+    // For edit models, include source image from canvas
+    if(isEdit){
+      var srcImg=document.getElementById('cImg');
+      if(!srcImg||srcImg.style.display==='none'||!srcImg.src){
+        showToast('Edit models need a source image on canvas first','err');
+        lc.style.display='none';es.style.display='';return;
+      }
+      reqBody.image_url=srcImg.src;
+    }
+    // Submit
+    var submitRes=await fetch(APIFREE_BASE+'/v1/image/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+      body:JSON.stringify(reqBody)
+    });
+    var submitData=await submitRes.json();
+    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed');
+    var requestId=submitData.resp_data.request_id;
+
+    // Poll
+    var maxWait=120000,start=Date.now();
+    while(Date.now()-start<maxWait){
+      await new Promise(function(r){setTimeout(r,3000);});
+      var pollRes=await fetch(APIFREE_BASE+'/v1/image/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+      var pollData=await pollRes.json();
+      if(pollData.resp_data&&pollData.resp_data.status==='success'){
+        var imgUrl=(pollData.resp_data.image_list&&pollData.resp_data.image_list[0]);
+        if(!imgUrl) throw new Error('No image URL in result');
+        // Fetch as blob to bypass CDN Referer ACL
+        var imgResp=await fetch(imgUrl,{referrerPolicy:'no-referrer'});
+        var imgBlob=await imgResp.blob();
+        var blobUrl=URL.createObjectURL(imgBlob);
+        lc.style.display='none';
+        if(bgVid) bgVid.style.display='none';
+        document.getElementById('ES').style.display='none';
+        img.src=blobUrl;img.style.display='block';
+        addAsset({type:'image',src:blobUrl,name:prompt.substring(0,30)});
+        addSidePreview(blobUrl,prompt.substring(0,20));
+        applyAdjustments();
+        usage.img++;updateUsagePanel();
+        showToast('Image generated!','ok');
+        return;
+      }
+      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
+    }
+    throw new Error('Generation timed out');
+  } catch(err){
+    lc.style.display='none';es.style.display='';
+    showToast('Image error: '+err.message,'err');
   }
-
-  if(imgTimeout) clearTimeout(imgTimeout);
-  imgTimeout = setTimeout(function(){
-    if(lc.classList.contains('show')){
-      lc.classList.remove('show'); es.classList.remove('hide');
-      showToast('Taking too long — try a simpler prompt','err');
-    }
-  }, 45000);
-
-  tryLoad();
 }
 
-function addRecentImage(src, label){
-  addSidePreview(src, label);
-  var container=document.getElementById('recentImages');
-  var old=container.querySelector('[data-empty]');
-  if(old) old.remove();
-  var item=document.createElement('div');
-  item.style.cssText='border:1px solid var(--border2);border-radius:6px;overflow:hidden;cursor:pointer;aspect-ratio:16/9;';
-  item.title=label;
-  item.innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;" onclick="loadRecentImage(\''+src+'\')">';
-  container.insertBefore(item, container.firstChild);
-  if(container.children.length>5) container.removeChild(container.lastChild);
-}
-function loadRecentImage(src){
-  var img=document.getElementById('cImg');
-  var es=document.getElementById('ES');
-  img.src=src;
-  img.style.cssText='display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
-  img.classList.add('vis');
-  es.classList.add('hide');
-  showToast('Image loaded!','ok');
-}
-
-function applyRatio(){
-  var ratio=document.getElementById('imageRatio').value;
-  document.getElementById('CB').style.aspectRatio=ratio;
-}
-function applyCanvasBg(){
-  document.getElementById('CB').style.background=document.getElementById('canvasBg').value;
-}
-
-function importImage(){ document.getElementById('imgFile').click(); }
 function handleImageUpload(event){
-  var file=event.target.files[0]; if(!file) return;
+  var file=event.target.files[0];if(!file)return;
   var reader=new FileReader();
   reader.onload=function(e){
-    var img=document.getElementById('cImg'), es=document.getElementById('ES'), lc=document.getElementById('LC');
-    var bgVid=document.getElementById('bgVideo');
-    img.src=e.target.result;
-    img.style.cssText='display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
-    img.classList.add('vis');
-    es.classList.add('hide'); lc.classList.remove('show');
-    if(bgVid) bgVid.style.display='none';
     addAsset({type:'image',src:e.target.result,name:file.name});
-    addSidePreview(e.target.result, file.name);
-    showToast('Image imported!','ok');
-    switchPanel('image',null);
-    applyAdjustments();
+    addSidePreview(e.target.result,file.name);
+    showToast('Image added to assets!','ok');
   };
   reader.readAsDataURL(file);
 }
 
-/* ═══ VIDEO ═══ */
-function generateVideo(){
-  var prompt=document.getElementById('videoPromptInput').value.trim();
-  if(!prompt){ showToast('Please enter a description','err'); return; }
-  var vlc=document.getElementById('VLC'), ves=document.getElementById('VES'), vb=document.getElementById('VB');
-  ves.style.display='none';
-  vlc.classList.add('show');
-  var style=document.getElementById('videoStyle').value;
-  var fullPrompt=prompt+', '+style+' film still, cinematic lighting, 4k, detailed';
-  var seed=Math.floor(Math.random()*999999);
-  var imgUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent(fullPrompt)+'?width=1280&height=720&seed='+seed+'&nologo=true';
-  var old=document.getElementById('vidResult'); if(old) old.remove();
-  var pi=document.createElement('img'); pi.id='vidResult';
-  pi.style.cssText='display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
-  vb.appendChild(pi);
-  pi.onload=function(){ vlc.classList.remove('show'); pi.style.display='block'; addAsset({type:'image',src:imgUrl,name:prompt.substring(0,30)}); showToast('Cinematic frame generated!','ok'); };
-  pi.onerror=function(){ vlc.classList.remove('show'); ves.style.display=''; showToast('Generation failed — try again','err'); };
-  // 30 second timeout
-  var vidTimeout = setTimeout(function(){
-    if(vlc.classList.contains('show')){
-      vlc.classList.remove('show');
-      ves.style.display='';
-      showToast('Generation timed out — try again','err');
-    }
-  }, 30000);
-  var pi_onload_orig = pi.onload;
-  pi.onload = function(){ clearTimeout(vidTimeout); pi_onload_orig.call(this); };
-  pi.src=imgUrl;
-}
-function importVideo(){ document.getElementById('vidFile').click(); }
 function handleVideoUpload(event){
-  var file=event.target.files[0]; if(!file) return;
+  var file=event.target.files[0];if(!file)return;
   var reader=new FileReader();
   reader.onload=function(e){
-    var vid=document.getElementById('cVid'), ves=document.getElementById('VES');
-    vid.src=e.target.result; vid.style.display='block'; ves.style.display='none';
+    // Create a new video element on the main canvas
+    var cb=document.getElementById('CB');
+    var bgVid=document.getElementById('bgVideo');
+    if(bgVid) bgVid.style.display='none';
+    document.getElementById('cImg').style.display='none';
+    document.getElementById('ES').style.display='none';
+    // Remove old imported video if exists
+    var old=document.getElementById('importedVid');if(old)old.remove();
+    var vid=document.createElement('video');
+    vid.id='importedVid';
+    vid.controls=true;vid.autoplay=true;vid.loop=true;
+    vid.crossOrigin='anonymous';
+    vid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
+    vid.src=e.target.result;
+    cb.appendChild(vid);
+    vid.addEventListener('canplay',function(){
+      // Update timer with video duration
+      var dur=vid.duration;
+      if(dur&&isFinite(dur)){
+        var dm=Math.floor(dur/60).toString().padStart(2,'0');
+        var ds=(Math.floor(dur)%60).toString().padStart(2,'0');
+        document.getElementById('tlTime').textContent='0:00 / '+dm+':'+ds;
+      }
+    },{ once:true });
+    vid.addEventListener('timeupdate',function(){
+      var cur=vid.currentTime,dur=vid.duration;
+      if(!isFinite(dur))return;
+      var cm=Math.floor(cur/60),cs=Math.floor(cur%60).toString().padStart(2,'0');
+      var dm=Math.floor(dur/60),ds=Math.floor(dur%60).toString().padStart(2,'0');
+      document.getElementById('tlTime').textContent=cm+':'+cs+' / '+dm+':'+ds;
+    });
     addAsset({type:'video',src:e.target.result,name:file.name});
-    showToast('Video imported!','ok');
+    tlAutoAdd(e.target.result,file.name);
+    showToast('Video loaded on canvas!','ok');
+    switchPanel('image',null);
   };
   reader.readAsDataURL(file);
 }
-
-/* ═══ VOICEOVER ═══ */
-function updateVoPlatform_OLD(){
-  // Azure only — nothing to toggle
-}
-
+</script>
+<script>
+/* ═══ VOICEOVER (Kokoro via apifree) ═══ */
 function generateVoiceover(){
   var script=document.getElementById('voScript').value.trim();
-  if(!script){ showToast('Please enter a script','err'); return; }
-  var platform=document.getElementById('voPlatform').value;
+  if(!script){showToast('Enter a script','err');return;}
+  var voiceId=document.getElementById('voiceSelect').value;
+  var speed=document.getElementById('voiceSpeed').value/100;
+  var purpose=document.getElementById('voPurpose').value;
   var btn=document.getElementById('voGenBtn');
-  btn.disabled=true; btn.textContent='Generating…';
+  btn.disabled=true;btn.textContent='Generating…';
   updateStatus('processing','Generating voiceover…');
 
-  // Azure via worker
-  var azVoice=document.getElementById('azVoiceSelect').value;
-  fetch('https://nyxen-video-worker.smcantrellbooks.workers.dev/tts',{
+  var CC_API='https://cantrell-creatives.onrender.com/api';
+
+  fetch(CC_API+'/tts',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:script,voice_id:azVoice,platform:'azure'})
+    body:JSON.stringify({text:script,voice_id:voiceId,speed:speed})
   })
-  .then(function(r){ return r.json(); })
+  .then(function(r){
+    var ct=r.headers.get('content-type')||'';
+    if(ct.indexOf('audio')!==-1) return r.blob().then(function(b){return{blob:b};});
+    return r.json();
+  })
   .then(function(data){
-    if(!data.audio) throw new Error(data.error||'No audio returned');
-    var url='data:audio/mpeg;base64,'+data.audio;
+    var url;
+    if(data.blob){
+      url=URL.createObjectURL(data.blob);
+    } else if(data.id){
+      url=CC_API+'/audio/'+data.id;
+    } else {
+      throw new Error('No audio returned');
+    }
     var audio=document.getElementById('aPrev');
-    var audBox=document.getElementById('audBox');
-    audio.pause(); audio.src=url; audio.load();
-    audBox.classList.add('on');
-    document.getElementById('apl-status').textContent='Ready — press play';
-    updateStatus('ready','Azure voiceover ready');
-    showToast('Azure voiceover generated!','ok');
+    audio.src=url;audio.load();
+    document.getElementById('audBox').style.display='block';
+    document.getElementById('apl-status').textContent='Ready — press play · Purpose: '+purpose;
+    updateStatus('ready','Voiceover ready');
+    usage.tts++;updateUsagePanel();
+    showToast('Voiceover generated!','ok');
   })
-  .catch(function(err){ updateStatus('error','Azure error: '+err.message); showToast('Azure generation failed','err'); })
-  .finally(function(){ btn.disabled=false; btn.textContent='✦ Generate Voiceover'; });
+  .catch(function(err){
+    updateStatus('error','Error: '+err.message);
+    showToast('Voiceover failed: '+err.message,'err');
+  })
+  .finally(function(){btn.disabled=false;btn.textContent='✦ Generate Voiceover';});
+}
+
+function pollAudio(taskId,attempts){
+  attempts=attempts||0;
+  if(attempts>30) return Promise.reject(new Error('Timed out waiting for audio after 60s'));
+  return new Promise(function(resolve){setTimeout(resolve,2000);})
+  .then(function(){
+    return fetch('https://api.apifree.ai/v1/audio/'+taskId+'/result',{
+      headers:{'Authorization':'Bearer '+APIFREE_KEY}
+    });
+  })
+  .then(function(r){
+    console.log('[TTS Fetch] Status:',r.status,'Content-Type:',r.headers.get('content-type'));
+    if(r.status===202||r.status===204) return pollAudio(taskId,attempts+1);
+    var ct=r.headers.get('content-type')||'';
+    if(ct.includes('audio')||ct.includes('octet')) return r.blob();
+    return r.json().then(function(data){
+      console.log('[TTS Fetch Response]',JSON.stringify(data));
+      // Check for processing/pending status
+      var status=data.status||(data.resp_data&&data.resp_data.status);
+      if(status==='processing'||status==='pending'||status==='queued'||status==='PROCESSING') return pollAudio(taskId,attempts+1);
+      // Look for audio URL in various locations
+      var url=data.url||data.audio_url
+        ||(data.resp_data&&data.resp_data.audio_list&&data.resp_data.audio_list[0])
+        ||(data.output&&(data.output.url||data.output.audio_url))
+        ||(data.resp_data&&(data.resp_data.url||data.resp_data.audio_url||data.resp_data.output_url))
+        ||(data.data&&data.data[0]&&(data.data[0].url||data.data[0].audio_url));
+      if(url) return url;
+      if(data.audio) return 'data:audio/wav;base64,'+data.audio;
+      if(data.resp_data&&data.resp_data.audio) return 'data:audio/wav;base64,'+data.resp_data.audio;
+      // If not ready yet and no explicit status, keep polling
+      if(attempts<15) return pollAudio(taskId,attempts+1);
+      throw new Error('No audio URL found. Response: '+JSON.stringify(data).substring(0,300));
+    });
+  });
 }
 
 function downloadAudio(){
   var audio=document.getElementById('aPrev');
-  if(!audio.src){ showToast('No audio to download','err'); return; }
-  var a=document.createElement('a'); a.href=audio.src; a.download='voiceover.mp3'; a.click();
+  if(!audio.src){showToast('No audio to download','err');return;}
+  var a=document.createElement('a');a.href=audio.src;a.download='voiceover.wav';a.click();
   showToast('Download started!','ok');
 }
 function clearAudio(){
-  var audio=document.getElementById('aPrev');
-  audio.src=''; document.getElementById('audBox').classList.remove('on');
+  document.getElementById('aPrev').src='';
+  document.getElementById('audBox').style.display='none';
   updateStatus('ready','Ready — Enter a script and click Generate');
-  showToast('Audio cleared','ok');
 }
 function updateStatus(type,text){
   var dot=document.getElementById('statusDot');
-  dot.className='sdot'; if(type==='processing') dot.classList.add('y'); if(type==='error') dot.classList.add('r');
+  dot.style.background=type==='processing'?'var(--gold)':type==='error'?'var(--red2)':'var(--green2)';
   document.getElementById('statusText').textContent=text;
 }
 
-/* ═══ EDITING FUNCTIONS ═══ */
-function applyAdjustments(){
-  var img = document.getElementById('cImg');
-  if(!img || !img.classList.contains('vis')) return;
-  var brightness = document.getElementById('cebBrightness') ? document.getElementById('cebBrightness').value : document.getElementById('brightnessSlider').value;
-  var contrast = document.getElementById('cebContrast') ? document.getElementById('cebContrast').value : document.getElementById('contrastSlider').value;
-  var saturation = document.getElementById('cebSaturation') ? document.getElementById('cebSaturation').value : document.getElementById('saturationSlider').value;
-  var opacity = document.getElementById('cebOpacity') ? document.getElementById('cebOpacity').value : document.getElementById('opacitySlider').value;
+/* ═══ MUSIC (Mureka via apifree) ═══ */
+async function generateMusic(){
+  var prompt=document.getElementById('musicPrompt').value.trim();
+  if(!prompt){showToast('Describe the song','err');return;}
+  var lyrics=document.getElementById('musicLyrics').value.trim();
+  var btn=document.getElementById('musicGenBtn');
+  btn.disabled=true;btn.textContent='Generating…';
 
-  var filters = 'brightness('+brightness+'%) contrast('+contrast+'%) saturate('+saturation+'%)';
-  switch(currentFilter){
-    case 'cinematic': filters += ' contrast(120%) brightness(90%) saturate(80%)'; break;
-    case 'noir': filters += ' grayscale(100%) contrast(130%)'; break;
-    case 'warm': filters += ' sepia(30%) saturate(120%)'; break;
-    case 'cool': filters += ' hue-rotate(180deg) saturate(80%)'; break;
-    case 'vintage': filters += ' sepia(50%) contrast(90%) brightness(90%)'; break;
-    case 'dramatic': filters += ' contrast(150%) brightness(85%) saturate(130%)'; break;
-    case 'fade': filters += ' brightness(120%) contrast(80%) saturate(70%)'; break;
+  var body={model:'mureka-ai/mureka-o2/generate-song',prompt:prompt,lyrics:lyrics||prompt};
+
+  try {
+    console.log('[Music Request]',JSON.stringify(body));
+    var submitRes=await fetch(APIFREE_BASE+'/v1/audio/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+      body:JSON.stringify(body)
+    });
+    var submitData=await submitRes.json();
+    console.log('[Music Submit]',JSON.stringify(submitData));
+    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed: '+JSON.stringify(submitData).substring(0,400));
+    var requestId=submitData.resp_data.request_id;
+
+    // Poll
+    var maxWait=180000,start=Date.now();
+    while(Date.now()-start<maxWait){
+      await new Promise(function(r){setTimeout(r,3000);});
+      var pollRes=await fetch(APIFREE_BASE+'/v1/audio/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+      var pollData=await pollRes.json();
+      console.log('[Music Poll]',JSON.stringify(pollData));
+      if(pollData.resp_data&&pollData.resp_data.status==='success'){
+        var audioUrl=(pollData.resp_data.audio_list&&pollData.resp_data.audio_list[0])
+          ||(pollData.resp_data.song_list&&pollData.resp_data.song_list[0])
+          ||(pollData.resp_data.music_list&&pollData.resp_data.music_list[0])
+          ||(pollData.resp_data.output_list&&pollData.resp_data.output_list[0])
+          ||pollData.resp_data.url
+          ||pollData.resp_data.audio_url;
+        if(!audioUrl){
+          // Try to find any URL in the response
+          var rd=pollData.resp_data;
+          for(var k in rd){if(typeof rd[k]==='string'&&rd[k].startsWith('http')){audioUrl=rd[k];break;}}
+          if(!audioUrl&&Array.isArray(rd)){audioUrl=rd[0];}
+          // Check nested arrays
+          for(var k2 in rd){if(Array.isArray(rd[k2])&&rd[k2].length>0){
+            var item=rd[k2][0];
+            if(typeof item==='string'&&item.startsWith('http')){audioUrl=item;break;}
+            if(item&&item.url){audioUrl=item.url;break;}
+            if(item&&item.audio_url){audioUrl=item.audio_url;break;}
+          }}
+        }
+        console.log('[Music Audio URL]',audioUrl);
+        if(!audioUrl) throw new Error('No audio URL found in: '+JSON.stringify(pollData.resp_data).substring(0,500));
+        var audioResp=await fetch(audioUrl,{referrerPolicy:'no-referrer'});
+        var audioBlob=await audioResp.blob();
+        var blobUrl=URL.createObjectURL(audioBlob);
+        document.getElementById('musicPrev').src=blobUrl;
+        document.getElementById('musicAudBox').style.display='block';
+        usage.music++;updateUsagePanel();
+        showToast('Song generated!','ok');
+        btn.disabled=false;btn.textContent='✦ Generate Song';
+        return;
+      }
+      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
+    }
+    throw new Error('Generation timed out');
+  } catch(err){
+    console.error('[Music Error]',err);
+    showToast('Music error: '+err.message,'err');
   }
-  var transform = 'rotate('+currentRotation+'deg) scaleX('+(flipH?-1:1)+') scaleY('+(flipV?-1:1)+')';
-  img.style.filter = filters;
-  img.style.transform = transform;
-  img.style.opacity = opacity/100;
+  btn.disabled=false;btn.textContent='✦ Generate Song';
+}
+function downloadMusic(){
+  var audio=document.getElementById('musicPrev');
+  if(!audio.src){showToast('No music to download','err');return;}
+  var a=document.createElement('a');a.href=audio.src;a.download='song.mp3';a.click();
 }
 
-function rotateImg(deg){
-  currentRotation = (currentRotation + deg) % 360;
-  applyAdjustments();
+/* ═══ VIDEO (LTX via apifree) ═══ */
+async function generateVideo(){
+  var prompt=document.getElementById('videoPromptInput').value.trim();
+  if(!prompt){showToast('Describe a scene','err');return;}
+  // Use MAIN canvas (CB) instead of separate VB canvas
+  var lc=document.getElementById('LC'),es=document.getElementById('ES');
+  var bgVid=document.getElementById('bgVideo');
+  es.style.display='none';
+  if(bgVid) bgVid.style.display='none';
+  lc.style.display='flex';
+  // Switch to image panel so user sees the main canvas
+  switchPanel('image', document.querySelector('.lbtn'));
+  var btn=document.getElementById('genVidBtn');
+  btn.disabled=true;btn.textContent='Generating…';
+
+  try {
+    var t2vModel=document.getElementById('t2vModel').value;
+    var t2vBody={model:t2vModel,prompt:prompt,duration:parseInt(document.getElementById('t2vDuration').value),resolution:document.getElementById('t2vResolution').value};
+    console.log('[Studio Video Request]', JSON.stringify(t2vBody));
+    var submitRes=await fetch(APIFREE_BASE+'/v1/video/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+      body:JSON.stringify(t2vBody)
+    });
+    var submitData=await submitRes.json();
+    console.log('[Studio Video Submit]', JSON.stringify(submitData));
+    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed: '+JSON.stringify(submitData).substring(0,400));
+    var requestId=submitData.resp_data.request_id;
+
+    // Poll
+    var maxWait=180000,start=Date.now();
+    while(Date.now()-start<maxWait){
+      await new Promise(function(r){setTimeout(r,3000);});
+      var pollRes=await fetch(APIFREE_BASE+'/v1/video/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+      var pollData=await pollRes.json();
+      if(pollData.resp_data&&pollData.resp_data.status==='success'){
+        var vurl=(pollData.resp_data.video_list&&pollData.resp_data.video_list[0])||pollData.resp_data.url;
+        if(!vurl) throw new Error('No video URL in result');
+        var vidResp=await fetch(vurl,{referrerPolicy:'no-referrer'});
+        var vidBlob=await vidResp.blob();
+        var blobUrl=URL.createObjectURL(vidBlob);
+        lc.style.display='none';
+        // Show on main canvas as a video element
+        var old=document.getElementById('mainVid'); if(old) old.remove();
+        var mainVid=document.createElement('video');
+        mainVid.id='mainVid';
+        mainVid.controls=true;mainVid.autoplay=true;mainVid.loop=true;
+        mainVid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
+        mainVid.src=blobUrl;
+        document.getElementById('CB').appendChild(mainVid);
+        window._lastVideoBlob=vidBlob;
+        window._lastVideoBlobUrl=blobUrl;
+        addAsset({type:'video',src:blobUrl,name:prompt.substring(0,30)});
+        tlAutoAdd(blobUrl,prompt.substring(0,30));
+        usage.vid+=parseInt(document.getElementById('t2vDuration').value);updateUsagePanel();
+        showToast('Video generated! Use Download button in toolbar.','ok');
+        btn.disabled=false;btn.textContent='✦ Generate Video';
+        return;
+      }
+      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
+    }
+    throw new Error('Generation timed out');
+  } catch(err){
+    lc.style.display='none';es.style.display='';
+    showToast('Video error: '+err.message,'err');
+  }
+  btn.disabled=false;btn.textContent='✦ Generate Video';
 }
 
-function flipImg(axis){
-  if(axis==='h') flipH = !flipH;
-  else flipV = !flipV;
-  applyAdjustments();
+/* ═══ IMAGE TO VIDEO ═══ */
+var i2vImageUrl=null;
+
+function handleI2vUpload(event){
+  var file=event.target.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    i2vImageUrl=e.target.result;
+    document.getElementById('i2vPreview').innerHTML='<img src="'+i2vImageUrl+'" style="width:100%;max-height:200px;object-fit:contain;border-radius:6px;border:1px solid var(--border);">';
+  };
+  reader.readAsDataURL(file);
 }
 
-function syncSlider(type, val){
-  // Keep sidebar sliders in sync with canvas bar sliders
-  var sidebarMap = {brightness:'brightnessSlider',contrast:'contrastSlider',saturation:'saturationSlider',opacity:'opacitySlider'};
-  var valMap = {brightness:'brightnessVal',contrast:'contrastVal',saturation:'saturationVal',opacity:'opacityVal'};
-  var barMap = {brightness:'cebBrightness',contrast:'cebContrast',saturation:'cebSaturation',opacity:'cebOpacity'};
-  var barValMap = {brightness:'cebBrightnessVal',contrast:'cebContrastVal',saturation:'cebSaturationVal',opacity:'cebOpacityVal'};
-  var suffix = type==='opacity'?'%':'%';
-  var sb = document.getElementById(sidebarMap[type]); if(sb) sb.value=val;
-  var sbv = document.getElementById(valMap[type]); if(sbv) sbv.textContent=val+suffix;
-  var bb = document.getElementById(barMap[type]); if(bb) bb.value=val;
-  var bbv = document.getElementById(barValMap[type]); if(bbv) bbv.textContent=val;
-}
+async function generateI2V(){
+  var imageUrl=document.getElementById('i2vImageUrl').value.trim()||i2vImageUrl;
+  if(!imageUrl){showToast('Provide an image URL or upload an image','err');return;}
+  var prompt=document.getElementById('i2vPrompt').value.trim()||'Smooth cinematic motion';
+  var lc=document.getElementById('LC'),es=document.getElementById('ES');
+  var bgVid=document.getElementById('bgVideo');
+  es.style.display='none';
+  if(bgVid) bgVid.style.display='none';
+  lc.style.display='flex';
+  switchPanel('image', document.querySelector('.lbtn'));
+  var btn=document.getElementById('genI2vBtn');
+  btn.disabled=true;btn.textContent='Generating…';
 
-function applyFilter(filter, btn){
-  currentFilter = filter;
-  // Update all filter buttons (both sidebar and bar)
-  document.querySelectorAll('.edit-filter-btn,.ceb-btn').forEach(function(b){
-    if(b.getAttribute('onclick') && b.getAttribute('onclick').includes('applyFilter')) b.classList.remove('active');
-  });
-  if(btn) btn.classList.add('active');
-  applyAdjustments();
-}
+  try {
+    var i2vModel=document.getElementById('i2vModel').value;
+    var i2vBody={model:i2vModel,prompt:prompt,image_url:imageUrl,duration:parseInt(document.getElementById('i2vDuration').value),resolution:document.getElementById('t2vResolution').value};
+    var submitRes=await fetch(APIFREE_BASE+'/v1/video/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+      body:JSON.stringify(i2vBody)
+    });
+    var submitData=await submitRes.json();
+    console.log('[Studio I2V Submit]',JSON.stringify(submitData));
+    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed: '+(submitData.error&&submitData.error.message||JSON.stringify(submitData)).substring(0,300));
+    var requestId=submitData.resp_data.request_id;
 
-function resetAdjustments(){
-  currentFilter='none'; currentRotation=0; flipH=false; flipV=false;
-  ['brightness','contrast','saturation'].forEach(function(t){ syncSlider(t,100); });
-  syncSlider('opacity',100);
-  document.querySelectorAll('.edit-filter-btn,.ceb-btn').forEach(function(b){
-    if(b.getAttribute('onclick') && b.getAttribute('onclick').includes('applyFilter')) b.classList.remove('active');
-  });
-  var nones = document.querySelectorAll('.edit-filter-btn,.ceb-btn');
-  nones.forEach(function(b){ if(b.textContent.trim()==='None') b.classList.add('active'); });
-  applyAdjustments();
-}
-
-var overlayCanvas = null;
-function applyTextOverlay(){
-  var text = document.getElementById('overlayText').value.trim();
-  if(!text){ showToast('Enter text first','err'); return; }
-  var img = document.getElementById('cImg');
-  if(!img || !img.classList.contains('vis')){ showToast('Load an image first','err'); return; }
-  var position = document.getElementById('overlayPosition').value;
-  var size = document.getElementById('overlaySize').value;
-  // Remove old overlay
-  clearTextOverlay();
-  var div = document.createElement('div');
-  div.id = 'textOverlay';
-  var fontSize = size==='small'?'1.2rem':size==='large'?'2.5rem':'1.8rem';
-  var top = position==='top'?'8%':position==='center'?'50%':'88%';
-  div.style.cssText = 'position:absolute;left:50%;top:'+top+';transform:translate(-50%,-50%);'
-    +'font-family:Cinzel,serif;font-size:'+fontSize+';font-weight:700;color:#fff;'
-    +'text-shadow:0 2px 8px rgba(0,0,0,.8),0 0 20px rgba(201,160,64,.5);'
-    +'letter-spacing:.1em;text-align:center;z-index:10;pointer-events:none;'
-    +'white-space:nowrap;padding:0 20px;';
-  div.textContent = text;
-  document.getElementById('CB').appendChild(div);
-  showToast('Text overlay added!','ok');
-}
-function clearTextOverlay(){
-  var old = document.getElementById('textOverlay'); if(old) old.remove();
+    var maxWait=180000,start=Date.now();
+    while(Date.now()-start<maxWait){
+      await new Promise(function(r){setTimeout(r,3000);});
+      var pollRes=await fetch(APIFREE_BASE+'/v1/video/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+      var pollData=await pollRes.json();
+      if(pollData.resp_data&&pollData.resp_data.status==='success'){
+        var vurl=(pollData.resp_data.video_list&&pollData.resp_data.video_list[0])||pollData.resp_data.url;
+        if(!vurl) throw new Error('No video URL');
+        var vidResp=await fetch(vurl,{referrerPolicy:'no-referrer'});
+        var vidBlob=await vidResp.blob();
+        var blobUrl=URL.createObjectURL(vidBlob);
+        lc.style.display='none';
+        var old=document.getElementById('mainVid'); if(old) old.remove();
+        var mainVid=document.createElement('video');
+        mainVid.id='mainVid';
+        mainVid.controls=true;mainVid.autoplay=true;mainVid.loop=true;
+        mainVid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
+        mainVid.src=blobUrl;
+        document.getElementById('CB').appendChild(mainVid);
+        window._lastVideoBlob=vidBlob;
+        window._lastVideoBlobUrl=blobUrl;
+        addAsset({type:'video',src:blobUrl,name:'i2v-'+prompt.substring(0,20)});
+        tlAutoAdd(blobUrl,'i2v-'+prompt.substring(0,20));
+        usage.vid+=parseInt(document.getElementById('i2vDuration').value);updateUsagePanel();
+        showToast('Image-to-video generated!','ok');
+        btn.disabled=false;btn.textContent='✦ Image → Video';
+        return;
+      }
+      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
+    }
+    throw new Error('Generation timed out');
+  } catch(err){
+    lc.style.display='none';es.style.display='';
+    showToast('I2V error: '+err.message,'err');
+  }
+  btn.disabled=false;btn.textContent='✦ Image → Video';
 }
 
 /* ═══ ASSETS ═══ */
-function addAsset(asset){
-  assets.push(asset); updateAssetGrid();
-}
+function addAsset(asset){assets.push(asset);updateAssetGrid();}
 function updateAssetGrid(){
   var grid=document.getElementById('assetGrid');
-  if(assets.length===0){ grid.innerHTML='<div class="assets-empty">No assets yet. Generate or import images and videos.</div>'; return; }
-  grid.innerHTML=assets.map(function(asset,i){
-    return '<div class="asset-item" onclick="loadAsset('+i+')"><img src="'+asset.src+'" alt="'+asset.name+'"><div class="asset-item-label">'+asset.name+'</div></div>';
+  if(!assets.length){grid.innerHTML='<div style="color:var(--muted);text-align:center;padding:50px 20px;font-size:.9rem;grid-column:1/-1;border:1px dashed var(--border);border-radius:10px;">No assets yet.</div>';return;}
+  grid.innerHTML=assets.map(function(a,i){
+    var thumb=a.type==='image'?'<img src="'+a.src+'" style="width:100%;height:100%;object-fit:cover;">':'<video src="'+a.src+'" style="width:100%;height:100%;object-fit:cover;" muted></video>';
+    return '<div style="border-radius:9px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);cursor:pointer;position:relative;" onclick="loadAsset('+i+')">'+thumb+'<div style="position:absolute;bottom:0;left:0;right:0;padding:5px 7px;background:rgba(0,0,0,.6);color:var(--cream);font-size:.7rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+a.name+'</div></div>';
   }).join('');
 }
 function loadAsset(i){
-  var asset=assets[i]; if(!asset) return;
-  if(asset.type==='image'){
-    var img=document.getElementById('cImg'), es=document.getElementById('ES');
-    img.src=asset.src;
-    img.style.cssText='display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
-    img.classList.add('vis'); es.classList.add('hide');
+  var a=assets[i];if(!a)return;
+  if(a.type==='image'){
+    document.getElementById('cImg').src=a.src;document.getElementById('cImg').style.display='block';
+    document.getElementById('ES').style.display='none';
     switchPanel('image',null);
-    showToast('Asset loaded!','ok');
   }
+  showToast('Asset loaded!','ok');
 }
 
-/* ═══ SETTINGS ═══ */
-function toggleSettings(){ document.getElementById('settingsPanel').classList.toggle('open'); }
-function saveApiKey(){
-  var key=document.getElementById('apiKey').value.trim();
-  if(!key){ showToast('Please enter an API key','err'); return; }
-  localStorage.setItem('elevenLabsApiKey',key);
-  showToast('API key saved!','ok');
+function addSidePreview(src,name){
+  var list=document.getElementById('sidePreviewList');
+  if(list.children.length===1&&list.children[0].style.color) list.innerHTML='';
+  var item=document.createElement('div');
+  item.style.cssText='border-radius:5px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;cursor:pointer;';
+  item.innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;" onclick="loadSidePreview(this.src)">';
+  list.insertBefore(item,list.firstChild);
+  if(list.children.length>10) list.removeChild(list.lastChild);
 }
-function saveCustomVoiceId(){
-  var id=document.getElementById('customVoiceId').value.trim();
-  localStorage.setItem('customVoiceId',id);
-  showToast('Voice ID saved!','ok');
-}
-function newProject(){
-  if(confirm('Start a new project? This will clear your current canvas.')){
-    document.getElementById('cImg').classList.remove('vis');
-    document.getElementById('cImg').style.display='none';
-    document.getElementById('ES').classList.remove('hide');
-    var bv=document.getElementById('bgVideo'); if(bv) bv.style.display='';
-    document.getElementById('promptInput').value='';
-    showToast('New project started!','ok');
-  }
+function loadSidePreview(src){
+  document.getElementById('cImg').src=src;document.getElementById('cImg').style.display='block';
+  document.getElementById('ES').style.display='none';
+  showToast('Asset loaded!','ok');
 }
 
 /* ═══ TOAST ═══ */
 function showToast(msg,type){
   var t=document.getElementById('T');
-  t.textContent=msg; t.className='toast on '+(type||'');
-  setTimeout(function(){ t.classList.remove('on'); },3000);
+  t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  t.style.borderColor=type==='ok'?'var(--green2)':type==='err'?'var(--red2)':'var(--border)';
+  var delay=type==='err'?10000:3000;
+  setTimeout(function(){t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';},delay);
 }
 
-/* ═══ NYXEN ═══ */
-function toggleNyxen(){
-  nyxOpen=!nyxOpen;
-  var panel=document.getElementById('nyxPanel');
-  panel.classList.toggle('open',nyxOpen);
-  if(nyxOpen && document.getElementById('nyxFeed').children.length===0){
-    addNyxMsg("Hello! I'm Nyxen, your creative assistant. I can help generate image prompts, write scripts for voiceovers, suggest video concepts, and more. What are we creating?","ai");
-  }
-  if(nyxOpen) setTimeout(function(){ document.getElementById('nyxInput').focus(); },100);
-}
-function addNyxMsg(text,role){
-  var feed=document.getElementById('nyxFeed');
-  var d=document.createElement('div'); d.className='nmsg '+role;
-  if(role==='ai') d.innerHTML='<div class="nlbl">NYXEN</div>'+text;
-  else d.textContent=text;
-  feed.appendChild(d); feed.scrollTop=feed.scrollHeight;
-}
-function sendNyxen(){
-  var inp=document.getElementById('nyxInput');
-  var msg=inp.value.trim(); if(!msg) return;
-  addNyxMsg(msg,'user'); inp.value='';
-  document.getElementById('nyxStatus').textContent='Thinking…';
-  var typing=document.createElement('div'); typing.className='nmsg ai'; typing.id='nyxTyping';
-  typing.innerHTML='<div class="nlbl">NYXEN</div><span style="opacity:.5;font-style:italic;">typing…</span>';
-  document.getElementById('nyxFeed').appendChild(typing);
-  document.getElementById('nyxFeed').scrollTop=document.getElementById('nyxFeed').scrollHeight;
-  fetch('https://nyxen-video-worker.smcantrellbooks.workers.dev/chat',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({message:msg})
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    var t=document.getElementById('nyxTyping'); if(t) t.remove();
-    var reply=d.story||d.reply||d.message||d.response||"I'm here! How can I help?";
-    addNyxMsg(reply,'ai');
-    document.getElementById('nyxStatus').textContent='Your creative assistant';
-  })
-  .catch(function(){
-    var t=document.getElementById('nyxTyping'); if(t) t.remove();
-    addNyxMsg("I'm here! Let me know how I can help.",'ai');
-    document.getElementById('nyxStatus').textContent='Your creative assistant';
-  });
-}
+/* ═══ IMAGE EDITING ═══ */
+var currentFilter='none',currentRotation=0,flipH=false,flipV=false;
 
-/* INIT */
-/* DRAGGABLE PANEL */
-var dragEl=null, dragOffX=0, dragOffY=0;
-function startDrag(e){
-  if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
-  dragEl=document.getElementById('floatEditPanel');
-  dragOffX=e.clientX-dragEl.getBoundingClientRect().left;
-  dragOffY=e.clientY-dragEl.getBoundingClientRect().top;
-  document.onmousemove=doDrag; document.onmouseup=stopDrag;
-}
-function doDrag(e){
-  if(!dragEl) return;
-  dragEl.style.left=Math.max(0,e.clientX-dragOffX)+'px';
-  dragEl.style.top=Math.max(0,e.clientY-dragOffY)+'px';
-  dragEl.style.right='auto';
-}
-function stopDrag(){ dragEl=null; document.onmousemove=null; document.onmouseup=null; }
-
-function toggleEditPanel(){
-  var panel=document.getElementById('floatEditPanel');
-  var toggle=document.getElementById('editPanelToggle');
-  if(panel.style.display==='none'){
-    panel.style.display='block'; toggle.style.display='none';
-  } else {
-    panel.style.display='none'; toggle.style.display='block';
-  }
-}
-
-/* SIDE PREVIEW STRIP */
-function addSidePreview(src, name){
-  var list=document.getElementById('sidePreviewList');
-  var empty=list.querySelector('div');
-  if(empty && empty.style.color===getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()) empty.remove();
-  var item=document.createElement('div');
-  item.style.cssText='border-radius:5px;overflow:hidden;border:1px solid var(--border2);aspect-ratio:16/9;cursor:pointer;transition:border-color .15s;';
-  item.title=name;
-  item.onmouseenter=function(){ this.style.borderColor='var(--gold)'; };
-  item.onmouseleave=function(){ this.style.borderColor='var(--border2)'; };
-  item.innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;display:block;" onclick="loadSidePreview(this.parentElement.querySelector(\'img\').src);">';
-  list.insertBefore(item, list.firstChild);
-  if(list.children.length > 10) list.removeChild(list.lastChild);
-}
-function loadSidePreview(src){
+function applyAdjustments(){
   var img=document.getElementById('cImg');
+  var vid=document.getElementById('importedVid');
   var bgVid=document.getElementById('bgVideo');
-  var es=document.getElementById('ES');
-  img.src=src;
-  img.style.cssText='display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
-  img.classList.add('vis');
-  es.classList.add('hide');
-  if(bgVid) bgVid.style.display='none';
+  var mainVid=document.getElementById('mainVid');
+  var tlVid=document.getElementById('tlPlayVid');
+  // Find the active media element
+  var target=null;
+  if(img&&img.style.display!=='none') target=img;
+  else if(mainVid) target=mainVid;
+  else if(vid) target=vid;
+  else if(tlVid) target=tlVid;
+  else if(bgVid&&bgVid.style.display!=='none') target=bgVid;
+  if(!target) return;
+
+  var b=document.getElementById('brightnessSlider').value;
+  var c=document.getElementById('contrastSlider').value;
+  var s=document.getElementById('saturationSlider').value;
+  var o=document.getElementById('opacitySlider').value;
+  var filters='brightness('+b+'%) contrast('+c+'%) saturate('+s+'%)';
+  switch(currentFilter){
+    case 'cinematic':filters+=' contrast(120%) brightness(90%) saturate(80%)';break;
+    case 'noir':filters+=' grayscale(100%) contrast(130%)';break;
+    case 'warm':filters+=' sepia(30%) saturate(120%)';break;
+    case 'cool':filters+=' hue-rotate(180deg) saturate(80%)';break;
+    case 'vintage':filters+=' sepia(50%) contrast(90%) brightness(90%)';break;
+    case 'dramatic':filters+=' contrast(150%) brightness(85%) saturate(130%)';break;
+    case 'fade':filters+=' brightness(120%) contrast(80%) saturate(70%)';break;
+  }
+  target.style.filter=filters;
+  target.style.opacity=o/100;
+  // Apply transform only to images
+  if(target===img){
+    target.style.transform='rotate('+currentRotation+'deg) scaleX('+(flipH?-1:1)+') scaleY('+(flipV?-1:1)+')';
+  }
+}
+function applyFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.efb').forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('applyFilter'))b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
   applyAdjustments();
-  showToast('Asset loaded!','ok');
+}
+function rotateImg(deg){currentRotation=(currentRotation+deg)%360;applyAdjustments();}
+function flipImg(axis){if(axis==='h')flipH=!flipH;else flipV=!flipV;applyAdjustments();}
+function resetAdjustments(){
+  currentFilter='none';currentRotation=0;flipH=false;flipV=false;
+  document.getElementById('brightnessSlider').value=100;document.getElementById('brightnessVal').textContent='100%';
+  document.getElementById('contrastSlider').value=100;document.getElementById('contrastVal').textContent='100%';
+  document.getElementById('saturationSlider').value=100;document.getElementById('saturationVal').textContent='100%';
+  document.getElementById('opacitySlider').value=100;document.getElementById('opacityVal').textContent='100%';
+  document.querySelectorAll('.efb').forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('applyFilter'))b.classList.remove('active');});
+  document.querySelector('.efb').classList.add('active');
+  applyAdjustments();
+}
+function applyTextOverlay(){
+  var text=document.getElementById('overlayText').value.trim();
+  if(!text){showToast('Enter text first','err');return;}
+  var img=document.getElementById('cImg');
+  if(!img||img.style.display==='none'){showToast('Load an image first','err');return;}
+  clearTextOverlay();
+  var div=document.createElement('div');div.id='textOverlay';
+  var pos=document.getElementById('overlayPosition').value;
+  var sz=document.getElementById('overlaySize').value;
+  var fontSize=sz==='small'?'1.2rem':sz==='large'?'2.5rem':'1.8rem';
+  var top=pos==='top'?'8%':pos==='center'?'50%':'88%';
+  div.style.cssText='position:absolute;left:50%;top:'+top+';transform:translate(-50%,-50%);font-family:Cinzel,serif;font-size:'+fontSize+';font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.8),0 0 20px rgba(184,148,46,.5);letter-spacing:.1em;text-align:center;z-index:10;pointer-events:none;white-space:nowrap;padding:0 20px;';
+  div.textContent=text;
+  document.getElementById('CB').appendChild(div);
+  showToast('Text overlay added!','ok');
+}
+function clearTextOverlay(){var old=document.getElementById('textOverlay');if(old)old.remove();}
+
+/* ═══ VIDEO TO VIDEO ═══ */
+var v2vVideoUrl=null;
+function handleV2vUpload(event){
+  var file=event.target.files[0];if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    v2vVideoUrl=e.target.result;
+    document.getElementById('v2vPreview').innerHTML='<video src="'+v2vVideoUrl+'" style="width:100%;max-height:120px;object-fit:cover;border-radius:6px;" muted autoplay loop></video>';
+  };
+  reader.readAsDataURL(file);
 }
 
-  // Sync to main prompt and generate
-  if(currentPanel==='image') document.getElementById('promptInput').value = prompt;
-  else if(currentPanel==='video') document.getElementById('videoPromptInput').value = prompt;
-  triggerGenerate();
-
-/* WAVEFORM VISUALIZER */
-var waveAnimId = null;
-var waveStart = Date.now();
-
-function initWaveform(){
-  var canvas = document.getElementById('waveCanvas');
-  if(!canvas) return;
-  var ctx = canvas.getContext('2d');
-  var bars = 80;
-
-  function draw(){
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    var w = canvas.width, h = canvas.height;
-    ctx.clearRect(0,0,w,h);
-    var t = Date.now() / 1000;
-    var barW = w / bars;
-
-    for(var i=0; i<bars; i++){
-      var x = i * barW;
-      // Multi-frequency wave with gold/plum gradient
-      var amp = (
-        Math.sin(t * 2.1 + i * 0.18) * 0.35 +
-        Math.sin(t * 3.7 + i * 0.31) * 0.25 +
-        Math.sin(t * 1.4 + i * 0.08) * 0.20 +
-        Math.sin(t * 5.2 + i * 0.44) * 0.10 +
-        Math.random() * 0.10
-      );
-      var barH = Math.max(3, Math.abs(amp) * h * 0.85);
-      var y = (h - barH) / 2;
-
-      // Gold to plum gradient per bar
-      var grad = ctx.createLinearGradient(0, y, 0, y+barH);
-      var intensity = Math.abs(amp);
-      if(intensity > 0.4){
-        grad.addColorStop(0, 'rgba(201,160,64,0.9)');
-        grad.addColorStop(0.5, 'rgba(232,192,96,1)');
-        grad.addColorStop(1, 'rgba(201,160,64,0.9)');
-      } else {
-        grad.addColorStop(0, 'rgba(138,70,99,0.5)');
-        grad.addColorStop(0.5, 'rgba(176,88,120,0.7)');
-        grad.addColorStop(1, 'rgba(138,70,99,0.5)');
+async function generateV2V(){
+  var videoUrl=v2vVideoUrl;
+  if(!videoUrl){showToast('Upload a source video first','err');return;}
+  var prompt=document.getElementById('v2vPrompt').value.trim()||'Cinematic style transformation';
+  var lc=document.getElementById('LC'),es=document.getElementById('ES');
+  var bgVid=document.getElementById('bgVideo');
+  es.style.display='none';
+  if(bgVid) bgVid.style.display='none';
+  lc.style.display='flex';
+  switchPanel('image', document.querySelector('.lbtn'));
+  var btn=document.getElementById('genV2vBtn');
+  btn.disabled=true;btn.textContent='Generating…';
+  try {
+    var submitRes=await fetch(APIFREE_BASE+'/v1/video/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+      body:JSON.stringify({model:'wan-ai/wan2.6-i2v-flash',prompt:prompt,video_url:videoUrl})
+    });
+    var submitData=await submitRes.json();
+    console.log('[V2V Submit]',JSON.stringify(submitData));
+    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed: '+JSON.stringify(submitData).substring(0,400));
+    var requestId=submitData.resp_data.request_id;
+    var maxWait=180000,start=Date.now();
+    while(Date.now()-start<maxWait){
+      await new Promise(function(r){setTimeout(r,3000);});
+      var pollRes=await fetch(APIFREE_BASE+'/v1/video/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+      var pollData=await pollRes.json();
+      if(pollData.resp_data&&pollData.resp_data.status==='success'){
+        var vurl=(pollData.resp_data.video_list&&pollData.resp_data.video_list[0])||pollData.resp_data.url;
+        if(!vurl) throw new Error('No video URL');
+        var vidResp=await fetch(vurl,{referrerPolicy:'no-referrer'});
+        var vidBlob=await vidResp.blob();
+        var blobUrl=URL.createObjectURL(vidBlob);
+        lc.style.display='none';
+        var old=document.getElementById('mainVid'); if(old) old.remove();
+        var mainVid=document.createElement('video');
+        mainVid.id='mainVid';
+        mainVid.controls=true;mainVid.autoplay=true;mainVid.loop=true;
+        mainVid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
+        mainVid.src=blobUrl;
+        document.getElementById('CB').appendChild(mainVid);
+        window._lastVideoBlob=vidBlob;
+        addAsset({type:'video',src:blobUrl,name:'v2v-'+prompt.substring(0,20)});
+        tlAutoAdd(blobUrl,'v2v-'+prompt.substring(0,20));
+        showToast('Video-to-video generated!','ok');
+        btn.disabled=false;btn.textContent='✦ Video → Video';
+        return;
       }
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.roundRect(x+1, y, Math.max(1, barW-2), barH, 2);
-      ctx.fill();
+      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
     }
-
-    // Timer
-    var elapsed = Math.floor((Date.now() - waveStart) / 1000);
-    var m = Math.floor(elapsed/60).toString().padStart(2,'0');
-    var s = (elapsed%60).toString().padStart(2,'0');
-    var timerEl = document.getElementById('waveTimer');
-    if(timerEl) timerEl.textContent = m+':'+s;
-
-    waveAnimId = requestAnimationFrame(draw);
+    throw new Error('Generation timed out');
+  } catch(err){
+    lc.style.display='none';es.style.display='';
+    showToast('V2V error: '+err.message,'err');
   }
-  draw();
+  btn.disabled=false;btn.textContent='✦ Video → Video';
+}
+
+/* ═══ FACE SWAP (placeholder) ═══ */
+var faceSwapUrl=null;
+function handleFaceSwapUpload(event){
+  var file=event.target.files[0];if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    faceSwapUrl=e.target.result;
+    document.getElementById('faceSwapPreview').innerHTML='<img src="'+faceSwapUrl+'" style="width:100%;max-height:100px;object-fit:contain;border-radius:6px;">';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function generateFaceSwap(){
+  var targetUrl=document.getElementById('faceSwapTarget').value.trim()||faceSwapUrl;
+  var sourceUrl=document.getElementById('faceSwapSource').value.trim();
+  if(!targetUrl){showToast('Upload or paste a target image','err');return;}
+  if(!sourceUrl){showToast('Paste a source face URL','err');return;}
+  var lc=document.getElementById('LC'),es=document.getElementById('ES');
+  var bgVid=document.getElementById('bgVideo');
+  es.style.display='none';
+  if(bgVid) bgVid.style.display='none';
+  lc.style.display='flex';
+  switchPanel('image', document.querySelector('.lbtn'));
+  var btn=document.getElementById('genFaceSwapBtn');
+  btn.disabled=true;btn.textContent='Swapping…';
+  try {
+    var submitRes=await fetch(APIFREE_BASE+'/v1/image/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+      body:JSON.stringify({model:'bytedance/seedream-4.5/edit',prompt:'swap the face with the source face, keep everything else identical',image_url:targetUrl,source_image_url:sourceUrl,num_images:1})
+    });
+    var submitData=await submitRes.json();
+    console.log('[FaceSwap Submit]',JSON.stringify(submitData));
+    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed: '+JSON.stringify(submitData).substring(0,400));
+    var requestId=submitData.resp_data.request_id;
+    var maxWait=120000,start=Date.now();
+    while(Date.now()-start<maxWait){
+      await new Promise(function(r){setTimeout(r,3000);});
+      var pollRes=await fetch(APIFREE_BASE+'/v1/image/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+      var pollData=await pollRes.json();
+      if(pollData.resp_data&&pollData.resp_data.status==='success'){
+        var imgUrl=(pollData.resp_data.image_list&&pollData.resp_data.image_list[0]);
+        if(!imgUrl) throw new Error('No image URL');
+        var imgResp=await fetch(imgUrl,{referrerPolicy:'no-referrer'});
+        var imgBlob=await imgResp.blob();
+        var blobUrl=URL.createObjectURL(imgBlob);
+        lc.style.display='none';
+        var cImg=document.getElementById('cImg');
+        cImg.src=blobUrl;cImg.style.display='block';
+        document.getElementById('ES').style.display='none';
+        if(document.getElementById('bgVideo')) document.getElementById('bgVideo').style.display='none';
+        addAsset({type:'image',src:blobUrl,name:'faceswap'});
+        showToast('Face swap complete!','ok');
+        btn.disabled=false;btn.textContent='✦ Swap Face';
+        return;
+      }
+      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
+    }
+    throw new Error('Timed out');
+  } catch(err){
+    lc.style.display='none';es.style.display='';
+    showToast('Face swap error: '+err.message,'err');
+  }
+  btn.disabled=false;btn.textContent='✦ Swap Face';
+}
+
+/* ═══ MULTI-CLIP TIMELINE ═══ */
+var tlClips=[];  // [{id,src,blob,name,duration,thumb}]
+var tlSelectedIdx=-1;
+var tlPlayingIdx=-1;
+var tlDragIdx=-1;
+
+function tlFmt(sec){
+  if(!sec||!isFinite(sec)) return '0:00';
+  var m=Math.floor(sec/60),s=Math.floor(sec%60).toString().padStart(2,'0');
+  return m+':'+s;
+}
+
+function tlAddClip(blobOrUrl,name,duration){
+  var id='clip_'+Date.now()+'_'+Math.random().toString(36).substr(2,4);
+  var clip={id:id,src:blobOrUrl,name:name||'Clip '+(tlClips.length+1),duration:duration||0,thumb:null};
+  // Generate thumbnail
+  var tmpVid=document.createElement('video');
+  tmpVid.crossOrigin='anonymous';
+  tmpVid.muted=true;
+  tmpVid.preload='metadata';
+  tmpVid.src=blobOrUrl;
+  tmpVid.addEventListener('loadeddata',function(){
+    clip.duration=tmpVid.duration;
+    tmpVid.currentTime=Math.min(1,tmpVid.duration*0.2);
+  });
+  tmpVid.addEventListener('seeked',function(){
+    try{
+      var c=document.createElement('canvas');
+      c.width=160;c.height=90;
+      var ctx=c.getContext('2d');
+      ctx.drawImage(tmpVid,0,0,160,90);
+      clip.thumb=c.toDataURL('image/jpeg',0.6);
+    }catch(e){}
+    tlRender();
+  });
+  tlClips.push(clip);
+  tlRender();
+  showToast('Clip added to timeline','ok');
+}
+
+function tlRender(){
+  var track=document.getElementById('tlTrack');
+  track.innerHTML='';
+  if(!tlClips.length){
+    track.innerHTML='<div id="tlEmpty" style="flex:1;display:flex;align-items:center;justify-content:center;color:rgba(184,148,46,.35);font-family:\'Cinzel\',serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;pointer-events:none;">Generate or import videos to build your sequence</div>';
+    document.getElementById('tlTime').textContent='0 clips · 0:00';
+    return;
+  }
+  tlClips.forEach(function(clip,i){
+    // Drop zone before each clip
+    var dz=document.createElement('div');
+    dz.className='tl-drop-zone';
+    dz.dataset.idx=i;
+    dz.addEventListener('dragover',function(e){e.preventDefault();this.classList.add('active');});
+    dz.addEventListener('dragleave',function(){this.classList.remove('active');});
+    dz.addEventListener('drop',function(e){e.preventDefault();this.classList.remove('active');tlDropAt(parseInt(this.dataset.idx));});
+    track.appendChild(dz);
+
+    var el=document.createElement('div');
+    el.className='tl-clip'+(i===tlSelectedIdx?' selected':'');
+    el.draggable=true;
+    el.dataset.idx=i;
+    // Width based on duration (min 80px, ~20px per second)
+    var w=Math.max(80,Math.round((clip.duration||5)*16));
+    el.style.width=w+'px';
+    // Thumbnail or gradient
+    if(clip.thumb){
+      el.innerHTML='<img class="tl-clip-thumb" src="'+clip.thumb+'">';
+    } else {
+      el.style.background='linear-gradient(135deg,rgba(184,148,46,.15),rgba(26,20,16,.9))';
+    }
+    el.innerHTML+='<div class="tl-clip-label">'+clip.name+'</div>';
+    if(clip.duration) el.innerHTML+='<div class="tl-clip-dur">'+tlFmt(clip.duration)+'</div>';
+    // Click to select
+    el.addEventListener('click',function(e){
+      e.stopPropagation();
+      tlSelectedIdx=i;
+      tlRender();
+    });
+    // Drag
+    el.addEventListener('dragstart',function(e){
+      tlDragIdx=i;
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    el.addEventListener('dragend',function(){el.classList.remove('dragging');tlDragIdx=-1;});
+    track.appendChild(el);
+  });
+  // Final drop zone
+  var dzEnd=document.createElement('div');
+  dzEnd.className='tl-drop-zone';
+  dzEnd.style.flex='1';
+  dzEnd.style.minWidth='20px';
+  dzEnd.dataset.idx=tlClips.length;
+  dzEnd.addEventListener('dragover',function(e){e.preventDefault();this.classList.add('active');});
+  dzEnd.addEventListener('dragleave',function(){this.classList.remove('active');});
+  dzEnd.addEventListener('drop',function(e){e.preventDefault();this.classList.remove('active');tlDropAt(parseInt(this.dataset.idx));});
+  track.appendChild(dzEnd);
+
+  // Update info
+  var totalDur=tlClips.reduce(function(s,c){return s+(c.duration||0);},0);
+  document.getElementById('tlTime').textContent=tlClips.length+' clip'+(tlClips.length!==1?'s':'')+' · '+tlFmt(totalDur);
+}
+
+function tlDropAt(targetIdx){
+  if(tlDragIdx<0||tlDragIdx===targetIdx) return;
+  var clip=tlClips.splice(tlDragIdx,1)[0];
+  if(targetIdx>tlDragIdx) targetIdx--;
+  tlClips.splice(targetIdx,0,clip);
+  tlSelectedIdx=targetIdx;
+  tlRender();
+  showToast('Clip reordered','ok');
+}
+
+function tlRemoveClip(){
+  if(tlSelectedIdx<0||!tlClips[tlSelectedIdx]){showToast('Select a clip first','err');return;}
+  tlClips.splice(tlSelectedIdx,1);
+  tlSelectedIdx=Math.min(tlSelectedIdx,tlClips.length-1);
+  tlRender();
+  showToast('Clip removed','ok');
+}
+
+function tlClearAll(){
+  if(!tlClips.length) return;
+  if(!confirm('Clear all clips from timeline?')) return;
+  tlClips=[];tlSelectedIdx=-1;
+  tlRender();
+  showToast('Timeline cleared','ok');
+}
+
+/* Sequential playback */
+var tlPlayAbort=false;
+async function tlPlayAll(){
+  if(!tlClips.length){showToast('No clips in timeline','err');return;}
+  tlPlayAbort=false;
+  var btn=document.getElementById('tlPlayBtn');
+  btn.textContent='⏸ Pause';
+  btn.onclick=function(){tlPlayAbort=true;};
+  var canvas=document.getElementById('CB');
+  var bgVid=document.getElementById('bgVideo');
+  if(bgVid) bgVid.style.display='none';
+  document.getElementById('cImg').style.display='none';
+  document.getElementById('ES').style.display='none';
+  // Remove old playback video
+  var old=document.getElementById('tlPlayVid');if(old)old.remove();
+  var vid=document.createElement('video');
+  vid.id='tlPlayVid';
+  vid.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:5;border-radius:12px;';
+  canvas.appendChild(vid);
+
+  for(var i=0;i<tlClips.length;i++){
+    if(tlPlayAbort) break;
+    tlSelectedIdx=i;
+    tlRender();
+    vid.src=tlClips[i].src;
+    vid.load();
+    await new Promise(function(resolve){
+      vid.oncanplay=function(){vid.play();};
+      vid.onended=resolve;
+      vid.onerror=resolve;
+      // Safety timeout
+      setTimeout(resolve,Math.max((tlClips[i].duration||10)*1000+2000,15000));
+    });
+  }
+  btn.textContent='▶ Play';
+  btn.onclick=function(){tlPlayAll();};
+  showToast('Playback complete','ok');
+}
+
+function tlStopAll(){
+  tlPlayAbort=true;
+  var vid=document.getElementById('tlPlayVid');
+  if(vid){vid.pause();vid.remove();}
+  document.getElementById('tlPlayBtn').textContent='▶ Play';
+  document.getElementById('tlPlayBtn').onclick=function(){tlPlayAll();};
+}
+
+/* Auto-add generated/imported videos to timeline */
+function tlAutoAdd(blobUrl,name){
+  tlAddClip(blobUrl,name);
 }
 
 window.addEventListener('DOMContentLoaded',function(){
-  setTimeout(initWaveform, 500);
-  var savedKey=localStorage.getItem('elevenLabsApiKey');
-  if(savedKey) document.getElementById('apiKey').value=savedKey;
-  var savedVoiceId=localStorage.getItem('customVoiceId');
-  if(savedVoiceId) document.getElementById('customVoiceId').value=savedVoiceId;
+  tlRender();
 });
+</script>
+
+<!-- NYXEN BUBBLE -->
+<style>
+.studio-nyx-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.studio-nyx-btn{width:56px;height:56px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:2px solid #B8942E;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:transform .2s;flex-shrink:0;}
+.studio-nyx-btn:hover{transform:scale(1.08);}
+.studio-nyx-panel{width:340px;height:480px;border-radius:16px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.5);border:1px solid #C4B08C;display:none;flex-direction:column;background:#F3EBE0;}
+.studio-nyx-panel.open{display:flex;}
+.studio-nyx-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;background:linear-gradient(90deg,rgba(184,148,46,.12),transparent);border-bottom:1px solid #D4C4A8;flex-shrink:0;}
+.studio-nyx-av{width:32px;height:32px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:1.5px solid #B8942E;flex-shrink:0;}
+.studio-nyx-name{font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;color:#B8942E;}
+.studio-nyx-status{font-size:.68rem;color:#8A7A64;font-style:italic;}
+.studio-nyx-close{border:none;background:transparent;color:#8A7A64;cursor:pointer;font-size:18px;margin-left:auto;padding:0;}
+.studio-nyx-feed{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.studio-nyx-msg{padding:8px 12px;border-radius:10px;font-size:.82rem;line-height:1.55;max-width:85%;}
+.studio-nyx-msg.ai{background:#FFFCF8;border:1px solid #C4B08C;color:#1A0F1A;align-self:flex-start;}
+.studio-nyx-msg.ai .snlbl{font-size:.6rem;letter-spacing:.12em;color:#B8942E;margin-bottom:2px;font-weight:700;font-family:'Cinzel',serif;display:block;}
+.studio-nyx-msg.user{background:#B8942E;color:#fff;align-self:flex-end;}
+.studio-nyx-input-row{display:flex;align-items:center;gap:6px;padding:10px 12px;border-top:1px solid #D4C4A8;background:#F3EBE0;flex-shrink:0;}
+.studio-nyx-tbox{flex:1;min-height:36px;padding:7px 11px;border-radius:8px;border:1px solid #D4C4A8;font-family:'Cormorant Garamond',serif;font-size:.95rem;color:#1A0F1A;background:#FFFCF8;outline:none;resize:none;}
+.studio-nyx-tbox:focus{border-color:#B8942E;}
+.studio-nyx-send{width:32px;height:32px;border-radius:7px;background:#B8942E;border:none;color:#fff;font-size:1rem;cursor:pointer;flex-shrink:0;}
+</style>
+<div class="studio-nyx-wrap">
+  <div class="studio-nyx-panel" id="studioNyxPanel">
+    <div class="studio-nyx-hdr">
+      <div class="studio-nyx-av"></div>
+      <div>
+        <div class="studio-nyx-name">Nyxen</div>
+        <div class="studio-nyx-status" id="studioNyxStatus">Your creative assistant</div>
+      </div>
+      <button class="studio-nyx-close" onclick="toggleStudioNyx()">✕</button>
+    </div>
+    <div class="studio-nyx-feed" id="studioNyxFeed"></div>
+    <div class="studio-nyx-input-row">
+      <textarea class="studio-nyx-tbox" id="studioNyxInput" placeholder="Ask Nyxen anything…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendStudioNyx();}"></textarea>
+      <button class="studio-nyx-send" onclick="sendStudioNyx()">➤</button>
+    </div>
+  </div>
+  <button class="studio-nyx-btn" onclick="toggleStudioNyx()" title="Chat with Nyxen"></button>
+</div>
+<script>
+var studioNyxOpen=false,studioNyxHistory=[],studioNyxConvId=null;
+function toggleStudioNyx(){
+  studioNyxOpen=!studioNyxOpen;
+  document.getElementById('studioNyxPanel').classList.toggle('open',studioNyxOpen);
+  if(studioNyxOpen&&document.getElementById('studioNyxFeed').children.length===0){
+    addStudioNyxMsg("Hi! I'm Nyxen — your Studio assistant. Ask me about image generation, video, music, or anything creative.",'ai');
+  }
+  if(studioNyxOpen) setTimeout(function(){document.getElementById('studioNyxInput').focus();},100);
+}
+function addStudioNyxMsg(text,role){
+  var feed=document.getElementById('studioNyxFeed');
+  var d=document.createElement('div'); d.className='studio-nyx-msg '+role;
+  if(role==='ai') d.innerHTML='<span class="snlbl">NYXEN</span>'+text;
+  else d.textContent=text;
+  feed.appendChild(d); feed.scrollTop=feed.scrollHeight;
+}
+function sendStudioNyx(){
+  var inp=document.getElementById('studioNyxInput');
+  var msg=inp.value.trim(); if(!msg) return;
+  addStudioNyxMsg(msg,'user'); inp.value='';
+  studioNyxHistory.push({role:'user',content:msg});
+  document.getElementById('studioNyxStatus').textContent='Thinking…';
+  var body={messages:studioNyxHistory.slice(-20),mode:'assistant',response_mode:'balanced'};
+  if(studioNyxConvId) body.conversation_id=studioNyxConvId;
+  fetch('https://nyxen-ai.onrender.com/api/chat',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var reply=d.response||d.content||"I'm here! How can I help?";
+    if(d.conversation_id) studioNyxConvId=d.conversation_id;
+    studioNyxHistory.push({role:'assistant',content:reply});
+    addStudioNyxMsg(reply,'ai');
+    document.getElementById('studioNyxStatus').textContent='Your creative assistant';
+  })
+  .catch(function(){
+    addStudioNyxMsg("Something went wrong. Please try again.",'ai');
+    document.getElementById('studioNyxStatus').textContent='Your creative assistant';
+  });
+}
 </script>
 </body>
 </html>
