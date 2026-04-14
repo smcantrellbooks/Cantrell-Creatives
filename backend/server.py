@@ -1,967 +1,658 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voice Studio — Cantrell Creatives</title>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-<style>
-:root {
-  --bg: #F9F4ED;
-  --surface: #FFFCF8;
-  --surface-el: #FBF7F2;
-  --border: rgba(201,169,97,.4);
-  --border-hover: rgba(201,169,97,.7);
-  --text-primary: #2D1F2D;
-  --text-secondary: rgba(45,31,45,.90);
-  --text-tertiary: rgba(45,31,45,.70);
-  --accent: #7B5C7B;
-  --accent-hover: #5a3d5a;
-  --gold: #C9A961;
-  --gold-lt: rgba(201,169,97,.15);
-  --plum: #7B5C7B;
-  --plum-lt: rgba(123,92,123,.1);
-  --plum-bd: rgba(123,92,123,.3);
-  --success: #2a6b3c;
-  --error: #c03c3c;
-  --oak-dark: #EDE0CC;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:17px;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
-.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none !important;}
-::-webkit-scrollbar{width:6px;height:6px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-::-webkit-scrollbar-thumb:hover{background:var(--border-hover);}
-.banner{position:relative;overflow:hidden;display:block;width:100%;height:300px;}
-.banner-img{position:absolute;top:0;left:0;width:100%;height:300px;object-fit:cover;object-position:center;transform:none !important;transition:none !important;will-change:auto !important;}
-.title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
-.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:var(--plum);line-height:1;text-shadow:rgba(255,255,255,.6) 0 2px 16px;letter-spacing:6px;}
-.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:var(--plum);line-height:.95;text-shadow:rgba(255,255,255,.6) 0 2px 16px;margin-left:8px;}
-.title-tagline{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(90,58,90,.85);margin-top:8px;}
-.gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--plum),transparent);margin-top:8px;border-radius:999px;}
-.nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:200;}
-.nt-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(201,169,97,.5);background:rgba(40,20,40,.32);color:rgba(232,201,122,.95);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
-.nt-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);}
-.nt-btn.login{background:rgb(201,169,97);border-color:rgb(201,169,97);color:rgb(45,31,45);font-weight:800;}
-.nt-btn.logout{background:rgba(192,60,60,.7);border-color:rgba(192,60,60,.8);color:#fff;font-weight:800;}
-.nt-btn.logout:hover{background:rgba(192,60,60,.9);}
-.nav-bot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(60,30,60,.78) 0%,rgba(60,30,60,.3) 55%,transparent 100%);z-index:100;}
-.nb-inner{display:flex;align-items:center;gap:10px;padding:10px 28px 14px;}
-.nb-btn{padding:7px 22px;border-radius:999px;border:1px solid rgba(201,169,97,.45);background:rgba(40,20,40,.28);color:rgba(232,201,122,.95);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;display:inline-block;white-space:nowrap;}
-.nb-btn:hover{background:rgba(201,169,97,.28);border-color:rgb(201,169,97);transform:translateY(-1px);}
-.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,rgba(201,169,97,.3) 10%,rgb(201,169,97) 30%,rgb(232,201,122) 50%,rgb(201,169,97) 70%,rgba(201,169,97,.3) 90%,transparent 100%);background-size:200%;animation:shimmer 4s linear infinite;}
-@keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
-.nav-tabs-bar{display:flex;align-items:center;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;flex-wrap:wrap;}
-.nav-tab{background:none;border:none;color:var(--text-tertiary);font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:14px 18px;cursor:pointer;transition:color 150ms,border-color 150ms;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;white-space:nowrap;}
-.nav-tab:hover{color:var(--text-secondary);}
-.nav-tab.active{color:var(--plum);border-bottom-color:var(--gold);}
-.nav-status{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse-glow 2s infinite;}
-@keyframes pulse-glow{0%,100%{opacity:1;}50%{opacity:.4;}}
-.main{min-height:calc(100vh - 340px);}
-.tab-content{display:none;padding:32px 24px;max-width:1440px;margin:0 auto;}
-.tab-content.active{display:block;}
-.section-header{margin-bottom:32px;}
-.section-title{font-family:'Cinzel',serif;font-weight:700;font-size:2rem;letter-spacing:.02em;line-height:1;margin-bottom:8px;color:var(--plum);}
-.section-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase;}
-.voice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-.voice-card{background:var(--surface);padding:20px;cursor:pointer;transition:background 150ms;display:flex;flex-direction:column;gap:12px;}
-.voice-card:hover{background:var(--surface-el);}
-.voice-card-header{display:flex;align-items:center;gap:12px;}
-.voice-avatar{width:40px;height:40px;background:var(--plum-lt);border:1px solid var(--plum-bd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:var(--plum);flex-shrink:0;}
-.voice-card-info{flex:1;min-width:0;}
-.voice-name{font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:var(--text-primary);}
-.voice-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase;}
-.voice-desc{font-size:14px;color:var(--text-secondary);line-height:1.4;}
-.voice-tags{display:flex;gap:6px;flex-wrap:wrap;}
-.voice-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--text-tertiary);border-radius:4px;}
-.voice-card-actions{display:flex;gap:8px;margin-top:auto;}
-.btn-play,.btn-select{flex:1;padding:8px 12px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all 150ms;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:6px;}
-.btn-play:hover{border-color:var(--plum);color:var(--plum);}
-.btn-play.playing{background:var(--plum);color:#fff;border-color:var(--plum);}
-.btn-select:hover{border-color:var(--gold);color:var(--gold);}
-.tts-layout{display:grid;grid-template-columns:1fr 360px;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;min-height:500px;}
-@media(max-width:768px){.tts-layout{grid-template-columns:1fr;}}
-.tts-editor{background:var(--surface);display:flex;flex-direction:column;}
-.tts-textarea{flex:1;background:transparent;border:none;color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.8;padding:24px;resize:none;outline:none;min-height:300px;}
-.tts-textarea::placeholder{color:var(--text-tertiary);}
-.tts-editor-footer{padding:12px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.char-count{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);}
-.tts-controls{background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:20px;}
-.control-group{display:flex;flex-direction:column;gap:8px;}
-.control-label{font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
-.control-select{background:#fff;border:1px solid var(--border);color:var(--text-primary);padding:10px 12px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;cursor:pointer;border-radius:8px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237B5C7B'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
-.control-select:focus{border-color:var(--plum);}
-.speed-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;}
-.speed-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;background:var(--plum);border-radius:50%;cursor:pointer;}
-.speed-value{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--gold);text-align:center;}
-.btn-generate{width:100%;padding:14px;background:linear-gradient(135deg,var(--plum),var(--accent-hover));color:#fff;border:none;font-family:'Cinzel',serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:8px;}
-.btn-generate:hover{background:linear-gradient(135deg,var(--accent-hover),var(--plum));transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,92,123,.3);}
-.btn-generate:active{transform:scale(.98);}
-.btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
-.audio-result{border:1px solid var(--border);background:var(--surface);padding:20px;display:none;flex-direction:column;gap:12px;margin-top:24px;border-radius:10px;}
-.audio-result.visible{display:flex;}
-.audio-result audio{width:100%;height:40px;outline:none;}
-.audio-result-info{display:flex;justify-content:space-between;align-items:center;}
-.btn-download{padding:8px 16px;background:transparent;border:1px solid var(--border);color:var(--text-secondary);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all 150ms;border-radius:6px;}
-.btn-download:hover{border-color:var(--gold);color:var(--gold);}
-.audiobook-layout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-@media(max-width:900px){.audiobook-layout{grid-template-columns:1fr;}}
-.audiobook-input,.audiobook-config{background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:20px;}
-.upload-zone{border:1px dashed var(--border);padding:32px;text-align:center;cursor:pointer;transition:border-color 150ms;position:relative;border-radius:10px;background:var(--surface-el);}
-.upload-zone:hover{border-color:var(--plum);}
-.upload-zone-icon{font-size:32px;color:var(--text-tertiary);margin-bottom:8px;}
-.upload-zone-text{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
-.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
-.audiobook-textarea{flex:1;background:#fff;border:1px solid var(--border);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.7;padding:16px;resize:vertical;outline:none;min-height:200px;border-radius:8px;}
-.audiobook-textarea:focus{border-color:var(--plum);}
-.segments-preview{max-height:200px;overflow-y:auto;border:1px solid var(--border);background:var(--surface-el);border-radius:8px;}
-.segment-item{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;font-size:13px;}
-.segment-item:last-child{border-bottom:none;}
-.segment-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border:1px solid;flex-shrink:0;margin-top:2px;border-radius:3px;}
-.segment-badge.narration{color:var(--text-tertiary);border-color:var(--border);}
-.segment-badge.dialogue{color:var(--gold);border-color:var(--gold);}
-.segment-text{color:var(--text-secondary);line-height:1.4;}
-.chat-layout{border:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;height:calc(100vh - 400px);max-height:600px;border-radius:12px;overflow:hidden;}
-.chat-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface-el);}
-.chat-header-title{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--plum);}
-.chat-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
-.chat-msg{max-width:80%;display:flex;flex-direction:column;gap:4px;}
-.chat-msg.user{align-self:flex-end;}
-.chat-msg.assistant{align-self:flex-start;}
-.chat-msg-role{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
-.chat-msg-content{padding:12px 16px;font-size:15px;line-height:1.6;border-radius:10px;}
-.chat-msg.user .chat-msg-content{background:var(--plum);color:#fff;}
-.chat-msg.assistant .chat-msg-content{background:var(--surface-el);border:1px solid var(--border);color:var(--text-secondary);}
-.chat-input-area{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;}
-.chat-input{flex:1;background:#fff;border:1px solid var(--border);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:15px;padding:10px 14px;outline:none;border-radius:8px;}
-.chat-input:focus{border-color:var(--plum);}
-.btn-send{padding:10px 20px;background:var(--plum);border:none;color:#fff;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background 150ms;border-radius:8px;}
-.btn-send:hover{background:var(--accent-hover);}
-.btn-send:disabled{opacity:.5;cursor:not-allowed;}
-.loading-indicator{display:inline-flex;gap:4px;align-items:center;}
-.loading-indicator span{width:6px;height:6px;background:var(--plum);border-radius:50%;animation:blink 1.2s infinite;}
-.loading-indicator span:nth-child(2){animation-delay:.2s;}
-.loading-indicator span:nth-child(3){animation-delay:.4s;}
-@keyframes blink{0%,60%,100%{opacity:.2;}30%{opacity:1;}}
-.empty-state{text-align:center;padding:80px 24px;color:var(--text-tertiary);}
-.empty-state-icon{font-size:48px;margin-bottom:16px;opacity:.3;}
-.empty-state-text{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
-.char-voice-option,.compare-voice-option{display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer;transition:background 150ms;font-size:14px;color:var(--text-secondary);border-radius:6px;}
-.char-voice-option:hover,.compare-voice-option:hover{background:var(--surface-el);}
-.char-voice-option input[type="checkbox"],.compare-voice-option input[type="checkbox"]{-webkit-appearance:none;appearance:none;width:14px;height:14px;border:1px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;position:relative;border-radius:3px;}
-.char-voice-option input[type="checkbox"]:checked{background:var(--plum);border-color:var(--plum);}
-.compare-voice-option input[type="checkbox"]:checked{background:#60A5FA;border-color:#60A5FA;}
-.char-voice-option input[type="checkbox"]:checked::after,.compare-voice-option input[type="checkbox"]:checked::after{content:'';position:absolute;top:1px;left:4px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
-.waveform-canvas{width:100%;height:80px;background:var(--surface-el);border:1px solid var(--border);display:block;border-radius:8px;}
-.history-table{width:100%;border:1px solid var(--border);background:var(--surface);border-radius:12px;overflow:hidden;}
-.history-header{display:grid;grid-template-columns:60px 100px 120px 1fr 160px 80px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-el);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
-.history-row{display:grid;grid-template-columns:60px 100px 120px 1fr 160px 80px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 150ms;cursor:pointer;font-size:14px;}
-.history-row:hover{background:var(--surface-el);}
-.history-row:last-child{border-bottom:none;}
-.history-type-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border:1px solid;display:inline-block;text-align:center;border-radius:4px;}
-.history-type-badge.tts{color:var(--plum);border-color:var(--plum);}
-.history-type-badge.audiobook{color:var(--gold);border-color:var(--gold);}
-.history-type-badge.compare{color:#60A5FA;border-color:#60A5FA;}
-.history-type-badge.batch{color:#A78BFA;border-color:#A78BFA;}
-.history-type-badge.stream{color:var(--success);border-color:var(--success);}
-.history-voice{color:var(--text-secondary);font-weight:600;}
-.history-text{color:var(--text-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;}
-.history-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);}
-.history-play-btn{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all 150ms;text-transform:uppercase;letter-spacing:.05em;border-radius:4px;}
-.history-play-btn:hover{border-color:var(--plum);color:var(--plum);}
-.history-empty{text-align:center;padding:60px 24px;color:var(--text-tertiary);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;}
-.compare-result-card{background:var(--surface);padding:20px;display:flex;flex-direction:column;gap:12px;}
-.compare-result-card .card-header{display:flex;align-items:center;gap:10px;}
-.compare-result-card .card-name{font-family:'Cinzel',serif;font-weight:700;font-size:16px;}
-.compare-result-card .card-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
-.compare-result-card audio{width:100%;height:36px;}
-.chat-msg.assistant .chat-msg-content h1,.chat-msg.assistant .chat-msg-content h2,.chat-msg.assistant .chat-msg-content h3{font-family:'Cinzel',serif;font-weight:700;margin:12px 0 6px;line-height:1.3;}
-.chat-msg.assistant .chat-msg-content p{margin:8px 0;line-height:1.6;}
-.chat-msg.assistant .chat-msg-content ul,.chat-msg.assistant .chat-msg-content ol{margin:8px 0;padding-left:20px;}
-.chat-msg.assistant .chat-msg-content li{margin:4px 0;line-height:1.5;}
-.chat-msg.assistant .chat-msg-content strong{color:var(--text-primary);font-weight:600;}
-.chat-msg.assistant .chat-msg-content code{background:var(--surface-el);border:1px solid var(--border);padding:1px 6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--plum);border-radius:3px;}
-.chat-msg.assistant .chat-msg-content pre{background:var(--surface-el);border:1px solid var(--border);padding:12px;overflow-x:auto;margin:8px 0;border-radius:6px;}
-@media(max-width:768px){.history-header,.history-row{grid-template-columns:60px 100px 1fr 80px;}.history-header>:nth-child(4),.history-row>:nth-child(4),.history-header>:nth-child(5),.history-row>:nth-child(5){display:none;}}
-@media(max-width:640px){.nav-tab{padding:10px 10px;font-size:10px;}.section-title{font-size:1.5rem;}.tab-content{padding:20px 12px;}.voice-grid{grid-template-columns:1fr;}}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.fade-in{animation:fadeIn 200ms ease-out forwards;}
-</style>
-</head>
-<body>
+from fastapi import FastAPI, APIRouter, UploadFile, File, HTTPException
+from fastapi.responses import FileResponse, StreamingResponse
+from starlette.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+import logging
+import uuid
+import re
+import io
+import csv
+import json as json_module
+import asyncio
+from datetime import datetime, timezone
+from pathlib import Path
+from pydantic import BaseModel
+from typing import List, Optional
+import aiosqlite
+from openai import AsyncOpenAI
 
-<div class="banner">
-  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');">
-  <div class="title-block">
-    <div class="title-voice">VOICE</div>
-    <div class="title-studio">Studio</div>
-    <div class="title-tagline">Clone &middot; Narrate &middot; Publish</div>
-    <div class="gold-wave"></div>
-  </div>
-  <nav class="nav-top">
-    <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#x1F3E0; Home</a>
-    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/login/myaccount">My Account</a>
-    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
-    <a class="nt-btn logout" href="https://creatives.smcantrellbooks.com/logout">Log Out</a>
-  </nav>
-  <nav class="nav-bot">
-    <div class="nb-inner">
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">✍️ Publisher Workspace</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">📚 Collections</a>
-      <a class="nb-btn" href="https://smcantrellbooks.com">🌎 Main Site</a>
-    </div>
-  </nav>
-</div>
-<div class="gold-line"></div>
+ROOT_DIR = Path(__file__).parent
+load_dotenv(ROOT_DIR / '.env')
 
-<div class="nav-tabs-bar">
-  <button class="nav-tab active" data-tab="voices"><i class="ph ph-waveform" style="font-size:14px;"></i> Voices</button>
-  <button class="nav-tab" data-tab="tts"><i class="ph ph-microphone" style="font-size:14px;"></i> TTS Studio</button>
-  <button class="nav-tab" data-tab="audiobook"><i class="ph ph-book-open" style="font-size:14px;"></i> Audiobook</button>
-  <button class="nav-tab" data-tab="chat"><i class="ph ph-chat-circle" style="font-size:14px;"></i> Chat</button>
-  <button class="nav-tab" data-tab="compare"><i class="ph ph-scales" style="font-size:14px;"></i> Compare</button>
-  <button class="nav-tab" data-tab="history"><i class="ph ph-clock-counter-clockwise" style="font-size:14px;"></i> History</button>
-  <div class="nav-status"><span class="status-dot"></span><span id="health-status">CHECKING...</span></div>
-</div>
+from voices import VOICE_PROFILES, get_voice_by_id
 
-<main class="main">
+GENERATIONS_DIR = ROOT_DIR / "generations"
+UPLOADS_DIR = ROOT_DIR / "uploads"
+GENERATIONS_DIR.mkdir(exist_ok=True)
+UPLOADS_DIR.mkdir(exist_ok=True)
 
-  <section id="voices-tab" class="tab-content active">
-    <div class="section-header">
-      <h1 class="section-title">Voice Library</h1>
-      <p class="section-sub">9 OpenAI TTS voices / HD quality engine</p>
-    </div>
-    <div id="voice-grid" class="voice-grid"></div>
-  </section>
+DB_PATH = str(ROOT_DIR / "openvoice.db")
+openai_client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-  <section id="tts-tab" class="tab-content">
-    <div class="section-header">
-      <h1 class="section-title">TTS Studio</h1>
-      <p class="section-sub">Text-to-speech generation / HD quality / custom voice profiles</p>
-    </div>
-    <div class="tts-layout">
-      <div class="tts-editor">
-        <textarea id="tts-text" class="tts-textarea" placeholder="Enter your text here. Up to 4,096 characters supported..." maxlength="4096"></textarea>
-        <div class="tts-editor-footer"><span id="tts-char-count" class="char-count">0 / 4096</span></div>
-      </div>
-      <div class="tts-controls">
-        <div class="control-group"><label class="control-label">Voice Profile</label><select id="tts-voice-select" class="control-select"></select></div>
-        <div class="control-group"><label class="control-label">Speed</label><input type="range" id="tts-speed" class="speed-slider" min="0.25" max="4.0" step="0.05" value="1.0"><div id="tts-speed-value" class="speed-value">1.00x</div></div>
-        <div class="control-group"><label class="control-label">Model</label><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-tertiary);padding:8px 0;">tts-1-hd <span style="color:var(--success);font-size:10px;">ACTIVE</span></div></div>
-        <div style="flex:1;"></div>
-        <button id="tts-generate-btn" class="btn-generate">Generate Speech</button>
-      </div>
-    </div>
-    <div id="tts-result" class="audio-result">
-      <canvas id="tts-waveform" class="waveform-canvas"></canvas>
-      <audio controls></audio>
-      <div class="audio-result-info"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);"></span><button class="btn-download"><i class="ph ph-download-simple"></i> Download MP3</button></div>
-    </div>
-  </section>
+app = FastAPI()
+api_router = APIRouter(prefix="/api")
 
-  <section id="audiobook-tab" class="tab-content">
-    <div class="section-header">
-      <h1 class="section-title">Audiobook Studio</h1>
-      <p class="section-sub">Full manuscript generation / auto dialogue detection / multi-voice</p>
-    </div>
-    <div class="audiobook-layout">
-      <div class="audiobook-input">
-        <div class="control-group">
-          <label class="control-label">Upload Manuscript</label>
-          <div class="upload-zone">
-            <div class="upload-zone-icon"><i class="ph ph-file-doc"></i></div>
-            <div class="upload-zone-text">Drop .docx file or click to upload</div>
-            <input type="file" id="audiobook-file" accept=".docx">
-          </div>
-          <div id="upload-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--success);margin-top:4px;"></div>
-        </div>
-        <!-- Chapter Navigator -->
-        <div id="chapter-nav" style="display:none;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <label class="control-label" style="margin:0;">Chapters</label>
-            <div style="display:flex;gap:8px;">
-              <button id="select-all-chapters" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--text-tertiary);padding:3px 10px;cursor:pointer;border-radius:4px;">Select All</button>
-              <button id="deselect-all-chapters" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--text-tertiary);padding:3px 10px;cursor:pointer;border-radius:4px;">Clear</button>
-            </div>
-          </div>
-          <div id="chapter-list" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;max-height:380px;overflow-y:auto;background:var(--surface);"></div>
-        </div>
-        <!-- Chapter Preview -->
-        <div id="chapter-preview" style="display:none;margin-top:12px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <label class="control-label" id="chapter-preview-title" style="margin:0;color:var(--plum);"></label>
-            <button id="chapter-preview-close" style="background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;font-size:16px;">&times;</button>
-          </div>
-          <div id="chapter-preview-text" style="border:1px solid var(--border);border-radius:8px;padding:16px;max-height:220px;overflow-y:auto;font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.7;color:var(--text-secondary);background:#fff;white-space:pre-wrap;"></div>
-        </div>
-        <textarea id="audiobook-text" style="display:none;"></textarea>
-        <div style="display:flex;gap:8px;margin-top:12px;">
-          <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid var(--border);color:var(--text-tertiary);flex:1;">Preview Segments</button>
-          <button id="epub-convert-btn" class="btn-generate" style="background:transparent;border:1px solid var(--gold);color:var(--gold);flex:1;"><i class="ph ph-book-bookmark"></i> EPUB</button>
-        </div>
-        <div id="segments-preview" class="segments-preview" style="display:none;"></div>
-      </div>
-      <div class="audiobook-config">
-        <div class="control-group">
-          <label class="control-label">Number of Voices</label>
-          <div style="display:flex;gap:16px;margin-top:4px;">
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Cinzel',serif;font-size:11px;color:var(--text-secondary);">
-              <input type="radio" name="voice-mode" id="mode-single" value="single" checked style="accent-color:var(--plum);"> 1 Voice
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Cinzel',serif;font-size:11px;color:var(--text-secondary);">
-              <input type="radio" name="voice-mode" id="mode-multi" value="multi" style="accent-color:var(--plum);"> 2 Voices
-            </label>
-          </div>
-        </div>
-        <div class="control-group">
-          <label class="control-label">1st Voice (Character/Narrator)</label>
-          <input type="text" id="char1-name" placeholder="Character name (e.g. Sarah)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;margin-bottom:8px;background:#fff;color:var(--text-primary);">
-          <select id="narrator-voice-select" class="control-select"></select>
-        </div>
-        <div id="char-voice-group" style="display:none;">
-          <div class="control-group">
-            <label class="control-label">2nd Character</label>
-            <input type="text" id="char2-name" placeholder="Character name (e.g. James)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;margin-bottom:8px;background:#fff;color:var(--text-primary);">
-            <select id="narrator2-voice-select" class="control-select"></select>
-          </div>
-        </div>
-        <div style="flex:1;"></div>
-        <button id="audiobook-generate-btn" class="btn-generate">Generate Audiobook</button>
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-      </div>
-    </div>
-    <div id="audiobook-result" class="audio-result">
-      <canvas id="audiobook-waveform" class="waveform-canvas"></canvas>
-      <audio controls></audio>
-      <div class="audio-result-info"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);"></span><button class="btn-download"><i class="ph ph-download-simple"></i> Download MP3</button></div>
-    </div>
-  </section>
+audiobook_jobs = {}
 
-  <section id="chat-tab" class="tab-content">
-    <div class="section-header">
-      <h1 class="section-title">AI Assistant</h1>
-      <p class="section-sub">Voice platform guidance / creative writing help</p>
-    </div>
-    <div class="chat-layout">
-      <div class="chat-header"><i class="ph ph-chat-circle-dots" style="color:var(--plum);font-size:18px;"></i><span class="chat-header-title">Voice Studio Assistant</span></div>
-      <div id="chat-messages" class="chat-messages">
-        <div class="empty-state"><div class="empty-state-icon"><i class="ph ph-chat-circle-dots"></i></div><div class="empty-state-text">Ask me anything about voice cloning, TTS, or audiobooks</div></div>
-      </div>
-      <div class="chat-input-area">
-        <input type="text" id="chat-input" class="chat-input" placeholder="Type your message..." autocomplete="off">
-        <button id="chat-send-btn" class="btn-send">Send</button>
-      </div>
-    </div>
-  </section>
 
-  <section id="compare-tab" class="tab-content">
-    <div class="section-header">
-      <h1 class="section-title">Voice Compare</h1>
-      <p class="section-sub">Side-by-side comparison / same text, different voices</p>
-    </div>
-    <div style="border:1px solid var(--border);background:var(--surface);padding:24px;margin-bottom:24px;border-radius:12px;">
-      <div class="control-group" style="margin-bottom:20px;"><label class="control-label">Comparison Text</label><textarea id="compare-text" class="audiobook-textarea" placeholder="Enter text to hear in multiple voices..." style="min-height:100px;"></textarea></div>
-      <div class="control-group" style="margin-bottom:20px;">
-        <label class="control-label">Select Voices to Compare (2-6)</label>
-        <div id="compare-voices-list" style="max-height:220px;overflow-y:auto;border:1px solid var(--border);background:#fff;padding:8px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px;border-radius:8px;"></div>
-        <div id="compare-selected-count" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);margin-top:4px;">0 voices selected</div>
-      </div>
-      <button id="compare-generate-btn" class="btn-generate">Compare Voices</button>
-    </div>
-    <div id="compare-results" style="display:none;">
-      <div class="control-label" style="margin-bottom:12px;">Comparison Results</div>
-      <div id="compare-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;"></div>
-    </div>
-  </section>
+async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
+    response = await openai_client.audio.speech.create(
+        model="tts-1-hd",
+        voice=voice,
+        input=text,
+        speed=speed,
+        response_format=response_format,
+    )
+    return response.content
 
-  <section id="history-tab" class="tab-content">
-    <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
-      <div><h1 class="section-title">Generation History</h1><p class="section-sub">All generated audio / TTS and audiobooks / playback and download</p></div>
-      <div style="display:flex;gap:8px;margin-top:8px;">
-        <button id="export-json-btn" class="btn-download" style="padding:8px 14px;"><i class="ph ph-file-json"></i> Export JSON</button>
-        <button id="export-csv-btn" class="btn-download" style="padding:8px 14px;"><i class="ph ph-file-csv"></i> Export CSV</button>
-      </div>
-    </div>
-    <div id="history-container"><div class="empty-state"><div class="empty-state-icon"><i class="ph ph-clock-counter-clockwise"></i></div><div class="empty-state-text">No generations yet</div></div></div>
-    <div id="history-player" class="audio-result">
-      <canvas id="history-waveform" class="waveform-canvas"></canvas>
-      <audio controls></audio>
-      <div class="audio-result-info"><span id="history-player-info" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-tertiary);"></span><button class="btn-download"><i class="ph ph-download-simple"></i> Download MP3</button></div>
-    </div>
-  </section>
 
-</main>
+async def init_db():
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS generations (
+                id TEXT PRIMARY KEY,
+                voice_id TEXT,
+                text TEXT,
+                type TEXT DEFAULT 'tts',
+                created_at TEXT
+            )
+        """)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS chat_messages (
+                id TEXT PRIMARY KEY,
+                session_id TEXT,
+                role TEXT,
+                content TEXT,
+                created_at TEXT
+            )
+        """)
+        await db.commit()
 
-<footer style="border-top:1px solid var(--border);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;">
-  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Publishing Terms</a> &middot;
-  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Audio Disclosures</a> &middot;
-  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Our Philosophy</a>
-</footer>
 
-<script src='https://cdn.jotfor.ms/agent/embedjs/019d3d3c3a537add8379214c3060726a324e/embed.js'></script>
-<script>
-var API = 'https://cantrell-creatives.fly.dev/api';
-var voices = [];
-var activeTab = 'voices';
-var chatSessionId = null;
-var currentAudio = null;
-var currentPlayingCard = null;
+class TTSRequest(BaseModel):
+    text: str
+    voice_id: str
+    speed: Optional[float] = None
+    format: Optional[str] = "mp3"
 
-function WaveformViz(canvasId) {
-  this.canvas = document.getElementById(canvasId);
-  if (!this.canvas) return;
-  this.ctx = this.canvas.getContext('2d');
-  this.audioCtx = null; this.analyser = null; this.source = null; this.animationId = null; this.connectedAudio = null;
-}
-WaveformViz.prototype.connect = function(audioEl) {
-  if (!this.canvas) return;
-  if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (this.source) { try { this.source.disconnect(); } catch(e) {} }
-  if (this.connectedAudio === audioEl) { this.audioCtx.resume(); return; }
-  this.analyser = this.audioCtx.createAnalyser(); this.analyser.fftSize = 256;
-  this.source = this.audioCtx.createMediaElementSource(audioEl);
-  this.source.connect(this.analyser); this.analyser.connect(this.audioCtx.destination);
-  this.connectedAudio = audioEl;
-};
-WaveformViz.prototype.start = function() {
-  if (!this.analyser || !this.canvas) return;
-  var self = this;
-  function draw() {
-    self.animationId = requestAnimationFrame(draw);
-    var bl = self.analyser.frequencyBinCount, da = new Uint8Array(bl);
-    self.analyser.getByteFrequencyData(da);
-    var w = self.canvas.width = self.canvas.offsetWidth * 2, h = self.canvas.height = self.canvas.offsetHeight * 2;
-    self.ctx.clearRect(0, 0, w, h);
-    var bw = (w / bl) * 1.5, x = 0;
-    for (var i = 0; i < bl; i++) {
-      var v = da[i] / 255, bh = v * h * 0.85;
-      var ratio = i / bl;
-      self.ctx.fillStyle = 'rgba(' + Math.round(123*(1-ratio)+201*ratio) + ',' + Math.round(92*(1-ratio)+169*ratio) + ',' + Math.round(123*(1-ratio)+97*ratio) + ',' + (0.6+v*0.4) + ')';
-      self.ctx.fillRect(x, h - bh, bw - 2, bh);
-      x += bw;
+
+class AudiobookRequest(BaseModel):
+    text: str
+    narrator_voice: Optional[str] = None
+    narrator_voice_id: Optional[str] = None
+    characters: Optional[list] = None
+    character_voice_ids: Optional[List[str]] = None
+    auto_detect: Optional[bool] = True
+    format: Optional[str] = "mp3"
+
+
+class ChatRequest(BaseModel):
+    message: str
+    session_id: Optional[str] = None
+
+
+class CompareRequest(BaseModel):
+    text: str
+    voice_ids: List[str]
+
+
+class BatchTTSRequest(BaseModel):
+    text: str
+    voice_id: str
+    chunk_size: Optional[int] = 4000
+
+
+class EpubRequest(BaseModel):
+    text: str
+    title: str = "Untitled"
+    author: str = "Unknown"
+
+
+def get_voice_by_name(name: str):
+    for voice in VOICE_PROFILES:
+        if voice["name"].lower() == name.lower():
+            return voice
+    return None
+
+
+def resolve_voice(identifier: str):
+    voice = get_voice_by_id(identifier)
+    if not voice:
+        voice = get_voice_by_name(identifier)
+    return voice
+
+
+def split_text_into_chunks(text, chunk_size=4000):
+    chunks = []
+    while text:
+        if len(text) <= chunk_size:
+            chunks.append(text)
+            break
+        cut = chunk_size
+        for sep in ['. ', '! ', '? ', '.\n', '!\n', '?\n', '\n\n', '\n', ', ', ' ']:
+            idx = text.rfind(sep, 0, chunk_size)
+            if idx > chunk_size // 2:
+                cut = idx + len(sep)
+                break
+        chunks.append(text[:cut])
+        text = text[cut:]
+    return chunks
+
+
+def parse_dialogue(text: str):
+    segments = []
+    pattern = r'(\u201c[^\u201d]*\u201d|"[^"]*"|\'[^\']*\')'
+    parts = re.split(pattern, text)
+    for part in parts:
+        part = part.strip()
+        if not part:
+            continue
+        is_dialogue = (
+            (part.startswith('"') and part.endswith('"')) or
+            (part.startswith("'") and part.endswith("'")) or
+            (part.startswith('\u201c') and part.endswith('\u201d'))
+        )
+        if is_dialogue:
+            cleaned = part.strip('"\'\u201c\u201d\u2018\u2019')
+            segments.append({"type": "dialogue", "text": cleaned})
+        else:
+            segments.append({"type": "narration", "text": part})
+    return segments if segments else [{"type": "narration", "text": text}]
+
+
+async def run_audiobook_job(job_id: str, request: AudiobookRequest):
+    job = audiobook_jobs[job_id]
+    job["status"] = "processing"
+    try:
+        narrator = None
+        if request.narrator_voice:
+            narrator = resolve_voice(request.narrator_voice)
+        if not narrator and request.narrator_voice_id:
+            narrator = resolve_voice(request.narrator_voice_id)
+        if not narrator:
+            narrator = VOICE_PROFILES[0] if VOICE_PROFILES else None
+        if not narrator:
+            job["status"] = "error"
+            job["error"] = "Narrator voice not found"
+            return
+
+        char_voices = []
+        if request.characters:
+            for char in request.characters:
+                if isinstance(char, dict) and char.get("voice_id"):
+                    v = resolve_voice(char["voice_id"])
+                    if v:
+                        char_voices.append(v)
+        if not char_voices and request.character_voice_ids:
+            for vid in request.character_voice_ids:
+                v = resolve_voice(vid)
+                if v:
+                    char_voices.append(v)
+        if not char_voices:
+            char_voices = [v for v in [get_voice_by_id("voice_06"), get_voice_by_id("voice_03"), get_voice_by_id("voice_08")] if v]
+
+        if request.auto_detect and char_voices:
+            # Parse dialogue but merge consecutive same-type segments into chunks
+            raw_segments = parse_dialogue(request.text)
+            # Merge segments into larger chunks (max 3000 chars each) to reduce API calls
+            merged = []
+            current_type = None
+            current_text = []
+            current_len = 0
+            for seg in raw_segments:
+                seg_text = seg["text"].strip()
+                if not seg_text:
+                    continue
+                if seg["type"] == current_type and current_len + len(seg_text) < 3000:
+                    current_text.append(seg_text)
+                    current_len += len(seg_text)
+                else:
+                    if current_text:
+                        merged.append({"type": current_type, "text": " ".join(current_text)})
+                    current_type = seg["type"]
+                    current_text = [seg_text]
+                    current_len = len(seg_text)
+            if current_text:
+                merged.append({"type": current_type, "text": " ".join(current_text)})
+            segments = merged
+        else:
+            chunks = split_text_into_chunks(request.text, 4000)
+            segments = [{"type": "narration", "text": c} for c in chunks]
+
+        total = len([s for s in segments if s["text"].strip()])
+        job["total"] = total
+        job["completed"] = 0
+
+        all_audio = []
+        char_index = 0
+
+        for segment in segments:
+            seg_text = segment["text"].strip()[:4096]
+            if not seg_text:
+                continue
+            if segment["type"] == "narration":
+                voice = narrator
+            else:
+                voice = char_voices[char_index % len(char_voices)] if char_voices else narrator
+                char_index += 1
+            try:
+                audio_bytes = await generate_speech(
+                    text=seg_text,
+                    voice=voice["openai_voice"],
+                    speed=voice["speed"]
+                )
+                all_audio.append(audio_bytes)
+                job["completed"] += 1
+                job["progress"] = round((job["completed"] / total) * 100)
+            except Exception as e:
+                logger.error(f"Segment failed: {e}")
+                job["completed"] += 1
+                continue
+
+        if not all_audio:
+            job["status"] = "error"
+            job["error"] = "Failed to generate any audio"
+            return
+
+        combined = b"".join(all_audio)
+        output_path = GENERATIONS_DIR / f"{job_id}.mp3"
+        with open(output_path, "wb") as f:
+            f.write(combined)
+
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
+                (job_id, narrator["id"], request.text[:500], "audiobook", datetime.now(timezone.utc).isoformat())
+            )
+            await db.commit()
+
+        job["status"] = "complete"
+        job["audio_url"] = f"/api/audio/{job_id}"
+        job["narrator_voice"] = narrator["name"]
+        job["segments_count"] = len(all_audio)
+        job["progress"] = 100
+
+    except Exception as e:
+        logger.error(f"Audiobook job failed: {e}")
+        job["status"] = "error"
+        job["error"] = str(e)
+
+
+@api_router.get("/health")
+async def health():
+    return {
+        "status": "healthy",
+        "service": "VoiceForge TTS",
+        "version": "2.1.0",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "voices_count": len(VOICE_PROFILES),
+        "tts_engine": "OpenAI TTS HD",
     }
-  }
-  draw();
-};
-WaveformViz.prototype.stop = function() {
-  if (this.animationId) { cancelAnimationFrame(this.animationId); this.animationId = null; }
-  if (this.canvas) this.drawIdle();
-};
-WaveformViz.prototype.drawIdle = function() {
-  if (!this.canvas) return;
-  var w = this.canvas.width = this.canvas.offsetWidth * 2, h = this.canvas.height = this.canvas.offsetHeight * 2;
-  this.ctx.clearRect(0, 0, w, h);
-  for (var i = 0; i < 64; i++) {
-    var v = 0.05 + Math.sin(i * 0.3) * 0.04;
-    this.ctx.fillStyle = 'rgba(201,169,97,0.3)';
-    this.ctx.fillRect(i * (w/64), h - v*h, (w/64) - 2, v*h);
-  }
-};
 
-var ttsWaveform = new WaveformViz('tts-waveform');
-var audiobookWaveform = new WaveformViz('audiobook-waveform');
-var historyWaveform = new WaveformViz('history-waveform');
 
-document.addEventListener('DOMContentLoaded', init);
-function init() {
-  setupTabs();
-  loadVoices().then(function() {
-    renderVoices(); populateVoiceSelects(); setupTTSForm(); setupAudiobookForm();
-    setupChatForm(); setupCompareForm(); setupHistoryExport(); setupWaveforms(); checkHealth();
-  });
-}
+@api_router.get("/voices")
+async def get_voices():
+    public_voices = []
+    for v in VOICE_PROFILES:
+        pv = {k: val for k, val in v.items() if k != "sample_file"}
+        public_voices.append(pv)
+    return {"voices": public_voices}
 
-function setupTabs() {
-  document.querySelectorAll('.nav-tab').forEach(function(btn) {
-    btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
-  });
-}
-function switchTab(tab) {
-  activeTab = tab;
-  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
-  document.getElementById(tab + '-tab').classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(function(btn) { btn.classList.toggle('active', btn.dataset.tab === tab); });
-  if (tab === 'history') loadHistory();
-}
 
-function checkHealth() {
-  fetch(API + '/health').then(function(r) { return r.json(); }).then(function(d) {
-    var el = document.getElementById('health-status');
-    if (el) { el.textContent = d.status === 'healthy' ? 'ONLINE' : 'OFFLINE'; el.previousElementSibling.style.background = d.status === 'healthy' ? '#2a6b3c' : '#c03c3c'; }
-  }).catch(function() { var el = document.getElementById('health-status'); if (el) { el.textContent = 'OFFLINE'; el.previousElementSibling.style.background = '#c03c3c'; } });
-}
+@api_router.get("/voices/custom")
+async def get_custom_voices():
+    return [
+        {"name": v["name"], "id": v["id"], "gender": v["gender"],
+         "accent": v["accent"], "style": v["style"], "description": v["description"]}
+        for v in VOICE_PROFILES
+    ]
 
-function loadVoices() {
-  return fetch(API + '/voices').then(function(r) { return r.json(); }).then(function(d) { voices = d.voices || d; }).catch(function() { voices = []; });
-}
 
-function renderVoices() {
-  var grid = document.getElementById('voice-grid'); if (!grid) return; grid.innerHTML = '';
-  voices.forEach(function(voice, idx) {
-    var card = document.createElement('div'); card.className = 'voice-card fade-in'; card.style.animationDelay = (idx*30) + 'ms';
-    var initials = voice.name.substring(0,2).toUpperCase();
-    card.innerHTML = '<div class="voice-card-header"><div class="voice-avatar">' + initials + '</div><div class="voice-card-info"><div class="voice-name">' + voice.name + '</div><div class="voice-id">' + voice.id + ' / ' + voice.accent + '</div></div></div><div class="voice-desc">' + voice.description + '</div><div class="voice-tags"><span class="voice-tag">' + voice.style + '</span><span class="voice-tag">' + voice.gender + '</span><span class="voice-tag">' + voice.accent + '</span></div><div class="voice-card-actions"><button class="btn-play"><i class="ph ph-play"></i> Play</button><button class="btn-select"><i class="ph ph-arrow-right"></i> Use</button></div>';
-    (function(vid, c) {
-      c.querySelector('.btn-play').addEventListener('click', function(e) { e.stopPropagation(); playSample(vid, c.querySelector('.btn-play')); });
-      c.querySelector('.btn-select').addEventListener('click', function(e) { e.stopPropagation(); selectVoiceForTTS(vid); });
-    })(voice.id, card);
-    grid.appendChild(card);
-  });
-}
+@api_router.get("/voice-sample/{voice_id}")
+async def get_voice_sample(voice_id: str):
+    voice = resolve_voice(voice_id)
+    if not voice:
+        raise HTTPException(status_code=404, detail="Voice not found")
+    sample_text = f"Hi, I'm {voice['name']}. {voice['description']}"
+    try:
+        audio_bytes = await generate_speech(
+            text=sample_text,
+            voice=voice["openai_voice"],
+            speed=voice["speed"],
+            response_format="mp3"
+        )
+    except Exception as e:
+        logger.error(f"Voice sample generation failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate voice sample")
+    return StreamingResponse(
+        io.BytesIO(audio_bytes),
+        media_type="audio/mpeg",
+        headers={"Content-Disposition": f"inline; filename={voice['name']}.mp3"}
+    )
 
-function playSample(voiceId, btn) {
-  if (currentAudio) { currentAudio.pause(); currentAudio = null; if (currentPlayingCard) { currentPlayingCard.classList.remove('playing'); currentPlayingCard.innerHTML = '<i class="ph ph-play"></i> Play'; } }
-  if (currentPlayingCard === btn) { currentPlayingCard = null; return; }
-  btn.classList.add('playing'); btn.innerHTML = '<i class="ph ph-spinner"></i> Loading';
-  var audio = new Audio(API + '/voice-sample/' + voiceId);
-  currentAudio = audio; currentPlayingCard = btn;
-  audio.addEventListener('canplay', function() { btn.innerHTML = '<i class="ph ph-stop"></i> Stop'; audio.play(); });
-  audio.addEventListener('ended', function() { btn.classList.remove('playing'); btn.innerHTML = '<i class="ph ph-play"></i> Play'; currentAudio = null; currentPlayingCard = null; });
-  audio.addEventListener('error', function() { btn.classList.remove('playing'); btn.innerHTML = '<i class="ph ph-play"></i> Play'; currentAudio = null; currentPlayingCard = null; });
-}
 
-function selectVoiceForTTS(voiceId) {
-  var sel = document.getElementById('tts-voice-select'); if (sel) sel.value = voiceId;
-  switchTab('tts');
-}
+@api_router.post("/tts")
+async def generate_tts(request: TTSRequest):
+    voice = resolve_voice(request.voice_id)
+    if not voice:
+        raise HTTPException(status_code=404, detail="Voice not found")
+    text = request.text[:4096]
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+    speed = request.speed if request.speed else voice["speed"]
+    gen_id = str(uuid.uuid4())
+    resp_format = request.format if request.format in ("mp3", "wav", "opus", "aac", "flac") else "mp3"
+    try:
+        audio_bytes = await generate_speech(text=text, voice=voice["openai_voice"], speed=speed, response_format=resp_format)
+    except Exception as e:
+        logger.error(f"TTS generation failed: {e}")
+        raise HTTPException(status_code=500, detail="TTS generation failed")
+    output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
+    with open(output_path, "wb") as f:
+        f.write(audio_bytes)
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
+            (gen_id, voice["id"], text[:500], "tts", datetime.now(timezone.utc).isoformat())
+        )
+        await db.commit()
+    return FileResponse(output_path, media_type="audio/mpeg", filename=f"{gen_id}.mp3")
 
-function populateVoiceSelects() {
-  ['tts-voice-select','narrator-voice-select','narrator2-voice-select','char2-voice-select'].forEach(function(id) {
-    var sel = document.getElementById(id); if (!sel) return; sel.innerHTML = '';
-    voices.forEach(function(v) { var opt = document.createElement('option'); opt.value = v.id; opt.textContent = v.name + ' — ' + v.style + ' (' + v.accent + ')'; sel.appendChild(opt); });
-  });
-  var charC = document.getElementById('char-voices-list');
-  if (charC) { charC.innerHTML = ''; voices.forEach(function(v) { var l = document.createElement('label'); l.className = 'char-voice-option'; l.innerHTML = '<input type="checkbox" value="' + v.id + '"><span>' + v.name + '</span>'; charC.appendChild(l); }); }
-  var compC = document.getElementById('compare-voices-list');
-  if (compC) { compC.innerHTML = ''; voices.forEach(function(v) { var l = document.createElement('label'); l.className = 'compare-voice-option'; l.innerHTML = '<input type="checkbox" value="' + v.id + '"><span>' + v.name + ' <span style="color:var(--text-tertiary);font-size:11px;">(' + v.accent + ')</span></span>'; l.querySelector('input').addEventListener('change', updateCompareCount); compC.appendChild(l); }); }
-}
 
-function setupTTSForm() {
-  var ta = document.getElementById('tts-text'), cc = document.getElementById('tts-char-count'), ss = document.getElementById('tts-speed'), sv = document.getElementById('tts-speed-value'), gb = document.getElementById('tts-generate-btn');
-  if (ta && cc) ta.addEventListener('input', function() { cc.textContent = ta.value.length + ' / 4096'; });
-  if (ss && sv) ss.addEventListener('input', function() { sv.textContent = parseFloat(ss.value).toFixed(2) + 'x'; });
-  if (gb) gb.addEventListener('click', generateTTS);
-}
+@api_router.get("/audio/{gen_id}")
+async def serve_audio(gen_id: str):
+    gen_id = re.sub(r'[^a-zA-Z0-9\-]', '', gen_id)
+    audio_path = GENERATIONS_DIR / f"{gen_id}.mp3"
+    if not audio_path.exists():
+        raise HTTPException(status_code=404, detail="Audio not found")
+    return FileResponse(audio_path, media_type="audio/mpeg", filename=f"{gen_id}.mp3")
 
-function generateTTS() {
-  var text = document.getElementById('tts-text').value.trim(), voiceId = document.getElementById('tts-voice-select').value, speed = parseFloat(document.getElementById('tts-speed').value), btn = document.getElementById('tts-generate-btn'), result = document.getElementById('tts-result');
-  if (!text) return; btn.disabled = true; btn.textContent = 'GENERATING...';
-  fetch(API + '/tts', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({text:text,voice_id:voiceId,speed:speed}) })
-  .then(function(r) {
-    var ct = r.headers.get('content-type') || '';
-    if (!r.ok) return r.json().then(function(d) { throw new Error(d.detail||'Failed'); });
-    if (ct.indexOf('audio') !== -1) return r.blob().then(function(blob) { return {blob:blob}; });
-    return r.json();
-  })
-  .then(function(data) {
-    result.classList.add('visible'); setTimeout(function() { ttsWaveform.drawIdle && ttsWaveform.drawIdle(); }, 50);
-    var url, voiceName = voiceId, textLen = text.length;
-    if (data.blob) {
-      url = URL.createObjectURL(data.blob);
-    } else {
-      url = API + '/audio/' + data.id;
-      voiceName = data.voice_name || voiceId;
-      textLen = data.text_length || text.length;
+
+@api_router.post("/audiobook")
+async def generate_audiobook(request: AudiobookRequest):
+    if not request.text.strip():
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+    job_id = str(uuid.uuid4())
+    audiobook_jobs[job_id] = {
+        "status": "queued",
+        "progress": 0,
+        "completed": 0,
+        "total": 0,
+        "audio_url": None,
+        "error": None,
+        "narrator_voice": None,
+        "segments_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat()
     }
-    var audioEl = result.querySelector('audio');
-    audioEl.pause();
-    audioEl.removeAttribute('src');
-    audioEl.load();
-    audioEl.src = url;
-    audioEl.load();
-    audioEl.play().catch(function(){});
-    var info = result.querySelector('.audio-result-info span'); if (info) info.textContent = 'Voice: ' + voiceName + ' | ' + textLen + ' chars';
-    var dl = result.querySelector('.btn-download'); if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-tts.mp3'; a.click(); };
-  }).catch(function(e) { alert('TTS Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'GENERATE SPEECH'; });
-}
+    asyncio.create_task(run_audiobook_job(job_id, request))
+    return {"job_id": job_id, "status": "queued"}
 
-var bookChapters = [];
 
-function parseChapters(text) {
-  var lines = text.split('\n');
-  var chapters = [];
-  var currentTitle = null;
-  var currentLines = [];
-  var chapterPattern = /^\s*(chapter\s+\S+|prologue|epilogue|part\s+\S+)/i;
-  var inTOC = false;
-  var tocEndIdx = -1;
+@api_router.get("/audiobook/status/{job_id}")
+async def audiobook_status(job_id: str):
+    job_id = re.sub(r'[^a-zA-Z0-9\-]', '', job_id)
+    if job_id not in audiobook_jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return audiobook_jobs[job_id]
 
-  // Find where TOC ends by detecting "TABLE OF CONTENTS" then finding
-  // the first line after TOC that has real paragraph content
-  for (var i = 0; i < lines.length; i++) {
-    if (/table\s+of\s+contents/i.test(lines[i])) {
-      inTOC = true;
-      continue;
+
+@api_router.post("/upload")
+async def upload_docx(file: UploadFile = File(...)):
+    if not file.filename.endswith('.docx'):
+        raise HTTPException(status_code=400, detail="Only .docx files are supported")
+    from docx import Document
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="File is empty")
+    try:
+        doc = Document(io.BytesIO(content))
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid or corrupted .docx file")
+    paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+    text = "\n\n".join(paragraphs)
+    return {
+        "filename": file.filename,
+        "content": text,
+        "text": text,
+        "word_count": len(text.split()),
+        "paragraph_count": len(paragraphs)
     }
-    if (inTOC) {
-      // TOC ends when we hit a blank line followed by a chapter heading
-      // that is NOT immediately followed by another chapter heading (i.e. real content)
-      var trimmed = lines[i].trim();
-      if (trimmed === '' && i + 1 < lines.length) {
-        var next = lines[i + 1].trim();
-        // Check if next line is a chapter heading
-        if (chapterPattern.test(next)) {
-          // Look ahead to see if this chapter has real content (not just more headings)
-          var hasContent = false;
-          for (var j = i + 2; j < Math.min(i + 10, lines.length); j++) {
-            var jLine = lines[j].trim();
-            if (jLine !== '' && !chapterPattern.test(jLine)) {
-              hasContent = true;
-              break;
-            }
-          }
-          if (hasContent) {
-            inTOC = false;
-            tocEndIdx = i + 1;
-          }
-        }
-      }
+
+
+@api_router.get("/history")
+async def get_history():
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            "SELECT id, voice_id, text, type, created_at FROM generations ORDER BY created_at DESC LIMIT 100"
+        )
+        rows = await cursor.fetchall()
+        results = []
+        for row in rows:
+            item = dict(row)
+            voice = get_voice_by_id(item.get("voice_id", ""))
+            item["voice_name"] = voice["name"] if voice else "Unknown"
+            item["audio_url"] = f"/api/audio/{item['id']}"
+            results.append(item)
+        return {"generations": results}
+
+
+@api_router.get("/history/export")
+async def export_history(format: str = "json"):
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            "SELECT id, voice_id, text, type, created_at FROM generations ORDER BY created_at DESC"
+        )
+        rows = await cursor.fetchall()
+        results = []
+        for row in rows:
+            item = dict(row)
+            voice = get_voice_by_id(item.get("voice_id", ""))
+            item["voice_name"] = voice["name"] if voice else "Unknown"
+            item["audio_url"] = f"/api/audio/{item['id']}"
+            results.append(item)
+    if format == "csv":
+        output = io.StringIO()
+        writer = csv.DictWriter(output, fieldnames=["id", "type", "voice_id", "voice_name", "text", "audio_url", "created_at"])
+        writer.writeheader()
+        for r in results:
+            writer.writerow(r)
+        content = output.getvalue()
+        return StreamingResponse(
+            io.BytesIO(content.encode()),
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=voiceforge_history.csv"}
+        )
+    else:
+        content = json_module.dumps({"generations": results, "exported_at": datetime.now(timezone.utc).isoformat()}, indent=2)
+        return StreamingResponse(
+            io.BytesIO(content.encode()),
+            media_type="application/json",
+            headers={"Content-Disposition": "attachment; filename=voiceforge_history.json"}
+        )
+
+
+@api_router.post("/compare")
+async def compare_voices(request: CompareRequest):
+    if len(request.voice_ids) < 2:
+        raise HTTPException(status_code=400, detail="Select at least 2 voices to compare")
+    if len(request.voice_ids) > 6:
+        raise HTTPException(status_code=400, detail="Maximum 6 voices for comparison")
+    text = request.text[:4096]
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+    results = []
+    for vid in request.voice_ids:
+        voice = resolve_voice(vid)
+        if not voice:
+            continue
+        gen_id = str(uuid.uuid4())
+        try:
+            audio_bytes = await generate_speech(text=text, voice=voice["openai_voice"], speed=voice["speed"])
+            output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
+            with open(output_path, "wb") as f:
+                f.write(audio_bytes)
+            async with aiosqlite.connect(DB_PATH) as db:
+                await db.execute(
+                    "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
+                    (gen_id, voice["id"], text[:500], "compare", datetime.now(timezone.utc).isoformat())
+                )
+                await db.commit()
+            results.append({
+                "voice_id": voice["id"],
+                "voice_name": voice["name"],
+                "accent": voice["accent"],
+                "style": voice["style"],
+                "audio_url": f"/api/audio/{gen_id}",
+                "gen_id": gen_id
+            })
+        except Exception as e:
+            logger.error(f"Compare voice {vid} failed: {e}")
+            results.append({
+                "voice_id": voice["id"],
+                "voice_name": voice["name"],
+                "accent": voice["accent"],
+                "style": voice["style"],
+                "audio_url": None,
+                "error": str(e)[:100]
+            })
+    return {"results": results, "text": text}
+
+
+@api_router.post("/batch-tts")
+async def batch_tts(request: BatchTTSRequest):
+    voice = resolve_voice(request.voice_id)
+    if not voice:
+        raise HTTPException(status_code=404, detail="Voice not found")
+    text = request.text
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="Text cannot be empty")
+    chunk_size = min(max(request.chunk_size or 4000, 500), 4096)
+    chunks = split_text_into_chunks(text, chunk_size)
+    gen_id = str(uuid.uuid4())
+    all_audio = []
+    for chunk in chunks:
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        try:
+            audio_bytes = await generate_speech(text=chunk, voice=voice["openai_voice"], speed=voice["speed"])
+            all_audio.append(audio_bytes)
+        except Exception as e:
+            logger.error(f"Batch TTS chunk failed: {e}")
+    if not all_audio:
+        raise HTTPException(status_code=500, detail="Failed to generate any audio chunks")
+    combined = b"".join(all_audio)
+    output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
+    with open(output_path, "wb") as f:
+        f.write(combined)
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
+            (gen_id, voice["id"], request.text[:500], "batch", datetime.now(timezone.utc).isoformat())
+        )
+        await db.commit()
+    return {
+        "id": gen_id,
+        "audio_url": f"/api/audio/{gen_id}",
+        "voice_name": voice["name"],
+        "chunks_total": len(chunks),
+        "chunks_generated": len(all_audio),
+        "text_length": len(request.text)
     }
-  }
 
-  // If we found TOC, start parsing from tocEndIdx, else parse from beginning
-  var startIdx = tocEndIdx > 0 ? tocEndIdx : 0;
 
-  for (var i = startIdx; i < lines.length; i++) {
-    var line = lines[i];
-    if (chapterPattern.test(line.trim())) {
-      if (currentTitle !== null && currentLines.join('\n').trim().length > 50) {
-        chapters.push({ title: currentTitle, content: currentLines.join('\n').trim() });
-      }
-      currentTitle = line.trim();
-      currentLines = [];
-    } else {
-      currentLines.push(line);
-    }
-  }
-  if (currentTitle !== null && currentLines.join('\n').trim().length > 50) {
-    chapters.push({ title: currentTitle, content: currentLines.join('\n').trim() });
-  }
-  if (chapters.length === 0) {
-    return [{ title: 'Full Manuscript', content: text }];
-  }
-  return chapters;
-}
+@api_router.post("/convert-epub")
+async def convert_epub(request: EpubRequest):
+    import zipfile
+    text = request.text
+    title = request.title
+    author = request.author
+    chapter_regex = re.compile(r'(?:^|\n)\s*(chapter\s+\d+[^\n]*)', re.IGNORECASE)
+    matches = list(chapter_regex.finditer(text))
+    chapters = []
+    if matches:
+        for i, match in enumerate(matches):
+            start = match.start()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            ch_title = match.group(1).strip()
+            ch_content = text[start:end].strip()[len(ch_title):].strip()
+            chapters.append({"title": ch_title, "content": ch_content})
+    else:
+        chapters.append({"title": title, "content": text})
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr('mimetype', 'application/epub+zip', compress_type=zipfile.ZIP_STORED)
+        zf.writestr('META-INF/container.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n  <rootfiles>\n    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n  </rootfiles>\n</container>')
+        manifest_items = []
+        spine_items = []
+        for i, ch in enumerate(chapters):
+            fname = f"chapter{i+1}.xhtml"
+            content_html = ch["content"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            body = "\n".join(f"<p>{p.strip()}</p>" for p in content_html.split("\n") if p.strip())
+            ch_title_escaped = ch["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            xhtml = f'<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml">\n<head><title>{ch_title_escaped}</title></head>\n<body><h1>{ch_title_escaped}</h1>{body}</body>\n</html>'
+            zf.writestr(f'OEBPS/{fname}', xhtml)
+            manifest_items.append(f'<item id="ch{i+1}" href="{fname}" media-type="application/xhtml+xml"/>')
+            spine_items.append(f'<itemref idref="ch{i+1}"/>')
+        title_escaped = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        author_escaped = author.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        opf = f'<?xml version="1.0" encoding="UTF-8"?>\n<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">\n  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">\n    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>\n    <dc:title>{title_escaped}</dc:title>\n    <dc:creator>{author_escaped}</dc:creator>\n    <dc:language>en</dc:language>\n    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>\n  </metadata>\n  <manifest>{"".join(manifest_items)}</manifest>\n  <spine>{"".join(spine_items)}</spine>\n</package>'
+        zf.writestr('OEBPS/content.opf', opf)
+    buf.seek(0)
+    safe_title = re.sub(r'[^a-zA-Z0-9 ]', '', title).replace(' ', '_') or 'book'
+    return StreamingResponse(buf, media_type="application/epub+zip",
+        headers={"Content-Disposition": f'attachment; filename="{safe_title}.epub"'})
 
-function renderChapterList(chapters) {
-  var list = document.getElementById('chapter-list');
-  var nav = document.getElementById('chapter-nav');
-  if (!list || !nav) return;
-  list.innerHTML = '';
-  chapters.forEach(function(ch, i) {
-    var row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 150ms;';
-    row.innerHTML = '<input type="checkbox" checked style="-webkit-appearance:none;appearance:none;width:14px;height:14px;border:1px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;position:relative;border-radius:3px;" data-idx="' + i + '">'
-      + '<span style="flex:1;font-family:Cormorant Garamond,serif;font-size:15px;color:var(--text-primary);">' + escapeHtml(ch.title) + '</span>'
-      + '<span style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);">' + ch.content.split(' ').length + ' words</span>'
-      + '<button style="background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:2px 6px;" title="Preview"><i class="ph ph-eye"></i></button>';
-    var cb = row.querySelector('input[type=checkbox]');
-    cb.addEventListener('change', function() {
-      cb.style.background = cb.checked ? 'var(--plum)' : '#fff';
-      cb.style.borderColor = cb.checked ? 'var(--plum)' : 'var(--border)';
-    });
-    cb.style.background = 'var(--plum)'; cb.style.borderColor = 'var(--plum)';
-    row.querySelector('button').addEventListener('click', function(e) {
-      e.stopPropagation();
-      showChapterPreview(ch.title, ch.content);
-    });
-    row.addEventListener('mouseover', function() { row.style.background = 'var(--surface-el)'; });
-    row.addEventListener('mouseout', function() { row.style.background = ''; });
-    list.appendChild(row);
-  });
-  nav.style.display = 'block';
 
-  var sa = document.getElementById('select-all-chapters');
-  var da = document.getElementById('deselect-all-chapters');
-  if (sa) sa.onclick = function() { list.querySelectorAll('input[type=checkbox]').forEach(function(cb) { cb.checked = true; cb.style.background = 'var(--plum)'; cb.style.borderColor = 'var(--plum)'; }); };
-  if (da) da.onclick = function() { list.querySelectorAll('input[type=checkbox]').forEach(function(cb) { cb.checked = false; cb.style.background = '#fff'; cb.style.borderColor = 'var(--border)'; }); };
-}
+@api_router.post("/chat")
+async def chat(request: ChatRequest):
+    import httpx
+    if not request.message.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    groq_key = os.environ.get("GROQ_API_KEY", "")
+    if not groq_key:
+        raise HTTPException(status_code=500, detail="Chat service not configured")
+    session_id = request.session_id or str(uuid.uuid4())
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
+                json={
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [
+                        {"role": "system", "content": "You are a helpful voice studio assistant for Cantrell Creatives. Help users with voice selection, TTS generation, and audiobook creation."},
+                        {"role": "user", "content": request.message}
+                    ],
+                    "max_tokens": 1000
+                }
+            )
+        data = resp.json()
+        reply = data["choices"][0]["message"]["content"]
+        return {"response": reply, "session_id": session_id}
+    except Exception as e:
+        logger.error(f"Chat failed: {e}")
+        raise HTTPException(status_code=500, detail="Chat service error")
 
-function showChapterPreview(title, content) {
-  var cp = document.getElementById('chapter-preview');
-  var ct = document.getElementById('chapter-preview-title');
-  var cx = document.getElementById('chapter-preview-text');
-  if (!cp || !ct || !cx) return;
-  ct.textContent = title;
-  cx.textContent = content.substring(0, 2000) + (content.length > 2000 ? '...' : '');
-  cp.style.display = 'block';
-}
 
-function getSelectedChapterText() {
-  var list = document.getElementById('chapter-list');
-  if (!list || bookChapters.length === 0) {
-    return document.getElementById('audiobook-text').value;
-  }
-  var selected = [];
-  list.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
-    if (cb.checked) { selected.push(bookChapters[parseInt(cb.dataset.idx)].content); }
-  });
-  return selected.join('\n\n');
-}
+app.include_router(api_router)
 
-function setupAudiobookForm() {
-  var fi = document.getElementById('audiobook-file'), ta = document.getElementById('audiobook-text'), pb = document.getElementById('audiobook-preview-btn'), gb = document.getElementById('audiobook-generate-btn');
-  var cp = document.getElementById('chapter-preview-close');
-  if (cp) cp.addEventListener('click', function() { document.getElementById('chapter-preview').style.display = 'none'; });
-  if (fi) fi.addEventListener('change', function(e) {
-    var file = e.target.files[0]; if (!file) return; var fd = new FormData(); fd.append('file', file);
-    fetch(API + '/upload', {method:'POST',body:fd}).then(function(r) { return r.json(); }).then(function(d) {
-      if (!d.text) throw new Error('Upload failed');
-      ta.value = d.text;
-      bookChapters = parseChapters(d.text);
-      renderChapterList(bookChapters);
-      var info = document.getElementById('upload-info'); if (info) { info.textContent = d.filename + ' — ' + d.word_count + ' words · ' + bookChapters.length + ' chapters'; info.style.display = 'block'; }
-    }).catch(function(e) { alert('Upload Error: ' + e.message); });
-  });
-  if (pb) pb.addEventListener('click', previewSegments);
-  document.querySelectorAll('input[name="voice-mode"]').forEach(function(r) {
-    r.addEventListener('change', function() {
-      var cg = document.getElementById('char-voice-group');
-      if (cg) cg.style.display = this.value === 'multi' ? 'block' : 'none';
-    });
-  });
-  var eb = document.getElementById('epub-convert-btn'); if (eb) eb.addEventListener('click', convertEPUB);
-  if (gb) gb.addEventListener('click', generateAudiobook);
-}
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-function previewSegments() {
-  var text = document.getElementById('audiobook-text').value.trim(), c = document.getElementById('segments-preview'); if (!text||!c) return;
-  var parts = text.split(/(\u201c[^\u201d]*\u201d|"[^"]*"|'[^']*')/); c.innerHTML = '';
-  parts.forEach(function(p) { p = p.trim(); if (!p) return;
-    var isDlg = (p.startsWith('"')&&p.endsWith('"'))||(p.startsWith("'")&&p.endsWith("'"))||(p.startsWith('\u201c')&&p.endsWith('\u201d'));
-    var d = document.createElement('div'); d.className = 'segment-item';
-    d.innerHTML = '<span class="segment-badge ' + (isDlg?'dialogue':'narration') + '">' + (isDlg?'DLG':'NAR') + '</span><span class="segment-text">' + escapeHtml(p.substring(0,120)) + (p.length>120?'...':'') + '</span>';
-    c.appendChild(d);
-  });
-  c.style.display = 'block';
-}
 
-function generateAudiobook() {
-  var text = getSelectedChapterText().trim(), nid = document.getElementById('narrator-voice-select').value, btn = document.getElementById('audiobook-generate-btn'), result = document.getElementById('audiobook-result');
-  if (!text) return;
-  var modeEl = document.querySelector('input[name="voice-mode"]:checked');
-  var mode = modeEl ? modeEl.value : 'single';
-  var cvids = [];
-  if (mode === 'multi') {
-    var char1sel = document.getElementById('narrator2-voice-select');
-    if (char1sel && char1sel.value) cvids.push(char1sel.value);
-  }
-  btn.disabled = true; btn.textContent = 'STARTING...';
-
-  // Show progress bar
-  var pb = document.getElementById('audiobook-progress');
-  if (!pb) {
-    pb = document.createElement('div');
-    pb.id = 'audiobook-progress';
-    pb.style.cssText = 'margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);';
-    pb.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span class="control-label" style="margin:0;">Generating Audiobook</span><span id="ab-pct" style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--gold);">0%</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div id="ab-bar" style="height:100%;background:linear-gradient(90deg,var(--plum),var(--gold));width:0%;transition:width 300ms;border-radius:3px;"></div></div><div id="ab-msg" style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);margin-top:6px;">Initializing...</div>';
-    result.parentNode.insertBefore(pb, result);
-  }
-  pb.style.display = 'block';
-
-  var body = {text:text, narrator_voice_id:nid};
-  if (cvids.length > 0) body.character_voice_ids = cvids;
-
-  fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
-  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
-  .then(function(data) {
-    if (data.job_id) {
-      pollAudiobookJob(data.job_id, btn, result);
-    } else {
-      showAudiobookResult(data, result);
-      btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-      pb.style.display = 'none';
-    }
-  })
-  .catch(function(e) {
-    alert('Audiobook Error: ' + e.message);
-    btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-    pb.style.display = 'none';
-  });
-}
-
-function pollAudiobookJob(jobId, btn, result) {
-  btn.textContent = 'GENERATING...';
-  var interval = setInterval(function() {
-    fetch(API + '/audiobook/status/' + jobId)
-    .then(function(r) { return r.json(); })
-    .then(function(job) {
-      var pct = job.progress || 0;
-      var bar = document.getElementById('ab-bar');
-      var pctEl = document.getElementById('ab-pct');
-      var msg = document.getElementById('ab-msg');
-      if (bar) bar.style.width = pct + '%';
-      if (pctEl) pctEl.textContent = pct + '%';
-      if (msg) msg.textContent = 'Segment ' + (job.completed || 0) + ' of ' + (job.total || '?');
-      btn.textContent = 'GENERATING... ' + pct + '%';
-      if (job.status === 'complete') {
-        clearInterval(interval);
-        document.getElementById('audiobook-progress').style.display = 'none';
-        showAudiobookResult(job, result);
-        btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-      } else if (job.status === 'error') {
-        clearInterval(interval);
-        document.getElementById('audiobook-progress').style.display = 'none';
-        alert('Audiobook Error: ' + (job.error || 'Unknown error'));
-        btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-      }
-    }).catch(function() {});
-  }, 3000);
-}
-
-function showAudiobookResult(data, result) {
-  result.classList.add('visible');
-  setTimeout(function() { audiobookWaveform.drawIdle && audiobookWaveform.drawIdle(); }, 50);
-  var url = data.audio_url ? (API.replace('/api','') + data.audio_url) : (API + '/audio/' + data.id);
-  var audioEl = result.querySelector('audio');
-  audioEl.pause(); audioEl.removeAttribute('src'); audioEl.load();
-  audioEl.src = url; audioEl.load(); audioEl.play().catch(function(){});
-  var info = result.querySelector('.audio-result-info span');
-  if (info) info.textContent = (data.segments_count || '') + ' segments | Narrator: ' + (data.narrator_voice || '');
-  var dl = result.querySelector('.btn-download');
-  if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-audiobook.mp3'; a.click(); };
-}
-
-function setupChatForm() {
-  var sb = document.getElementById('chat-send-btn'), ci = document.getElementById('chat-input');
-  if (sb) sb.addEventListener('click', sendChat);
-  if (ci) ci.addEventListener('keydown', function(e) { if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); sendChat(); } });
-}
-
-function sendChat() {
-  var ci = document.getElementById('chat-input'), msg = ci.value.trim(); if (!msg) return;
-  var mc = document.getElementById('chat-messages'), sb = document.getElementById('chat-send-btn');
-  appendChatMsg('user', msg); ci.value = ''; sb.disabled = true;
-  var lid = 'ld-' + Date.now(), ld = document.createElement('div'); ld.className = 'chat-msg assistant'; ld.id = lid;
-  ld.innerHTML = '<div class="chat-msg-role">assistant</div><div class="chat-msg-content"><div class="loading-indicator"><span></span><span></span><span></span></div></div>';
-  mc.appendChild(ld); mc.scrollTop = mc.scrollHeight;
-  fetch(API + '/chat', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,session_id:chatSessionId})})
-  .then(function(r) { if (!r.ok) return r.json().then(function(d) { throw new Error(d.detail||'Chat failed'); }); return r.json(); })
-  .then(function(d) { chatSessionId = d.session_id; var l = document.getElementById(lid); if (l) l.remove(); appendChatMsg('assistant', d.response); })
-  .catch(function(e) { var l = document.getElementById(lid); if (l) l.remove(); appendChatMsg('assistant', 'Error: ' + e.message); })
-  .finally(function() { sb.disabled = false; ci.focus(); });
-}
-
-function appendChatMsg(role, content) {
-  var c = document.getElementById('chat-messages'), d = document.createElement('div'); d.className = 'chat-msg ' + role + ' fade-in';
-  var rendered = role==='assistant' ? parseMarkdown(content) : escapeHtml(content);
-  d.innerHTML = '<div class="chat-msg-role">' + role + '</div><div class="chat-msg-content">' + rendered + '</div>';
-  c.appendChild(d); c.scrollTop = c.scrollHeight;
-  var empty = c.querySelector('.empty-state'); if (empty) empty.remove();
-}
-
-function setupWaveforms() {
-  [ttsWaveform,audiobookWaveform,historyWaveform].forEach(function(wf) { wf.drawIdle && wf.drawIdle(); });
-  var ta = document.querySelector('#tts-result audio');
-  if (ta) { ta.addEventListener('play', function() { ttsWaveform.connect(ta); ttsWaveform.start(); }); ta.addEventListener('pause', function() { ttsWaveform.stop(); }); ta.addEventListener('ended', function() { ttsWaveform.stop(); }); }
-  var ab = document.querySelector('#audiobook-result audio');
-  if (ab) { ab.addEventListener('play', function() { audiobookWaveform.connect(ab); audiobookWaveform.start(); }); ab.addEventListener('pause', function() { audiobookWaveform.stop(); }); ab.addEventListener('ended', function() { audiobookWaveform.stop(); }); }
-  var hi = document.querySelector('#history-player audio');
-  if (hi) { hi.addEventListener('play', function() { historyWaveform.connect(hi); historyWaveform.start(); }); hi.addEventListener('pause', function() { historyWaveform.stop(); }); hi.addEventListener('ended', function() { historyWaveform.stop(); }); }
-}
-
-function loadHistory() {
-  var c = document.getElementById('history-container'); if (!c) return;
-  fetch(API + '/history').then(function(r) { return r.json(); }).then(function(data) {
-    var gens = data.generations || [];
-    if (gens.length===0) { c.innerHTML = '<div class="history-empty"><i class="ph ph-clock-counter-clockwise" style="font-size:40px;display:block;margin-bottom:12px;opacity:0.3;"></i>No generations yet.</div>'; return; }
-    var html = '<div class="history-table"><div class="history-header"><span>#</span><span>Type</span><span>Voice</span><span>Text</span><span>Date</span><span>Action</span></div>';
-    gens.forEach(function(g, i) {
-      var date = g.created_at ? new Date(g.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
-      var tp = g.text ? g.text.substring(0,80) + (g.text.length>80?'...':'') : '—';
-      html += '<div class="history-row fade-in" style="animation-delay:' + (i*30) + 'ms" data-audio-url="' + g.audio_url + '" data-gen-id="' + g.id + '" data-voice="' + g.voice_name + '" data-type="' + g.type + '"><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text-tertiary);">' + String(i+1).padStart(2,'0') + '</span><span><span class="history-type-badge ' + g.type + '">' + g.type + '</span></span><span class="history-voice">' + g.voice_name + '</span><span class="history-text">' + escapeHtml(tp) + '</span><span class="history-date">' + date + '</span><span><button class="history-play-btn"><i class="ph ph-play"></i> Play</button></span></div>';
-    });
-    html += '</div>'; c.innerHTML = html;
-    c.querySelectorAll('.history-play-btn').forEach(function(btn) { btn.addEventListener('click', function(e) { e.stopPropagation(); var r = btn.closest('.history-row'); playHistoryItem(r.dataset.audioUrl,r.dataset.voice,r.dataset.type,r.dataset.genId); }); });
-  }).catch(function(e) { c.innerHTML = '<div class="history-empty">Failed to load: ' + e.message + '</div>'; });
-}
-
-function playHistoryItem(audioUrl, voiceName, type, genId) {
-  var p = document.getElementById('history-player'), a = p.querySelector('audio'), info = document.getElementById('history-player-info'), dl = p.querySelector('.btn-download');
-  var fullUrl = API.replace('/api','') + audioUrl; a.src = fullUrl; a.play(); p.classList.add('visible');
-  setTimeout(function() { historyWaveform.drawIdle && historyWaveform.drawIdle(); }, 50);
-  info.textContent = type.toUpperCase() + ' | Voice: ' + voiceName;
-  dl.onclick = function() { var a2 = document.createElement('a'); a2.href = fullUrl; a2.download = 'voicestudio-' + type + '-' + genId + '.mp3'; a2.click(); };
-}
-
-function updateCompareCount() {
-  var checked = document.querySelectorAll('#compare-voices-list input:checked');
-  var el = document.getElementById('compare-selected-count'); if (el) el.textContent = checked.length + ' voices selected';
-}
-
-function setupCompareForm() { var btn = document.getElementById('compare-generate-btn'); if (btn) btn.addEventListener('click', generateComparison); }
-
-function generateComparison() {
-  var text = document.getElementById('compare-text').value.trim(), cbs = document.querySelectorAll('#compare-voices-list input:checked'), vids = Array.from(cbs).map(function(cb) { return cb.value; }), btn = document.getElementById('compare-generate-btn'), rd = document.getElementById('compare-results'), grid = document.getElementById('compare-grid');
-  if (!text) { alert('Enter comparison text'); return; } if (vids.length<2) { alert('Select at least 2 voices'); return; }
-  btn.disabled = true; btn.textContent = 'GENERATING...'; rd.style.display = 'none';
-  fetch(API + '/compare', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_ids:vids})})
-  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
-  .then(function(data) {
-    grid.innerHTML = '';
-    data.results.forEach(function(r) {
-      var card = document.createElement('div'); card.className = 'compare-result-card fade-in';
-      if (r.audio_url) {
-        var url = API.replace('/api','') + r.audio_url;
-        card.innerHTML = '<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">' + r.voice_name.substring(0,2).toUpperCase() + '</div><div><div class="card-name">' + r.voice_name + '</div><div class="card-meta">' + r.accent + ' / ' + r.style + '</div></div></div><audio controls src="' + url + '"></audio><button class="btn-download"><i class="ph ph-download-simple"></i> Download</button>';
-        card.querySelector('.btn-download').onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'compare-' + r.voice_name + '.mp3'; a.click(); };
-      } else {
-        card.innerHTML = '<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">' + r.voice_name.substring(0,2).toUpperCase() + '</div><div><div class="card-name">' + r.voice_name + '</div><div class="card-meta" style="color:var(--error);">Generation failed</div></div></div>';
-      }
-      grid.appendChild(card);
-    });
-    rd.style.display = 'block';
-  }).catch(function(e) { alert('Compare Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'COMPARE VOICES'; });
-}
-
-function setupHistoryExport() {
-  var jb = document.getElementById('export-json-btn'), cb = document.getElementById('export-csv-btn');
-  if (jb) jb.addEventListener('click', function() { exportHistory('json'); });
-  if (cb) cb.addEventListener('click', function() { exportHistory('csv'); });
-}
-function exportHistory(fmt) { var a = document.createElement('a'); a.href = API + '/history/export?format=' + fmt; a.download = 'voicestudio_history.' + fmt; a.click(); }
-
-function convertEPUB() {
-  var text = document.getElementById('audiobook-text').value.trim();
-  if (!text) { alert('Please enter or upload manuscript text first'); return; }
-  var title = prompt('Book title:', 'My Book') || 'My Book';
-  var author = prompt('Author name:', 'Author') || 'Author';
-  var btn = document.getElementById('epub-convert-btn');
-  btn.disabled = true; btn.textContent = 'CONVERTING...';
-  fetch(API + '/convert-epub', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({text:text, title:title, author:author}) })
-  .then(function(r) {
-    if (!r.ok) return r.json().then(function(d) { throw new Error(d.detail||'Failed'); });
-    return r.blob();
-  })
-  .then(function(blob) {
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a'); a.href = url; a.download = title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/ /g,'_') + '.epub'; a.click();
-    URL.revokeObjectURL(url);
-  })
-  .catch(function(e) { alert('EPUB Error: ' + e.message); })
-  .finally(function() { btn.disabled = false; btn.innerHTML = '<i class="ph ph-book-bookmark"></i> Convert to EPUB'; });
-}
-
-function escapeHtml(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-function parseMarkdown(t) {
-  if (!t) return '';
-  var h = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  h = h.replace(/```(\w*)\n?([\s\S]*?)```/g,'<pre><code>$2</code></pre>');
-  h = h.replace(/`([^`]+)`/g,'<code>$1</code>');
-  h = h.replace(/^### (.+)$/gm,'<h3>$1</h3>'); h = h.replace(/^## (.+)$/gm,'<h2>$1</h2>'); h = h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
-  h = h.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>'); h = h.replace(/\*([^*]+)\*/g,'<em>$1</em>');
-  h = h.replace(/^---$/gm,'<hr>');
-  h = h.replace(/^[\s]*[-]\s+(.+)$/gm,'<li>$1</li>');
-  h = h.replace(/\n\n+/g,'</p><p>'); h = h.replace(/\n/g,'<br>');
-  if (!h.startsWith('<')) h = '<p>' + h + '</p>';
-  return h;
-}
-</script>
-</body>
-</html>
+@app.on_event("startup")
+async def startup():
+    await init_db()
+    logger.info("VoiceForge TTS API started successfully")
