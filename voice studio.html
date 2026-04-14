@@ -281,19 +281,59 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
           </div>
           <div id="upload-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--success);margin-top:4px;"></div>
         </div>
-        <div class="control-group"><label class="control-label">Or Paste Text</label><textarea id="audiobook-text" class="audiobook-textarea" placeholder='Paste your manuscript here. Use "quotation marks" for dialogue...'></textarea></div>
-        <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid var(--border);color:var(--text-tertiary);">Preview Segments</button>
+        <!-- Chapter Navigator -->
+        <div id="chapter-nav" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <label class="control-label" style="margin:0;">Chapters</label>
+            <div style="display:flex;gap:8px;">
+              <button id="select-all-chapters" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--text-tertiary);padding:3px 10px;cursor:pointer;border-radius:4px;">Select All</button>
+              <button id="deselect-all-chapters" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--text-tertiary);padding:3px 10px;cursor:pointer;border-radius:4px;">Clear</button>
+            </div>
+          </div>
+          <div id="chapter-list" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;max-height:380px;overflow-y:auto;background:var(--surface);"></div>
+        </div>
+        <!-- Chapter Preview -->
+        <div id="chapter-preview" style="display:none;margin-top:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <label class="control-label" id="chapter-preview-title" style="margin:0;color:var(--plum);"></label>
+            <button id="chapter-preview-close" style="background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;font-size:16px;">&times;</button>
+          </div>
+          <div id="chapter-preview-text" style="border:1px solid var(--border);border-radius:8px;padding:16px;max-height:220px;overflow-y:auto;font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.7;color:var(--text-secondary);background:#fff;white-space:pre-wrap;"></div>
+        </div>
+        <textarea id="audiobook-text" style="display:none;"></textarea>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid var(--border);color:var(--text-tertiary);flex:1;">Preview Segments</button>
+          <button id="epub-convert-btn" class="btn-generate" style="background:transparent;border:1px solid var(--gold);color:var(--gold);flex:1;"><i class="ph ph-book-bookmark"></i> EPUB</button>
+        </div>
         <div id="segments-preview" class="segments-preview" style="display:none;"></div>
       </div>
       <div class="audiobook-config">
-        <div class="control-group"><label class="control-label">Narrator Voice</label><select id="narrator-voice-select" class="control-select"></select></div>
         <div class="control-group">
-          <label class="control-label">Character Voices (optional)</label>
-          <div id="char-voices-list" style="max-height:260px;overflow-y:auto;border:1px solid var(--border);background:#fff;padding:8px;display:flex;flex-direction:column;gap:4px;border-radius:8px;"></div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-tertiary);margin-top:4px;">Leave empty for auto-assignment</div>
+          <label class="control-label">Number of Voices</label>
+          <div style="display:flex;gap:16px;margin-top:4px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Cinzel',serif;font-size:11px;color:var(--text-secondary);">
+              <input type="radio" name="voice-mode" id="mode-single" value="single" checked style="accent-color:var(--plum);"> 1 Voice
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Cinzel',serif;font-size:11px;color:var(--text-secondary);">
+              <input type="radio" name="voice-mode" id="mode-multi" value="multi" style="accent-color:var(--plum);"> 2 Voices
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">1st Voice (Character/Narrator)</label>
+          <input type="text" id="char1-name" placeholder="Character name (e.g. Sarah)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;margin-bottom:8px;background:#fff;color:var(--text-primary);">
+          <select id="narrator-voice-select" class="control-select"></select>
+        </div>
+        <div id="char-voice-group" style="display:none;">
+          <div class="control-group">
+            <label class="control-label">2nd Character</label>
+            <input type="text" id="char2-name" placeholder="Character name (e.g. James)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;margin-bottom:8px;background:#fff;color:var(--text-primary);">
+            <select id="narrator2-voice-select" class="control-select"></select>
+          </div>
         </div>
         <div style="flex:1;"></div>
         <button id="audiobook-generate-btn" class="btn-generate">Generate Audiobook</button>
+
       </div>
     </div>
     <div id="audiobook-result" class="audio-result">
@@ -492,7 +532,7 @@ function selectVoiceForTTS(voiceId) {
 }
 
 function populateVoiceSelects() {
-  ['tts-voice-select','narrator-voice-select'].forEach(function(id) {
+  ['tts-voice-select','narrator-voice-select','narrator2-voice-select','char2-voice-select'].forEach(function(id) {
     var sel = document.getElementById(id); if (!sel) return; sel.innerHTML = '';
     voices.forEach(function(v) { var opt = document.createElement('option'); opt.value = v.id; opt.textContent = v.name + ' — ' + v.style + ' (' + v.accent + ')'; sel.appendChild(opt); });
   });
@@ -541,16 +581,152 @@ function generateTTS() {
   }).catch(function(e) { alert('TTS Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'GENERATE SPEECH'; });
 }
 
+var bookChapters = [];
+
+function parseChapters(text) {
+  var lines = text.split('\n');
+  var chapters = [];
+  var currentTitle = null;
+  var currentLines = [];
+  var chapterPattern = /^\s*(chapter\s+\S+|prologue|epilogue|part\s+\S+)/i;
+  var inTOC = false;
+  var tocEndIdx = -1;
+
+  // Find where TOC ends by detecting "TABLE OF CONTENTS" then finding
+  // the first line after TOC that has real paragraph content
+  for (var i = 0; i < lines.length; i++) {
+    if (/table\s+of\s+contents/i.test(lines[i])) {
+      inTOC = true;
+      continue;
+    }
+    if (inTOC) {
+      // TOC ends when we hit a blank line followed by a chapter heading
+      // that is NOT immediately followed by another chapter heading (i.e. real content)
+      var trimmed = lines[i].trim();
+      if (trimmed === '' && i + 1 < lines.length) {
+        var next = lines[i + 1].trim();
+        // Check if next line is a chapter heading
+        if (chapterPattern.test(next)) {
+          // Look ahead to see if this chapter has real content (not just more headings)
+          var hasContent = false;
+          for (var j = i + 2; j < Math.min(i + 10, lines.length); j++) {
+            var jLine = lines[j].trim();
+            if (jLine !== '' && !chapterPattern.test(jLine)) {
+              hasContent = true;
+              break;
+            }
+          }
+          if (hasContent) {
+            inTOC = false;
+            tocEndIdx = i + 1;
+          }
+        }
+      }
+    }
+  }
+
+  // If we found TOC, start parsing from tocEndIdx, else parse from beginning
+  var startIdx = tocEndIdx > 0 ? tocEndIdx : 0;
+
+  for (var i = startIdx; i < lines.length; i++) {
+    var line = lines[i];
+    if (chapterPattern.test(line.trim())) {
+      if (currentTitle !== null && currentLines.join('\n').trim().length > 50) {
+        chapters.push({ title: currentTitle, content: currentLines.join('\n').trim() });
+      }
+      currentTitle = line.trim();
+      currentLines = [];
+    } else {
+      currentLines.push(line);
+    }
+  }
+  if (currentTitle !== null && currentLines.join('\n').trim().length > 50) {
+    chapters.push({ title: currentTitle, content: currentLines.join('\n').trim() });
+  }
+  if (chapters.length === 0) {
+    return [{ title: 'Full Manuscript', content: text }];
+  }
+  return chapters;
+}
+
+function renderChapterList(chapters) {
+  var list = document.getElementById('chapter-list');
+  var nav = document.getElementById('chapter-nav');
+  if (!list || !nav) return;
+  list.innerHTML = '';
+  chapters.forEach(function(ch, i) {
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 150ms;';
+    row.innerHTML = '<input type="checkbox" checked style="-webkit-appearance:none;appearance:none;width:14px;height:14px;border:1px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;position:relative;border-radius:3px;" data-idx="' + i + '">'
+      + '<span style="flex:1;font-family:Cormorant Garamond,serif;font-size:15px;color:var(--text-primary);">' + escapeHtml(ch.title) + '</span>'
+      + '<span style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);">' + ch.content.split(' ').length + ' words</span>'
+      + '<button style="background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;font-size:12px;padding:2px 6px;" title="Preview"><i class="ph ph-eye"></i></button>';
+    var cb = row.querySelector('input[type=checkbox]');
+    cb.addEventListener('change', function() {
+      cb.style.background = cb.checked ? 'var(--plum)' : '#fff';
+      cb.style.borderColor = cb.checked ? 'var(--plum)' : 'var(--border)';
+    });
+    cb.style.background = 'var(--plum)'; cb.style.borderColor = 'var(--plum)';
+    row.querySelector('button').addEventListener('click', function(e) {
+      e.stopPropagation();
+      showChapterPreview(ch.title, ch.content);
+    });
+    row.addEventListener('mouseover', function() { row.style.background = 'var(--surface-el)'; });
+    row.addEventListener('mouseout', function() { row.style.background = ''; });
+    list.appendChild(row);
+  });
+  nav.style.display = 'block';
+
+  var sa = document.getElementById('select-all-chapters');
+  var da = document.getElementById('deselect-all-chapters');
+  if (sa) sa.onclick = function() { list.querySelectorAll('input[type=checkbox]').forEach(function(cb) { cb.checked = true; cb.style.background = 'var(--plum)'; cb.style.borderColor = 'var(--plum)'; }); };
+  if (da) da.onclick = function() { list.querySelectorAll('input[type=checkbox]').forEach(function(cb) { cb.checked = false; cb.style.background = '#fff'; cb.style.borderColor = 'var(--border)'; }); };
+}
+
+function showChapterPreview(title, content) {
+  var cp = document.getElementById('chapter-preview');
+  var ct = document.getElementById('chapter-preview-title');
+  var cx = document.getElementById('chapter-preview-text');
+  if (!cp || !ct || !cx) return;
+  ct.textContent = title;
+  cx.textContent = content.substring(0, 2000) + (content.length > 2000 ? '...' : '');
+  cp.style.display = 'block';
+}
+
+function getSelectedChapterText() {
+  var list = document.getElementById('chapter-list');
+  if (!list || bookChapters.length === 0) {
+    return document.getElementById('audiobook-text').value;
+  }
+  var selected = [];
+  list.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+    if (cb.checked) { selected.push(bookChapters[parseInt(cb.dataset.idx)].content); }
+  });
+  return selected.join('\n\n');
+}
+
 function setupAudiobookForm() {
   var fi = document.getElementById('audiobook-file'), ta = document.getElementById('audiobook-text'), pb = document.getElementById('audiobook-preview-btn'), gb = document.getElementById('audiobook-generate-btn');
+  var cp = document.getElementById('chapter-preview-close');
+  if (cp) cp.addEventListener('click', function() { document.getElementById('chapter-preview').style.display = 'none'; });
   if (fi) fi.addEventListener('change', function(e) {
     var file = e.target.files[0]; if (!file) return; var fd = new FormData(); fd.append('file', file);
     fetch(API + '/upload', {method:'POST',body:fd}).then(function(r) { return r.json(); }).then(function(d) {
-      if (!d.text) throw new Error('Upload failed'); ta.value = d.text;
-      var info = document.getElementById('upload-info'); if (info) { info.textContent = d.filename + ' — ' + d.word_count + ' words'; info.style.display = 'block'; }
+      if (!d.text) throw new Error('Upload failed');
+      ta.value = d.text;
+      bookChapters = parseChapters(d.text);
+      renderChapterList(bookChapters);
+      var info = document.getElementById('upload-info'); if (info) { info.textContent = d.filename + ' — ' + d.word_count + ' words · ' + bookChapters.length + ' chapters'; info.style.display = 'block'; }
     }).catch(function(e) { alert('Upload Error: ' + e.message); });
   });
   if (pb) pb.addEventListener('click', previewSegments);
+  document.querySelectorAll('input[name="voice-mode"]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      var cg = document.getElementById('char-voice-group');
+      if (cg) cg.style.display = this.value === 'multi' ? 'block' : 'none';
+    });
+  });
+  var eb = document.getElementById('epub-convert-btn'); if (eb) eb.addEventListener('click', convertEPUB);
   if (gb) gb.addEventListener('click', generateAudiobook);
 }
 
@@ -567,19 +743,89 @@ function previewSegments() {
 }
 
 function generateAudiobook() {
-  var text = document.getElementById('audiobook-text').value.trim(), nid = document.getElementById('narrator-voice-select').value, btn = document.getElementById('audiobook-generate-btn'), result = document.getElementById('audiobook-result');
+  var text = getSelectedChapterText().trim(), nid = document.getElementById('narrator-voice-select').value, btn = document.getElementById('audiobook-generate-btn'), result = document.getElementById('audiobook-result');
   if (!text) return;
-  var cbs = document.querySelectorAll('#char-voices-list input[type="checkbox"]:checked'), cvids = Array.from(cbs).map(function(cb) { return cb.value; });
-  btn.disabled = true; btn.textContent = 'GENERATING AUDIOBOOK...';
-  var body = {text:text,narrator_voice_id:nid}; if (cvids.length>0) body.character_voice_ids = cvids;
-  fetch(API + '/audiobook', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+  var modeEl = document.querySelector('input[name="voice-mode"]:checked');
+  var mode = modeEl ? modeEl.value : 'single';
+  var cvids = [];
+  if (mode === 'multi') {
+    var char1sel = document.getElementById('narrator2-voice-select');
+    if (char1sel && char1sel.value) cvids.push(char1sel.value);
+  }
+  btn.disabled = true; btn.textContent = 'STARTING...';
+
+  // Show progress bar
+  var pb = document.getElementById('audiobook-progress');
+  if (!pb) {
+    pb = document.createElement('div');
+    pb.id = 'audiobook-progress';
+    pb.style.cssText = 'margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);';
+    pb.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span class="control-label" style="margin:0;">Generating Audiobook</span><span id="ab-pct" style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--gold);">0%</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div id="ab-bar" style="height:100%;background:linear-gradient(90deg,var(--plum),var(--gold));width:0%;transition:width 300ms;border-radius:3px;"></div></div><div id="ab-msg" style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);margin-top:6px;">Initializing...</div>';
+    result.parentNode.insertBefore(pb, result);
+  }
+  pb.style.display = 'block';
+
+  var body = {text:text, narrator_voice_id:nid};
+  if (cvids.length > 0) body.character_voice_ids = cvids;
+
+  fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
   .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
   .then(function(data) {
-    result.classList.add('visible'); setTimeout(function() { audiobookWaveform.drawIdle && audiobookWaveform.drawIdle(); }, 50);
-    var url = API + '/audio/' + data.id; result.querySelector('audio').src = url;
-    var info = result.querySelector('.audio-result-info span'); if (info) info.textContent = data.segments_count + ' segments | Narrator: ' + data.narrator_voice;
-    var dl = result.querySelector('.btn-download'); if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-audiobook-' + data.id + '.mp3'; a.click(); };
-  }).catch(function(e) { alert('Audiobook Error: ' + e.message); }).finally(function() { btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK'; });
+    if (data.job_id) {
+      pollAudiobookJob(data.job_id, btn, result);
+    } else {
+      showAudiobookResult(data, result);
+      btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+      pb.style.display = 'none';
+    }
+  })
+  .catch(function(e) {
+    alert('Audiobook Error: ' + e.message);
+    btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+    pb.style.display = 'none';
+  });
+}
+
+function pollAudiobookJob(jobId, btn, result) {
+  btn.textContent = 'GENERATING...';
+  var interval = setInterval(function() {
+    fetch(API + '/audiobook/status/' + jobId)
+    .then(function(r) { return r.json(); })
+    .then(function(job) {
+      var pct = job.progress || 0;
+      var bar = document.getElementById('ab-bar');
+      var pctEl = document.getElementById('ab-pct');
+      var msg = document.getElementById('ab-msg');
+      if (bar) bar.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+      if (msg) msg.textContent = 'Segment ' + (job.completed || 0) + ' of ' + (job.total || '?');
+      btn.textContent = 'GENERATING... ' + pct + '%';
+      if (job.status === 'complete') {
+        clearInterval(interval);
+        document.getElementById('audiobook-progress').style.display = 'none';
+        showAudiobookResult(job, result);
+        btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+      } else if (job.status === 'error') {
+        clearInterval(interval);
+        document.getElementById('audiobook-progress').style.display = 'none';
+        alert('Audiobook Error: ' + (job.error || 'Unknown error'));
+        btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+      }
+    }).catch(function() {});
+  }, 3000);
+}
+
+function showAudiobookResult(data, result) {
+  result.classList.add('visible');
+  setTimeout(function() { audiobookWaveform.drawIdle && audiobookWaveform.drawIdle(); }, 50);
+  var url = data.audio_url ? (API.replace('/api','') + data.audio_url) : (API + '/audio/' + data.id);
+  var audioEl = result.querySelector('audio');
+  audioEl.pause(); audioEl.removeAttribute('src'); audioEl.load();
+  audioEl.src = url; audioEl.load(); audioEl.play().catch(function(){});
+  var info = result.querySelector('.audio-result-info span');
+  if (info) info.textContent = (data.segments_count || '') + ' segments | Narrator: ' + (data.narrator_voice || '');
+  var dl = result.querySelector('.btn-download');
+  if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = 'voicestudio-audiobook.mp3'; a.click(); };
 }
 
 function setupChatForm() {
@@ -629,7 +875,7 @@ function loadHistory() {
     gens.forEach(function(g, i) {
       var date = g.created_at ? new Date(g.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
       var tp = g.text ? g.text.substring(0,80) + (g.text.length>80?'...':'') : '—';
-      html += '<div class="history-row fade-in" style="animation-delay:' + (i*30) + 'ms" data-audio-url="' + g.audio_url + '" data-gen-id="' + g.id + '" data-voice="' + g.voice_name + '" data-type="' + g.type + '"><span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text-tertiary);">' + String(i+1).padStart(2,'0') + '</span><span><span class="history-type-badge ' + g.type + '">' + g.type + '</span></span><span class="history-voice">' + g.voice_name + '</span><span class="history-text">' + escapeHtml(tp) + '</span><span class="history-date">' + date + '</span><span><button class="history-play-btn"><i class="ph ph-play"></i> Play</button></span></div>';
+      html += '<div class="history-row fade-in" style="animation-delay:' + (i*30) + 'ms" data-audio-url="' + g.audio_url + '" data-gen-id="' + g.id + '" data-voice="' + g.voice_name + '" data-type="' + g.type + '"><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--text-tertiary);">' + String(i+1).padStart(2,'0') + '</span><span><span class="history-type-badge ' + g.type + '">' + g.type + '</span></span><span class="history-voice">' + g.voice_name + '</span><span class="history-text">' + escapeHtml(tp) + '</span><span class="history-date">' + date + '</span><span><button class="history-play-btn"><i class="ph ph-play"></i> Play</button></span></div>';
     });
     html += '</div>'; c.innerHTML = html;
     c.querySelectorAll('.history-play-btn').forEach(function(btn) { btn.addEventListener('click', function(e) { e.stopPropagation(); var r = btn.closest('.history-row'); playHistoryItem(r.dataset.audioUrl,r.dataset.voice,r.dataset.type,r.dataset.genId); }); });
@@ -680,6 +926,27 @@ function setupHistoryExport() {
   if (cb) cb.addEventListener('click', function() { exportHistory('csv'); });
 }
 function exportHistory(fmt) { var a = document.createElement('a'); a.href = API + '/history/export?format=' + fmt; a.download = 'voicestudio_history.' + fmt; a.click(); }
+
+function convertEPUB() {
+  var text = document.getElementById('audiobook-text').value.trim();
+  if (!text) { alert('Please enter or upload manuscript text first'); return; }
+  var title = prompt('Book title:', 'My Book') || 'My Book';
+  var author = prompt('Author name:', 'Author') || 'Author';
+  var btn = document.getElementById('epub-convert-btn');
+  btn.disabled = true; btn.textContent = 'CONVERTING...';
+  fetch(API + '/convert-epub', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({text:text, title:title, author:author}) })
+  .then(function(r) {
+    if (!r.ok) return r.json().then(function(d) { throw new Error(d.detail||'Failed'); });
+    return r.blob();
+  })
+  .then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/ /g,'_') + '.epub'; a.click();
+    URL.revokeObjectURL(url);
+  })
+  .catch(function(e) { alert('EPUB Error: ' + e.message); })
+  .finally(function() { btn.disabled = false; btn.innerHTML = '<i class="ph ph-book-bookmark"></i> Convert to EPUB'; });
+}
 
 function escapeHtml(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 function parseMarkdown(t) {
