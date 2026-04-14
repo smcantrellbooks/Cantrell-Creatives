@@ -9,6 +9,7 @@ import re
 import io
 import csv
 import json as json_module
+import asyncio
 from datetime import datetime, timezone
 from pathlib import Path
 from pydantic import BaseModel
@@ -21,16 +22,12 @@ load_dotenv(ROOT_DIR / '.env')
 
 from voices import VOICE_PROFILES, get_voice_by_id
 
-# Directories
 GENERATIONS_DIR = ROOT_DIR / "generations"
 UPLOADS_DIR = ROOT_DIR / "uploads"
 GENERATIONS_DIR.mkdir(exist_ok=True)
 UPLOADS_DIR.mkdir(exist_ok=True)
 
-# Database
 DB_PATH = str(ROOT_DIR / "openvoice.db")
-
-# Clients
 openai_client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 app = FastAPI()
@@ -38,6 +35,8 @@ api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+audiobook_jobs = {}
 
 
 async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
@@ -165,14 +164,108 @@ def parse_dialogue(text: str):
     return segments if segments else [{"type": "narration", "text": text}]
 
 
-# --- Endpoints ---
+async def run_audiobook_job(job_id: str, request: AudiobookRequest):
+    job = audiobook_jobs[job_id]
+    job["status"] = "processing"
+    try:
+        narrator = None
+        if request.narrator_voice:
+            narrator = resolve_voice(request.narrator_voice)
+        if not narrator and request.narrator_voice_id:
+            narrator = resolve_voice(request.narrator_voice_id)
+        if not narrator:
+            narrator = VOICE_PROFILES[0] if VOICE_PROFILES else None
+        if not narrator:
+            job["status"] = "error"
+            job["error"] = "Narrator voice not found"
+            return
+
+        char_voices = []
+        if request.characters:
+            for char in request.characters:
+                if isinstance(char, dict) and char.get("voice_id"):
+                    v = resolve_voice(char["voice_id"])
+                    if v:
+                        char_voices.append(v)
+        if not char_voices and request.character_voice_ids:
+            for vid in request.character_voice_ids:
+                v = resolve_voice(vid)
+                if v:
+                    char_voices.append(v)
+        if not char_voices:
+            char_voices = [v for v in [get_voice_by_id("voice_06"), get_voice_by_id("voice_03"), get_voice_by_id("voice_08")] if v]
+
+        if request.auto_detect and char_voices:
+            segments = parse_dialogue(request.text)
+        else:
+            chunks = split_text_into_chunks(request.text, 4000)
+            segments = [{"type": "narration", "text": c} for c in chunks]
+
+        total = len([s for s in segments if s["text"].strip()])
+        job["total"] = total
+        job["completed"] = 0
+
+        all_audio = []
+        char_index = 0
+
+        for segment in segments:
+            seg_text = segment["text"].strip()[:4096]
+            if not seg_text:
+                continue
+            if segment["type"] == "narration":
+                voice = narrator
+            else:
+                voice = char_voices[char_index % len(char_voices)] if char_voices else narrator
+                char_index += 1
+            try:
+                audio_bytes = await generate_speech(
+                    text=seg_text,
+                    voice=voice["openai_voice"],
+                    speed=voice["speed"]
+                )
+                all_audio.append(audio_bytes)
+                job["completed"] += 1
+                job["progress"] = round((job["completed"] / total) * 100)
+            except Exception as e:
+                logger.error(f"Segment failed: {e}")
+                job["completed"] += 1
+                continue
+
+        if not all_audio:
+            job["status"] = "error"
+            job["error"] = "Failed to generate any audio"
+            return
+
+        combined = b"".join(all_audio)
+        output_path = GENERATIONS_DIR / f"{job_id}.mp3"
+        with open(output_path, "wb") as f:
+            f.write(combined)
+
+        async with aiosqlite.connect(DB_PATH) as db:
+            await db.execute(
+                "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
+                (job_id, narrator["id"], request.text[:500], "audiobook", datetime.now(timezone.utc).isoformat())
+            )
+            await db.commit()
+
+        job["status"] = "complete"
+        job["audio_url"] = f"/api/audio/{job_id}"
+        job["narrator_voice"] = narrator["name"]
+        job["segments_count"] = len(all_audio)
+        job["progress"] = 100
+
+    except Exception as e:
+        logger.error(f"Audiobook job failed: {e}")
+        job["status"] = "error"
+        job["error"] = str(e)
+
 
 @api_router.get("/health")
 async def health():
     return {
         "status": "healthy",
         "service": "VoiceForge TTS",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "voices_count": len(VOICE_PROFILES),
         "tts_engine": "OpenAI TTS HD",
@@ -202,9 +295,7 @@ async def get_voice_sample(voice_id: str):
     voice = resolve_voice(voice_id)
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
-
     sample_text = f"Hi, I'm {voice['name']}. {voice['description']}"
-
     try:
         audio_bytes = await generate_speech(
             text=sample_text,
@@ -215,7 +306,6 @@ async def get_voice_sample(voice_id: str):
     except Exception as e:
         logger.error(f"Voice sample generation failed: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate voice sample")
-
     return StreamingResponse(
         io.BytesIO(audio_bytes),
         media_type="audio/mpeg",
@@ -228,42 +318,32 @@ async def generate_tts(request: TTSRequest):
     voice = resolve_voice(request.voice_id)
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
-
     text = request.text[:4096]
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
-
     speed = request.speed if request.speed else voice["speed"]
     gen_id = str(uuid.uuid4())
     resp_format = request.format if request.format in ("mp3", "wav", "opus", "aac", "flac") else "mp3"
-
     try:
-        audio_bytes = await generate_speech(
-            text=text,
-            voice=voice["openai_voice"],
-            speed=speed,
-            response_format=resp_format,
-        )
+        audio_bytes = await generate_speech(text=text, voice=voice["openai_voice"], speed=speed, response_format=resp_format)
     except Exception as e:
         logger.error(f"TTS generation failed: {e}")
         raise HTTPException(status_code=500, detail="TTS generation failed")
-
     output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
     with open(output_path, "wb") as f:
         f.write(audio_bytes)
-
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
             "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
             (gen_id, voice["id"], text[:500], "tts", datetime.now(timezone.utc).isoformat())
         )
         await db.commit()
-
     return FileResponse(output_path, media_type="audio/mpeg", filename=f"{gen_id}.mp3")
 
 
 @api_router.get("/audio/{gen_id}")
 async def serve_audio(gen_id: str):
+    gen_id = re.sub(r'[^a-zA-Z0-9\-]', '', gen_id)
     audio_path = GENERATIONS_DIR / f"{gen_id}.mp3"
     if not audio_path.exists():
         raise HTTPException(status_code=404, detail="Audio not found")
@@ -272,107 +352,46 @@ async def serve_audio(gen_id: str):
 
 @api_router.post("/audiobook")
 async def generate_audiobook(request: AudiobookRequest):
-    narrator = None
-    if request.narrator_voice:
-        narrator = resolve_voice(request.narrator_voice)
-    if not narrator and request.narrator_voice_id:
-        narrator = resolve_voice(request.narrator_voice_id)
-    if not narrator:
-        narrator = VOICE_PROFILES[0] if VOICE_PROFILES else None
-    if not narrator:
-        raise HTTPException(status_code=404, detail="Narrator voice not found")
-
-    text = request.text
-    if not text.strip():
+    if not request.text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
+    job_id = str(uuid.uuid4())
+    audiobook_jobs[job_id] = {
+        "status": "queued",
+        "progress": 0,
+        "completed": 0,
+        "total": 0,
+        "audio_url": None,
+        "error": None,
+        "narrator_voice": None,
+        "segments_count": 0,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    asyncio.create_task(run_audiobook_job(job_id, request))
+    return {"job_id": job_id, "status": "queued"}
 
-    char_voices = []
-    if request.characters:
-        for char in request.characters:
-            if isinstance(char, dict) and char.get("voice_id"):
-                v = resolve_voice(char["voice_id"])
-                if v:
-                    char_voices.append(v)
-    if not char_voices and request.character_voice_ids:
-        for vid in request.character_voice_ids:
-            v = resolve_voice(vid)
-            if v:
-                char_voices.append(v)
 
-    if not char_voices:
-        char_voices = [v for v in [get_voice_by_id("voice_06"), get_voice_by_id("voice_03"), get_voice_by_id("voice_08")] if v]
-
-    chunks = split_text_into_chunks(text, 4000)
-    gen_id = str(uuid.uuid4())
-    all_audio = []
-
-    if request.auto_detect and char_voices:
-        segments = parse_dialogue(text)
-        char_index = 0
-        for segment in segments:
-            seg_text = segment["text"].strip()[:4096]
-            if not seg_text:
-                continue
-            if segment["type"] == "narration":
-                voice = narrator
-            else:
-                voice = char_voices[char_index % len(char_voices)] if char_voices else narrator
-                char_index += 1
-            try:
-                audio_bytes = await generate_speech(text=seg_text, voice=voice["openai_voice"], speed=voice["speed"])
-                all_audio.append(audio_bytes)
-            except Exception as e:
-                logger.error(f"Audiobook segment failed: {e}")
-                continue
-    else:
-        for chunk in chunks:
-            chunk = chunk.strip()
-            if not chunk:
-                continue
-            try:
-                audio_bytes = await generate_speech(text=chunk, voice=narrator["openai_voice"], speed=narrator["speed"])
-                all_audio.append(audio_bytes)
-            except Exception as e:
-                logger.error(f"Audiobook chunk failed: {e}")
-                continue
-
-    if not all_audio:
-        raise HTTPException(status_code=500, detail="Failed to generate audiobook audio")
-
-    combined = b"".join(all_audio)
-    output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
-    with open(output_path, "wb") as f:
-        f.write(combined)
-
-    async with aiosqlite.connect(DB_PATH) as db:
-        await db.execute(
-            "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
-            (gen_id, narrator["id"], text[:500], "audiobook", datetime.now(timezone.utc).isoformat())
-        )
-        await db.commit()
-
-    return FileResponse(output_path, media_type="audio/mpeg", filename=f"{gen_id}.mp3")
+@api_router.get("/audiobook/status/{job_id}")
+async def audiobook_status(job_id: str):
+    job_id = re.sub(r'[^a-zA-Z0-9\-]', '', job_id)
+    if job_id not in audiobook_jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return audiobook_jobs[job_id]
 
 
 @api_router.post("/upload")
 async def upload_docx(file: UploadFile = File(...)):
     if not file.filename.endswith('.docx'):
         raise HTTPException(status_code=400, detail="Only .docx files are supported")
-
     from docx import Document
-
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="File is empty")
-
     try:
         doc = Document(io.BytesIO(content))
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid or corrupted .docx file")
-
     paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
     text = "\n\n".join(paragraphs)
-
     return {
         "filename": file.filename,
         "content": text,
@@ -415,7 +434,6 @@ async def export_history(format: str = "json"):
             item["voice_name"] = voice["name"] if voice else "Unknown"
             item["audio_url"] = f"/api/audio/{item['id']}"
             results.append(item)
-
     if format == "csv":
         output = io.StringIO()
         writer = csv.DictWriter(output, fieldnames=["id", "type", "voice_id", "voice_name", "text", "audio_url", "created_at"])
@@ -443,11 +461,9 @@ async def compare_voices(request: CompareRequest):
         raise HTTPException(status_code=400, detail="Select at least 2 voices to compare")
     if len(request.voice_ids) > 6:
         raise HTTPException(status_code=400, detail="Maximum 6 voices for comparison")
-
     text = request.text[:4096]
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
-
     results = []
     for vid in request.voice_ids:
         voice = resolve_voice(vid)
@@ -459,14 +475,12 @@ async def compare_voices(request: CompareRequest):
             output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
             with open(output_path, "wb") as f:
                 f.write(audio_bytes)
-
             async with aiosqlite.connect(DB_PATH) as db:
                 await db.execute(
                     "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
                     (gen_id, voice["id"], text[:500], "compare", datetime.now(timezone.utc).isoformat())
                 )
                 await db.commit()
-
             results.append({
                 "voice_id": voice["id"],
                 "voice_name": voice["name"],
@@ -485,7 +499,6 @@ async def compare_voices(request: CompareRequest):
                 "audio_url": None,
                 "error": str(e)[:100]
             })
-
     return {"results": results, "text": text}
 
 
@@ -494,17 +507,13 @@ async def batch_tts(request: BatchTTSRequest):
     voice = resolve_voice(request.voice_id)
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
-
     text = request.text
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
-
     chunk_size = min(max(request.chunk_size or 4000, 500), 4096)
     chunks = split_text_into_chunks(text, chunk_size)
-
     gen_id = str(uuid.uuid4())
     all_audio = []
-
     for chunk in chunks:
         chunk = chunk.strip()
         if not chunk:
@@ -514,22 +523,18 @@ async def batch_tts(request: BatchTTSRequest):
             all_audio.append(audio_bytes)
         except Exception as e:
             logger.error(f"Batch TTS chunk failed: {e}")
-
     if not all_audio:
         raise HTTPException(status_code=500, detail="Failed to generate any audio chunks")
-
     combined = b"".join(all_audio)
     output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
     with open(output_path, "wb") as f:
         f.write(combined)
-
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
             "INSERT INTO generations (id, voice_id, text, type, created_at) VALUES (?, ?, ?, ?, ?)",
             (gen_id, voice["id"], request.text[:500], "batch", datetime.now(timezone.utc).isoformat())
         )
         await db.commit()
-
     return {
         "id": gen_id,
         "audio_url": f"/api/audio/{gen_id}",
@@ -546,7 +551,6 @@ async def convert_epub(request: EpubRequest):
     text = request.text
     title = request.title
     author = request.author
-
     chapter_regex = re.compile(r'(?:^|\n)\s*(chapter\s+\d+[^\n]*)', re.IGNORECASE)
     matches = list(chapter_regex.finditer(text))
     chapters = []
@@ -559,16 +563,10 @@ async def convert_epub(request: EpubRequest):
             chapters.append({"title": ch_title, "content": ch_content})
     else:
         chapters.append({"title": title, "content": text})
-
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
         zf.writestr('mimetype', 'application/epub+zip', compress_type=zipfile.ZIP_STORED)
-        zf.writestr('META-INF/container.xml', '''<?xml version="1.0" encoding="UTF-8"?>
-<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-  <rootfiles>
-    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
-  </rootfiles>
-</container>''')
+        zf.writestr('META-INF/container.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n  <rootfiles>\n    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n  </rootfiles>\n</container>')
         manifest_items = []
         spine_items = []
         for i, ch in enumerate(chapters):
@@ -576,39 +574,51 @@ async def convert_epub(request: EpubRequest):
             content_html = ch["content"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             body = "\n".join(f"<p>{p.strip()}</p>" for p in content_html.split("\n") if p.strip())
             ch_title_escaped = ch["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            xhtml = f'''<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head><title>{ch_title_escaped}</title></head>
-<body><h1>{ch_title_escaped}</h1>{body}</body>
-</html>'''
+            xhtml = f'<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml">\n<head><title>{ch_title_escaped}</title></head>\n<body><h1>{ch_title_escaped}</h1>{body}</body>\n</html>'
             zf.writestr(f'OEBPS/{fname}', xhtml)
             manifest_items.append(f'<item id="ch{i+1}" href="{fname}" media-type="application/xhtml+xml"/>')
             spine_items.append(f'<itemref idref="ch{i+1}"/>')
-
         title_escaped = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         author_escaped = author.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        opf = f'''<?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>
-    <dc:title>{title_escaped}</dc:title>
-    <dc:creator>{author_escaped}</dc:creator>
-    <dc:language>en</dc:language>
-    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>
-  </metadata>
-  <manifest>{"".join(manifest_items)}</manifest>
-  <spine>{"".join(spine_items)}</spine>
-</package>'''
+        opf = f'<?xml version="1.0" encoding="UTF-8"?>\n<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">\n  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">\n    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>\n    <dc:title>{title_escaped}</dc:title>\n    <dc:creator>{author_escaped}</dc:creator>\n    <dc:language>en</dc:language>\n    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>\n  </metadata>\n  <manifest>{"".join(manifest_items)}</manifest>\n  <spine>{"".join(spine_items)}</spine>\n</package>'
         zf.writestr('OEBPS/content.opf', opf)
-
     buf.seek(0)
     safe_title = re.sub(r'[^a-zA-Z0-9 ]', '', title).replace(' ', '_') or 'book'
     return StreamingResponse(buf, media_type="application/epub+zip",
         headers={"Content-Disposition": f'attachment; filename="{safe_title}.epub"'})
 
 
-# Include router
+@api_router.post("/chat")
+async def chat(request: ChatRequest):
+    import httpx
+    if not request.message.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    groq_key = os.environ.get("GROQ_API_KEY", "")
+    if not groq_key:
+        raise HTTPException(status_code=500, detail="Chat service not configured")
+    session_id = request.session_id or str(uuid.uuid4())
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
+                json={
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [
+                        {"role": "system", "content": "You are a helpful voice studio assistant for Cantrell Creatives. Help users with voice selection, TTS generation, and audiobook creation."},
+                        {"role": "user", "content": request.message}
+                    ],
+                    "max_tokens": 1000
+                }
+            )
+        data = resp.json()
+        reply = data["choices"][0]["message"]["content"]
+        return {"response": reply, "session_id": session_id}
+    except Exception as e:
+        logger.error(f"Chat failed: {e}")
+        raise HTTPException(status_code=500, detail="Chat service error")
+
+
 app.include_router(api_router)
 
 app.add_middleware(
