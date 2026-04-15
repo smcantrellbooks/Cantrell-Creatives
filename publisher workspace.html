@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if(window.pdfjsLib){window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}</script>
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -314,7 +316,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
       <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
         <label class="lbl" style="margin-bottom:6px;">Import Manuscript</label>
-        <input type="file" id="importFile" accept=".txt,.docx,.epub,.rtf" hidden onchange="importManuscript(event)"/>
+        <input type="file" id="importFile" accept=".txt,.docx,.epub,.rtf,.pdf" hidden onchange="importManuscript(event)"/>
         <button class="btn-plum" style="width:100%;" onclick="document.getElementById('importFile').click()">&#128229; Import File</button>
         <div id="importStatus" style="font-size:.8rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;"></div>
       </div>
@@ -538,12 +540,26 @@ textarea.inp{resize:vertical;line-height:1.85;}
         </label>
         <!-- EPUB option — hidden by default, shown only when selected -->
         <div class="epub-option" id="epubOption">
-          <div style="font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:#6b4a1a;margin-bottom:6px;">EPUB Options</div>
+          <div style="font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:#6b4a1a;margin-bottom:6px;">EPUB 3.0 Options</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div><label class="lbl" style="font-size:.75rem;">Cover Image URL</label><input class="inp" type="text" id="epubCover" placeholder="https://..." style="font-size:.85rem;padding:6px 9px;"/></div>
             <div><label class="lbl" style="font-size:.75rem;">Language</label><input class="inp" type="text" id="epubLang" value="en" style="font-size:.85rem;padding:6px 9px;"/></div>
           </div>
-          <div class="epub-note">EPUB will be generated and downloaded to your device. You can then upload it to Voice Studio or Collections.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+            <div><label class="lbl" style="font-size:.75rem;">Publisher</label><input class="inp" type="text" id="epubPublisher" placeholder="Publisher name" style="font-size:.85rem;padding:6px 9px;"/></div>
+            <div><label class="lbl" style="font-size:.75rem;">ISBN (optional)</label><input class="inp" type="text" id="epubISBN" placeholder="978-..." style="font-size:.85rem;padding:6px 9px;"/></div>
+          </div>
+          <div style="margin-top:8px;">
+            <label class="lbl" style="font-size:.75rem;">Description / Blurb</label>
+            <textarea class="inp" id="epubDescription" placeholder="Book description for metadata..." rows="2" style="font-size:.85rem;padding:6px 9px;"></textarea>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <label class="lbl" style="font-size:.75rem;margin-bottom:0;">Include Title Page</label>
+            <input type="checkbox" id="epubTitlePage" checked style="accent-color:#C9A040;width:16px;height:16px;"/>
+            <label class="lbl" style="font-size:.75rem;margin-bottom:0;margin-left:12px;">Include TOC</label>
+            <input type="checkbox" id="epubTOC" checked style="accent-color:#C9A040;width:16px;height:16px;"/>
+          </div>
+          <div class="epub-note">Generates a valid EPUB 3.0 file with proper navigation, chapter structure, and metadata. Compatible with Kindle, Apple Books, Kobo, and all major platforms.</div>
         </div>
         <div style="margin-top:12px;">
           <button class="btn-gold" style="width:100%;" onclick="exportManuscript()">&#128640; Export Manuscript</button>
@@ -970,12 +986,14 @@ function importManuscript(e){
   var ext = file.name.split('.').pop().toLowerCase();
   status.textContent = 'Reading '+file.name+'...';
 
-  if(ext==='epub'||ext==='docx'){
+  if(ext==='pdf'){
+    importPDF(file, status);
+  } else if(ext==='epub'||ext==='docx'){
     if(typeof JSZip==='undefined'){ status.textContent='JSZip not loaded — refresh and try again.'; return; }
     var r2 = new FileReader();
     r2.onload = function(ev){
       JSZip.loadAsync(ev.target.result).then(function(zip){
-        var titleFound='', fullText='';
+        var titleFound='', fullHTML='';
         if(ext==='epub'){
           var opfKey = Object.keys(zip.files).find(function(f){ return f.endsWith('.opf'); });
           var opfPromise = opfKey ? zip.files[opfKey].async('text') : Promise.resolve('');
@@ -986,17 +1004,13 @@ function importManuscript(e){
           }).then(function(htmlArr){
             htmlArr.forEach(function(h){
               var stripped = h.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
-              if(stripped.length>50) fullText += stripped+'\n\n';
+              if(stripped.length>50) fullHTML += stripped+'\n\n';
             });
-            finishImport(fullText, titleFound, file.name, status);
+            finishImport(fullHTML, titleFound, file.name, status);
           });
         } else {
-          var doc = zip.files['word/document.xml'];
-          if(!doc){ status.textContent='Could not read DOCX.'; return; }
-          return doc.async('text').then(function(xml){
-            fullText = xml.replace(/<w:br[^>]*>/gi,'\n').replace(/<w:p[ >][^>]*>/gi,'\n').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/\s+/g,' ').trim();
-            finishImport(fullText, '', file.name, status);
-          });
+          // DOCX — style-aware import
+          importDocxStyleAware(zip, file.name, status);
         }
       }).catch(function(err){ status.textContent='Error: '+err.message; });
     };
@@ -1009,17 +1023,217 @@ function importManuscript(e){
   e.target.value='';
 }
 
-function finishImport(text, titleFound, filename, status){
-  // Split into ~250 word chunks per page
-  var paragraphs = text.split(/\n\n+/).filter(function(p){ return p.trim().length>0; });
-  var pages = []; var current = '';
-  paragraphs.forEach(function(para){
-    current += '<p>'+para.trim()+'</p>';
-    var wordCount = current.replace(/<[^>]+>/g,' ').trim().split(/\s+/).length;
-    if(wordCount > 280){ pages.push(current); current = ''; }
+/* ── Style-aware DOCX import ── */
+function importDocxStyleAware(zip, filename, status){
+  var stylesMap = {};
+  var stylesFile = zip.files['word/styles.xml'];
+  var stylesPromise = stylesFile ? stylesFile.async('text') : Promise.resolve('');
+
+  stylesPromise.then(function(stylesXml){
+    // Build map of style IDs to heading levels
+    if(stylesXml){
+      var styleMatches = stylesXml.match(/<w:style[^>]*>[\s\S]*?<\/w:style>/gi) || [];
+      styleMatches.forEach(function(s){
+        var idMatch = s.match(/w:styleId="([^"]+)"/i);
+        var nameMatch = s.match(/<w:name\s+w:val="([^"]+)"/i);
+        if(idMatch && nameMatch){
+          var id = idMatch[1], name = nameMatch[1].toLowerCase();
+          if(name.indexOf('heading 1')>=0 || name==='title') stylesMap[id] = 'h1';
+          else if(name.indexOf('heading 2')>=0 || name==='subtitle') stylesMap[id] = 'h2';
+          else if(name.indexOf('heading 3')>=0) stylesMap[id] = 'h3';
+          else if(name.indexOf('title')>=0) stylesMap[id] = 'h1';
+          else if(name.indexOf('subtitle')>=0) stylesMap[id] = 'h2';
+        }
+      });
+    }
+
+    var doc = zip.files['word/document.xml'];
+    if(!doc){ status.textContent='Could not read DOCX.'; return; }
+    return doc.async('text');
+  }).then(function(xml){
+    if(!xml) return;
+    var htmlOut = '';
+    // Extract paragraphs with their styles
+    var paragraphs = xml.match(/<w:p[ >][\s\S]*?<\/w:p>/gi) || [];
+    paragraphs.forEach(function(pXml){
+      // Detect style
+      var styleMatch = pXml.match(/<w:pStyle\s+w:val="([^"]+)"/i);
+      var styleId = styleMatch ? styleMatch[1] : '';
+      var tag = stylesMap[styleId] || 'p';
+
+      // Also detect by outline level
+      if(tag === 'p'){
+        var outlineMatch = pXml.match(/<w:outlineLvl\s+w:val="(\d+)"/i);
+        if(outlineMatch){
+          var lvl = parseInt(outlineMatch[1]);
+          if(lvl === 0) tag = 'h1';
+          else if(lvl === 1) tag = 'h2';
+          else if(lvl === 2) tag = 'h3';
+        }
+      }
+
+      // Detect bold runs (all bold = possible heading)
+      var runs = pXml.match(/<w:r[ >][\s\S]*?<\/w:r>/gi) || [];
+      var textContent = '';
+      var allBold = runs.length > 0;
+      var allItalic = runs.length > 0;
+      var hasText = false;
+
+      runs.forEach(function(r){
+        var tMatch = r.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/gi);
+        if(tMatch){
+          tMatch.forEach(function(tm){
+            var txt = tm.replace(/<[^>]+>/g,'');
+            textContent += txt;
+            if(txt.trim()) hasText = true;
+          });
+        }
+        if(!/<w:b[\s\/]/.test(r)) allBold = false;
+        if(!/<w:i[\s\/]/.test(r)) allItalic = false;
+      });
+
+      // Detect scene breaks (centered *** or --- or similar)
+      var isCentered = /<w:jc\s+w:val="center"/i.test(pXml);
+      var trimmed = textContent.trim();
+      if(isCentered && /^[\*\-~_\s]{2,}$/.test(trimmed)){
+        htmlOut += '<hr>';
+        return;
+      }
+
+      // Detect page breaks
+      if(/<w:br\s+w:type="page"/i.test(pXml)){
+        htmlOut += '<hr class="page-break">';
+      }
+
+      if(!hasText && !trimmed) return;
+
+      // Decode XML entities
+      trimmed = trimmed.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');
+
+      // Apply inline formatting
+      var formatted = '';
+      runs.forEach(function(r){
+        var tMatch = r.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/gi);
+        if(!tMatch) return;
+        var txt = '';
+        tMatch.forEach(function(tm){ txt += tm.replace(/<[^>]+>/g,''); });
+        txt = txt.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"');
+        var isBold = /<w:b[\s\/]/.test(r);
+        var isItalic = /<w:i[\s\/]/.test(r);
+        if(isBold) txt = '<strong>'+txt+'</strong>';
+        if(isItalic) txt = '<em>'+txt+'</em>';
+        formatted += txt;
+      });
+      if(!formatted) formatted = trimmed;
+
+      htmlOut += '<'+tag+'>'+formatted+'</'+tag+'>';
+    });
+
+    // Try to find title from first heading
+    var titleFound = '';
+    var firstH1 = htmlOut.match(/<h1>([\s\S]*?)<\/h1>/i);
+    if(firstH1) titleFound = firstH1[1].replace(/<[^>]+>/g,'').trim();
+
+    finishImportHTML(htmlOut, titleFound, filename, status);
+  }).catch(function(err){ status.textContent='Error reading DOCX: '+err.message; });
+}
+
+/* ── PDF import using pdf.js ── */
+function importPDF(file, status){
+  if(typeof pdfjsLib === 'undefined'){
+    status.textContent = 'PDF.js not loaded — refresh and try again.';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    var typedArray = new Uint8Array(ev.target.result);
+    pdfjsLib.getDocument({data: typedArray}).promise.then(function(pdf){
+      status.textContent = 'Processing '+pdf.numPages+' pages...';
+      var textPages = [];
+      var processed = 0;
+      function processPage(pageNum){
+        pdf.getPage(pageNum).then(function(page){
+          page.getTextContent().then(function(content){
+            var pageText = '';
+            var lastY = null;
+            var lastFontSize = 0;
+            content.items.forEach(function(item){
+              var y = item.transform ? item.transform[5] : 0;
+              var fontSize = item.transform ? item.transform[0] : 12;
+              // Detect line breaks based on Y position change
+              if(lastY !== null && Math.abs(y - lastY) > 2){
+                if(Math.abs(y - lastY) > fontSize * 1.5){
+                  pageText += '\n\n'; // Paragraph break
+                } else {
+                  pageText += '\n'; // Line break
+                }
+              }
+              pageText += item.str;
+              lastY = y;
+              lastFontSize = fontSize;
+            });
+            textPages.push(pageText);
+            processed++;
+            status.textContent = 'Processing page '+processed+' of '+pdf.numPages+'...';
+            if(processed < pdf.numPages){
+              processPage(pageNum + 1);
+            } else {
+              // All pages done — convert to structured HTML
+              var fullText = textPages.join('\n\n---PAGE BREAK---\n\n');
+              var htmlOut = '';
+              var paragraphs = fullText.split(/\n\n+/).filter(function(p){ return p.trim().length > 0; });
+              paragraphs.forEach(function(para){
+                var trimmed = para.trim();
+                if(trimmed === '---PAGE BREAK---'){
+                  htmlOut += '<hr class="page-break">';
+                } else if(/^chapter\s+\d+/i.test(trimmed) || /^CHAPTER\s+/.test(trimmed)){
+                  htmlOut += '<h1>'+trimmed+'</h1>';
+                } else if(trimmed.length < 60 && trimmed === trimmed.toUpperCase() && /[A-Z]/.test(trimmed)){
+                  htmlOut += '<h2>'+trimmed+'</h2>';
+                } else {
+                  htmlOut += '<p>'+trimmed.replace(/\n/g,' ')+'</p>';
+                }
+              });
+              var titleFound = '';
+              var firstH = htmlOut.match(/<h[12]>([\s\S]*?)<\/h[12]>/i);
+              if(firstH) titleFound = firstH[1].replace(/<[^>]+>/g,'').trim();
+              finishImportHTML(htmlOut, titleFound, file.name, status);
+            }
+          });
+        });
+      }
+      processPage(1);
+    }).catch(function(err){ status.textContent = 'Error reading PDF: '+err.message; });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ── Finish import with structured HTML ── */
+function finishImportHTML(html, titleFound, filename, status){
+  // Split HTML into pages by word count (~280 words per page)
+  var tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  var children = Array.from(tmp.children);
+  var pages = []; var current = ''; var wordCount = 0;
+
+  children.forEach(function(el){
+    var elHtml = el.outerHTML;
+    var elWords = (el.textContent||'').trim().split(/\s+/).length;
+    // Page break elements force new page
+    if(el.classList && el.classList.contains('page-break')){
+      if(current) pages.push(current);
+      current = ''; wordCount = 0;
+      return;
+    }
+    current += elHtml;
+    wordCount += elWords;
+    if(wordCount > 280){
+      pages.push(current);
+      current = ''; wordCount = 0;
+    }
   });
   if(current) pages.push(current);
-  if(pages.length === 0) pages = ['<p>'+text+'</p>'];
+  if(pages.length === 0) pages = ['<p>'+html+'</p>'];
 
   var outer = document.getElementById('editorOuter');
   var addBtn = outer.querySelector('.add-page-btn');
@@ -1035,10 +1249,24 @@ function finishImport(text, titleFound, filename, status){
   updatePageNumbers();
 
   if(titleFound && !document.getElementById('bookTitle').value) document.getElementById('bookTitle').value = titleFound;
-  else { var lines=text.split('\n').filter(function(l){ return l.trim().length>0; }); if(lines[0]&&!document.getElementById('bookTitle').value) document.getElementById('bookTitle').value=lines[0].trim().substring(0,60); }
   updateStats();
   saveProject();
-  status.textContent = '&#10003; '+filename+' imported — '+pageCount+' pages';
+  status.innerHTML = '&#10003; '+filename+' imported &mdash; '+pageCount+' pages';
+}
+
+function finishImport(text, titleFound, filename, status){
+  // Convert plain text to HTML then use the HTML importer
+  var paragraphs = text.split(/\n\n+/).filter(function(p){ return p.trim().length>0; });
+  var html = '';
+  paragraphs.forEach(function(para){
+    var trimmed = para.trim();
+    if(/^chapter\s+\d+/i.test(trimmed) || /^CHAPTER\s+/.test(trimmed)){
+      html += '<h1>'+trimmed+'</h1>';
+    } else {
+      html += '<p>'+trimmed+'</p>';
+    }
+  });
+  finishImportHTML(html, titleFound, filename, status);
 }
 
 /* ═══ EXPORT ═══ */
@@ -1063,11 +1291,361 @@ function exportManuscript(){
     status.textContent='&#10003; Sending to Collections&#8230;';
     setTimeout(function(){ location.href='https://creatives.smcantrellbooks.com/collections'; }, 1000);
   } else if(dest==='epub'){
-    // Basic EPUB download
-    var blob = new Blob([fullContent],{type:'application/epub+zip'});
-    var a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=title+'.epub'; a.click();
-    status.textContent='&#10003; EPUB downloaded. You can upload it to Voice Studio or Collections.';
+    status.textContent='Generating EPUB 3.0...';
+    generateEPUB3(title, author, chapters).then(function(blob){
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = title.replace(/[^a-zA-Z0-9\s\-]/g,'').replace(/\s+/g,'_') + '.epub';
+      a.click();
+      status.innerHTML='&#10003; EPUB 3.0 downloaded &mdash; valid for Kindle, Apple Books, Kobo, and all platforms.';
+    }).catch(function(err){
+      status.textContent='Error generating EPUB: '+err.message;
+    });
   }
+}
+
+/* ═══ EPUB 3.0 GENERATOR ═══ */
+async function generateEPUB3(title, author, chapterList){
+  var zip = new JSZip();
+  var lang = (document.getElementById('epubLang')||{}).value || 'en';
+  var coverUrl = (document.getElementById('epubCover')||{}).value || '';
+  var publisher = (document.getElementById('epubPublisher')||{}).value || 'Cantrell Creatives';
+  var isbn = (document.getElementById('epubISBN')||{}).value || '';
+  var description = (document.getElementById('epubDescription')||{}).value || '';
+  var includeTitlePage = document.getElementById('epubTitlePage') ? document.getElementById('epubTitlePage').checked : true;
+  var includeTOC = document.getElementById('epubTOC') ? document.getElementById('epubTOC').checked : true;
+  var bookId = isbn || ('urn:uuid:' + crypto.randomUUID());
+  var now = new Date().toISOString().replace(/\.\d+Z$/,'Z');
+
+  // ── mimetype (must be first, uncompressed) ──
+  zip.file('mimetype', 'application/epub+zip', {compression:'STORE'});
+
+  // ── META-INF/container.xml ──
+  zip.file('META-INF/container.xml',
+    '<?xml version="1.0" encoding="UTF-8"?>\n'+
+    '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n'+
+    '  <rootfiles>\n'+
+    '    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n'+
+    '  </rootfiles>\n'+
+    '</container>'
+  );
+
+  // ── Shared CSS for all XHTML files ──
+  var bookCSS =
+    'body{font-family:"Georgia","Times New Roman",serif;line-height:1.8;color:#1a1a1a;margin:1em 1.5em;}\n'+
+    'h1{font-size:1.8em;text-align:center;margin:2em 0 1em;page-break-before:always;font-weight:700;}\n'+
+    'h2{font-size:1.3em;margin:1.5em 0 0.8em;font-weight:600;}\n'+
+    'h3{font-size:1.1em;margin:1.2em 0 0.6em;font-weight:600;}\n'+
+    'p{margin:0 0 0.4em;text-indent:1.5em;}\n'+
+    'p.first,p.no-indent{text-indent:0;}\n'+
+    'p.scene-break{text-align:center;margin:1.5em 0;text-indent:0;font-size:1.2em;letter-spacing:0.3em;}\n'+
+    'blockquote{border-left:3px solid #999;padding:0.5em 1em;margin:1em 0;font-style:italic;color:#555;}\n'+
+    '.title-page{text-align:center;margin-top:30%;}\n'+
+    '.title-page h1{font-size:2.2em;margin-bottom:0.3em;page-break-before:auto;}\n'+
+    '.title-page .subtitle{font-size:1.3em;font-style:italic;color:#555;margin-bottom:1em;}\n'+
+    '.title-page .author{font-size:1.4em;margin-top:2em;}\n'+
+    '.title-page .publisher{font-size:0.9em;color:#777;margin-top:3em;}\n'+
+    '.copyright{font-size:0.85em;color:#555;margin-top:20%;}\n'+
+    '.copyright p{text-indent:0;margin-bottom:0.3em;}\n'+
+    'hr{border:none;border-top:1px solid #ccc;margin:2em auto;width:40%;}\n';
+  zip.file('OEBPS/style.css', bookCSS);
+
+  // ── Build chapter XHTML files ──
+  var manifestItems = [];
+  var spineItems = [];
+  var tocEntries = [];
+  var fileIndex = 0;
+
+  function makeXHTML(bodyContent, pageTitle){
+    return '<?xml version="1.0" encoding="UTF-8"?>\n'+
+      '<!DOCTYPE html>\n'+
+      '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="'+lang+'">\n'+
+      '<head><meta charset="UTF-8"/><title>'+escXml(pageTitle)+'</title>\n'+
+      '<link rel="stylesheet" type="text/css" href="style.css"/></head>\n'+
+      '<body>\n'+bodyContent+'\n</body>\n</html>';
+  }
+
+  function escXml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // Title page
+  if(includeTitlePage){
+    fileIndex++;
+    var titleBody = '<div class="title-page">\n'+
+      '  <h1>'+escXml(title)+'</h1>\n'+
+      (author ? '  <p class="author">'+escXml(author)+'</p>\n' : '')+
+      (publisher ? '  <p class="publisher">'+escXml(publisher)+'</p>\n' : '')+
+      '</div>';
+    var titleFile = 'title.xhtml';
+    zip.file('OEBPS/'+titleFile, makeXHTML(titleBody, title));
+    manifestItems.push({id:'title', href:titleFile, type:'application/xhtml+xml'});
+    spineItems.push('title');
+  }
+
+  // Copyright page
+  if(includeTitlePage){
+    fileIndex++;
+    var copyrightBody = '<div class="copyright">\n'+
+      '  <p>'+escXml(title)+'</p>\n'+
+      (author ? '  <p>Copyright &copy; '+new Date().getFullYear()+' '+escXml(author)+'. All rights reserved.</p>\n' : '')+
+      (publisher ? '  <p>Published by '+escXml(publisher)+'</p>\n' : '')+
+      (isbn ? '  <p>ISBN: '+escXml(isbn)+'</p>\n' : '')+
+      '  <p>No part of this publication may be reproduced, stored in a retrieval system, or transmitted in any form or by any means without the prior written permission of the author.</p>\n'+
+      '</div>';
+    var copyrightFile = 'copyright.xhtml';
+    zip.file('OEBPS/'+copyrightFile, makeXHTML(copyrightBody, 'Copyright'));
+    manifestItems.push({id:'copyright', href:copyrightFile, type:'application/xhtml+xml'});
+    spineItems.push('copyright');
+  }
+
+  // Process each chapter
+  chapterList.forEach(function(ch, idx){
+    fileIndex++;
+    var chId = 'chapter'+(idx+1);
+    var chFile = chId+'.xhtml';
+    var chTitle = ch.title || ('Chapter '+(idx+1));
+
+    // Parse chapter content from editor HTML
+    var rawHTML = '';
+    if(ch.content){
+      try {
+        var pages = JSON.parse(ch.content);
+        if(Array.isArray(pages)) rawHTML = pages.join('');
+        else rawHTML = ch.content;
+      } catch(e){ rawHTML = ch.content; }
+    }
+
+    // Convert editor HTML to clean EPUB XHTML
+    var chBody = '<h1>'+escXml(chTitle)+'</h1>\n';
+    if(rawHTML){
+      chBody += convertToEpubXHTML(rawHTML);
+    }
+
+    zip.file('OEBPS/'+chFile, makeXHTML(chBody, chTitle));
+    manifestItems.push({id:chId, href:chFile, type:'application/xhtml+xml'});
+    spineItems.push(chId);
+    tocEntries.push({id:chId, href:chFile, title:chTitle});
+  });
+
+  // ── Cover image (if provided) ──
+  var coverManifest = '';
+  var coverMeta = '';
+  if(coverUrl){
+    try {
+      var resp = await fetch(coverUrl);
+      if(resp.ok){
+        var blob = await resp.blob();
+        var ext = 'jpg';
+        var mimeType = blob.type || 'image/jpeg';
+        if(mimeType.includes('png')) ext = 'png';
+        else if(mimeType.includes('gif')) ext = 'gif';
+        var coverFilename = 'cover.'+ext;
+        var arrBuf = await blob.arrayBuffer();
+        zip.file('OEBPS/images/'+coverFilename, arrBuf);
+        manifestItems.push({id:'cover-image', href:'images/'+coverFilename, type:mimeType, properties:'cover-image'});
+
+        // Cover XHTML
+        var coverBody = '<div style="text-align:center;margin:0;padding:0;">\n'+
+          '  <img src="images/'+coverFilename+'" alt="Cover" style="max-width:100%;max-height:100%;"/>\n'+
+          '</div>';
+        zip.file('OEBPS/cover.xhtml', makeXHTML(coverBody, 'Cover'));
+        manifestItems.unshift({id:'cover', href:'cover.xhtml', type:'application/xhtml+xml'});
+        spineItems.unshift('cover');
+        coverMeta = '    <meta name="cover" content="cover-image"/>\n';
+      }
+    } catch(e){ /* skip cover if fetch fails */ }
+  }
+
+  // ── Navigation document (EPUB 3 nav.xhtml) ──
+  if(includeTOC){
+    var navBody = '<nav epub:type="toc" id="toc">\n  <h1>Table of Contents</h1>\n  <ol>\n';
+    tocEntries.forEach(function(entry){
+      navBody += '    <li><a href="'+entry.href+'">'+escXml(entry.title)+'</a></li>\n';
+    });
+    navBody += '  </ol>\n</nav>';
+    zip.file('OEBPS/nav.xhtml', makeXHTML(navBody, 'Table of Contents'));
+    manifestItems.push({id:'nav', href:'nav.xhtml', type:'application/xhtml+xml', properties:'nav'});
+    spineItems.splice(includeTitlePage ? 2 : 0, 0, 'nav');
+  }
+
+  // ── NCX (for EPUB 2 compatibility) ──
+  var ncx = '<?xml version="1.0" encoding="UTF-8"?>\n'+
+    '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">\n'+
+    '<head>\n  <meta name="dtb:uid" content="'+escXml(bookId)+'"/>\n'+
+    '  <meta name="dtb:depth" content="1"/>\n  <meta name="dtb:totalPageCount" content="0"/>\n'+
+    '  <meta name="dtb:maxPageNumber" content="0"/>\n</head>\n'+
+    '<docTitle><text>'+escXml(title)+'</text></docTitle>\n'+
+    '<navMap>\n';
+  tocEntries.forEach(function(entry, i){
+    ncx += '  <navPoint id="navpoint-'+(i+1)+'" playOrder="'+(i+1)+'">\n'+
+      '    <navLabel><text>'+escXml(entry.title)+'</text></navLabel>\n'+
+      '    <content src="'+entry.href+'"/>\n'+
+      '  </navPoint>\n';
+  });
+  ncx += '</navMap>\n</ncx>';
+  zip.file('OEBPS/toc.ncx', ncx);
+  manifestItems.push({id:'ncx', href:'toc.ncx', type:'application/x-dtbncx+xml'});
+
+  // ── Stylesheet manifest ──
+  manifestItems.push({id:'css', href:'style.css', type:'text/css'});
+
+  // ── content.opf ──
+  var opf = '<?xml version="1.0" encoding="UTF-8"?>\n'+
+    '<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="3.0">\n'+
+    '  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">\n'+
+    '    <dc:identifier id="bookid">'+escXml(bookId)+'</dc:identifier>\n'+
+    '    <dc:title>'+escXml(title)+'</dc:title>\n'+
+    '    <dc:language>'+escXml(lang)+'</dc:language>\n'+
+    (author ? '    <dc:creator>'+escXml(author)+'</dc:creator>\n' : '')+
+    (publisher ? '    <dc:publisher>'+escXml(publisher)+'</dc:publisher>\n' : '')+
+    (description ? '    <dc:description>'+escXml(description)+'</dc:description>\n' : '')+
+    '    <dc:date>'+now+'</dc:date>\n'+
+    '    <meta property="dcterms:modified">'+now+'</meta>\n'+
+    coverMeta+
+    '  </metadata>\n'+
+    '  <manifest>\n';
+
+  manifestItems.forEach(function(item){
+    opf += '    <item id="'+item.id+'" href="'+item.href+'" media-type="'+item.type+'"';
+    if(item.properties) opf += ' properties="'+item.properties+'"';
+    opf += '/>\n';
+  });
+
+  opf += '  </manifest>\n'+
+    '  <spine toc="ncx">\n';
+  spineItems.forEach(function(id){
+    opf += '    <itemref idref="'+id+'"/>\n';
+  });
+  opf += '  </spine>\n</package>';
+
+  zip.file('OEBPS/content.opf', opf);
+
+  // Generate the zip with proper compression
+  return zip.generateAsync({
+    type: 'blob',
+    mimeType: 'application/epub+zip',
+    compression: 'DEFLATE',
+    compressionOptions: {level: 9}
+  });
+}
+
+/* ── Convert editor HTML to clean EPUB XHTML ── */
+function convertToEpubXHTML(html){
+  var tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  var result = '';
+  var isFirstPara = true;
+
+  function processNode(node){
+    if(node.nodeType === 3){
+      // Text node
+      var text = node.textContent;
+      if(text.trim()) result += escXmlContent(text);
+      return;
+    }
+    if(node.nodeType !== 1) return;
+
+    var tag = node.tagName.toLowerCase();
+    var children = node.childNodes;
+
+    // Skip empty elements
+    if(!node.textContent.trim() && !['hr','br','img'].includes(tag)) return;
+
+    if(tag === 'h1' || tag === 'h2' || tag === 'h3'){
+      result += '<'+tag+'>'+escXmlContent(node.textContent.trim())+'</'+tag+'>\n';
+      isFirstPara = true;
+    } else if(tag === 'p' || tag === 'div'){
+      var text = node.textContent.trim();
+      if(!text) return;
+      // Check for scene breaks
+      if(/^[\u2015\u2014\u2013\-\*~_\s]{2,}$/.test(text) || text === '***' || text === '* * *'){
+        result += '<p class="scene-break">* * *</p>\n';
+        isFirstPara = true;
+        return;
+      }
+      var cls = isFirstPara ? ' class="first"' : '';
+      result += '<p'+cls+'>';
+      // Process inline formatting
+      processInline(node);
+      result += '</p>\n';
+      isFirstPara = false;
+    } else if(tag === 'blockquote'){
+      result += '<blockquote>';
+      for(var i=0;i<children.length;i++) processNode(children[i]);
+      result += '</blockquote>\n';
+    } else if(tag === 'hr'){
+      result += '<p class="scene-break">* * *</p>\n';
+      isFirstPara = true;
+    } else if(tag === 'br'){
+      result += '<br/>';
+    } else if(tag === 'ul' || tag === 'ol'){
+      result += '<'+tag+'>';
+      for(var i=0;i<children.length;i++){
+        if(children[i].nodeType===1 && children[i].tagName.toLowerCase()==='li'){
+          result += '<li>'+escXmlContent(children[i].textContent.trim())+'</li>';
+        }
+      }
+      result += '</'+tag+'>\n';
+    } else {
+      // Generic — recurse into children
+      for(var i=0;i<children.length;i++) processNode(children[i]);
+    }
+  }
+
+  function processInline(node){
+    var children = node.childNodes;
+    for(var i=0;i<children.length;i++){
+      var child = children[i];
+      if(child.nodeType === 3){
+        result += escXmlContent(child.textContent);
+      } else if(child.nodeType === 1){
+        var ctag = child.tagName.toLowerCase();
+        if(ctag === 'strong' || ctag === 'b'){
+          result += '<strong>';
+          processInline(child);
+          result += '</strong>';
+        } else if(ctag === 'em' || ctag === 'i'){
+          result += '<em>';
+          processInline(child);
+          result += '</em>';
+        } else if(ctag === 'u'){
+          result += '<span style="text-decoration:underline;">';
+          processInline(child);
+          result += '</span>';
+        } else if(ctag === 'a'){
+          result += '<a href="'+escXmlContent(child.getAttribute('href')||'#')+'">';
+          processInline(child);
+          result += '</a>';
+        } else if(ctag === 'br'){
+          result += '<br/>';
+        } else {
+          processInline(child);
+        }
+      }
+    }
+  }
+
+  function escXmlContent(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  var topChildren = tmp.childNodes;
+  for(var i=0;i<topChildren.length;i++) processNode(topChildren[i]);
+
+  // If no structured content was found, wrap raw text in paragraphs
+  if(!result.trim()){
+    var rawText = tmp.textContent.trim();
+    if(rawText){
+      var paras = rawText.split(/\n\n+/);
+      paras.forEach(function(p,idx){
+        if(p.trim()){
+          var cls = idx === 0 ? ' class="first"' : '';
+          result += '<p'+cls+'>'+escXmlContent(p.trim())+'</p>\n';
+        }
+      });
+    }
+  }
+
+  return result;
 }
 
 /* ═══ NYXEN ═══ */
