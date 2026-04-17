@@ -39,9 +39,9 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
 .banner{position:relative;overflow:hidden;display:block;width:100%;height:300px;}
 .banner-img{position:absolute;top:0;left:0;width:100%;height:300px;object-fit:cover;object-position:center;transform:none !important;transition:none !important;will-change:auto !important;}
 .title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
-.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:var(--plum);line-height:1;text-shadow:rgba(255,255,255,.6) 0 2px 16px;letter-spacing:6px;}
-.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:var(--plum);line-height:.95;text-shadow:rgba(255,255,255,.6) 0 2px 16px;margin-left:8px;}
-.title-tagline{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(90,58,90,.85);margin-top:8px;}
+.title-voice{font-family:'Cinzel',serif;font-size:48px;font-weight:600;color:rgba(232,201,122,.95);line-height:1;text-shadow:rgba(0,0,0,.4) 0 2px 20px;letter-spacing:6px;}
+.title-studio{font-family:'Pinyon Script',cursive;font-size:58px;color:#fff;line-height:.95;text-shadow:rgba(0,0,0,.3) 0 2px 20px;margin-left:8px;}
+.title-tagline{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:#7B5C7B;margin-top:8px;}
 .gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--plum),transparent);margin-top:8px;border-radius:999px;}
 .nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(60,30,60,.55) 0%,transparent 100%);z-index:200;}
 .nt-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(201,169,97,.5);background:rgba(40,20,40,.32);color:rgba(232,201,122,.95);font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
@@ -196,24 +196,22 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
 <body>
 
 <div class="banner">
-  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164932/voicestudiobanner-bADR0-ldnFZiRRaIHT8yjg.png" alt="Voice Studio" onerror="this.style.background='linear-gradient(135deg,#f0e4f0,#e8d8e8)';this.removeAttribute('src');">
+  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164929/voicestudioofficial-gSFc-Wi6R19hbmveJtP7bg.png" alt="Voice Studio">
   <div class="title-block">
     <div class="title-voice">VOICE</div>
     <div class="title-studio">Studio</div>
-    <div class="title-tagline">Clone &middot; Narrate &middot; Publish</div>
+    <div class="title-tagline">Your Words &middot; Your Story &middot; Your Creation</div>
     <div class="gold-wave"></div>
   </div>
   <nav class="nav-top">
     <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#x1F3E0; Home</a>
-    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/login/myaccount">My Account</a>
+    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/myaccount">My Account</a>
     <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
-    <a class="nt-btn logout" href="https://creatives.smcantrellbooks.com/logout">Log Out</a>
   </nav>
   <nav class="nav-bot">
     <div class="nb-inner">
       <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>
       <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">✍️ Publisher Workspace</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/editor">📝 Book Editor</a>
       <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">📚 Collections</a>
       <a class="nb-btn" href="https://smcantrellbooks.com">🌎 Main Site</a>
     </div>
@@ -277,8 +275,8 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
           <label class="control-label">Upload Manuscript</label>
           <div class="upload-zone">
             <div class="upload-zone-icon"><i class="ph ph-file-doc"></i></div>
-            <div class="upload-zone-text">Drop .docx file or click to upload</div>
-            <input type="file" id="audiobook-file" accept=".docx">
+            <div class="upload-zone-text">Drop .docx or .epub file or click to upload</div>
+            <input type="file" id="audiobook-file" accept=".docx,.epub">
           </div>
           <div id="upload-info" style="display:none;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--success);margin-top:4px;"></div>
         </div>
@@ -405,9 +403,8 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Our Philosophy</a>
 </footer>
 
-<script src='https://cdn.jotfor.ms/agent/embedjs/019d3d3c3a537add8379214c3060726a324e/embed.js'></script>
 <script>
-var API = 'https://cantrell-creatives.onrender.com/api';
+var API = 'https://cantrell-creatives-e3q2.onrender.com/api';
 var voices = [];
 var activeTab = 'voices';
 var chatSessionId = null;
@@ -590,49 +587,10 @@ function parseChapters(text) {
   var currentTitle = null;
   var currentLines = [];
   var chapterPattern = /^\s*(chapter\s+\S+|prologue|epilogue|part\s+\S+)/i;
-  var inTOC = false;
-  var tocEndIdx = -1;
-
-  // Find where TOC ends by detecting "TABLE OF CONTENTS" then finding
-  // the first line after TOC that has real paragraph content
   for (var i = 0; i < lines.length; i++) {
-    if (/table\s+of\s+contents/i.test(lines[i])) {
-      inTOC = true;
-      continue;
-    }
-    if (inTOC) {
-      // TOC ends when we hit a blank line followed by a chapter heading
-      // that is NOT immediately followed by another chapter heading (i.e. real content)
-      var trimmed = lines[i].trim();
-      if (trimmed === '' && i + 1 < lines.length) {
-        var next = lines[i + 1].trim();
-        // Check if next line is a chapter heading
-        if (chapterPattern.test(next)) {
-          // Look ahead to see if this chapter has real content (not just more headings)
-          var hasContent = false;
-          for (var j = i + 2; j < Math.min(i + 10, lines.length); j++) {
-            var jLine = lines[j].trim();
-            if (jLine !== '' && !chapterPattern.test(jLine)) {
-              hasContent = true;
-              break;
-            }
-          }
-          if (hasContent) {
-            inTOC = false;
-            tocEndIdx = i + 1;
-          }
-        }
-      }
-    }
-  }
-
-  // If we found TOC, start parsing from tocEndIdx, else parse from beginning
-  var startIdx = tocEndIdx > 0 ? tocEndIdx : 0;
-
-  for (var i = startIdx; i < lines.length; i++) {
     var line = lines[i];
     if (chapterPattern.test(line.trim())) {
-      if (currentTitle !== null && currentLines.join('\n').trim().length > 50) {
+      if (currentTitle !== null) {
         chapters.push({ title: currentTitle, content: currentLines.join('\n').trim() });
       }
       currentTitle = line.trim();
@@ -641,7 +599,7 @@ function parseChapters(text) {
       currentLines.push(line);
     }
   }
-  if (currentTitle !== null && currentLines.join('\n').trim().length > 50) {
+  if (currentTitle !== null) {
     chapters.push({ title: currentTitle, content: currentLines.join('\n').trim() });
   }
   if (chapters.length === 0) {
@@ -711,14 +669,25 @@ function setupAudiobookForm() {
   var cp = document.getElementById('chapter-preview-close');
   if (cp) cp.addEventListener('click', function() { document.getElementById('chapter-preview').style.display = 'none'; });
   if (fi) fi.addEventListener('change', function(e) {
-    var file = e.target.files[0]; if (!file) return; var fd = new FormData(); fd.append('file', file);
-    fetch(API + '/upload', {method:'POST',body:fd}).then(function(r) { return r.json(); }).then(function(d) {
+    var file = e.target.files[0]; if (!file) return;
+    var info = document.getElementById('upload-info');
+    var isEpub = file.name.toLowerCase().endsWith('.epub');
+    var endpoint = API + '/upload';
+    if (info) { info.textContent = 'Uploading...'; info.style.display = 'block'; info.style.color = 'var(--gold)'; }
+    var fd = new FormData(); fd.append('file', file);
+    fetch(endpoint, {method:'POST', body:fd})
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
       if (!d.text) throw new Error('Upload failed');
       ta.value = d.text;
       bookChapters = parseChapters(d.text);
       renderChapterList(bookChapters);
-      var info = document.getElementById('upload-info'); if (info) { info.textContent = d.filename + ' — ' + d.word_count + ' words · ' + bookChapters.length + ' chapters'; info.style.display = 'block'; }
-    }).catch(function(e) { alert('Upload Error: ' + e.message); });
+      if (info) { info.textContent = d.filename + ' — ' + d.word_count + ' words · ' + bookChapters.length + ' chapters'; info.style.color = 'var(--success)'; }
+    })
+    .catch(function(err) {
+      alert('Upload Error: ' + err.message);
+      if (info) { info.textContent = 'Error: ' + err.message; info.style.color = 'var(--error)'; }
+    });
   });
   if (pb) pb.addEventListener('click', previewSegments);
   document.querySelectorAll('input[name="voice-mode"]').forEach(function(r) {
@@ -744,8 +713,9 @@ function previewSegments() {
 }
 
 function generateAudiobook() {
-  var text = getSelectedChapterText().trim(), nid = document.getElementById('narrator-voice-select').value, btn = document.getElementById('audiobook-generate-btn'), result = document.getElementById('audiobook-result');
-  if (!text) return;
+  var nid = document.getElementById('narrator-voice-select').value;
+  var btn = document.getElementById('audiobook-generate-btn');
+  var result = document.getElementById('audiobook-result');
   var modeEl = document.querySelector('input[name="voice-mode"]:checked');
   var mode = modeEl ? modeEl.value : 'single';
   var cvids = [];
@@ -753,67 +723,205 @@ function generateAudiobook() {
     var char1sel = document.getElementById('narrator2-voice-select');
     if (char1sel && char1sel.value) cvids.push(char1sel.value);
   }
-  btn.disabled = true; btn.textContent = 'STARTING...';
 
-  // Show progress bar
+  // Get selected chapters in order
+  var selectedChapters = [];
+  var list = document.getElementById('chapter-list');
+  if (list && bookChapters.length > 0) {
+    list.querySelectorAll('input[type=checkbox]').forEach(function(cb) {
+      if (cb.checked) selectedChapters.push(bookChapters[parseInt(cb.dataset.idx)]);
+    });
+  }
+  if (selectedChapters.length === 0) {
+    var fallback = document.getElementById('audiobook-text').value.trim();
+    if (!fallback) { alert('Please upload a manuscript first.'); return; }
+    selectedChapters = [{title: 'Full Manuscript', content: fallback}];
+  }
+
+  btn.disabled = true;
+
+  // Build or reset progress UI
   var pb = document.getElementById('audiobook-progress');
   if (!pb) {
     pb = document.createElement('div');
     pb.id = 'audiobook-progress';
     pb.style.cssText = 'margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);';
-    pb.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span class="control-label" style="margin:0;">Generating Audiobook</span><span id="ab-pct" style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--gold);">0%</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;"><div id="ab-bar" style="height:100%;background:linear-gradient(90deg,var(--plum),var(--gold));width:0%;transition:width 300ms;border-radius:3px;"></div></div><div id="ab-msg" style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);margin-top:6px;">Initializing...</div>';
     result.parentNode.insertBefore(pb, result);
   }
   pb.style.display = 'block';
+  pb.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span class="control-label" style="margin:0;">Generating Audiobook</span><span id="ab-pct" style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--gold);">0%</span></div>'
+    + '<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px;"><div id="ab-bar" style="height:100%;background:linear-gradient(90deg,var(--plum),var(--gold));width:0%;transition:width 400ms;border-radius:3px;"></div></div>'
+    + '<div id="ab-msg" style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);">Starting...</div>'
+    + '<div id="ab-chapter-list" style="margin-top:12px;display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;"></div>';
 
-  var body = {text:text, narrator_voice_id:nid};
-  if (cvids.length > 0) body.character_voice_ids = cvids;
+  var total = selectedChapters.length;
+  var completedUrls = [];
+  var chapterListEl = document.getElementById('ab-chapter-list');
 
-  fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
-  .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
-  .then(function(data) {
-    if (data.job_id) {
-      pollAudiobookJob(data.job_id, btn, result);
-    } else {
-      showAudiobookResult(data, result);
-      btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-      pb.style.display = 'none';
-    }
-  })
-  .catch(function(e) {
-    alert('Audiobook Error: ' + e.message);
-    btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-    pb.style.display = 'none';
+  // Pre-populate chapter status rows
+  selectedChapters.forEach(function(ch, i) {
+    var row = document.createElement('div');
+    row.id = 'ab-ch-' + i;
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;font-family:JetBrains Mono,monospace;font-size:10px;color:var(--text-tertiary);';
+    row.innerHTML = '<span id="ab-ch-icon-' + i + '" style="flex-shrink:0;">⬜</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(ch.title) + '</span><span id="ab-ch-status-' + i + '">Waiting</span>';
+    chapterListEl.appendChild(row);
   });
-}
 
-function pollAudiobookJob(jobId, btn, result) {
-  btn.textContent = 'GENERATING...';
-  var interval = setInterval(function() {
-    fetch(API + '/audiobook/status/' + jobId)
-    .then(function(r) { return r.json(); })
-    .then(function(job) {
-      var pct = job.progress || 0;
-      var bar = document.getElementById('ab-bar');
-      var pctEl = document.getElementById('ab-pct');
-      var msg = document.getElementById('ab-msg');
-      if (bar) bar.style.width = pct + '%';
-      if (pctEl) pctEl.textContent = pct + '%';
-      if (msg) msg.textContent = 'Segment ' + (job.completed || 0) + ' of ' + (job.total || '?');
-      btn.textContent = 'GENERATING... ' + pct + '%';
-      if (job.status === 'complete') {
-        clearInterval(interval);
-        document.getElementById('audiobook-progress').style.display = 'none';
-        showAudiobookResult(job, result);
-        btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-      } else if (job.status === 'error') {
-        clearInterval(interval);
-        document.getElementById('audiobook-progress').style.display = 'none';
-        alert('Audiobook Error: ' + (job.error || 'Unknown error'));
-        btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+  function updateProgress(done) {
+    var pct = Math.round((done / total) * 100);
+    var bar = document.getElementById('ab-bar');
+    var pctEl = document.getElementById('ab-pct');
+    if (bar) bar.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+  }
+
+  function setChapterStatus(i, status, success) {
+    var icon = document.getElementById('ab-ch-icon-' + i);
+    var st = document.getElementById('ab-ch-status-' + i);
+    var row = document.getElementById('ab-ch-' + i);
+    if (icon) icon.textContent = success === true ? '✅' : success === false ? '❌' : '⏳';
+    if (st) { st.textContent = status; st.style.color = success === true ? 'var(--success)' : success === false ? 'var(--error)' : 'var(--gold)'; }
+    if (row && success === true) row.style.color = 'var(--text-secondary)';
+  }
+
+  // Process chapters one at a time in sequence
+  function processChapter(i) {
+    if (i >= total) {
+      // All done — stitch together
+      finishAudiobook();
+      return;
+    }
+    var ch = selectedChapters[i];
+    var msg = document.getElementById('ab-msg');
+    if (msg) msg.textContent = 'Chapter ' + (i+1) + ' of ' + total + ': ' + ch.title;
+    setChapterStatus(i, 'Generating...', null);
+    updateProgress(i);
+
+    var body = {text: ch.content, narrator_voice_id: nid};
+    if (cvids.length > 0) body.character_voice_ids = cvids;
+
+    fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
+    .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
+    .then(function(data) {
+      if (data.job_id) {
+        pollChapterJob(data.job_id, i, function(audioUrl) {
+          completedUrls.push({title: ch.title, url: audioUrl});
+          setChapterStatus(i, 'Complete', true);
+          updateProgress(i + 1);
+          processChapter(i + 1);
+        }, function(err) {
+          setChapterStatus(i, 'Failed — retrying...', false);
+          // Retry once
+          setTimeout(function() {
+            fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
+            .then(function(r2) { return r2.json(); })
+            .then(function(d2) {
+              if (d2.job_id) {
+                pollChapterJob(d2.job_id, i, function(audioUrl) {
+                  completedUrls.push({title: ch.title, url: audioUrl});
+                  setChapterStatus(i, 'Complete (retry)', true);
+                  updateProgress(i + 1);
+                  processChapter(i + 1);
+                }, function() {
+                  setChapterStatus(i, 'Skipped', false);
+                  processChapter(i + 1);
+                });
+              }
+            }).catch(function() { setChapterStatus(i, 'Skipped', false); processChapter(i + 1); });
+          }, 2000);
+        });
+      } else if (data.audio_url) {
+        var url = API.replace('/api','') + data.audio_url;
+        completedUrls.push({title: ch.title, url: url});
+        setChapterStatus(i, 'Complete', true);
+        updateProgress(i + 1);
+        processChapter(i + 1);
+      } else {
+        setChapterStatus(i, 'Skipped', false);
+        processChapter(i + 1);
       }
-    }).catch(function() {});
-  }, 3000);
+    })
+    .catch(function(e) {
+      setChapterStatus(i, 'Error: ' + e.message, false);
+      processChapter(i + 1);
+    });
+  }
+
+  function pollChapterJob(jobId, chIdx, onSuccess, onError) {
+    var attempts = 0;
+    var interval = setInterval(function() {
+      attempts++;
+      if (attempts > 120) { clearInterval(interval); onError('Timeout'); return; }
+      fetch(API + '/audiobook/status/' + jobId)
+      .then(function(r) { return r.json(); })
+      .then(function(job) {
+        var pct = job.progress || 0;
+        setChapterStatus(chIdx, 'Generating... ' + pct + '%', null);
+        if (job.status === 'complete') {
+          clearInterval(interval);
+          var url = job.audio_url ? (API.replace('/api','') + job.audio_url) : (API + '/audio/' + jobId);
+          onSuccess(url);
+        } else if (job.status === 'error') {
+          clearInterval(interval);
+          onError(job.error || 'Unknown error');
+        }
+      }).catch(function() {});
+    }, 3000);
+  }
+
+  function finishAudiobook() {
+    var msg = document.getElementById('ab-msg');
+    if (completedUrls.length === 0) {
+      if (msg) msg.textContent = 'No chapters completed.';
+      btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+      return;
+    }
+    if (msg) msg.textContent = completedUrls.length + ' of ' + total + ' chapters complete.';
+    pb.style.display = 'none';
+    btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
+
+    // Show the last/only completed chapter in the player
+    // and list all completed chapters for individual download
+    var lastUrl = completedUrls[completedUrls.length - 1].url;
+    result.classList.add('visible');
+    setTimeout(function() { audiobookWaveform.drawIdle && audiobookWaveform.drawIdle(); }, 50);
+    var audioEl = result.querySelector('audio');
+    audioEl.pause(); audioEl.removeAttribute('src'); audioEl.load();
+    audioEl.src = lastUrl; audioEl.load(); audioEl.play().catch(function(){});
+    var info = result.querySelector('.audio-result-info span');
+    if (info) info.textContent = completedUrls.length + ' chapters generated';
+    var dl = result.querySelector('.btn-download');
+    if (dl) dl.onclick = function() { var a = document.createElement('a'); a.href = lastUrl; a.download = 'voicestudio-audiobook.mp3'; a.click(); };
+
+    // If multiple chapters, show individual download links
+    if (completedUrls.length > 1) {
+      var existing = document.getElementById('ab-chapter-downloads');
+      if (existing) existing.remove();
+      var dlBlock = document.createElement('div');
+      dlBlock.id = 'ab-chapter-downloads';
+      dlBlock.style.cssText = 'margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);';
+      dlBlock.innerHTML = '<div class="control-label" style="margin-bottom:10px;">Chapter Downloads</div>';
+      completedUrls.forEach(function(ch, i) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-secondary);';
+        row.innerHTML = '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:12px;">' + escapeHtml(ch.title) + '</span>';
+        var dlBtn = document.createElement('button');
+        dlBtn.className = 'btn-download';
+        dlBtn.innerHTML = '<i class="ph ph-download-simple"></i> MP3';
+        dlBtn.style.cssText = 'padding:4px 10px;font-size:10px;flex-shrink:0;';
+        (function(url, title) {
+          dlBtn.onclick = function() { var a = document.createElement('a'); a.href = url; a.download = title.replace(/[^a-z0-9]/gi,'_') + '.mp3'; a.click(); };
+        })(ch.url, ch.title);
+        row.appendChild(dlBtn);
+        if (i === completedUrls.length - 1) row.style.borderBottom = 'none';
+        dlBlock.appendChild(row);
+      });
+      result.parentNode.insertBefore(dlBlock, result.nextSibling);
+    }
+  }
+
+  // Kick off chapter-by-chapter generation
+  processChapter(0);
 }
 
 function showAudiobookResult(data, result) {
@@ -964,5 +1072,111 @@ function parseMarkdown(t) {
   return h;
 }
 </script>
+
+<!-- Nyxen Chat Bubble -->
+<style>
+#nyxen-bubble{position:fixed;bottom:28px;right:28px;z-index:9999;}
+#nyxen-toggle{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--plum),var(--accent-hover));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(123,92,123,.45);transition:transform .2s;}
+#nyxen-toggle:hover{transform:scale(1.08);}
+#nyxen-toggle svg{width:26px;height:26px;fill:#fff;}
+#nyxen-panel{position:absolute;bottom:68px;right:0;width:340px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(45,31,45,.18);display:none;flex-direction:column;overflow:hidden;max-height:480px;}
+#nyxen-panel.open{display:flex;}
+#nyxen-head{padding:14px 18px;background:linear-gradient(135deg,var(--plum),var(--accent-hover));display:flex;align-items:center;gap:10px;}
+#nyxen-head-name{font-family:'Cinzel',serif;font-size:13px;font-weight:600;color:#fff;letter-spacing:.06em;}
+#nyxen-head-sub{font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:rgba(255,255,255,.7);letter-spacing:.04em;}
+#nyxen-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+#nyxen-msgs .nm{max-width:85%;font-size:14px;line-height:1.55;padding:10px 14px;border-radius:10px;}
+#nyxen-msgs .nm.assistant{background:var(--surface-el);border:1px solid var(--border);color:var(--text-secondary);align-self:flex-start;}
+#nyxen-msgs .nm.user{background:var(--plum);color:#fff;align-self:flex-end;}
+#nyxen-foot{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:8px;}
+#nyxen-input{flex:1;background:#fff;border:1px solid var(--border);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:15px;padding:8px 12px;outline:none;border-radius:8px;}
+#nyxen-input:focus{border-color:var(--plum);}
+#nyxen-send{padding:8px 16px;background:var(--plum);border:none;color:#fff;font-family:'Cinzel',serif;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:8px;transition:background 150ms;white-space:nowrap;}
+#nyxen-send:hover{background:var(--accent-hover);}
+#nyxen-send:disabled{opacity:.5;cursor:not-allowed;}
+.nyxen-dots{display:inline-flex;gap:4px;align-items:center;padding:2px 0;}
+.nyxen-dots span{width:6px;height:6px;background:var(--plum);border-radius:50%;animation:blink 1.2s infinite;}
+.nyxen-dots span:nth-child(2){animation-delay:.2s;}
+.nyxen-dots span:nth-child(3){animation-delay:.4s;}
+</style>
+
+<div id="nyxen-bubble">
+  <div id="nyxen-panel">
+    <div id="nyxen-head">
+      <div>
+        <div id="nyxen-head-name">Nyxen</div>
+        <div id="nyxen-head-sub">Your Publishing AI</div>
+      </div>
+    </div>
+    <div id="nyxen-msgs">
+      <div class="nm assistant">Hi! I'm Nyxen, your publishing assistant. Ask me anything about your book, voice studio, or publishing journey.</div>
+    </div>
+    <div id="nyxen-foot">
+      <input id="nyxen-input" type="text" placeholder="Ask Nyxen..." autocomplete="off">
+      <button id="nyxen-send">Send</button>
+    </div>
+  </div>
+  <button id="nyxen-toggle" title="Chat with Nyxen">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.782-1.388A9.954 9.954 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.952 7.952 0 01-4.073-1.118l-.29-.174-3.006.872.872-2.965-.19-.305A7.954 7.954 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+  </button>
+</div>
+
+<script>
+(function(){
+  var API = 'https://cantrell-creatives-e3q2.onrender.com/api';
+  var panel = document.getElementById('nyxen-panel');
+  var toggle = document.getElementById('nyxen-toggle');
+  var msgs = document.getElementById('nyxen-msgs');
+  var input = document.getElementById('nyxen-input');
+  var send = document.getElementById('nyxen-send');
+  var sessionId = null;
+
+  toggle.addEventListener('click', function(){
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) input.focus();
+  });
+
+  function addMsg(role, content) {
+    var d = document.createElement('div');
+    d.className = 'nm ' + role;
+    d.textContent = content;
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    return d;
+  }
+
+  function sendMsg() {
+    var text = input.value.trim(); if (!text) return;
+    addMsg('user', text);
+    input.value = '';
+    send.disabled = true;
+    var loader = document.createElement('div');
+    loader.className = 'nm assistant';
+    loader.innerHTML = '<div class="nyxen-dots"><span></span><span></span><span></span></div>';
+    msgs.appendChild(loader);
+    msgs.scrollTop = msgs.scrollHeight;
+    fetch(API + '/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: text, session_id: sessionId})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      sessionId = d.session_id;
+      loader.remove();
+      addMsg('assistant', d.response || 'Sorry, I had trouble with that.');
+    })
+    .catch(function(){
+      loader.remove();
+      addMsg('assistant', 'Connection issue — please try again.');
+    })
+    .finally(function(){ send.disabled = false; input.focus(); });
+  }
+
+  send.addEventListener('click', sendMsg);
+  input.addEventListener('keydown', function(e){ if (e.key==='Enter') sendMsg(); });
+})();
+</script>
+
 </body>
 </html>
