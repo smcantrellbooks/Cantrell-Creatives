@@ -173,9 +173,9 @@ textarea.inp{resize:vertical;line-height:1.85;}
 <!-- BANNER -->
 <div class="banner">
   <img class="banner-img"
-    src="https://cdn1.site-media.eu/images/0/24210303/creativepublisher-AgC9X4Wbo5VZC1GHvwD2zg.png"
+    src="https://cdn1.site-media.eu/images/0/24508205/studiobannerblank-gbvaNSHz4F7-O2ZlQ3wTzQ.png"
     alt="Book Editor"
-    onerror="this.style.background='linear-gradient(135deg,#f5ede0,#e8d8e8)';this.removeAttribute('src');">
+    onerror="this.style.background='linear-gradient(135deg,#1a1410,#3a2a18)';this.removeAttribute('src');">
   <div class="banner-overlay"></div>
   <div class="banner-title-wrap">
     <div class="banner-title">Book Editor</div>
@@ -385,8 +385,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- CKEditor 5 CDN (free open-source build) -->
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<!-- CKEditor 5 CDN (super-build includes all plugins) -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
 
 <script>
 /* ==============================
@@ -419,9 +419,9 @@ function init() {
   setupExportToggle();
 }
 
-/* -- CKEditor 5 initialization -- */
+/* -- CKEditor 5 initialization (super-build) -- */
 function initCKEditor() {
-  ClassicEditor
+  CKEDITOR.ClassicEditor
     .create(document.querySelector('#ckEditor'), {
       toolbar: {
         items: [
@@ -442,6 +442,8 @@ function initCKEditor() {
           'outdent', 'indent',
           '|',
           'link', 'blockQuote', 'insertTable', 'horizontalLine',
+          '|',
+          'findAndReplace',
           '|',
           'removeFormat',
           '|',
@@ -475,7 +477,33 @@ function initCKEditor() {
         supportAllValues: true
       },
       placeholder: 'Start writing your manuscript here...\n\nEvery great story begins with a single word.',
-      language: 'en'
+      language: 'en',
+      // Super-build requires listing premium plugins to remove
+      removePlugins: [
+        'AIAssistant',
+        'CKBox',
+        'CKFinder',
+        'EasyImage',
+        'MultiLevelList',
+        'RealTimeCollaborativeComments',
+        'RealTimeCollaborativeTrackChanges',
+        'RealTimeCollaborativeRevisionHistory',
+        'PresenceList',
+        'Comments',
+        'TrackChanges',
+        'TrackChangesData',
+        'RevisionHistory',
+        'Pagination',
+        'WProofreader',
+        'MathType',
+        'SlashCommand',
+        'Template',
+        'DocumentOutline',
+        'FormatPainter',
+        'TableOfContents',
+        'PasteFromOfficeEnhanced',
+        'CaseChange'
+      ]
     })
     .then(function(editor) {
       editorInstance = editor;
