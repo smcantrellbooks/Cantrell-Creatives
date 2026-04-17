@@ -385,8 +385,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- CKEditor 5 CDN (free open-source build) -->
-<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<!-- CKEditor 5 CDN (super-build includes all plugins) -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
 
 <script>
 /* ==============================
@@ -419,9 +419,9 @@ function init() {
   setupExportToggle();
 }
 
-/* -- CKEditor 5 initialization -- */
+/* -- CKEditor 5 initialization (super-build) -- */
 function initCKEditor() {
-  ClassicEditor
+  CKEDITOR.ClassicEditor
     .create(document.querySelector('#ckEditor'), {
       toolbar: {
         items: [
@@ -442,6 +442,8 @@ function initCKEditor() {
           'outdent', 'indent',
           '|',
           'link', 'blockQuote', 'insertTable', 'horizontalLine',
+          '|',
+          'findAndReplace',
           '|',
           'removeFormat',
           '|',
@@ -475,7 +477,33 @@ function initCKEditor() {
         supportAllValues: true
       },
       placeholder: 'Start writing your manuscript here...\n\nEvery great story begins with a single word.',
-      language: 'en'
+      language: 'en',
+      // Super-build requires listing plugins to remove (not used ones)
+      removePlugins: [
+        'AIAssistant',
+        'CKBox',
+        'CKFinder',
+        'EasyImage',
+        'MultiLevelList',
+        'RealTimeCollaborativeComments',
+        'RealTimeCollaborativeTrackChanges',
+        'RealTimeCollaborativeRevisionHistory',
+        'PresenceList',
+        'Comments',
+        'TrackChanges',
+        'TrackChangesData',
+        'RevisionHistory',
+        'Pagination',
+        'WProofreader',
+        'MathType',
+        'SlashCommand',
+        'Template',
+        'DocumentOutline',
+        'FormatPainter',
+        'TableOfContents',
+        'PasteFromOfficeEnhanced',
+        'CaseChange'
+      ]
     })
     .then(function(editor) {
       editorInstance = editor;
