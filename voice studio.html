@@ -321,7 +321,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
         </div>
         <div class="control-group">
           <label class="control-label">1st Voice (Character/Narrator)</label>
-          <input type="text" id="char1-name" placeholder="Character name (e.g. Sarah)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;margin-bottom:8px;background:#fff;color:var(--text-primary);">
+          <input type="text" id="char1-name" placeholder="Character name (e.g. Sarah)" style="display:none;width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;margin-bottom:8px;background:#fff;color:var(--text-primary);">
           <select id="narrator-voice-select" class="control-select"></select>
         </div>
         <div id="char-voice-group" style="display:none;">
@@ -469,6 +469,8 @@ var historyWaveform = new WaveformViz('history-waveform');
 
 document.addEventListener('DOMContentLoaded', init);
 function init() {
+  var incoming=localStorage.getItem('vs_incoming');
+  if(incoming){try{var data=JSON.parse(incoming);localStorage.removeItem('vs_incoming');setTimeout(function(){var ta=document.getElementById('audiobook-text');if(ta&&data.content){ta.value=data.content;if(typeof parseChapters==='function'){bookChapters=parseChapters(data.content);if(typeof renderChapterList==='function')renderChapterList(bookChapters);}}var info=document.getElementById('upload-info');if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}},800);}catch(e){}}
   var incoming = localStorage.getItem('vs_incoming');
   if(incoming){try{var data=JSON.parse(incoming);localStorage.removeItem('vs_incoming');setTimeout(function(){var ta=document.getElementById('audiobook-text');if(ta&&data.content){ta.value=data.content;if(typeof parseChapters==='function'){bookChapters=parseChapters(data.content);if(typeof renderChapterList==='function')renderChapterList(bookChapters);}}var info=document.getElementById('upload-info');if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}},800);}catch(e){}}
   setupTabs();
@@ -586,30 +588,52 @@ var bookChapters = [];
 
 function parseChapters(text) {
   var lines = text.split('\n');
-  var segments = [];
+  var allSegments = [];
   var currentTitle = null;
   var currentLines = [];
-  // Split on Chapter, Prologue, Epilogue AND Part headings
+  // Match Chapter AND Part headings
   var headingPattern = /^\s*(chapter\s+\S+|prologue|epilogue|part\s+\d+)/i;
+
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
     if (headingPattern.test(line.trim())) {
       if (currentTitle !== null) {
-        segments.push({ title: currentTitle, content: currentLines.join('\n').trim() });
+        allSegments.push({ title: currentTitle, content: currentLines.join('\n').trim() });
       }
       currentTitle = line.trim();
       currentLines = [];
     } else {
-      currentLines.push(line);
+      if (currentTitle !== null) currentLines.push(line);
     }
   }
   if (currentTitle !== null) {
-    segments.push({ title: currentTitle, content: currentLines.join('\n').trim() });
+    allSegments.push({ title: currentTitle, content: currentLines.join('\n').trim() });
   }
-  if (segments.length === 0) {
+
+  // Remove TOC duplicates - keep only segments with real content (>100 chars)
+  var withContent = allSegments.filter(function(s){ return s.content.trim().length > 100 || /^chapter\s/i.test(s.title) || /^(prologue|epilogue)/i.test(s.title); });
+  if (withContent.length === 0) withContent = allSegments;
+
+  // Capture front matter (text before first heading) - only once
+  var firstHeadingIdx = text.search(/(chapter|prologue|epilogue|part\s+\d+)\s+\S+/i);
+  var frontMatter = firstHeadingIdx > 20 ? text.substring(0, firstHeadingIdx).trim() : '';
+
+  var result = withContent;
+  // Front matter is included in the full text but not shown as a separate segment
+
+  // Remove exact duplicate titles (keep first occurrence with content)
+  var seen = {};
+  result = result.filter(function(s){
+    var key = s.title.toLowerCase().trim();
+    if(seen[key]) return false;
+    seen[key] = true;
+    return true;
+  });
+
+  if (result.length === 0) {
     return [{ title: 'Full Manuscript', content: text }];
   }
-  return segments;
+  return result;
 }
 
 function renderChapterList(chapters) {
@@ -672,12 +696,17 @@ function setupAudiobookForm() {
   var fi = document.getElementById('audiobook-file'), ta = document.getElementById('audiobook-text'), pb = document.getElementById('audiobook-preview-btn'), gb = document.getElementById('audiobook-generate-btn');
   var cp = document.getElementById('chapter-preview-close');
   if (cp) cp.addEventListener('click', function() { document.getElementById('chapter-preview').style.display = 'none'; });
-  if(fi)fi.addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var ext=file.name.split('.').pop().toLowerCase();if(ext!=='epub'){alert('Please upload an EPUB file. If you have a manuscript, go to the Book Editor to export it as EPUB first.');e.target.value='';return;}if(typeof JSZip==='undefined'){alert('Page not fully loaded. Please refresh and try again.');return;}var r=new FileReader();r.onload=function(ev){JSZip.loadAsync(ev.target.result).then(function(zip){var ef=Object.keys(zip.files).filter(function(f){return(f.endsWith('.html')||f.endsWith('.xhtml'))&&!f.toLowerCase().includes('toc')&&!f.toLowerCase().includes('nav');}).sort();return Promise.all(ef.map(function(fn){return zip.files[fn].async('text');}));}).then(function(arr){var text=arr.map(function(h){var tmp=document.createElement('div');tmp.innerHTML=h;return(tmp.textContent||tmp.innerText||'').replace(/[\t ]+/g,' ').trim();}).filter(Boolean).join(' ');ta.value=text;bookChapters=parseChapters(text);renderChapterList(bookChapters);var info=document.getElementById('upload-info');if(info){info.textContent=file.name+' loaded — '+text.split(' ').filter(Boolean).length+' words, '+bookChapters.length+' chapters';info.style.display='block';}}).catch(function(err){alert('EPUB Error: '+err.message);});};r.readAsArrayBuffer(file);});
+  if(fi)fi.addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var ext=file.name.split('.').pop().toLowerCase();if(ext!=='epub'){alert('Please upload an EPUB file. If you have a manuscript, go to the Book Editor to export it as EPUB first.');e.target.value='';return;}if(typeof JSZip==='undefined'){alert('Page not fully loaded. Please refresh and try again.');return;}var r=new FileReader();r.onload=function(ev){JSZip.loadAsync(ev.target.result).then(function(zip){var ef=Object.keys(zip.files).filter(function(f){return(f.endsWith('.html')||f.endsWith('.xhtml'))&&!f.toLowerCase().includes('toc')&&!f.toLowerCase().includes('nav');}).sort();return Promise.all(ef.map(function(fn){return zip.files[fn].async('text');}));}).then(function(arr){var text=arr.map(function(h){var tmp=document.createElement('div');tmp.innerHTML=h.replace(/<h[1-6][^>]*>/gi,'\n').replace(/<\/h[1-6]>/gi,'\n').replace(/<p[^>]*>/gi,'\n').replace(/<\/p>/gi,'\n').replace(/<[^>]+>/g,'');var t=(tmp.textContent||'').replace(/[ \t]+/g,' ').replace(/\n[ \t]*/g,'\n').trim();return t;}).filter(Boolean).join('\n\n');// Keep full text including front matter - parse chapters from it
+// Front matter will be included as first segment if present
+ta.value=text;bookChapters=parseChapters(text);renderChapterList(bookChapters);var info=document.getElementById('upload-info');if(info){info.textContent=file.name+' loaded — '+text.split(' ').filter(Boolean).length+' words, '+bookChapters.length+' chapters';info.style.display='block';}}).catch(function(err){alert('EPUB Error: '+err.message);});};r.readAsArrayBuffer(file);});
   if (pb) pb.addEventListener('click', previewSegments);
   document.querySelectorAll('input[name="voice-mode"]').forEach(function(r) {
     r.addEventListener('change', function() {
       var cg = document.getElementById('char-voice-group');
-      if (cg) cg.style.display = this.value === 'multi' ? 'block' : 'none';
+      var char1 = document.getElementById('char1-name');
+      var isMulti = this.value === 'multi';
+      if (cg) cg.style.display = isMulti ? 'block' : 'none';
+      if (char1) char1.style.display = isMulti ? 'block' : 'none';
     });
   });
   var eb = document.getElementById('epub-convert-btn'); if (eb) eb.addEventListener('click', convertEPUB);
@@ -697,7 +726,9 @@ function previewSegments() {
 }
 
 function generateAudiobook() {
-  var nid = document.getElementById('narrator-voice-select').value;
+  var nid = document.getElementById("narrator-voice-select").value || "voice_01";
+  var voiceObj = voices.find(function(v){ return v.id === nid; });
+  var narratorVoiceName = voiceObj ? (voiceObj.openai_voice || voiceObj.name || "alloy") : "alloy";
   var btn = document.getElementById('audiobook-generate-btn');
   var result = document.getElementById('audiobook-result');
   var modeEl = document.querySelector('input[name="voice-mode"]:checked');
@@ -775,11 +806,21 @@ function generateAudiobook() {
     if (i >= total) { finishAudiobook(); return; }
     var ch = selectedChapters[i];
     var msg = document.getElementById('ab-msg');
-    if (msg) msg.textContent = 'Chapter ' + (i+1) + ' of ' + total + ': ' + ch.title;
+    if (msg) msg.textContent = 'Segment ' + (i+1) + ' of ' + total + ': ' + ch.title;
     if (!ch.content || !ch.content.trim()) { setChapterStatus(i, 'Skipped — title only, no content', null); updateProgress(i+1); processChapter(i+1); return; }
     setChapterStatus(i, 'Generating...', null);
     updateProgress(i);
-    var body = {text: ch.content, narrator_voice_id: nid};
+    // Clean text - remove chars that cause API errors
+    var cleanContent = ch.content
+      .replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u201C\u201D]/g, '"')
+      .replace(/[\u2013\u2014]/g, '-')
+      .replace(/[\u2026]/g, '...')
+      .replace(/[^\x00-\x7F\n]/g, ' ')
+      .replace(/[ \t]+/g, ' ')
+      .trim();
+    if (!cleanContent) { setChapterStatus(i, 'Skipped - no readable content', null); updateProgress(i+1); processChapter(i+1); return; }
+    var body = {text: cleanContent, narrator_voice_id: nid, narrator_voice: narratorVoiceName};
     if (cvids.length > 0) body.character_voice_ids = cvids;
     fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
     .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
@@ -789,17 +830,17 @@ function generateAudiobook() {
           completedUrls.push({title:ch.title, url:url});
           setChapterStatus(i, 'Complete', true, url);
           updateProgress(i+1);
-          setTimeout(function() { processChapter(i+1); }, 2000);
+          setTimeout(function() { processChapter(i+1); }, 300);
         }, function() {
           setChapterStatus(i, 'Failed', false);
-          setTimeout(function() { processChapter(i+1); }, 2000);
+          setTimeout(function() { processChapter(i+1); }, 300);
         });
       } else if (data.audio_url) {
         var chUrl = API.replace('/api','') + data.audio_url;
         completedUrls.push({title:ch.title, url:chUrl});
         setChapterStatus(i, 'Complete', true, chUrl);
         updateProgress(i+1);
-        setTimeout(function() { processChapter(i+1); }, 2000);
+        setTimeout(function() { processChapter(i+1); }, 300);
       } else {
         setChapterStatus(i, 'Skipped', false);
         processChapter(i+1);
