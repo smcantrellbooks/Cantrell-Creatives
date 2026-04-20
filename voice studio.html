@@ -802,16 +802,11 @@ function generateAudiobook() {
     }
   }
 
-  function processChapter(i) {
-    if (i >= total) { finishAudiobook(); return; }
-    var ch = selectedChapters[i];
-    var msg = document.getElementById('ab-msg');
-    if (msg) msg.textContent = 'Segment ' + (i+1) + ' of ' + total + ': ' + ch.title;
-    if (!ch.content || !ch.content.trim()) { setChapterStatus(i, 'Skipped — title only, no content', null); updateProgress(i+1); processChapter(i+1); return; }
-    setChapterStatus(i, 'Generating...', null);
-    updateProgress(i);
-    // Clean text - remove chars that cause API errors
-    var cleanContent = ch.content
+  var BATCH_SIZE = 3;
+  var completedCount = 0;
+
+  function cleanText(content) {
+    return content
       .replace(/[\u2018\u2019]/g, "'")
       .replace(/[\u201C\u201D]/g, '"')
       .replace(/[\u2013\u2014]/g, '-')
@@ -819,34 +814,78 @@ function generateAudiobook() {
       .replace(/[^\x00-\x7F\n]/g, ' ')
       .replace(/[ \t]+/g, ' ')
       .trim();
-    if (!cleanContent) { setChapterStatus(i, 'Skipped - no readable content', null); updateProgress(i+1); processChapter(i+1); return; }
-    var body = {text: cleanContent, narrator_voice_id: nid, narrator_voice: narratorVoiceName};
+  }
+
+  function processSinglePart(i) {
+    var ch = selectedChapters[i];
+    if (!ch.content || !ch.content.trim()) {
+      setChapterStatus(i, 'Skipped — no content', null);
+      completedCount++;
+      updateProgress(completedCount);
+      return Promise.resolve(null);
+    }
+    var content = cleanText(ch.content);
+    if (!content) {
+      setChapterStatus(i, 'Skipped — no readable content', null);
+      completedCount++;
+      updateProgress(completedCount);
+      return Promise.resolve(null);
+    }
+    setChapterStatus(i, 'Generating...', null);
+    var body = {text: content, narrator_voice_id: nid, narrator_voice: narratorVoiceName};
     if (cvids.length > 0) body.character_voice_ids = cvids;
-    fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
+    return fetch(API + '/audiobook', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)})
     .then(function(r) { return r.json().then(function(d) { if (!r.ok) throw new Error(d.detail||'Failed'); return d; }); })
     .then(function(data) {
       if (data.job_id) {
-        pollChapterJob(data.job_id, i, function(url) {
-          completedUrls.push({title:ch.title, url:url});
-          setChapterStatus(i, 'Complete', true, url);
-          updateProgress(i+1);
-          setTimeout(function() { processChapter(i+1); }, 300);
-        }, function() {
-          setChapterStatus(i, 'Failed', false);
-          setTimeout(function() { processChapter(i+1); }, 300);
+        return new Promise(function(resolve) {
+          pollChapterJob(data.job_id, i, function(url) {
+            completedUrls.push({title:ch.title, url:url, index:i});
+            setChapterStatus(i, 'Complete', true, url);
+            completedCount++;
+            updateProgress(completedCount);
+            resolve(url);
+          }, function() {
+            setChapterStatus(i, 'Failed', false);
+            completedCount++;
+            updateProgress(completedCount);
+            resolve(null);
+          });
         });
       } else if (data.audio_url) {
         var chUrl = API.replace('/api','') + data.audio_url;
-        completedUrls.push({title:ch.title, url:chUrl});
+        completedUrls.push({title:ch.title, url:chUrl, index:i});
         setChapterStatus(i, 'Complete', true, chUrl);
-        updateProgress(i+1);
-        setTimeout(function() { processChapter(i+1); }, 300);
+        completedCount++;
+        updateProgress(completedCount);
+        return chUrl;
       } else {
         setChapterStatus(i, 'Skipped', false);
-        processChapter(i+1);
+        completedCount++;
+        updateProgress(completedCount);
+        return null;
       }
     })
-    .catch(function(e) { setChapterStatus(i, 'Error: ' + e.message, false); processChapter(i+1); });
+    .catch(function(e) {
+      setChapterStatus(i, 'Error: ' + e.message, false);
+      completedCount++;
+      updateProgress(completedCount);
+      return null;
+    });
+  }
+
+  function processBatch(startIdx) {
+    if (startIdx >= total) { finishAudiobook(); return; }
+    var batchEnd = Math.min(startIdx + BATCH_SIZE, total);
+    var msg = document.getElementById('ab-msg');
+    if (msg) msg.textContent = 'Processing segments ' + (startIdx+1) + '–' + batchEnd + ' of ' + total;
+    var batch = [];
+    for (var i = startIdx; i < batchEnd; i++) {
+      batch.push(processSinglePart(i));
+    }
+    Promise.all(batch).then(function() {
+      setTimeout(function() { processBatch(batchEnd); }, 500);
+    });
   }
 
   function pollChapterJob(jobId, chIdx, onSuccess, onError) {
@@ -870,7 +909,8 @@ function generateAudiobook() {
   function finishAudiobook() {
     pb.style.display = 'none';
     btn.disabled = false; btn.textContent = 'GENERATE AUDIOBOOK';
-    if (completedUrls.length === 0) { alert('No chapters completed.'); return; }
+    if (completedUrls.length === 0) { alert('No segments completed.'); return; }
+    completedUrls.sort(function(a, b) { return (a.index||0) - (b.index||0); });
     var lastUrl = completedUrls[completedUrls.length-1].url;
     result.classList.add('visible');
     setTimeout(function() { audiobookWaveform.drawIdle && audiobookWaveform.drawIdle(); }, 50);
@@ -901,7 +941,7 @@ function generateAudiobook() {
     }
   }
 
-  processChapter(0);
+  processBatch(0);
 }
 
 function showAudiobookResult(data, result) {
