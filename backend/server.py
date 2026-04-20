@@ -36,13 +36,32 @@ api_router = APIRouter(prefix="/api")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+RUNPOD_API = os.environ.get("RUNPOD_API_URL", "https://qezhr3d59svgui-7860.proxy.runpod.net")
+
 audiobook_jobs = {}
 
 
 async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
+    import httpx
+    # Try RunPod custom voice first
+    try:
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(
+                RUNPOD_API + "/api/tts",
+                json={"text": text, "voice_id": voice, "speed": speed, "format": response_format}
+            )
+            if resp.status_code == 200:
+                return resp.content
+            logger.warning(f"RunPod TTS failed with status {resp.status_code}, falling back to OpenAI")
+    except Exception as e:
+        logger.warning(f"RunPod TTS error: {e}, falling back to OpenAI")
+
+    # Fallback to OpenAI TTS
+    openai_voices = ["alloy", "ash", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer"]
+    tts_voice = voice if voice in openai_voices else "alloy"
     response = await openai_client.audio.speech.create(
         model="tts-1",
-        voice=voice,
+        voice=tts_voice,
         input=text,
         speed=speed,
         response_format=response_format,
@@ -195,6 +214,9 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
             job["error"] = "No voices available"
             return
 
+        # Use voice name for RunPod, openai_voice as fallback
+        narrator_voice_key = narrator.get("name", narrator.get("openai_voice", "alloy"))
+
         char_voices = []
         if request.characters:
             for char in request.characters:
@@ -253,10 +275,11 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
                 voice = char_voices[char_index % len(char_voices)] if char_voices else narrator
                 char_index += 1
             try:
+                voice_key = voice.get("name", voice.get("openai_voice", "alloy"))
                 audio_bytes = await generate_speech(
                     text=seg_text,
-                    voice=voice["openai_voice"],
-                    speed=voice["speed"]
+                    voice=voice_key,
+                    speed=voice.get("speed", 1.0)
                 )
                 all_audio.append(audio_bytes)
                 job["completed"] += 1
@@ -309,6 +332,29 @@ async def health():
 
 @api_router.get("/voices")
 async def get_voices():
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(RUNPOD_API + "/api/voices/custom")
+            if resp.status_code == 200:
+                runpod_voices = resp.json()
+                voices = []
+                for v in runpod_voices:
+                    name = v.get("name", "")
+                    parts = name.rsplit(" ", 2)
+                    accent = " ".join(parts[1:]) if len(parts) > 1 else "English-US"
+                    voices.append({
+                        "id": v.get("id", name),
+                        "name": name,
+                        "gender": "neutral",
+                        "style": "narrator",
+                        "accent": accent,
+                        "description": v.get("description", name + " voice")
+                    })
+                return {"voices": voices}
+    except Exception as e:
+        logger.warning(f"RunPod voices fetch failed: {e}, using local profiles")
+    # Fallback to local voices
     public_voices = []
     for v in VOICE_PROFILES:
         pv = {k: val for k, val in v.items() if k != "sample_file"}
@@ -327,6 +373,20 @@ async def get_custom_voices():
 
 @api_router.get("/voice-sample/{voice_id}")
 async def get_voice_sample(voice_id: str):
+    import httpx
+    # Try RunPod voice sample first
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            resp = await client.get(RUNPOD_API + "/api/voice-sample/" + voice_id)
+            if resp.status_code == 200:
+                return StreamingResponse(
+                    io.BytesIO(resp.content),
+                    media_type="audio/mpeg",
+                    headers={"Content-Disposition": f"inline; filename={voice_id}.mp3"}
+                )
+    except Exception as e:
+        logger.warning(f"RunPod voice sample failed: {e}")
+    # Fallback to local
     voice = resolve_voice(voice_id)
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
