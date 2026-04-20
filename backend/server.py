@@ -41,7 +41,7 @@ audiobook_jobs = {}
 
 async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
     response = await openai_client.audio.speech.create(
-        model="tts-1-hd",
+        model="tts-1",
         voice=voice,
         input=text,
         speed=speed,
