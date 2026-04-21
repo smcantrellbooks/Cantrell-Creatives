@@ -316,29 +316,6 @@ async def health():
 
 @api_router.get("/voices")
 async def get_voices():
-    import httpx
-    try:
-        async with httpx.AsyncClient(timeout=10) as client:
-            resp = await client.get(RUNPOD_API + "/api/voices/custom")
-            if resp.status_code == 200:
-                runpod_voices = resp.json()
-                voices = []
-                for v in runpod_voices:
-                    name = v.get("name", "")
-                    parts = name.rsplit(" ", 2)
-                    accent = " ".join(parts[1:]) if len(parts) > 1 else "English-US"
-                    voices.append({
-                        "id": v.get("id", name),
-                        "name": name,
-                        "gender": "neutral",
-                        "style": "narrator",
-                        "accent": accent,
-                        "description": v.get("description", name + " voice")
-                    })
-                return {"voices": voices}
-    except Exception as e:
-        logger.warning(f"RunPod voices fetch failed: {e}, using local profiles")
-    # Fallback to local voices
     public_voices = []
     for v in VOICE_PROFILES:
         pv = {k: val for k, val in v.items() if k != "sample_file"}
