@@ -43,30 +43,14 @@ audiobook_jobs = {}
 
 async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
     import httpx
-    # Try RunPod custom voice first
-    try:
-        async with httpx.AsyncClient(timeout=120) as client:
-            resp = await client.post(
-                RUNPOD_API + "/api/tts",
-                json={"text": text, "voice_id": voice, "speed": speed, "format": response_format}
-            )
-            if resp.status_code == 200:
-                return resp.content
-            logger.warning(f"RunPod TTS failed with status {resp.status_code}, falling back to OpenAI")
-    except Exception as e:
-        logger.warning(f"RunPod TTS error: {e}, falling back to OpenAI")
-
-    # Fallback to OpenAI TTS
-    openai_voices = ["alloy", "ash", "coral", "echo", "fable", "nova", "onyx", "sage", "shimmer"]
-    tts_voice = voice if voice in openai_voices else "alloy"
-    response = await openai_client.audio.speech.create(
-        model="tts-1",
-        voice=tts_voice,
-        input=text,
-        speed=speed,
-        response_format=response_format,
-    )
-    return response.content
+    async with httpx.AsyncClient(timeout=120) as client:
+        resp = await client.post(
+            RUNPOD_API + "/api/tts",
+            json={"text": text, "voice_id": voice, "speed": speed, "format": response_format}
+        )
+        if resp.status_code == 200:
+            return resp.content
+        raise Exception(f"RunPod TTS failed: {resp.status_code} {resp.text}")
 
 
 async def init_db():
