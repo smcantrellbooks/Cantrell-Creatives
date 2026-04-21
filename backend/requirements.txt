@@ -21,3 +21,4 @@ starlette==0.37.2
 typing_extensions==4.15.0
 uvicorn==0.25.0
 ebooklib==0.18
+coqui-tts
