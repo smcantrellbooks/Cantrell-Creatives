@@ -15,7 +15,6 @@ from pathlib import Path
 from pydantic import BaseModel
 from typing import List, Optional
 import aiosqlite
-from openai import AsyncOpenAI
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -28,7 +27,12 @@ GENERATIONS_DIR.mkdir(exist_ok=True)
 UPLOADS_DIR.mkdir(exist_ok=True)
 
 DB_PATH = str(ROOT_DIR / "openvoice.db")
-openai_client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+# ── CLOUDFLARE WORKER ENDPOINT ──
+CLOUDFLARE_WORKER = os.environ.get(
+    "CLOUDFLARE_WORKER_URL",
+    "https://cantrell-creatives.smcantrellbooks.workers.dev"
+)
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -36,21 +40,27 @@ api_router = APIRouter(prefix="/api")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-RUNPOD_API = os.environ.get("RUNPOD_API_URL", "https://qezhr3d59svgui-7860.proxy.runpod.net")
-
 audiobook_jobs = {}
 
 
-async def generate_speech(text: str, voice: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
+# ── CORE TTS via Cloudflare Worker ──
+async def generate_speech(text: str, voice_id: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
     import httpx
+    payload = {
+        "text": text,
+        "voice_id": voice_id,
+        "format": response_format,
+        "speed": speed
+    }
     async with httpx.AsyncClient(timeout=120) as client:
         resp = await client.post(
-            RUNPOD_API + "/api/tts",
-            json={"text": text, "voice_id": voice, "speed": speed, "format": response_format}
+            CLOUDFLARE_WORKER,
+            json=payload,
+            headers={"Content-Type": "application/json"}
         )
         if resp.status_code == 200:
             return resp.content
-        raise Exception(f"RunPod TTS failed: {resp.status_code} {resp.text}")
+        raise Exception(f"Cloudflare Worker TTS failed: {resp.status_code} {resp.text[:200]}")
 
 
 async def init_db():
@@ -122,13 +132,6 @@ def get_voice_by_name(name: str):
     return None
 
 
-def get_voice_by_openai_name(openai_voice: str):
-    for voice in VOICE_PROFILES:
-        if voice.get("openai_voice", "").lower() == openai_voice.lower():
-            return voice
-    return None
-
-
 def resolve_voice(identifier: str):
     if not identifier:
         return VOICE_PROFILES[0] if VOICE_PROFILES else None
@@ -138,13 +141,10 @@ def resolve_voice(identifier: str):
     voice = get_voice_by_name(identifier)
     if voice:
         return voice
-    voice = get_voice_by_openai_name(identifier)
-    if voice:
-        return voice
     return VOICE_PROFILES[0] if VOICE_PROFILES else None
 
 
-def split_text_into_chunks(text, chunk_size=4000):
+def split_text_into_chunks(text, chunk_size=3800):
     chunks = []
     while text:
         if len(text) <= chunk_size:
@@ -198,9 +198,6 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
             job["error"] = "No voices available"
             return
 
-        # Use voice name for RunPod, openai_voice as fallback
-        narrator_voice_key = narrator.get("name", narrator.get("openai_voice", "alloy"))
-
         char_voices = []
         if request.characters:
             for char in request.characters:
@@ -214,7 +211,11 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
                 if v:
                     char_voices.append(v)
         if not char_voices:
-            char_voices = [v for v in [get_voice_by_id("voice_06"), get_voice_by_id("voice_03"), get_voice_by_id("voice_08")] if v]
+            char_voices = [v for v in [
+                get_voice_by_id("voice_06"),
+                get_voice_by_id("voice_03"),
+                get_voice_by_id("voice_08")
+            ] if v]
 
         if request.auto_detect and char_voices:
             raw_segments = parse_dialogue(request.text)
@@ -239,7 +240,7 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
                 merged.append({"type": current_type, "text": " ".join(current_text)})
             segments = merged
         else:
-            chunks = split_text_into_chunks(request.text, 4000)
+            chunks = split_text_into_chunks(request.text, 3800)
             segments = [{"type": "narration", "text": c} for c in chunks]
 
         total = len([s for s in segments if s["text"].strip()])
@@ -250,7 +251,7 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
         char_index = 0
 
         for segment in segments:
-            seg_text = segment["text"].strip()[:4096]
+            seg_text = segment["text"].strip()[:4000]
             if not seg_text:
                 continue
             if segment["type"] == "narration":
@@ -259,10 +260,9 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
                 voice = char_voices[char_index % len(char_voices)] if char_voices else narrator
                 char_index += 1
             try:
-                voice_key = voice.get("name", voice.get("openai_voice", "alloy"))
                 audio_bytes = await generate_speech(
                     text=seg_text,
-                    voice=voice_key,
+                    voice_id=voice["id"],
                     speed=voice.get("speed", 1.0)
                 )
                 all_audio.append(audio_bytes)
@@ -302,15 +302,18 @@ async def run_audiobook_job(job_id: str, request: AudiobookRequest):
         job["error"] = str(e)
 
 
+# ── ROUTES ──
+
 @api_router.get("/health")
 async def health():
     return {
         "status": "healthy",
-        "service": "VoiceForge TTS",
-        "version": "2.1.0",
+        "service": "Cantrell Creatives Voice Engine",
+        "version": "3.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "voices_count": len(VOICE_PROFILES),
-        "tts_engine": "OpenAI TTS HD",
+        "tts_engine": "Cloudflare Workers AI — minimax/speech-2.8-turbo",
+        "worker_url": CLOUDFLARE_WORKER,
     }
 
 
@@ -318,36 +321,13 @@ async def health():
 async def get_voices():
     public_voices = []
     for v in VOICE_PROFILES:
-        pv = {k: val for k, val in v.items() if k != "sample_file"}
+        pv = {k: val for k, val in v.items() if k not in ("sample_file", "openai_voice")}
         public_voices.append(pv)
     return {"voices": public_voices}
 
 
-@api_router.get("/voices/custom")
-async def get_custom_voices():
-    return [
-        {"name": v["name"], "id": v["id"], "gender": v["gender"],
-         "accent": v["accent"], "style": v["style"], "description": v["description"]}
-        for v in VOICE_PROFILES
-    ]
-
-
 @api_router.get("/voice-sample/{voice_id}")
 async def get_voice_sample(voice_id: str):
-    import httpx
-    # Try RunPod voice sample first
-    try:
-        async with httpx.AsyncClient(timeout=30) as client:
-            resp = await client.get(RUNPOD_API + "/api/voice-sample/" + voice_id)
-            if resp.status_code == 200:
-                return StreamingResponse(
-                    io.BytesIO(resp.content),
-                    media_type="audio/mpeg",
-                    headers={"Content-Disposition": f"inline; filename={voice_id}.mp3"}
-                )
-    except Exception as e:
-        logger.warning(f"RunPod voice sample failed: {e}")
-    # Fallback to local
     voice = resolve_voice(voice_id)
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
@@ -355,8 +335,8 @@ async def get_voice_sample(voice_id: str):
     try:
         audio_bytes = await generate_speech(
             text=sample_text,
-            voice=voice["openai_voice"],
-            speed=voice["speed"],
+            voice_id=voice["id"],
+            speed=voice.get("speed", 1.0),
             response_format="mp3"
         )
     except Exception as e:
@@ -374,17 +354,22 @@ async def generate_tts(request: TTSRequest):
     voice = resolve_voice(request.voice_id)
     if not voice:
         raise HTTPException(status_code=404, detail="Voice not found")
-    text = request.text[:4096]
+    text = request.text[:4000]
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
-    speed = request.speed if request.speed else voice["speed"]
+    speed = request.speed if request.speed else voice.get("speed", 1.0)
     gen_id = str(uuid.uuid4())
-    resp_format = request.format if request.format in ("mp3", "wav", "opus", "aac", "flac") else "mp3"
+    resp_format = request.format if request.format in ("mp3", "wav") else "mp3"
     try:
-        audio_bytes = await generate_speech(text=text, voice=voice["openai_voice"], speed=speed, response_format=resp_format)
+        audio_bytes = await generate_speech(
+            text=text,
+            voice_id=voice["id"],
+            speed=speed,
+            response_format=resp_format
+        )
     except Exception as e:
         logger.error(f"TTS generation failed: {e}")
-        raise HTTPException(status_code=500, detail="TTS generation failed")
+        raise HTTPException(status_code=500, detail=f"TTS generation failed: {str(e)}")
     output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
     with open(output_path, "wb") as f:
         f.write(audio_bytes)
@@ -437,12 +422,14 @@ async def audiobook_status(job_id: str):
 @api_router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     filename = file.filename.lower()
-    if not (filename.endswith('.docx') or filename.endswith('.epub')):
-        raise HTTPException(status_code=400, detail="Only .docx and .epub files are supported")
+    if not (filename.endswith('.docx') or filename.endswith('.epub') or filename.endswith('.txt')):
+        raise HTTPException(status_code=400, detail="Only .docx, .epub, and .txt files are supported")
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="File is empty")
-    if filename.endswith('.docx'):
+    if filename.endswith('.txt'):
+        text = content.decode('utf-8', errors='ignore')
+    elif filename.endswith('.docx'):
         try:
             from docx import Document
             doc = Document(io.BytesIO(content))
@@ -533,14 +520,14 @@ async def export_history(format: str = "json"):
         return StreamingResponse(
             io.BytesIO(content.encode()),
             media_type="text/csv",
-            headers={"Content-Disposition": "attachment; filename=voiceforge_history.csv"}
+            headers={"Content-Disposition": "attachment; filename=cantrell_history.csv"}
         )
     else:
         content = json_module.dumps({"generations": results, "exported_at": datetime.now(timezone.utc).isoformat()}, indent=2)
         return StreamingResponse(
             io.BytesIO(content.encode()),
             media_type="application/json",
-            headers={"Content-Disposition": "attachment; filename=voiceforge_history.json"}
+            headers={"Content-Disposition": "attachment; filename=cantrell_history.json"}
         )
 
 
@@ -550,7 +537,7 @@ async def compare_voices(request: CompareRequest):
         raise HTTPException(status_code=400, detail="Select at least 2 voices to compare")
     if len(request.voice_ids) > 6:
         raise HTTPException(status_code=400, detail="Maximum 6 voices for comparison")
-    text = request.text[:4096]
+    text = request.text[:4000]
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
     results = []
@@ -560,7 +547,11 @@ async def compare_voices(request: CompareRequest):
             continue
         gen_id = str(uuid.uuid4())
         try:
-            audio_bytes = await generate_speech(text=text, voice=voice["openai_voice"], speed=voice["speed"])
+            audio_bytes = await generate_speech(
+                text=text,
+                voice_id=voice["id"],
+                speed=voice.get("speed", 1.0)
+            )
             output_path = GENERATIONS_DIR / f"{gen_id}.mp3"
             with open(output_path, "wb") as f:
                 f.write(audio_bytes)
@@ -599,7 +590,7 @@ async def batch_tts(request: BatchTTSRequest):
     text = request.text
     if not text.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
-    chunk_size = min(max(request.chunk_size or 4000, 500), 4096)
+    chunk_size = min(max(request.chunk_size or 3800, 500), 4000)
     chunks = split_text_into_chunks(text, chunk_size)
     gen_id = str(uuid.uuid4())
     all_audio = []
@@ -608,7 +599,11 @@ async def batch_tts(request: BatchTTSRequest):
         if not chunk:
             continue
         try:
-            audio_bytes = await generate_speech(text=chunk, voice=voice["openai_voice"], speed=voice["speed"])
+            audio_bytes = await generate_speech(
+                text=chunk,
+                voice_id=voice["id"],
+                speed=voice.get("speed", 1.0)
+            )
             all_audio.append(audio_bytes)
         except Exception as e:
             logger.error(f"Batch TTS chunk failed: {e}")
@@ -655,21 +650,40 @@ async def convert_epub(request: EpubRequest):
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zf:
         zf.writestr('mimetype', 'application/epub+zip', compress_type=zipfile.ZIP_STORED)
-        zf.writestr('META-INF/container.xml', '<?xml version="1.0" encoding="UTF-8"?>\n<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n  <rootfiles>\n    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n  </rootfiles>\n</container>')
+        zf.writestr('META-INF/container.xml',
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n'
+            '  <rootfiles>\n'
+            '    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n'
+            '  </rootfiles>\n</container>')
         manifest_items = []
         spine_items = []
         for i, ch in enumerate(chapters):
             fname = f"chapter{i+1}.xhtml"
             content_html = ch["content"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
             body = "\n".join(f"<p>{p.strip()}</p>" for p in content_html.split("\n") if p.strip())
-            ch_title_escaped = ch["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-            xhtml = f'<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml">\n<head><title>{ch_title_escaped}</title></head>\n<body><h1>{ch_title_escaped}</h1>{body}</body>\n</html>'
+            ch_title_esc = ch["title"].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            xhtml = (f'<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html>\n'
+                     f'<html xmlns="http://www.w3.org/1999/xhtml">\n'
+                     f'<head><title>{ch_title_esc}</title></head>\n'
+                     f'<body><h1>{ch_title_esc}</h1>{body}</body>\n</html>')
             zf.writestr(f'OEBPS/{fname}', xhtml)
             manifest_items.append(f'<item id="ch{i+1}" href="{fname}" media-type="application/xhtml+xml"/>')
             spine_items.append(f'<itemref idref="ch{i+1}"/>')
-        title_escaped = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        author_escaped = author.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        opf = f'<?xml version="1.0" encoding="UTF-8"?>\n<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">\n  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">\n    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>\n    <dc:title>{title_escaped}</dc:title>\n    <dc:creator>{author_escaped}</dc:creator>\n    <dc:language>en</dc:language>\n    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>\n  </metadata>\n  <manifest>{"".join(manifest_items)}</manifest>\n  <spine>{"".join(spine_items)}</spine>\n</package>'
+        title_esc = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        author_esc = author.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        opf = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
+               f'<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">\n'
+               f'  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">\n'
+               f'    <dc:identifier id="uid">urn:uuid:{uuid.uuid4()}</dc:identifier>\n'
+               f'    <dc:title>{title_esc}</dc:title>\n'
+               f'    <dc:creator>{author_esc}</dc:creator>\n'
+               f'    <dc:language>en</dc:language>\n'
+               f'    <meta property="dcterms:modified">{datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}</meta>\n'
+               f'  </metadata>\n'
+               f'  <manifest>{"".join(manifest_items)}</manifest>\n'
+               f'  <spine>{"".join(spine_items)}</spine>\n'
+               f'</package>')
         zf.writestr('OEBPS/content.opf', opf)
     buf.seek(0)
     safe_title = re.sub(r'[^a-zA-Z0-9 ]', '', title).replace(' ', '_') or 'book'
@@ -692,9 +706,9 @@ async def chat(request: ChatRequest):
                 "https://api.groq.com/openai/v1/chat/completions",
                 headers={"Authorization": f"Bearer {groq_key}", "Content-Type": "application/json"},
                 json={
-                    "model": "openai/gpt-oss-20b",
+                    "model": "llama3-8b-8192",
                     "messages": [
-                        {"role": "system", "content": "You are a helpful voice studio assistant for Cantrell Creatives. Help users with voice selection, TTS generation, and audiobook creation."},
+                        {"role": "system", "content": "You are Nyxen, a helpful publishing assistant for Cantrell Creatives. Help users with voice selection, TTS generation, audiobook creation, and publishing guidance."},
                         {"role": "user", "content": request.message}
                     ],
                     "max_tokens": 1000
@@ -722,4 +736,4 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await init_db()
-    logger.info("VoiceForge TTS API started successfully")
+    logger.info(f"Cantrell Creatives Voice Engine started — Worker: {CLOUDFLARE_WORKER}")
