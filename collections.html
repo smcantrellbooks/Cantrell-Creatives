@@ -6,10 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Publish your books to the Cantrell Creatives collections platform.">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#ffffff;--card:#fff;--border:#e8e0ce;--text:#111111;--muted:rgba(0,0,0,.5);--primary:#C9A040;--gold:#C9A040;--gold-dark:#a07d20;--plum:#7B5C7B;--cream:#FDFBF7;--focus:#005fcc;}
-html,body{min-height:100vh;font-family:'Cormorant Garamond',serif;color:var(--text);background:var(--bg);font-size:18px;overflow-x:hidden;}
+:root{--bg:#ffffff;--card:#fff;--border:#d4c9b0;--text:#111111;--muted:rgba(0,0,0,.7);--primary:#C9A040;--gold:#C9A040;--gold-dark:#8a6a10;--plum:#7B5C7B;--cream:#FDFBF7;--focus:#005fcc;}
+html,body{min-height:100vh;font-family:'Cormorant Garamond',serif;color:#111111;background:var(--bg);font-size:19px;overflow-x:hidden;}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;border:none;outline:none;background:none;}
 button{cursor:pointer;}
 a{text-decoration:none;color:inherit;}
@@ -43,7 +44,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 @keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
 
 /* TIER NOTICE */
-.tier-notice{background:linear-gradient(135deg,#fffbf0,#fff9e6);border:1px solid #C9A040;border-radius:8px;padding:12px 18px;margin:20px 24px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.tier-notice{background:linear-gradient(135deg,#fffbf0,#fff9e6);border:1px solid #C9A040;border-radius:0;padding:12px 24px;margin:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;}
 .tier-notice-left{display:flex;align-items:center;gap:10px;}
 .tier-badge{background:#111;color:#C9A040;font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:999px;text-transform:uppercase;}
 .tier-notice p{font-size:.85rem;color:#111;}
@@ -52,40 +53,41 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .upgrade-link:hover{background:#C9A040;border-color:#C9A040;color:#000;}
 
 /* TITLE BAR */
-.title-bar{padding:16px 24px 12px;border-bottom:2px solid var(--gold);background:#fff;}
+.title-bar{padding:16px 24px 12px;border-bottom:2px solid var(--gold);background:#fff;width:100%;}
 .title-bar h2{font-size:1.3rem;font-weight:700;font-family:'Cinzel',serif;color:#111;}
 
 /* MAIN */
-.main-grid{max-width:1240px;margin:0 auto;padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;}
-@media(max-width:1024px){.main-grid{grid-template-columns:1fr;}}
+.main-grid{width:100%;max-width:100%;margin:0;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:20px;box-sizing:border-box;}
+@media(max-width:1024px){.main-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.main-grid{grid-template-columns:1fr;}}
 
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:16px;}
-.card h3{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;font-family:'Cinzel',serif;color:#111;border-bottom:1px solid #f0e8d0;padding-bottom:8px;}
+.card h3{font-size:1.15rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;font-family:'Cinzel',serif;color:#111;border-bottom:2px solid #d4c9b0;padding-bottom:10px;}
 
 /* FORMS */
-.form-group{margin-bottom:10px;}
-.form-group label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px;font-weight:600;letter-spacing:.04em;}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:4px;font-size:.95rem;background:#fff;transition:border .18s;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:.9rem;color:#222222;margin-bottom:5px;font-weight:700;letter-spacing:.04em;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #c8bfa8;border-radius:6px;font-size:1.05rem;background:#fff;color:#111111;transition:border .18s;}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);outline:3px solid var(--focus);outline-offset:1px;}
 .form-group textarea{resize:none;}
 .form-group select{appearance:auto;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.required-indicator{color:#c53030;margin-left:2px;} 
-.field-hint{font-size:.72rem;color:var(--muted);margin-top:3px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.required-indicator{color:#c53030;margin-left:2px;}
+.field-hint{font-size:.82rem;color:#555555;margin-top:4px;}
 
 /* UPLOADS */
-.upload-box{border:2px dashed var(--border);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.upload-box{border:2px dashed #c8bfa8;border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:border-color .2s;}
 .upload-box:hover{border-color:rgba(122,38,56,.5);}
 .upload-box:focus{border-color:var(--focus);outline:3px solid var(--focus);}
-.upload-box p{font-size:.9rem;margin-top:6px;}
-.upload-box .small{font-size:.75rem;color:var(--muted);}
+.upload-box p{font-size:1rem;margin-top:6px;color:#333;}
+.upload-box .small{font-size:.82rem;color:#555555;}
 
 /* ASSETS */
-.asset-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+.asset-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
 .asset-row:last-child{border-bottom:none;}
-.asset-left{display:flex;align-items:center;gap:8px;font-size:.9rem;}
-.asset-status{font-size:.75rem;color:var(--muted);}
+.asset-left{display:flex;align-items:center;gap:8px;font-size:1rem;color:#222;}
+.asset-status{font-size:.82rem;color:#555555;}
 
 /* BUTTONS */
 .btn{padding:8px 16px;border-radius:4px;font-size:.85rem;font-weight:600;transition:all .2s;}
@@ -210,8 +212,8 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       <span class="banner-logo" aria-label="Cantrell Creatives">Cantrell Creatives</span>
       <div class="banner-nav-links">
         <a class="bnl" href="https://creatives.smcantrellbooks.com">Home</a>
-        <a class="bnl" href="https://creatives.smcantrellbooks.com/my-account">My Account</a>
-        <a class="bnl login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
+        <a class="bnl" href="https://creatives.smcantrellbooks.com/myaccount">My Account</a>
+        <a class="bnl login" href="https://creatives.smcantrellbooks.com/login">Login</a>
       </div>
     </nav>
     <div class="banner-title">
@@ -221,7 +223,6 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
     <nav class="banner-bottom-nav" aria-label="Platform navigation">
       <a class="bbn" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>
       <a class="bbn" href="https://creatives.smcantrellbooks.com/publisher-workspace">✍️ Publisher Workspace</a>
-      <a class="bbn" href="https://creatives.smcantrellbooks.com/editor">📝 Book Editor</a>
       <a class="bbn" href="https://creatives.smcantrellbooks.com/voice-studio">🎤 Voice Studio</a>
     </nav>
   </div>
@@ -238,11 +239,23 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
 </div>
 
 <div class="title-bar">
-  <h2>Publication Ready</h2>
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <h2>Publication Ready</h2>
+    <div style="display:flex;gap:6px;">
+      <button id="btn-new-book" onclick="setBookMode('new')" style="padding:5px 14px;border-radius:999px;border:1px solid #C9A040;background:#C9A040;color:#000;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;">New Book</button>
+      <button id="btn-existing-book" onclick="setBookMode('existing')" style="padding:5px 14px;border-radius:999px;border:1px solid rgba(201,169,97,.4);background:transparent;color:#a07d20;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;">Update Existing</button>
+    </div>
+  </div>
+  <!-- Existing book selector — shown only in update mode -->
+  <div id="existing-book-selector" style="display:none;margin-top:12px;">
+    <select id="existing-book-select" onchange="loadExistingBook(this.value)" style="width:100%;padding:9px 12px;border:1px solid rgba(201,169,97,.4);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:15px;background:#fff;color:#111;outline:none;cursor:pointer;">
+      <option value="">— Select a book to update —</option>
+    </select>
+  </div>
 </div>
 
 <!-- MAIN CONTENT -->
-<main id="main-content" role="main">
+<main id="main-content" role="main" style="width:100%;overflow-x:hidden;">
 <div class="main-grid">
 
   <!-- LEFT COLUMN -->
@@ -253,6 +266,35 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
         Book Details
       </h3>
+
+      <!-- BOOK ID FIELD -->
+      <div class="form-group">
+        <label style="font-family:Cinzel,serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a07d20;">Book ID</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <div id="book-id-display" style="flex:1;padding:9px 12px;border:1px solid rgba(201,169,97,.3);border-radius:6px;background:rgba(201,169,97,.04);font-family:monospace;font-size:.9rem;font-weight:700;color:#888;letter-spacing:.06em;">Not assigned</div>
+          <button id="copy-book-id-btn" onclick="copyBookId()" style="display:none;background:transparent;border:1px solid rgba(201,169,97,.4);border-radius:4px;padding:6px 12px;font-family:Cinzel,serif;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:#a07d20;cursor:pointer;white-space:nowrap;">Copy</button>
+        </div>
+        <div id="book-id-hint" style="font-family:'Cormorant Garamond',serif;font-size:13px;color:#a07d20;font-style:italic;margin-top:4px;">Fill in the book title and click Initialize to generate a Book ID.</div>
+      </div>
+
+      <!-- FORMAT SELECTOR -->
+      <div class="form-group">
+        <label style="font-family:Cinzel,serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Format</label>
+        <div id="format-list" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
+          <div class="format-row" style="display:flex;align-items:center;gap:8px;">
+            <select class="format-select" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:15px;background:#fff;color:#111;outline:none;cursor:pointer;">
+              <option value="ebook">Ebook</option>
+              <option value="audiobook">Audiobook</option>
+            </select>
+            <button onclick="removeFormat(this)" style="background:transparent;border:1px solid #e0c0c0;border-radius:4px;padding:6px 10px;color:#c53030;font-size:.85rem;cursor:pointer;line-height:1;" title="Remove format">&times;</button>
+          </div>
+        </div>
+        <button onclick="addFormat()" style="margin-top:8px;background:transparent;border:1px dashed rgba(201,169,97,.5);border-radius:6px;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a07d20;cursor:pointer;width:100%;">+ Add Format</button>
+      </div>
+
+      <!-- INITIALIZE BUTTON -->
+      <button id="init-book-btn" onclick="initializeBook()" style="width:100%;padding:11px;border-radius:6px;border:1px solid #C9A040;background:rgba(201,169,97,.08);color:#a07d20;font-family:Cinzel,serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-bottom:16px;transition:all .2s;">Initialize Book</button>
+
       <div class="form-group">
         <label for="title">Book Title <span class="required-indicator" aria-label="required">*</span></label>
         <input id="title" type="text" value="The Enchanted Relic" aria-required="true" autocomplete="off" maxlength="200">
@@ -264,8 +306,12 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea rows="3" id="description" placeholder="Describe your book..." maxlength="2000" aria-describedby="desc-hint"></textarea>
-        <div class="field-hint" id="desc-hint">Max 2000 characters</div>
+        <textarea rows="4" id="description" placeholder="Describe your book..." oninput="checkDescWordCount(this)" aria-describedby="desc-hint"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+          <div class="field-hint" id="desc-hint">Max 500 words</div>
+          <div id="desc-word-count" style="font-size:.82rem;color:#555555;">0 / 500 words</div>
+        </div>
+        <div id="desc-error" style="display:none;font-size:.82rem;color:#c53030;margin-top:3px;">Description exceeds 500 words. Please shorten it before publishing.</div>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -828,7 +874,7 @@ updateEarnings();
 updatePreview();
 
 // NYXEN
-const NYXEN_API = 'https://nyxen-ai.onrender.com/api';
+const NYXEN_API = 'https://cantrell-creatives-e3q2.onrender.com/api';
 let nyxenOpen = false, nyxenHistory = [], nyxenConvId = null;
 
 function toggleNyxen() {
@@ -947,7 +993,7 @@ async function generateCover() {
   error.classList.add('hidden');
 
   try {
-    const resp = await fetch('/api/generate-cover', {
+    const resp = await fetch('https://cantrell-creatives-e3q2.onrender.com/api/generate-cover', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, author, category, series, style, mood, subject, colorTheme, includeTitle, includeAuthor, includeSeries })
@@ -1241,6 +1287,329 @@ function handleAudiobookUpload(e) {
 
 function nyxenKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); nyxenSend(); } }
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 90) + 'px'; }
+
+// ── BOOK MODE ──
+var bookMode = 'new'; // 'new' or 'existing'
+var existingBooks = [];
+
+function setBookMode(mode) {
+  bookMode = mode;
+  var btnNew = document.getElementById('btn-new-book');
+  var btnExisting = document.getElementById('btn-existing-book');
+  var selector = document.getElementById('existing-book-selector');
+  var hint = document.getElementById('book-mode-hint');
+  var publishBtn = document.getElementById('publishBtn');
+
+  if (mode === 'new') {
+    btnNew.style.background = '#C9A040';
+    btnNew.style.color = '#000';
+    btnNew.style.borderColor = '#C9A040';
+    btnExisting.style.background = 'transparent';
+    btnExisting.style.color = '#a07d20';
+    btnExisting.style.borderColor = 'rgba(201,169,97,.4)';
+    selector.style.display = 'none';
+    hint.textContent = 'Creating a new book — fill in the details and click Initialize Book.';
+    // Reset book ID display
+    currentBookId = null;
+    var display = document.getElementById('book-id-display');
+    if (display) { display.textContent = 'Not assigned'; display.style.color = '#888'; }
+    var copyBtn = document.getElementById('copy-book-id-btn');
+    if (copyBtn) copyBtn.style.display = 'none';
+    var initBtn = document.getElementById('init-book-btn');
+    if (initBtn) { initBtn.textContent = 'Initialize Book'; initBtn.disabled = false; initBtn.style.background = 'rgba(201,169,97,.08)'; initBtn.style.borderColor = '#C9A040'; initBtn.style.color = '#a07d20'; }
+    if (publishBtn) publishBtn.textContent = 'Publish to ' + (collection.charAt(0).toUpperCase() + collection.slice(1)) + ' Collection';
+  } else {
+    btnExisting.style.background = '#C9A040';
+    btnExisting.style.color = '#000';
+    btnExisting.style.borderColor = '#C9A040';
+    btnNew.style.background = 'transparent';
+    btnNew.style.color = '#a07d20';
+    btnNew.style.borderColor = 'rgba(201,169,97,.4)';
+    selector.style.display = 'flex';
+    hint.textContent = 'Select an existing book to add assets or update details.';
+    loadExistingBooksList();
+    if (publishBtn) publishBtn.textContent = 'Update Book';
+  }
+}
+
+async function loadExistingBooksList() {
+  var select = document.getElementById('existing-book-select');
+  if (!select) return;
+  select.innerHTML = '<option value="">Loading...</option>';
+
+  try {
+    var resp = await fetch(SUPABASE_URL + '/rest/v1/books?select=smcb_id,title,collection&order=created_at.desc', {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+      }
+    });
+    if (!resp.ok) throw new Error('Failed to load books');
+    existingBooks = await resp.json();
+    select.innerHTML = '<option value="">— Select a book —</option>';
+    existingBooks.forEach(function(book) {
+      var opt = document.createElement('option');
+      opt.value = book.smcb_id;
+      opt.textContent = book.smcb_id + ' — ' + book.title;
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    select.innerHTML = '<option value="">— Could not load books —</option>';
+    console.error('Load books error:', err);
+  }
+}
+
+function loadExistingBook(smcbId) {
+  if (!smcbId) return;
+  var book = existingBooks.find(function(b) { return b.smcb_id === smcbId; });
+  if (!book) return;
+
+  // Update Book ID display
+  currentBookId = smcbId;
+  var display = document.getElementById('book-id-display');
+  if (display) display.textContent = smcbId;
+
+  // Pre-fill form fields
+  if (book.title && document.getElementById('title')) {
+    document.getElementById('title').value = book.title;
+  }
+  if (book.collection) {
+    var collectionMap = { 'the-grace-collection': 'grace', 'the-horizon-collection': 'horizon', 'audiobooks': 'audiobook' };
+    var c = collectionMap[book.collection] || 'grace';
+    setCollection(c);
+  }
+
+  var hint = document.getElementById('book-mode-hint');
+  if (hint) hint.textContent = 'Updating ' + smcbId + ' — changes will overwrite existing record.';
+
+  var publishBtn = document.getElementById('publishBtn');
+  if (publishBtn) publishBtn.textContent = 'Update ' + smcbId;
+}
+const SUPABASE_URL = 'https://recyyhvdvuupxhbxmzal.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
+const NYX_URL = 'https://nyx-frontstore.smcantrellbooks.workers.dev';
+
+var currentBookId = null;
+var currentUser = null;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', async function() {
+  if (typeof window.supabase !== 'undefined') {
+    const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: { user } } = await sbClient.auth.getUser();
+    if (user) currentUser = user;
+  }
+  // DO NOT auto-generate book ID — user must initialize
+  var publishBtn = document.getElementById('publishBtn');
+  if (publishBtn) publishBtn.addEventListener('click', publishBook);
+});
+
+// ── INITIALIZE BOOK ──
+async function initializeBook() {
+  var title = document.getElementById('title') ? document.getElementById('title').value.trim() : '';
+  if (!title) { alert('Please enter a book title before initializing.'); return; }
+
+  var btn = document.getElementById('init-book-btn');
+  btn.textContent = 'Initializing...';
+  btn.disabled = true;
+
+  try {
+    // Insert minimal record to get trigger-assigned SMCB ID
+    var formats = getSelectedFormats();
+    var resp = await fetch(SUPABASE_URL + '/rest/v1/books', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        title: title,
+        formats: formats,
+        creator_id: currentUser ? currentUser.id : null,
+        audio_status: 'pending'
+      })
+    });
+
+    if (!resp.ok) throw new Error('Failed to initialize book');
+    var result = await resp.json();
+
+    if (result && result[0] && result[0].smcb_id) {
+      currentBookId = result[0].smcb_id;
+      var display = document.getElementById('book-id-display');
+      if (display) {
+        display.textContent = currentBookId;
+        display.style.color = '#111';
+      }
+      var copyBtn = document.getElementById('copy-book-id-btn');
+      if (copyBtn) copyBtn.style.display = 'block';
+      var hint = document.getElementById('book-id-hint');
+      if (hint) hint.textContent = 'Book initialized — ID locked in. Complete the form and publish.';
+      btn.textContent = '✓ Book Initialized';
+      btn.style.background = 'rgba(42,107,60,.08)';
+      btn.style.borderColor = '#2a6b3c';
+      btn.style.color = '#2a6b3c';
+    }
+  } catch (err) {
+    alert('Initialize failed: ' + err.message);
+    btn.textContent = 'Initialize Book';
+    btn.disabled = false;
+  }
+}
+
+// ── FORMAT MANAGEMENT ──
+function getSelectedFormats() {
+  return Array.from(document.querySelectorAll('.format-select')).map(function(s) { return s.value; });
+}
+
+function addFormat() {
+  var list = document.getElementById('format-list');
+  var existing = list.querySelectorAll('.format-select');
+  if (existing.length >= 2) { alert('Maximum 2 formats per book.'); return; }
+  var row = document.createElement('div');
+  row.className = 'format-row';
+  row.style.cssText = 'display:flex;align-items:center;gap:8px;';
+  row.innerHTML = '<select class="format-select" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:\'Cormorant Garamond\',serif;font-size:15px;background:#fff;color:#111;outline:none;cursor:pointer;">'
+    + '<option value="ebook">Ebook</option>'
+    + '<option value="audiobook">Audiobook</option>'
+    + '</select>'
+    + '<button onclick="removeFormat(this)" style="background:transparent;border:1px solid #e0c0c0;border-radius:4px;padding:6px 10px;color:#c53030;font-size:.85rem;cursor:pointer;line-height:1;" title="Remove format">&times;</button>';
+  list.appendChild(row);
+}
+
+function removeFormat(btn) {
+  var list = document.getElementById('format-list');
+  var rows = list.querySelectorAll('.format-row');
+  if (rows.length <= 1) { alert('At least one format is required.'); return; }
+  btn.closest('.format-row').remove();
+}
+
+// ── GENERATE BOOK ID ──
+// ── DESCRIPTION WORD COUNT ──
+function checkDescWordCount(el) {
+  var words = el.value.trim() ? el.value.trim().split(/\s+/).length : 0;
+  var countEl = document.getElementById('desc-word-count');
+  var errorEl = document.getElementById('desc-error');
+  if (countEl) {
+    countEl.textContent = words + ' / 500 words';
+    countEl.style.color = words > 500 ? '#c53030' : '#555555';
+  }
+  if (errorEl) errorEl.style.display = words > 500 ? 'block' : 'none';
+  if (el) el.style.borderColor = words > 500 ? '#c53030' : '';
+}
+
+function copyBookId() {
+  navigator.clipboard.writeText(currentBookId).then(function() {
+    var btn = document.querySelector('[onclick="copyBookId()"]');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Copy'; }, 2000); }
+  });
+}
+
+// ── PUBLISH BOOK ──
+async function publishBook() {
+  var btn = document.getElementById('publishBtn');
+  var title = document.getElementById('title') ? document.getElementById('title').value.trim() : '';
+  var author = document.getElementById('authorName') ? document.getElementById('authorName').value.trim() : '';
+  var price = document.getElementById('price') ? document.getElementById('price').value.trim() : '0';
+
+  if (!title) { alert('Please enter a book title.'); return; }
+
+  // Validate description word count
+  var desc = document.getElementById('description') ? document.getElementById('description').value.trim() : '';
+  var wordCount = desc ? desc.split(/\s+/).length : 0;
+  if (wordCount > 500) { alert('Description exceeds 500 words. Please shorten it before publishing.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Publishing...';
+
+  try {
+    // Determine collection
+    var collectionMap = { grace: 'the-grace-collection', horizon: 'the-horizon-collection', audiobook: 'audiobooks' };
+    var collectionSlug = collectionMap[collection] || 'the-grace-collection';
+
+    // Build book record
+    var bookRecord = {
+      smcb_id: currentBookId,
+      title: title,
+      author: author || (currentUser ? currentUser.email.split('@')[0] : 'Unknown'),
+      collection: collectionSlug,
+      price: parseFloat(price) || 0,
+      audio_status: selectedAudioFiles.length > 0 ? 'complete' : 'pending',
+      creator_id: currentUser ? currentUser.id : null,
+      published_at: new Date().toISOString(),
+      storefront_url: 'https://smcantrellbooks.com/' + collectionSlug
+    };
+
+    // Insert or update Supabase books table
+    var supabaseResp;
+    if (bookMode === 'existing' && currentBookId) {
+      // PATCH existing book
+      supabaseResp = await fetch(SUPABASE_URL + '/rest/v1/books?smcb_id=eq.' + currentBookId, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(bookRecord)
+      });
+    } else {
+      // POST new book
+      supabaseResp = await fetch(SUPABASE_URL + '/rest/v1/books', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(bookRecord)
+      });
+    }
+
+    if (!supabaseResp.ok) {
+      var err = await supabaseResp.json();
+      throw new Error(err.message || 'Supabase operation failed');
+    }
+
+    var result = await supabaseResp.json();
+    // Update currentBookId with the actual SMCB ID assigned by the trigger
+    if (result && result[0] && result[0].smcb_id) {
+      currentBookId = result[0].smcb_id;
+      var displayEl = document.getElementById('book-id-display');
+      if (displayEl) displayEl.textContent = currentBookId;
+    }
+
+    // Show success
+    btn.textContent = bookMode === 'existing' ? '✓ Updated' : '✓ Published';
+    btn.style.background = 'linear-gradient(135deg,#2a6b3c,#38855a)';
+    btn.style.color = '#fff';
+    btn.style.borderColor = '#2a6b3c';
+
+    // Show confirmation
+    var confirm = document.createElement('div');
+    confirm.style.cssText = 'margin-top:16px;padding:16px;background:rgba(42,107,60,.08);border:1px solid rgba(42,107,60,.3);border-radius:8px;text-align:center;';
+    confirm.innerHTML = '<div style="font-family:Cinzel,serif;font-size:.8rem;font-weight:700;color:#2a6b3c;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Published Successfully</div>'
+      + '<div style="font-size:.9rem;color:#111;margin-bottom:8px;"><strong>' + sanitize(title) + '</strong> has been submitted to <strong>' + sanitize(collection.charAt(0).toUpperCase()+collection.slice(1)) + ' Collection</strong></div>'
+      + '<div style="font-family:monospace;font-size:.8rem;color:#a07d20;margin-bottom:12px;">Book ID: ' + currentBookId + '</div>'
+      + '<a href="https://smcantrellbooks.com/' + collectionSlug + '" target="_blank" style="display:inline-block;padding:8px 20px;background:#111;color:#C9A040;font-family:Cinzel,serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;text-decoration:none;">View on Storefront →</a>';
+    btn.parentNode.insertBefore(confirm, btn.nextSibling);
+
+    // Reset for next book
+    setTimeout(function(){
+      setBookMode('new');
+    }, 3000);
+
+  } catch (err) {
+    console.error('Publish error:', err);
+    alert('Publish failed: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Publish to ' + (collection.charAt(0).toUpperCase()+collection.slice(1)) + ' Collection';
+  }
+}
 </script>
+
 </body>
 </html>
