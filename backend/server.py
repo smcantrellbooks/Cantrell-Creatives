@@ -691,7 +691,71 @@ async def convert_epub(request: EpubRequest):
         headers={"Content-Disposition": f'attachment; filename="{safe_title}.epub"'})
 
 
-@api_router.post("/chat")
+class CoverRequest(BaseModel):
+    title: str
+    author: str = ""
+    genre: str = ""
+    mood: str = ""
+    style: str = ""
+    description: str = ""
+
+
+@api_router.post("/generate-cover")
+async def generate_cover(request: CoverRequest):
+    openai_key = os.environ.get("OPENAI_API_KEY", "")
+    if not openai_key:
+        raise HTTPException(status_code=500, detail="OpenAI API key not configured")
+
+    # Build a detailed prompt for cinematic book cover
+    genre_note = f"Genre: {request.genre}. " if request.genre else ""
+    mood_note = f"Mood: {request.mood}. " if request.mood else ""
+    style_note = f"Art style: {request.style}. " if request.style else ""
+    desc_note = request.description if request.description else ""
+
+    prompt = (
+        f"A professional, cinematic book cover for a novel titled '{request.title}'"
+        f"{' by ' + request.author if request.author else ''}. "
+        f"{genre_note}{mood_note}{style_note}{desc_note} "
+        f"High-end publishing quality. No text overlaid on the image. "
+        f"Dramatic lighting, rich colors, emotionally resonant composition. "
+        f"Suitable for a professional novel cover. Portrait orientation."
+    )
+
+    import httpx
+    try:
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                "https://api.openai.com/v1/images/generations",
+                headers={
+                    "Authorization": f"Bearer {openai_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "dall-e-3",
+                    "prompt": prompt,
+                    "n": 1,
+                    "size": "1024x1792",
+                    "quality": "standard",
+                    "response_format": "url"
+                }
+            )
+        if resp.status_code != 200:
+            raise HTTPException(status_code=500, detail=f"OpenAI error: {resp.text[:200]}")
+
+        data = resp.json()
+        image_url = data["data"][0]["url"]
+        revised_prompt = data["data"][0].get("revised_prompt", prompt)
+
+        return {
+            "url": image_url,
+            "revised_prompt": revised_prompt,
+            "title": request.title
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Cover generation failed: {e}")
+        raise HTTPException(status_code=500, detail=f"Cover generation failed: {str(e)}")
 async def chat(request: ChatRequest):
     import httpx
     if not request.message.strip():
