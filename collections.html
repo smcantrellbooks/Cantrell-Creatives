@@ -218,11 +218,12 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
     </nav>
     <div class="banner-title">
       <h1>COLLECTIONS</h1>
-      <p>Publication Ready — Cantrell Creatives</p>
+      <p>Publication Home</p>
     </div>
     <nav class="banner-bottom-nav" aria-label="Platform navigation">
       <a class="bbn" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>
       <a class="bbn" href="https://creatives.smcantrellbooks.com/publisher-workspace">✍️ Publisher Workspace</a>
+      <a class="bbn" href="https://creatives.smcantrellbooks.com/editor/">📝 Book Editor</a>
       <a class="bbn" href="https://creatives.smcantrellbooks.com/voice-studio">🎤 Voice Studio</a>
     </nav>
   </div>
@@ -267,46 +268,54 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
         Book Details
       </h3>
 
-      <!-- BOOK ID FIELD -->
-      <div class="form-group">
-        <label style="font-family:Cinzel,serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a07d20;">Book ID</label>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-          <div id="book-id-display" style="flex:1;padding:9px 12px;border:1px solid rgba(201,169,97,.3);border-radius:6px;background:rgba(201,169,97,.04);font-family:monospace;font-size:.9rem;font-weight:700;color:#888;letter-spacing:.06em;">Not assigned</div>
-          <button id="copy-book-id-btn" onclick="copyBookId()" style="display:none;background:transparent;border:1px solid rgba(201,169,97,.4);border-radius:4px;padding:6px 12px;font-family:Cinzel,serif;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:#a07d20;cursor:pointer;white-space:nowrap;">Copy</button>
-        </div>
-        <div id="book-id-hint" style="font-family:'Cormorant Garamond',serif;font-size:13px;color:#a07d20;font-style:italic;margin-top:4px;">Fill in the book title and click Initialize to generate a Book ID.</div>
-      </div>
-
-      <!-- FORMAT SELECTOR -->
+      <!-- FORMAT SELECTION -->
       <div class="form-group">
         <label style="font-family:Cinzel,serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Format</label>
-        <div id="format-list" style="display:flex;flex-direction:column;gap:6px;margin-top:4px;">
-          <div class="format-row" style="display:flex;align-items:center;gap:8px;">
-            <select class="format-select" style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:15px;background:#fff;color:#111;outline:none;cursor:pointer;">
-              <option value="ebook">Ebook</option>
-              <option value="audiobook">Audiobook</option>
-            </select>
-            <button onclick="removeFormat(this)" style="background:transparent;border:1px solid #e0c0c0;border-radius:4px;padding:6px 10px;color:#c53030;font-size:.85rem;cursor:pointer;line-height:1;" title="Remove format">&times;</button>
-          </div>
+        <div style="display:flex;gap:20px;margin-top:8px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1rem;color:#111;font-weight:600;">
+            <input type="radio" name="book-format" value="ebook" onchange="onFormatChange()" style="accent-color:#C9A040;width:16px;height:16px;" checked> Ebook
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1rem;color:#111;font-weight:600;">
+            <input type="radio" name="book-format" value="audiobook" onchange="onFormatChange()" style="accent-color:#C9A040;width:16px;height:16px;"> Audiobook
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:1rem;color:#111;font-weight:600;">
+            <input type="radio" name="book-format" value="both" onchange="onFormatChange()" style="accent-color:#C9A040;width:16px;height:16px;"> Both
+          </label>
         </div>
-        <button onclick="addFormat()" style="margin-top:8px;background:transparent;border:1px dashed rgba(201,169,97,.5);border-radius:6px;padding:7px 16px;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a07d20;cursor:pointer;width:100%;">+ Add Format</button>
       </div>
 
-      <!-- INITIALIZE BUTTON -->
-      <button id="init-book-btn" onclick="initializeBook()" style="width:100%;padding:11px;border-radius:6px;border:1px solid #C9A040;background:rgba(201,169,97,.08);color:#a07d20;font-family:Cinzel,serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-bottom:16px;transition:all .2s;">Initialize Book</button>
+      <!-- EBOOK ID -->
+      <div id="ebook-id-section" class="form-group">
+        <label style="font-family:Cinzel,serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a07d20;">Ebook ID</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <div id="ebook-id-display" style="flex:1;padding:9px 12px;border:1px solid rgba(201,169,97,.3);border-radius:6px;background:rgba(201,169,97,.04);font-family:monospace;font-size:.9rem;font-weight:700;color:#888;letter-spacing:.06em;">Not assigned</div>
+          <button onclick="generateFormatId('ebook')" style="padding:8px 14px;border-radius:6px;border:1px solid #C9A040;background:rgba(201,169,97,.08);color:#a07d20;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">Generate</button>
+          <button id="copy-ebook-id-btn" onclick="copyId('ebook')" style="display:none;padding:8px 12px;border-radius:6px;border:1px solid rgba(201,169,97,.4);background:transparent;color:#a07d20;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;cursor:pointer;">Copy</button>
+        </div>
+      </div>
+
+      <!-- AUDIOBOOK ID -->
+      <div id="audiobook-id-section" class="form-group" style="display:none;">
+        <label style="font-family:Cinzel,serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a07d20;">Audiobook ID</label>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <div id="audiobook-id-display" style="flex:1;padding:9px 12px;border:1px solid rgba(201,169,97,.3);border-radius:6px;background:rgba(201,169,97,.04);font-family:monospace;font-size:.9rem;font-weight:700;color:#888;letter-spacing:.06em;">Not assigned</div>
+          <button onclick="generateFormatId('audiobook')" style="padding:8px 14px;border-radius:6px;border:1px solid #C9A040;background:rgba(201,169,97,.08);color:#a07d20;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">Generate</button>
+          <button id="copy-audiobook-id-btn" onclick="copyId('audiobook')" style="display:none;padding:8px 12px;border-radius:6px;border:1px solid rgba(201,169,97,.4);background:transparent;color:#a07d20;font-family:Cinzel,serif;font-size:.62rem;font-weight:700;cursor:pointer;">Copy</button>
+        </div>
+      </div>
 
       <div class="form-group">
         <label for="title">Book Title <span class="required-indicator" aria-label="required">*</span></label>
-        <input id="title" type="text" value="The Enchanted Relic" aria-required="true" autocomplete="off" maxlength="200">
+        <input id="title" type="text" value="" aria-required="true" autocomplete="off" maxlength="200" placeholder="">
         <div class="field-error" id="title-error" role="alert"></div>
       </div>
       <div class="form-group">
         <label for="subtitle">Subtitle <span class="field-hint">(optional)</span></label>
-        <input id="subtitle" type="text" maxlength="200">
+        <input id="subtitle" type="text" maxlength="200" value="" placeholder="">
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea rows="4" id="description" placeholder="Describe your book..." oninput="checkDescWordCount(this)" aria-describedby="desc-hint"></textarea>
+        <textarea rows="4" id="description" oninput="checkDescWordCount(this)" aria-describedby="desc-hint"></textarea>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
           <div class="field-hint" id="desc-hint">Max 500 words</div>
           <div id="desc-word-count" style="font-size:.82rem;color:#555555;">0 / 500 words</div>
@@ -315,21 +324,30 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="categories">Category</label>
+          <label for="categories">Genre</label>
           <select id="categories">
-            <option>Fantasy</option>
-            <option>Romance</option>
-            <option>Sci-Fi</option>
-            <option>Mystery</option>
-            <option>Poetry</option>
-            <option>Thriller</option>
-            <option>Literary Fiction</option>
-            <option>Non-Fiction</option>
+            <option value="">— Select Genre —</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="romance">Romance</option>
+            <option value="mystery">Mystery</option>
+            <option value="thriller">Thriller</option>
+            <option value="sci-fi">Sci-Fi</option>
+            <option value="supernatural">Supernatural</option>
+            <option value="horror">Horror</option>
+            <option value="fiction">Fiction</option>
+            <option value="literary-fiction">Literary Fiction</option>
+            <option value="nonfiction">Nonfiction</option>
+            <option value="biography">Biography</option>
+            <option value="documentary">Documentary</option>
+            <option value="spiritual">Spiritual</option>
+            <option value="inspirational">Inspirational</option>
+            <option value="poetry">Poetry</option>
+            <option value="health">Health &amp; Fitness</option>
           </select>
         </div>
         <div class="form-group">
           <label for="keywords">Keywords</label>
-          <input id="keywords" type="text" placeholder="magic, adventure" maxlength="200" aria-describedby="keywords-hint">
+          <input id="keywords" type="text" maxlength="200" aria-describedby="keywords-hint" placeholder="">
           <div class="field-hint" id="keywords-hint">Comma-separated</div>
         </div>
       </div>
@@ -414,7 +432,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
           </div>
           <div class="form-group">
             <label for="genAuthor">Author Name <span class="required-indicator" aria-label="required">*</span></label>
-            <input type="text" id="genAuthor" placeholder="e.g. S.M. Cantrell" maxlength="100" aria-required="true">
+            <input type="text" id="genAuthor" placeholder="Author name" maxlength="100" aria-required="true">
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -535,7 +553,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       <h3 id="author-bio-heading">Author Bio</h3>
       <div class="form-group">
         <label for="authorName">Author Name <span class="required-indicator" aria-label="required">*</span></label>
-        <input id="authorName" type="text" value="S.M. Cantrell" aria-required="true" maxlength="100">
+        <input id="authorName" type="text" value="" aria-required="true" maxlength="100">
       </div>
       <div class="form-group">
         <label for="authorBio">Bio</label>
@@ -552,7 +570,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
         <div class="preview-box" style="display:flex;gap:10px;align-items:flex-start;">
           <div style="width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.08);flex-shrink:0;" aria-hidden="true"></div>
           <div>
-            <div style="font-weight:600;font-size:.9rem;" id="previewAuthor">S.M. Cantrell</div>
+            <div style="font-weight:600;font-size:.9rem;" id="previewAuthor"></div>
             <div style="font-size:.75rem;color:var(--muted);" id="previewBio">Your bio will appear here...</div>
           </div>
         </div>
@@ -592,7 +610,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       </div>
       <div class="form-group">
         <label for="seriesOrder">Book Number in Series</label>
-        <input type="number" id="seriesOrder" min="1" max="999" value="1">
+        <input type="number" id="seriesOrder" min="1" max="999" value="">
       </div>
       <div class="form-group">
         <label for="seriesDesc">Series Description</label>
@@ -610,7 +628,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
         <label for="price">Book Price (USD) <span class="required-indicator" aria-label="required">*</span></label>
         <div style="position:relative;">
           <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);" aria-hidden="true">$</span>
-          <input id="price" type="number" step="0.01" min="0" max="999.99" value="3.99" style="padding-left:24px;" aria-required="true" aria-label="Book price in US dollars">
+          <input id="price" type="number" step="0.01" min="0" max="999.99" value="" style="padding-left:24px;" aria-required="true" aria-label="Book price in US dollars">
         </div>
       </div>
     </section>
@@ -875,6 +893,9 @@ updatePreview();
 
 // NYXEN
 const NYXEN_API = 'https://cantrell-creatives-e3q2.onrender.com/api';
+const NYXEN_ARCHIVE = 'https://nyxen-video-worker.smcantrellbooks.workers.dev';
+const SUPABASE_URL = 'https://recyyhvdvuupxhbxmzal.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
 let nyxenOpen = false, nyxenHistory = [], nyxenConvId = null;
 
 function toggleNyxen() {
@@ -1288,7 +1309,71 @@ function handleAudiobookUpload(e) {
 function nyxenKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); nyxenSend(); } }
 function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 90) + 'px'; }
 
-// ── BOOK MODE ──
+// ── FORMAT CHANGE ──
+function onFormatChange() {
+  var format = document.querySelector('input[name="book-format"]:checked').value;
+  var ebookSection = document.getElementById('ebook-id-section');
+  var audiobookSection = document.getElementById('audiobook-id-section');
+  ebookSection.style.display = (format === 'ebook' || format === 'both') ? 'block' : 'none';
+  audiobookSection.style.display = (format === 'audiobook' || format === 'both') ? 'block' : 'none';
+}
+
+// ── GENERATE FORMAT ID ──
+var generatedIds = { ebook: null, audiobook: null };
+
+async function generateFormatId(format) {
+  var title = document.getElementById('title') ? document.getElementById('title').value.trim() : '';
+  if (!title) { alert('Please enter a book title first.'); return; }
+
+  var displayEl = document.getElementById(format + '-id-display');
+  var copyBtn = document.getElementById('copy-' + format + '-id-btn');
+  if (displayEl) displayEl.textContent = 'Generating...';
+
+  try {
+    var resp = await fetch(SUPABASE_URL + '/rest/v1/books', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify({
+        title: title,
+        format: format,
+        creator_id: currentUser ? currentUser.id : null,
+        audio_status: format === 'audiobook' ? 'pending' : null
+      })
+    });
+
+    if (!resp.ok) {
+      var err = await resp.json();
+      throw new Error(err.message || 'Failed to generate ID');
+    }
+
+    var result = await resp.json();
+    var smcbId = result && result[0] ? result[0].smcb_id : null;
+    if (!smcbId) throw new Error('No ID returned');
+
+    generatedIds[format] = smcbId;
+    if (displayEl) { displayEl.textContent = smcbId; displayEl.style.color = '#111'; }
+    if (copyBtn) copyBtn.style.display = 'block';
+
+  } catch (err) {
+    if (displayEl) displayEl.textContent = 'Error — try again';
+    alert('Failed to generate ' + format + ' ID: ' + err.message);
+  }
+}
+
+// ── COPY FORMAT ID ──
+function copyId(format) {
+  var id = generatedIds[format];
+  if (!id) return;
+  navigator.clipboard.writeText(id).then(function() {
+    var btn = document.getElementById('copy-' + format + '-id-btn');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(function() { btn.textContent = 'Copy'; }, 2000); }
+  });
+}
 var bookMode = 'new'; // 'new' or 'existing'
 var existingBooks = [];
 
@@ -1385,8 +1470,6 @@ function loadExistingBook(smcbId) {
   var publishBtn = document.getElementById('publishBtn');
   if (publishBtn) publishBtn.textContent = 'Update ' + smcbId;
 }
-const SUPABASE_URL = 'https://recyyhvdvuupxhbxmzal.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
 const NYX_URL = 'https://nyx-frontstore.smcantrellbooks.workers.dev';
 
 var currentBookId = null;
@@ -1399,6 +1482,50 @@ window.addEventListener('DOMContentLoaded', async function() {
     const { data: { user } } = await sbClient.auth.getUser();
     if (user) currentUser = user;
   }
+  // Auto-fill from Publisher Workspace or Editor
+  try {
+    var incoming = localStorage.getItem('collections_incoming');
+    if (incoming) {
+      var data = JSON.parse(incoming);
+      localStorage.removeItem('collections_incoming');
+      // Title
+      if (data.title && document.getElementById('title')) {
+        document.getElementById('title').value = data.title;
+      }
+      // Author
+      if (data.author && document.getElementById('authorName')) {
+        document.getElementById('authorName').value = data.author;
+      }
+      // Series
+      if (data.series && document.getElementById('seriesName')) {
+        document.getElementById('seriesName').value = data.series;
+      }
+      // Genre
+      if (data.genre && document.getElementById('categories')) {
+        document.getElementById('categories').value = data.genre.toLowerCase();
+      }
+      // Reconstruct EPUB File from base64 and inject into upload input
+      if (data.epubB64Key) {
+        var b64 = localStorage.getItem(data.epubB64Key);
+        if (b64) {
+          try {
+            var arr = b64.split(','), mime = arr[0].match(/:(.*?);/)[1];
+            var bstr = atob(arr[1]), n = bstr.length, u8 = new Uint8Array(n);
+            for (var i = 0; i < n; i++) u8[i] = bstr.charCodeAt(i);
+            var blob = new Blob([u8], {type: mime});
+            var file = new File([blob], data.epubName || 'book.epub', {type: mime});
+            var epubInput = document.getElementById('epubUpload');
+            if (epubInput) {
+              var dt = new DataTransfer();
+              dt.items.add(file);
+              epubInput.files = dt.files;
+              epubInput.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+          } catch(e) { console.warn('Could not reconstruct EPUB:', e); }
+        }
+      }
+    }
+  } catch(e) {}
   // DO NOT auto-generate book ID — user must initialize
   var publishBtn = document.getElementById('publishBtn');
   if (publishBtn) publishBtn.addEventListener('click', publishBook);
@@ -1426,7 +1553,7 @@ async function initializeBook() {
       },
       body: JSON.stringify({
         title: title,
-        formats: formats,
+        format: formats[0] || 'ebook',
         creator_id: currentUser ? currentUser.id : null,
         audio_status: 'pending'
       })
@@ -1524,21 +1651,67 @@ async function publishBook() {
   btn.textContent = 'Publishing...';
 
   try {
+    // ── UPLOAD FILES TO R2 VIA NYXEN ARCHIVE ──
+    var epubFileUrl = null;
+    var coverFileUrl = null;
+
+    var epubInput = document.getElementById('epubUpload');
+    var coverInput = document.getElementById('coverUpload');
+
+    if (epubInput && epubInput.files && epubInput.files[0]) {
+      var epubForm = new FormData();
+      epubForm.append('file', epubInput.files[0]);
+      epubForm.append('folder', 'books/epub');
+      btn.textContent = 'Uploading EPUB...';
+      try {
+        var epubResp = await fetch(NYXEN_ARCHIVE + '/upload', { method: 'POST', body: epubForm });
+        if (epubResp.ok) { var epubData = await epubResp.json(); epubFileUrl = epubData.url || epubData.key; }
+      } catch(e) { console.warn('EPUB upload failed:', e); }
+    }
+
+    if (coverInput && coverInput.files && coverInput.files[0]) {
+      var coverForm = new FormData();
+      coverForm.append('file', coverInput.files[0]);
+      coverForm.append('folder', 'books/covers');
+      btn.textContent = 'Uploading Cover...';
+      try {
+        var coverResp = await fetch(NYXEN_ARCHIVE + '/upload', { method: 'POST', body: coverForm });
+        if (coverResp.ok) { var coverData = await coverResp.json(); coverFileUrl = coverData.url || coverData.key; }
+      } catch(e) { console.warn('Cover upload failed:', e); }
+    }
+
+    btn.textContent = 'Publishing...';
+
+  } catch(uploadErr) {
+    console.warn('File upload issue:', uploadErr);
+  }
+
+  try {
     // Determine collection
     var collectionMap = { grace: 'the-grace-collection', horizon: 'the-horizon-collection', audiobook: 'audiobooks' };
     var collectionSlug = collectionMap[collection] || 'the-grace-collection';
 
     // Build book record
+    var bio = document.getElementById('bio') ? document.getElementById('bio').value.trim() : '';
+
+    var genre = document.getElementById('categories') ? document.getElementById('categories').value : '';
+
     var bookRecord = {
       smcb_id: currentBookId,
       title: title,
       author: author || (currentUser ? currentUser.email.split('@')[0] : 'Unknown'),
+      bio: bio || null,
       collection: collectionSlug,
+      genre: genre || null,
+      format: getSelectedFormats()[0] || 'ebook',
       price: parseFloat(price) || 0,
+      status: 'published',
       audio_status: selectedAudioFiles.length > 0 ? 'complete' : 'pending',
       creator_id: currentUser ? currentUser.id : null,
       published_at: new Date().toISOString(),
-      storefront_url: 'https://smcantrellbooks.com/' + collectionSlug
+      storefront_url: 'https://smcantrellbooks.com/collections',
+      file_url: epubFileUrl || null,
+      cover_url: coverFileUrl || null
     };
 
     // Insert or update Supabase books table
@@ -1594,13 +1767,30 @@ async function publishBook() {
     confirm.innerHTML = '<div style="font-family:Cinzel,serif;font-size:.8rem;font-weight:700;color:#2a6b3c;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Published Successfully</div>'
       + '<div style="font-size:.9rem;color:#111;margin-bottom:8px;"><strong>' + sanitize(title) + '</strong> has been submitted to <strong>' + sanitize(collection.charAt(0).toUpperCase()+collection.slice(1)) + ' Collection</strong></div>'
       + '<div style="font-family:monospace;font-size:.8rem;color:#a07d20;margin-bottom:12px;">Book ID: ' + currentBookId + '</div>'
-      + '<a href="https://smcantrellbooks.com/' + collectionSlug + '" target="_blank" style="display:inline-block;padding:8px 20px;background:#111;color:#C9A040;font-family:Cinzel,serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;text-decoration:none;">View on Storefront →</a>';
+      + '<a href="https://smcantrellbooks.com/collections" target="_blank" style="display:inline-block;padding:8px 20px;background:#111;color:#C9A040;font-family:Cinzel,serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;text-decoration:none;">View on Storefront →</a>';
     btn.parentNode.insertBefore(confirm, btn.nextSibling);
 
-    // Reset for next book
+    // ── CLEAN UP MANUSCRIPT FROM SUPABASE AFTER PUBLISH ──
+    try {
+      if (currentBookId) {
+        await fetch(SUPABASE_URL + '/rest/v1/books?smcb_id=eq.' + currentBookId, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({ description: null })
+        });
+      }
+    } catch(e) {
+      console.warn('Manuscript cleanup skipped:', e);
+    }
+
+    // Redirect to storefront collections after 2 seconds
     setTimeout(function(){
-      setBookMode('new');
-    }, 3000);
+      window.location.href = 'https://smcantrellbooks.com/collections';
+    }, 2000);
 
   } catch (err) {
     console.error('Publish error:', err);
