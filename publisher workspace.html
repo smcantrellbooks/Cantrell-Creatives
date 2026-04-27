@@ -9,204 +9,343 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;font-size:15px;overflow-x:hidden;background:#EFEFEF;}
+html,body{width:100%;min-height:100vh;font-family:'Outfit',sans-serif;font-size:9pt;overflow-x:hidden;background:#F5ECD8;}
 
 :root{
   --gold:#C9A040;--gold2:#E2B84A;
   --gold-lt:rgba(201,160,64,.12);--gold-bd:rgba(201,160,64,.3);
-  --sidebar:#2C1E0F;
-  --border:#E0CFA8;
-  --text:#2c1e0f;
+  --sidebar:#2C1E0F;--sidebar2:#3A2810;
+  --cream:#FDF8F0;--warm:#F5ECD8;
+  --border:#E0CFA8;--text:#2c1e0f;--text-lt:rgba(44,30,15,.5);
+  --burg:#7a1f2e;--burg-lt:rgba(122,31,46,.08);--burg-bd:rgba(122,31,46,.25);
 }
-
-/* BANNER */
 .banner{position:relative;overflow:hidden;width:100%;}
 .banner-img{display:block;width:100%;height:180px;object-fit:cover;object-position:center 35%;}
 .banner-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;pointer-events:none;}
-.banner-title-main{font-family:"Cinzel",serif;font-size:2rem;font-weight:700;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.6);letter-spacing:.08em;}
-.banner-title-sub{font-family:"Cinzel",serif;font-size:.78rem;letter-spacing:.28em;color:#fff;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.8);}
+.banner-title-main{font-family:'Cinzel',serif;font-size:18pt;font-weight:700;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.6);letter-spacing:.08em;}
+.banner-title-sub{font-family:'Cinzel',serif;font-size:9pt;letter-spacing:.28em;color:#fff;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,.8);}
 .nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px;background:linear-gradient(rgba(0,0,0,.45),transparent);z-index:10;}
-.nt-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(201,160,64,.5);background:rgba(0,0,0,.25);color:rgba(232,201,122,.95);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;font-family:'Outfit',sans-serif;}
+.nt-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(201,160,64,.5);background:rgba(0,0,0,.25);color:rgba(232,201,122,.95);font-size:8pt;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;font-family:'Outfit',sans-serif;}
 .nt-btn:hover{background:rgba(201,160,64,.25);}
 .nt-btn.login{background:var(--gold);border-color:var(--gold);color:#1a0a00;font-weight:700;}
 .nav-bot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(0,0,0,.6),transparent);z-index:10;}
 .nb-inner{display:flex;gap:8px;padding:6px 20px 12px;}
-.nb-btn{padding:6px 18px;border-radius:999px;border:1px solid rgba(201,160,64,.4);background:rgba(0,0,0,.2);color:rgba(232,201,122,.95);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);text-decoration:none;display:inline-block;font-family:'Outfit',sans-serif;}
+.nb-btn{padding:6px 18px;border-radius:999px;border:1px solid rgba(201,160,64,.4);background:rgba(0,0,0,.2);color:rgba(232,201,122,.95);font-size:8pt;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);text-decoration:none;display:inline-block;font-family:'Outfit',sans-serif;transition:.2s;}
 .nb-btn:hover{background:rgba(201,160,64,.2);}
+.nb-btn.active{background:var(--gold);color:#1a0a00;border-color:var(--gold);font-weight:700;}
 .gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent,rgba(201,160,64,.3) 10%,var(--gold) 30%,var(--gold2) 50%,var(--gold) 70%,rgba(201,160,64,.3) 90%,transparent);}
 
-/* APP SHELL */
-.app{display:flex;flex-direction:column;}
-.workspace{display:flex;height:calc(100vh - 183px);min-height:700px;}
+/* NYXEN WORKSPACE */
 
-/* LEFT SIDEBAR */
-.sidebar{width:230px;min-width:230px;background:#2C1E0F;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;height:100%;}
-.sb-head{padding:12px;border-bottom:1px solid rgba(255,255,255,.08);}
-.sb-lbl{font-family:"Cinzel",serif;font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,160,64,.65);margin-bottom:8px;display:block;}
-.proj-list{display:flex;flex-direction:column;gap:2px;max-height:160px;overflow-y:auto;padding:2px;}
-.proj-list::-webkit-scrollbar{width:2px;}
-.proj-list::-webkit-scrollbar-thumb{background:rgba(201,160,64,.3);}
-.proj-item{display:flex;align-items:center;gap:6px;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:.78rem;color:rgba(255,255,255,.55);border-left:2px solid transparent;}
-.proj-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.85);}
-.proj-item.active{background:rgba(201,160,64,.12);color:var(--gold);border-left-color:var(--gold);}
-.proj-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.proj-date{font-size:.58rem;opacity:.4;}
-.proj-del{color:rgba(255,80,80,.4);cursor:pointer;font-size:.65rem;padding:1px 4px;}
-.proj-del:hover{color:#ff5555;}
-.btn-new-proj{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:7px;border-radius:6px;border:1px dashed rgba(201,160,64,.3);background:transparent;color:rgba(201,160,64,.7);font-family:'Outfit',sans-serif;font-size:.76rem;cursor:pointer;margin-top:6px;}
-.btn-new-proj:hover{background:rgba(201,160,64,.08);}
-.sb-section{padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);}
-.sb-scroll{flex:1;overflow-y:auto;min-height:0;padding:0 12px 10px;}
-.sb-scroll::-webkit-scrollbar{width:2px;}
-.sb-scroll::-webkit-scrollbar-thumb{background:rgba(201,160,64,.25);}
-.f-lbl{font-size:.6rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;margin-top:8px;display:block;}
-.sb-inp{width:100%;padding:6px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:rgba(255,255,255,.8);font-family:'Outfit',sans-serif;font-size:.78rem;outline:none;}
-.sb-inp:focus{border-color:rgba(201,160,64,.4);}
-.sb-inp option{background:#2C1E0F;}
-.sb-btn{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:7px;border-radius:6px;border:1px solid rgba(201,160,64,.25);background:rgba(201,160,64,.08);color:rgba(201,160,64,.85);font-family:'Outfit',sans-serif;font-size:.76rem;cursor:pointer;margin-top:6px;}
-.sb-btn:hover{background:rgba(201,160,64,.18);}
-.sb-btn.gold{background:var(--gold);color:#1a0a00;border-color:var(--gold);font-weight:700;}
-.sb-btn.gold:hover{background:var(--gold2);}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
-.s-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:5px;padding:6px 4px;text-align:center;}
-.s-val{display:block;font-family:"Cinzel",serif;font-size:.85rem;font-weight:700;color:var(--gold);}
-.s-lbl{display:block;font-size:.5rem;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.08em;margin-top:1px;}
-.radio-row{display:flex;align-items:center;gap:6px;font-size:.74rem;color:rgba(255,255,255,.5);margin-bottom:4px;cursor:pointer;}
-.radio-row input{accent-color:var(--gold);}
-.sb-export{padding:10px 12px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.nyx-workspace{
+  display:grid;
+  grid-template-columns:200px 1fr 300px;
+  grid-template-rows:1fr auto;
+  gap:0;
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.1);
+  margin-bottom:40px;
+  min-height:800px;
+  height:85vh;
+}
+.nyx-chapters-panel{
+  grid-column:1;
+  grid-row:1/3;
+  background:#FDF8F0;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:16px 12px;
+  gap:8px;
+  overflow-y:auto;
+}
+.nyx-editor-panel{
+  grid-column:2;
+  grid-row:1;
+  display:flex;flex-direction:column;
+  border-right:none;
+  border-bottom:1px solid var(--border);
+  background:#fff;
+  min-height:0;
+}
+.nyx-chat-area{
+  grid-column:2;
+  grid-row:2;
+  display:flex;flex-direction:column;
+  border-right:none;
+  border-top:2px solid var(--border);
+  background:#fff;
+  min-height:220px;
+  max-height:300px;
+}
+.nyx-right-panel{
+  grid-column:3;
+  grid-row:1/3;
+  display:flex;flex-direction:column;
+  background:#FDF8F0;
+  border-left:1px solid var(--border);
+  overflow:hidden;
+  min-height:0;
+}
+.nyx-panel-head{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.nyx-chapter-list{display:flex;flex-direction:column;gap:4px;flex:1;}
+.nyx-ch-item{padding:7px 10px;border-radius:8px;font-size:9pt;color:var(--text);cursor:pointer;border:1px solid transparent;transition:.15s;display:flex;align-items:center;gap:6px;}
+.nyx-ch-item:hover{background:var(--gold-lt);border-color:var(--gold-bd);}
+.nyx-ch-item.active{background:var(--gold);color:#1a0a00;font-weight:700;border-color:var(--gold);}
+.nyx-ch-divider{height:1px;background:var(--border);margin:4px 0;}
+.nyx-add-ch-btn{padding:8px;border-radius:8px;border:1px dashed var(--gold-bd);background:transparent;color:var(--gold);font-family:'Cinzel',serif;font-size:9pt;font-weight:700;cursor:pointer;transition:.15s;text-align:center;}
+.nyx-add-ch-btn:hover{background:var(--gold-lt);}
+.nyx-export-btn{padding:7px 10px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--text);font-size:9pt;cursor:pointer;transition:.15s;text-align:left;font-family:'Outfit',sans-serif;}
+.nyx-export-btn:hover{background:var(--gold);color:#1a0a00;}
 
-/* CENTER EDITOR */
-.editor{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#F5F5F5;height:100%;}
+/* Formatting toolbar */
+.nyx-fmt-bar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--border);background:#FEFAF4;}
+.nyx-fmt-select{padding:3px 6px;border:1px solid var(--border);border-radius:5px;font-size:9pt;color:var(--text);background:#fff;outline:none;cursor:pointer;font-family:'Outfit',sans-serif;}
+.nyx-fmt-btn{width:26px;height:26px;border:1px solid var(--border);border-radius:5px;background:#fff;color:var(--text);font-size:9pt;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;font-family:'Georgia',serif;}
+.nyx-fmt-btn:hover{background:var(--gold-lt);border-color:var(--gold-bd);}
+.nyx-fmt-btn.active{background:var(--gold);color:#1a0a00;border-color:var(--gold);}
+.nyx-fmt-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex-shrink:0;}
 
-.ch-bar{background:#F8F8F8;border-bottom:1px solid #E0E0E0;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0;}
-.ch-tab{padding:4px 12px;border-radius:999px;border:1.5px solid #E0E0E0;background:#fff;color:#555;font-family:'Outfit',sans-serif;font-size:.74rem;cursor:pointer;}
-.ch-tab.active{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700;}
-.ch-tab:hover:not(.active){border-color:#C0C0C0;}
-.ch-add{padding:4px 10px;border-radius:999px;border:1.5px dashed #D0D0D0;background:transparent;color:#777;font-family:'Outfit',sans-serif;font-size:.74rem;cursor:pointer;}
-.ch-add:hover{border-color:var(--gold);color:var(--gold);}
-.ch-del{padding:4px 8px;border-radius:999px;border:1.5px dashed rgba(192,60,60,.3);background:transparent;color:rgba(192,60,60,.5);font-family:'Outfit',sans-serif;font-size:.74rem;cursor:pointer;}
-.ch-title-inp{flex:1;max-width:240px;padding:4px 10px;border-radius:999px;border:1.5px solid #E0E0E0;background:transparent;color:#333;font-family:'Outfit',sans-serif;font-size:.76rem;outline:none;}
-.ch-title-inp:focus{border-color:var(--gold);}
+/* Export modal */
+.nyx-export-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;}
+.nyx-export-modal.open{display:flex;}
+.nyx-export-box{background:#fff;border-radius:14px;padding:24px;width:360px;box-shadow:0 16px 48px rgba(0,0,0,.25);}
+.nyx-export-title{font-family:'Cinzel',serif;font-size:11pt;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.nyx-export-group{margin-bottom:14px;}
+.nyx-export-group-label{font-size:8pt;font-weight:700;color:var(--text-lt);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.nyx-export-option{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:6px;transition:.15s;font-size:9pt;color:var(--text);font-family:'Outfit',sans-serif;}
+.nyx-export-option:hover{border-color:var(--gold);background:var(--gold-lt);}
+.nyx-export-option-icon{font-size:12pt;flex-shrink:0;}
+.nyx-export-close{width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-lt);font-size:9pt;cursor:pointer;margin-top:8px;font-family:'Outfit',sans-serif;}
+.nyx-export-close:hover{background:#f5f5f5;}
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  background:#fff;
+}
+.nyx-editor-header{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);background:#FDF8F0;}
+.nyx-chapter-title-inp{flex:1;border:none;background:transparent;font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--text);outline:none;}
+.nyx-chapter-title-inp::placeholder{color:rgba(44,30,15,.3);}
+.nyx-editor-stats{display:flex;gap:12px;font-size:9pt;color:var(--text-lt);white-space:nowrap;flex-shrink:0;}
+.nyx-editor-area{
+  flex:1;
+  border:none;
+  outline:none;
+  padding:24px 32px;
+  font-family:'Georgia',serif;
+  font-size:12pt;
+  line-height:1.85;
+  color:var(--text);
+  background:#fff;
+  min-height:400px;
+  overflow-y:auto;
+}
+.nyx-editor-area:empty:before{content:attr(data-placeholder);color:rgba(44,30,15,.25);font-style:italic;pointer-events:none;font-size:11pt;}
+.nyx-tools-bar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--border);background:#FDF8F0;}
+.nyx-tool-btn{padding:5px 12px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--text);font-size:9pt;cursor:pointer;transition:.15s;font-family:'Outfit',sans-serif;}
+.nyx-tool-btn:hover{background:var(--gold);color:#1a0a00;border-color:var(--gold);}
 
-.meta-bar{background:#F8F8F8;border-bottom:1px solid #E0E0E0;padding:7px 14px;display:flex;gap:8px;flex-shrink:0;}
-.meta-inp{flex:1;padding:6px 10px;border-radius:6px;border:1.5px solid #E8E8E8;background:#fff;color:#222;font-family:'Outfit',sans-serif;font-size:.84rem;outline:none;}
-.meta-inp:focus{border-color:var(--gold);}
-.meta-inp::placeholder{color:rgba(0,0,0,.28);}
+/* RIGHT - Nyxen Panel */
+.nyx-right-panel{
+  display:flex;flex-direction:column;
+  background:#FDF8F0;
+  overflow:hidden;
+  height:100%;
+}
+.nyx-right-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--burg);border-bottom:1px solid var(--burg-bd);flex-shrink:0;}
+.nyx-avatar{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex-shrink:0;}
+.nyx-right-name{font-family:'Cinzel',serif;font-size:9pt;font-weight:700;color:var(--gold);}
+.nyx-right-sub{font-size:8pt;color:rgba(255,255,255,.55);font-style:italic;}
+.nyx-online-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;margin-left:auto;flex-shrink:0;box-shadow:0 0 6px rgba(76,175,80,.6);}
+.nyx-tabs{display:flex;border-bottom:1px solid var(--border);background:#fff;flex-shrink:0;}
+.nyx-tab{flex:1;padding:8px 4px;border:none;background:transparent;font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-lt);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;}
+.nyx-tab.active{color:var(--burg);border-bottom-color:var(--burg);}
+.nyx-tab-content{overflow-y:auto;padding:10px;flex:1;min-height:0;}
+.nyx-field{margin-bottom:7px;}
+.nyx-lbl{display:block;font-size:8pt;font-weight:700;color:var(--text-lt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.nyx-inp{width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-family:'Outfit',sans-serif;font-size:11pt;color:var(--text);background:#fff;outline:none;transition:.15s;}
+.nyx-inp:focus{border-color:var(--gold);}
+textarea.nyx-inp{resize:none;line-height:1.4;}
+.nyx-check{display:flex;align-items:center;gap:5px;font-size:8pt;color:var(--text);cursor:pointer;padding:2px 0;}
+.nyx-check input{accent-color:var(--burg);width:12px;height:12px;}
+.nyx-template-btn{display:block;width:100%;padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:8pt;cursor:pointer;text-align:left;margin-bottom:5px;transition:.15s;font-family:'Outfit',sans-serif;}
+.nyx-template-btn:hover{background:var(--gold-lt);border-color:var(--gold-bd);}
 
-.toolbar{background:#F5F5F5;border-bottom:1px solid #E0E0E0;padding:5px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:2px;row-gap:3px;flex-shrink:0;}
-.tb-btn{padding:4px 7px;border-radius:4px;border:none;background:transparent;color:#444;font-family:'Outfit',sans-serif;font-size:.74rem;cursor:pointer;}
-.tb-btn:hover{background:#EBEBEB;}
-.tb-sep{width:1px;height:17px;background:#DCDCDC;margin:0 3px;}
-.tb-sel{padding:3px 5px;border-radius:4px;border:1px solid transparent;background:transparent;color:#444;font-family:'Outfit',sans-serif;font-size:.74rem;cursor:pointer;outline:none;}
-.tb-sel:hover{background:#EBEBEB;}
+/* Chat area — flex:1 so it fills remaining space, pinned at bottom */
+.nyx-chat-feed{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.nyx-chat-feed::-webkit-scrollbar{width:3px;}
+.nyx-chat-feed::-webkit-scrollbar-thumb{background:var(--gold-bd);border-radius:2px;}
+.nyx-chat-input-row{display:flex;gap:6px;padding:10px 16px;border-top:1px solid var(--border);background:#FDF8F0;}
+.nyx-chat-inp{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:9pt;color:var(--text);outline:none;resize:none;min-height:38px;max-height:70px;line-height:1.4;background:#fff;}
+.nyx-chat-inp:focus{border-color:var(--gold);}
+.nyx-send-btn{width:38px;height:38px;border-radius:8px;border:none;background:var(--burg);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10pt;flex-shrink:0;}
+.nyx-send-btn:hover{opacity:.85;}
+.nyx-chat-feed{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.nyx-chat-feed::-webkit-scrollbar{width:3px;}
+.nyx-chat-feed::-webkit-scrollbar-thumb{background:var(--gold-bd);border-radius:2px;}
+.nyx-chat-input-row{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--border);background:#FDF8F0;flex-shrink:0;}
+.nyx-chat-inp{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:9pt;color:var(--text);outline:none;resize:none;min-height:34px;max-height:70px;line-height:1.4;background:#fff;}
+.nyx-chat-inp:focus{border-color:var(--gold);}
+.nyx-send-btn{width:34px;height:34px;border-radius:8px;border:none;background:var(--burg);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:9pt;flex-shrink:0;}
+.nyx-send-btn:hover{opacity:.85;}
 
-/* PAGE CANVAS */
-.page-canvas{flex:1;overflow-y:auto;background:#E8E8E8;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;min-height:0;}
-.page-canvas::-webkit-scrollbar{width:8px;}
-.page-canvas::-webkit-scrollbar-track{background:#E0E0E0;}
-.page-canvas::-webkit-scrollbar-thumb{background:#AAAAAA;border-radius:4px;}
+/* Chat messages */
+.nyx-msg{padding:8px 12px;border-radius:10px;font-size:9pt;line-height:1.6;max-width:92%;}
+.nyx-msg.ai{background:var(--gold-lt);border:1px solid var(--gold-bd);color:var(--text);align-self:flex-start;}
+.nyx-msg.user{background:var(--burg);color:#fff;align-self:flex-end;}
+.nyx-msg-lbl{font-size:8pt;letter-spacing:.14em;color:var(--gold);margin-bottom:3px;font-weight:700;font-family:'Cinzel',serif;text-transform:uppercase;}
+.nyx-insert-btn{display:inline-block;margin-top:6px;padding:2px 8px;border:1px solid var(--gold-bd);border-radius:999px;font-size:8pt;color:var(--text);cursor:pointer;background:transparent;font-family:'Outfit',sans-serif;}
+.nyx-insert-btn:hover{background:var(--gold);color:#1a0a00;border-color:var(--gold);}
 
-/* WHITE DOCUMENT PAGES - like Word */
-.doc-page{background:#ffffff;width:100%;max-width:700px;min-height:1040px;max-height:1040px;overflow:hidden;padding:72px 80px;color:#1a1a1a;font-family:'Cormorant Garamond',serif;font-size:1.06rem;line-height:1.9;outline:none;box-shadow:0 2px 10px rgba(0,0,0,.18);flex-shrink:0;}
-.doc-page:focus{outline:none;box-shadow:0 2px 14px rgba(0,0,0,.2);}
-.doc-page:empty::before{content:attr(data-placeholder);color:rgba(0,0,0,.2);font-style:italic;pointer-events:none;}
-.doc-page h1{font-family:"Cinzel",serif;font-size:1.7rem;text-align:center;margin:24px 0 18px;}
-.doc-page h2{font-family:"Cinzel",serif;font-size:1.25rem;margin:18px 0 12px;}
-.doc-page h3{font-family:"Cinzel",serif;font-size:1.05rem;margin:14px 0 8px;}
-.doc-page p{margin-bottom:8px;text-indent:2em;}
-.doc-page p:first-child{text-indent:0;}
-.doc-page blockquote{border-left:3px solid var(--gold);padding:8px 16px;margin:14px 0;font-style:italic;color:#555;}
-.doc-page hr{border:none;border-top:1px solid #DDD;margin:24px auto;width:40%;}
-.add-page-btn{width:100%;max-width:720px;padding:9px;border-radius:4px;border:1px dashed #BBBBBB;background:rgba(0,0,0,.02);color:#888;font-family:"Cinzel",serif;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
-.add-page-btn:hover{background:rgba(201,160,64,.07);border-color:var(--gold);color:#6b4a1a;}
+.nyxen-welcome{padding:8px 0;}
+.nyxen-welcome p{font-size:9pt;color:var(--text-lt);line-height:1.6;}
+.quick-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.quick-btn{padding:4px 10px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--text);font-size:8pt;cursor:pointer;transition:.15s;font-family:'Outfit',sans-serif;}
+.quick-btn:hover{background:var(--gold-lt);}
 
-.word-bar{background:#FAFAFA;border-top:1px solid #E8E8E8;padding:4px 14px;font-size:.7rem;color:#888;text-align:right;flex-shrink:0;}
+@media(max-width:1000px){
+  .nyx-workspace{grid-template-columns:160px 1fr 260px;}
+}
+@media(max-width:768px){
+  .nyx-workspace{grid-template-columns:1fr;grid-template-rows:auto;}
+}
 
-/* NYXEN PANEL */
+/* PAGE LAYOUT */
+.page{max-width:1440px;margin:0 auto;padding:32px 24px 64px;}
+.section-title{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(44,30,15,.45);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 
-.nyx-head{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:9px;flex-shrink:0;}
-.nyx-av{width:32px;height:32px;border-radius:8px;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover;border:2px solid var(--gold);flex-shrink:0;}
-.nyx-name{font-family:"Cinzel",serif;font-size:.8rem;font-weight:700;color:var(--gold);}
-.nyx-status{font-size:.6rem;color:rgba(255,255,255,.38);font-style:italic;}
-.nyx-quick{display:flex;flex-wrap:wrap;gap:3px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;}
-.nq-btn{padding:3px 8px;border-radius:999px;border:1px solid rgba(201,160,64,.4);background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);font-family:'Outfit',sans-serif;font-size:.64rem;cursor:pointer;}
-.nq-btn:hover{background:rgba(201,160,64,.2);color:var(--gold);}
-.file-prev{display:none;margin:5px 10px;padding:5px 9px;background:rgba(201,160,64,.09);border:1px solid rgba(201,160,64,.25);border-radius:6px;align-items:center;gap:6px;font-size:.7rem;color:var(--gold);}
-.file-prev.show{display:flex;}
-.nyx-feed{flex:1;overflow-y:auto;padding:9px;display:flex;flex-direction:column;gap:8px;min-height:0;}
-.nyx-feed::-webkit-scrollbar{width:2px;}
-.nyx-feed::-webkit-scrollbar-thumb{background:rgba(201,160,64,.25);}
-.n-msg{padding:8px 11px;border-radius:8px;font-size:.78rem;line-height:1.58;max-width:96%;}
-.n-msg.ai{background:#FDF6EC;border:1px solid rgba(201,160,64,.25);color:#2c1e0f;align-self:flex-start;}
-.n-msg.ai .n-lbl{font-size:.48rem;letter-spacing:.15em;color:#8B6520;margin-bottom:3px;font-weight:700;font-family:"Cinzel",serif;}
-.n-msg.user{background:#F0E8D8;border:1px solid rgba(201,160,64,.3);color:#2c1e0f;align-self:flex-end;}
+/* PATH CARDS — three entry paths */
+.path-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:40px;}
+@media(max-width:700px){.path-grid{grid-template-columns:1fr;}}
+
+.path-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;transition:all .2s;cursor:default;}
+.path-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);opacity:0;transition:.2s;}
+.path-card:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(201,160,64,.15);transform:translateY(-2px);}
+.path-card:hover::before{opacity:1;}
+.path-card.highlight{border-color:rgba(201,160,64,.5);background:linear-gradient(135deg,#fff 60%,rgba(201,160,64,.04));}
+
+.path-icon{width:48px;height:48px;border-radius:12px;background:var(--gold-lt);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-size:17pt;flex-shrink:0;}
+.path-title{font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--text);}
+.path-desc{font-size:9pt;color:var(--text-lt);line-height:1.65;}
+.path-actions{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+
+.btn-primary{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border-radius:8px;border:none;background:var(--gold);color:#1a0a00;font-family:'Outfit',sans-serif;font-size:9pt;font-weight:700;cursor:pointer;transition:all .18s;text-decoration:none;}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px);}
+.btn-secondary{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;border-radius:8px;border:1.5px solid var(--gold-bd);background:transparent;color:#6b4a1a;font-family:'Outfit',sans-serif;font-size:9pt;font-weight:600;cursor:pointer;transition:all .18s;text-decoration:none;}
+.btn-secondary:hover{background:var(--gold-lt);border-color:var(--gold);}
+
+/* EPUB UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--gold-bd);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(201,160,64,.03);}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--gold);background:rgba(201,160,64,.07);}
+.upload-zone-text{font-size:10pt;color:var(--text-lt);font-style:italic;line-height:1.6;}
+.upload-zone-icon{font-size:19pt;margin-bottom:6px;}
+.epub-ready{display:none;background:#fff;border:1.5px solid rgba(100,160,100,.4);border-radius:10px;padding:14px 16px;gap:10px;align-items:center;}
+.epub-ready.show{display:flex;}
+.epub-ready-name{flex:1;font-size:9pt;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.epub-clear{color:rgba(180,60,60,.6);cursor:pointer;font-size:10pt;flex-shrink:0;}
+.epub-clear:hover{color:#c03c3c;}
+
+/* NYXEN CREATIVE SPACE */
+.nyxen-space{background:#fff;border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:40px;}
+.nyxen-space-header{background:var(--sidebar);padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.nyxen-av{width:40px;height:40px;border-radius:10px;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover;border:2px solid var(--gold);flex-shrink:0;}
+.nyxen-header-text .name{font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--gold);}
+.nyxen-header-text .sub{font-size:8pt;color:rgba(255,255,255,.4);font-style:italic;}
+.nyxen-new-chat{margin-left:auto;padding:6px 14px;border-radius:999px;border:1px solid rgba(201,160,64,.4);background:transparent;color:rgba(201,160,64,.8);font-family:'Outfit',sans-serif;font-size:8pt;cursor:pointer;transition:.15s;}
+.nyxen-new-chat:hover{background:rgba(201,160,64,.12);}
+
+.nyxen-body{display:flex;height:420px;}
+.nyxen-sidebar{width:180px;min-width:180px;background:var(--sidebar2);border-right:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;padding:10px 8px;gap:4px;overflow-y:auto;flex-shrink:0;}
+.nyxen-sidebar::-webkit-scrollbar{width:2px;}
+.nyxen-sidebar::-webkit-scrollbar-thumb{background:rgba(201,160,64,.3);}
+.convo-item{padding:7px 9px;border-radius:6px;font-size:8pt;color:rgba(255,255,255,.55);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:.15s;}
+.convo-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);}
+.convo-item.active{background:rgba(201,160,64,.15);color:var(--gold);}
+.convo-empty{padding:12px 8px;text-align:center;color:rgba(255,255,255,.2);font-size:8pt;font-style:italic;}
+
+.nyxen-chat{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.nyxen-feed{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;background:#FAFAFA;}
+.nyxen-feed::-webkit-scrollbar{width:4px;}
+.nyxen-feed::-webkit-scrollbar-thumb{background:#D0C0A8;border-radius:2px;}
+
+/* Welcome screen */
+.nyxen-welcome{text-align:center;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.nyxen-welcome img{width:56px;height:56px;border-radius:14px;border:3px solid var(--gold);object-fit:cover;}
+.nyxen-welcome h3{font-family:'Cinzel',serif;font-size:13pt;color:var(--text);}
+.nyxen-welcome p{font-size:9pt;color:var(--text-lt);line-height:1.7;max-width:360px;}
+.quick-btns{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:4px;}
+.quick-btn{padding:6px 14px;border-radius:999px;border:1.5px solid var(--gold-bd);background:#fff;color:#6b4a1a;font-family:'Outfit',sans-serif;font-size:9pt;cursor:pointer;transition:.15s;}
+.quick-btn:hover{background:var(--gold-lt);border-color:var(--gold);}
+
+/* Messages */
+.msg{padding:12px 16px;border-radius:12px;font-size:10pt;line-height:1.65;max-width:90%;}
+.msg.ai{background:#fff;border:1px solid #E8D9BF;color:var(--text);align-self:flex-start;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.msg.ai .lbl{font-size:7pt;letter-spacing:.15em;color:var(--gold);margin-bottom:4px;font-weight:700;font-family:'Cinzel',serif;text-transform:uppercase;}
+.msg.user{background:var(--sidebar);color:rgba(255,255,255,.85);align-self:flex-end;}
+.insert-btn{display:inline-block;margin-top:8px;padding:3px 10px;border:1px solid var(--gold-bd);border-radius:999px;font-family:'Cinzel',serif;font-size:7pt;color:#6b4a1a;cursor:pointer;background:transparent;}
+.insert-btn:hover{background:var(--gold);color:#1a0a00;}
+
 .typing-dots{display:inline-flex;gap:3px;align-items:center;}
-.typing-dots span{width:4px;height:4px;border-radius:50%;background:#C9A040;animation:td 1.2s ease-in-out infinite;}
+.typing-dots span{width:4px;height:4px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite;}
 .typing-dots span:nth-child(2){animation-delay:.2s;}
 .typing-dots span:nth-child(3){animation-delay:.4s;}
 @keyframes td{0%,80%,100%{opacity:.35;transform:translateY(0);}40%{opacity:1;transform:translateY(-4px);}}
-.nyx-inp-row{display:flex;align-items:flex-end;gap:5px;padding:8px 9px;border-top:1px solid rgba(255,255,255,.06);flex-shrink:0;}
-.nyx-txt{flex:1;min-height:32px;max-height:72px;padding:7px 9px;border-radius:6px;border:1px solid #D0C0A0;background:#fff;color:#2c1e0f;font-family:'Outfit',sans-serif;font-size:.8rem;outline:none;resize:none;line-height:1.4;}
-.nyx-txt:focus{border-color:var(--gold);}
-.nyx-txt::placeholder{color:rgba(44,30,15,.35);}
-.nyx-up-btn{width:30px;height:30px;border-radius:6px;border:1px solid rgba(201,160,64,.28);background:transparent;color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;flex-shrink:0;}
-.nyx-up-btn:hover{background:rgba(201,160,64,.1);}
-.nyx-send{width:30px;height:30px;border-radius:6px;border:none;background:var(--gold);color:#1a0a00;display:flex;align-items:center;justify-content:center;font-size:.82rem;cursor:pointer;flex-shrink:0;font-weight:700;}
-.nyx-send:hover{background:var(--gold2);}
-.insert-btn{display:inline-block;margin-top:4px;padding:2px 8px;border:1px solid rgba(201,160,64,.3);border-radius:999px;font-family:"Cinzel",serif;font-size:.48rem;color:var(--gold);cursor:pointer;background:transparent;}
-.insert-btn:hover{background:var(--gold);color:#1a0a00;}
-.nyx-export{border-top:1px solid rgba(255,255,255,.06);padding:7px 9px;flex-shrink:0;}
-.nyx-exp-title{font-family:"Cinzel",serif;font-size:.54rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,160,64,.55);margin-bottom:5px;}
-.exp-btns{display:flex;flex-wrap:wrap;gap:3px;}
-.exp-btn{padding:3px 8px;border-radius:5px;border:1px solid rgba(201,160,64,.22);background:transparent;color:rgba(255,255,255,.55);font-family:'Outfit',sans-serif;font-size:.64rem;cursor:pointer;}
-.exp-btn:hover{background:rgba(201,160,64,.1);color:var(--gold);}
-.exp-btn.primary{background:var(--gold);color:#1a0a00;border-color:var(--gold);font-weight:700;}
-.exp-btn.primary:hover{background:var(--gold2);}
-#nyxenExportStatus{font-size:.65rem;color:var(--gold);margin-top:3px;font-style:italic;}
 
+.nyxen-input-area{padding:10px 14px;border-top:1px solid #EEE;background:#fff;display:flex;gap:8px;align-items:flex-end;}
+.nyxen-txt{flex:1;padding:9px 12px;border-radius:8px;border:1.5px solid #E0D0B0;background:#fff;color:var(--text);font-family:'Outfit',sans-serif;font-size:9pt;outline:none;resize:none;min-height:36px;max-height:80px;line-height:1.45;}
+.nyxen-txt:focus{border-color:var(--gold);}
+.nyxen-txt::placeholder{color:var(--text-lt);}
+.nyxen-send{width:36px;height:36px;border-radius:8px;border:none;background:var(--sidebar);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10pt;flex-shrink:0;}
+.nyxen-send:hover{background:var(--sidebar2);}
 
-/* NYXEN BOTTOM PANEL */
-.nyxen-bottom{width:100%;background:#fff;border-top:3px solid #C9A040;display:flex;flex-direction:column;}
-.nyxen-bottom-inner{display:flex;height:380px;}
-.nyxen-bottom-sidebar{width:220px;min-width:220px;background:#2C1E0F;border-right:1px solid rgba(201,160,64,.15);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
-.nyxen-bottom-chat{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#fff;}
-.nyx-convo-list{flex:1;overflow-y:auto;padding:8px;}
-.nyx-convo-list::-webkit-scrollbar{width:2px;}
-.nyx-convo-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);}
-.nyx-convo-item{padding:7px 10px;border-radius:7px;font-size:.74rem;color:rgba(255,255,255,.6);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:.15s;}
-.nyx-convo-item:hover{background:rgba(255,255,255,.08);color:#fff;}
-.nyx-convo-item.active{background:rgba(201,160,64,.2);color:#fff;}
-.nyx-new-chat{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:8px;background:#C9A040;color:#1a0a00;border:none;border-radius:7px;font-family:"Outfit",sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;transition:.15s;}
-.nyx-new-chat:hover{background:#E2B84A;}
+/* PROJECT SETUP */
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px;}
+@media(max-width:700px){.setup-grid{grid-template-columns:1fr;}}
+.setup-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px;}
+.setup-card h3{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b4a1a;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.field{margin-bottom:10px;}
+.field label{display:block;font-size:8pt;color:var(--text-lt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+.field input,.field select,.field textarea{width:100%;padding:8px 11px;border-radius:7px;border:1.5px solid var(--border);background:#fff;color:var(--text);font-family:'Outfit',sans-serif;font-size:10pt;outline:none;transition:.15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);}
+.field textarea{resize:vertical;min-height:72px;line-height:1.55;}
+
+/* OPEN IN EDITOR BUTTON */
+.open-editor-bar{background:var(--sidebar);border-radius:14px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:40px;flex-wrap:wrap;}
+.open-editor-text .t{font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--gold);}
+.open-editor-text .s{font-size:9pt;color:rgba(255,255,255,.45);margin-top:2px;}
+.btn-open-editor{display:flex;align-items:center;gap:8px;padding:12px 24px;border-radius:9px;border:none;background:var(--gold);color:#1a0a00;font-family:'Cinzel',serif;font-size:9pt;font-weight:700;cursor:pointer;transition:all .18s;text-decoration:none;letter-spacing:.04em;}
+.btn-open-editor:hover{background:var(--gold2);transform:translateY(-1px);}
+
+/* RESOURCES */
+.resources{margin-top:40px;padding-top:32px;border-top:1px solid var(--border);}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.res-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;}
+.res-card h4{font-family:'Cinzel',serif;color:#6b4a1a;font-size:8pt;font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #F0E8D8;text-transform:uppercase;letter-spacing:.04em;}
+.res-link{display:flex;justify-content:space-between;padding:5px 0;font-size:9pt;color:var(--text);text-decoration:none;border-bottom:1px solid #F5F5F5;}
+.res-link:last-child{border-bottom:none;}
+.res-link:hover{color:var(--gold);}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:14px 24px;text-align:center;background:#EDE0C8;margin-top:40px;}
+.footer a{font-size:8pt;color:var(--text-lt);margin:0 8px;text-decoration:none;}
+.footer a:hover{color:var(--gold);}
 
 /* AUTH */
 .auth-widget{position:relative;display:flex;align-items:center;}
-.auth-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7B5C7B,#5a3d5a);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Cinzel",serif;font-size:.65rem;font-weight:700;color:#e8c97a;cursor:pointer;}
-.auth-name-tag{font-family:'Outfit',sans-serif;font-size:.66rem;font-weight:600;color:rgba(232,201,122,.9);margin-left:4px;cursor:pointer;white-space:nowrap;}
-.auth-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#FAFAFA;border:1px solid rgba(201,160,64,.3);border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,.5);min-width:185px;overflow:hidden;display:none;z-index:9999;}
+.auth-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#7B5C7B,#5a3d5a);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:8pt;font-weight:700;color:#e8c97a;cursor:pointer;}
+.auth-name-tag{font-family:'Outfit',sans-serif;font-size:8pt;font-weight:600;color:rgba(232,201,122,.9);margin-left:4px;cursor:pointer;white-space:nowrap;}
+.auth-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#1a1208;border:1px solid rgba(201,160,64,.3);border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,.5);min-width:185px;overflow:hidden;display:none;z-index:9999;}
 .auth-dropdown.open{display:block;}
 .auth-dd-header{padding:9px 12px;background:linear-gradient(135deg,#0f0804,#1c1208);border-bottom:1px solid rgba(201,160,64,.15);}
-.auth-dd-name{font-family:"Cinzel",serif;font-size:.68rem;font-weight:700;color:#fff;}
-.auth-dd-email{font-size:.62rem;color:rgba(255,255,255,.38);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.auth-dd-tier{display:inline-block;margin-top:2px;padding:1px 6px;border-radius:999px;font-family:"Cinzel",serif;font-size:.44rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(201,160,64,.12);border:1px solid rgba(201,160,64,.25);color:#e8c97a;}
-.auth-dd-item{display:flex;align-items:center;gap:7px;padding:7px 12px;font-family:'Outfit',sans-serif;font-size:.73rem;color:rgba(232,220,200,.75);text-decoration:none;transition:background .12s;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
+.auth-dd-name{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;color:#fff;}
+.auth-dd-email{font-size:7pt;color:rgba(255,255,255,.38);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.auth-dd-tier{display:inline-block;margin-top:2px;padding:1px 6px;border-radius:999px;font-family:'Cinzel',serif;font-size:7pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(201,160,64,.12);border:1px solid rgba(201,160,64,.25);color:#e8c97a;}
+.auth-dd-item{display:flex;align-items:center;gap:7px;padding:7px 12px;font-family:'Outfit',sans-serif;font-size:9pt;color:rgba(232,220,200,.75);text-decoration:none;transition:background .12s;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
 .auth-dd-item:hover{background:rgba(201,160,64,.07);}
 .auth-dd-item.danger{color:#ff6060;}
 .auth-dd-divider{height:1px;background:rgba(201,160,64,.09);margin:2px 0;}
-
-/* RESOURCES + FOOTER */
-.resources{background:#F5ECD8;border-top:2px solid rgba(201,160,64,.25);padding:32px 28px 44px;}
-.res-inner{max-width:1100px;margin:0 auto;}
-.res-title{font-family:"Cinzel",serif;font-size:.82rem;font-weight:700;color:#6b4a1a;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid rgba(201,160,64,.25);padding-bottom:9px;margin-bottom:16px;}
-.res-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
-.res-card{background:#fff;border:1px solid rgba(201,160,64,.2);border-radius:10px;padding:14px;}
-.res-card h4{font-family:"Cinzel",serif;color:#6b4a1a;font-size:.68rem;font-weight:700;margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid #F0E8D8;text-transform:uppercase;letter-spacing:.04em;}
-.res-link{display:flex;justify-content:space-between;padding:5px 0;font-size:.78rem;color:#3a2a1a;text-decoration:none;border-bottom:1px solid #F5F5F5;}
-.res-link:last-child{border-bottom:none;}
-.res-link:hover{color:var(--gold);}
-.footer{border-top:1px solid rgba(201,160,64,.2);padding:12px 20px;text-align:center;background:#EDE0C8;}
-.footer a{font-size:.7rem;color:rgba(44,30,15,.45);margin:0 8px;text-decoration:none;}
-.footer a:hover{color:var(--gold);}
 </style>
 </head>
 <body>
@@ -216,7 +355,7 @@ html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;font-size:15px;
   <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24760496/publisherworkspace-fLKmPHEGiqGH9DxP2gEmvQ.png" alt="Publisher Workspace" onerror="this.style.background='#2c1e0f';this.removeAttribute('src');">
   <div class="banner-overlay">
     <span class="banner-title-main">Publisher's Workspace</span>
-    <span class="banner-title-sub">Bringing Stories to Life</span>
+    <span class="banner-title-sub">Bring Your Stories to Life</span>
   </div>
   <nav class="nav-top">
     <button class="nt-btn" onclick="location.href='https://creatives.smcantrellbooks.com'">🏠 Home</button>
@@ -225,6 +364,7 @@ html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;font-size:15px;
   </nav>
   <nav class="nav-bot">
     <div class="nb-inner">
+      <button class="nb-btn active">✍ Publisher Workspace</button>
       <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/studio'">🎬 Studio</button>
       <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/voice-studio'">🎙 Voice Studio</button>
       <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/collections'">📚 Collections</button>
@@ -233,226 +373,290 @@ html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;font-size:15px;
 </div>
 <div class="gold-line"></div>
 
-<div class="app">
-  <div class="workspace">
+<main id="main-content" role="main" style="width:100%;overflow-x:hidden;">
+<div class="page">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sb-head">
-        <span class="sb-lbl">Projects</span>
-        <div class="proj-list" id="projectList"></div>
-        <button class="btn-new-proj" onclick="newProject()">＋ New Project</button>
+  <!-- PATH SELECTION -->
+  <div class="section-title">Where are you in your journey?</div>
+  <div class="path-grid">
+
+    <!-- PATH 1: UPLOAD EPUB -->
+    <div class="path-card highlight">
+      <div class="path-icon">📂</div>
+      <div class="path-title">Upload Your EPUB</div>
+      <div class="path-desc">Upload a finished EPUB to open in the Book Editor for review, formatting, or publishing.</div>
+      <input type="file" id="epubFile" accept=".epub" hidden onchange="handleFileUpload(event)">
+      <div class="upload-zone" id="epubZone" onclick="document.getElementById('epubFile').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">
+        <div class="upload-zone-icon">📥</div>
+        <div class="upload-zone-text">Drop your EPUB here or click to browse</div>
       </div>
-      <div class="sb-section">
-        <span class="sb-lbl">Import</span>
-        <input type="file" id="importFile" accept=".txt,.docx,.rtf" hidden onchange="importManuscript(event)">
-        <button class="sb-btn" onclick="document.getElementById('importFile').click()">📥 Import Manuscript</button>
-        <div id="importStatus" style="font-size:.66rem;color:rgba(255,255,255,.35);margin-top:4px;font-style:italic;"></div>
+      <div class="epub-ready" id="epubReady">
+        <span id="epubReadyIcon">📘</span>
+        <span class="epub-ready-name" id="epubReadyName"></span>
+        <span class="epub-clear" onclick="clearEpub()">✕</span>
       </div>
-      <div class="sb-scroll">
-        <span class="f-lbl">Book Title</span>
-        <input class="sb-inp" type="text" id="bookTitle" placeholder="Your Book Title" oninput="saveProject()">
-        <span class="f-lbl">Author</span>
-        <input class="sb-inp" type="text" id="authorName" placeholder="S.M. Cantrell" oninput="saveProject()">
-        <span class="f-lbl">Genre</span>
-        <select class="sb-inp" id="projectGenre" onchange="saveProject()">
-          <option>Urban Fantasy</option><option>Fantasy Romance</option><option>Paranormal</option>
-          <option>Sci-Fi</option><option>Mystery</option><option>Thriller</option><option>Romance</option>
-          <option>Literary Fiction</option><option>Poetry</option><option>Non-Fiction</option>
-          <option>Inspirational</option><option>Documentary</option>
-        </select>
-        <span class="f-lbl">Series</span>
-        <input class="sb-inp" type="text" id="projectSeries" placeholder="Series (optional)">
-        <span class="f-lbl">Target Words</span>
-        <input class="sb-inp" type="number" id="targetWords" value="80000">
-        <span class="f-lbl" style="margin-top:12px;">Stats</span>
-        <div class="stats-grid">
-          <div class="s-box"><span class="s-val" id="statWords">0</span><span class="s-lbl">Words</span></div>
-          <div class="s-box"><span class="s-val" id="statPages">0</span><span class="s-lbl">Pages</span></div>
-          <div class="s-box"><span class="s-val" id="statProgress">0%</span><span class="s-lbl">Goal</span></div>
-          <div class="s-box"><span class="s-val" id="statParas">0</span><span class="s-lbl">Paras</span></div>
-        </div>
+      <div class="path-actions" id="epubActions" style="display:none;">
+        <button class="btn-primary" onclick="goEditorWithFile()">📝 Open in Book Editor →</button>
       </div>
-      <div class="sb-export">
-        <span class="sb-lbl">Export To</span>
-        <label class="radio-row"><input type="radio" name="exportDest" value="local" checked> Local (.txt)</label>
-        <label class="radio-row"><input type="radio" name="exportDest" value="voicestudio"> Voice Studio</label>
-        <label class="radio-row"><input type="radio" name="exportDest" value="collections"> Collections</label>
-        <label class="radio-row"><input type="radio" name="exportDest" value="epub"> EPUB</label>
-        <button class="sb-btn gold" onclick="exportManuscript()" style="margin-top:8px;">🚀 Export</button>
-        <div id="exportStatus" style="font-size:.65rem;color:var(--gold);margin-top:4px;font-style:italic;"></div>
+      <div class="path-actions" id="docActions" style="display:none;"></div>
+      <div class="path-actions" id="epubPrompt">
+        <div style="font-size:8pt;color:var(--text-lt);text-align:center;font-style:italic;">Upload your EPUB to open in the editor</div>
       </div>
     </div>
 
-    <!-- EDITOR -->
-    <div class="editor">
-      <div class="ch-bar">
-        <div id="chapterTabs" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;"></div>
-        <button class="ch-add" onclick="addChapter()">＋ Chapter</button>
-        <button class="ch-del" onclick="deleteChapter()">✕</button>
-        <input class="ch-title-inp" type="text" id="chapterTitle" placeholder="Chapter title…" oninput="updateChapterTitle()">
+    <!-- PATH 2: OPEN EDITOR -->
+    <div class="path-card highlight">
+      <div class="path-icon">📝</div>
+      <div class="path-title">Open Book Editor</div>
+      <div class="path-desc">Go directly to the editor to write, import a manuscript, or continue working on a saved manuscript.</div>
+      <div class="path-actions">
+        <button class="btn-primary" onclick="goEditor()">📝 Open in Book Editor →</button>
       </div>
-      <div class="meta-bar">
-        <input class="meta-inp" type="text" id="metaBookTitle" placeholder="Book Title" oninput="document.getElementById('bookTitle').value=this.value;saveProject()">
-        <input class="meta-inp" type="text" id="metaAuthor" placeholder="Author Name" oninput="document.getElementById('authorName').value=this.value;saveProject()" style="max-width:200px;">
+      <div style="font-size:8pt;color:var(--text-lt);line-height:1.6;padding:10px;background:var(--gold-lt);border-radius:8px;border:1px solid var(--gold-bd);">
+        💡 Import DOCX, PDF or EPUB — or start writing fresh. Your manuscript auto-saves by title.
       </div>
-      <div class="toolbar">
-        <select class="tb-sel" onchange="fmt('formatBlock',this.value);this.value=''">
-          <option value="">Style</option><option value="p">Normal</option><option value="h1">Heading 1</option>
-          <option value="h2">Heading 2</option><option value="h3">Heading 3</option><option value="blockquote">Blockquote</option>
-        </select>
-        <select class="tb-sel" onchange="setFont(this.value);this.value=''">
-          <option value="">Font</option><option value="Cormorant Garamond,serif">Cormorant</option>
-          <option value="Cinzel,serif">Cinzel</option><option value="Georgia,serif">Georgia</option>
-          <option value="Times New Roman,serif">Times New Roman</option><option value="Courier New,monospace">Courier</option>
-        </select>
-        <select class="tb-sel" onchange="fmt('fontSize',this.value);this.value=''">
-          <option value="">Size</option><option value="2">10</option><option value="3">12</option>
-          <option value="4">14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option>
-        </select>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="fmt('bold')"><b>B</b></button>
-        <button class="tb-btn" onclick="fmt('italic')"><i>I</i></button>
-        <button class="tb-btn" onclick="fmt('underline')"><u>U</u></button>
-        <button class="tb-btn" onclick="fmt('strikeThrough')"><s>S</s></button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="fmt('justifyLeft')" title="Align Left"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="1" width="14" height="2" fill="currentColor"/><rect x="0" y="5" width="10" height="2" fill="currentColor"/><rect x="0" y="9" width="14" height="2" fill="currentColor"/><rect x="0" y="13" width="8" height="2" fill="currentColor"/></svg></button>
-        <button class="tb-btn" onclick="fmt('justifyCenter')" title="Center"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="1" width="14" height="2" fill="currentColor"/><rect x="2" y="5" width="10" height="2" fill="currentColor"/><rect x="0" y="9" width="14" height="2" fill="currentColor"/><rect x="3" y="13" width="8" height="2" fill="currentColor"/></svg></button>
-        <button class="tb-btn" onclick="fmt('justifyRight')" title="Align Right"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="1" width="14" height="2" fill="currentColor"/><rect x="4" y="5" width="10" height="2" fill="currentColor"/><rect x="0" y="9" width="14" height="2" fill="currentColor"/><rect x="6" y="13" width="8" height="2" fill="currentColor"/></svg></button>
-        <button class="tb-btn" onclick="fmt('justifyFull')" title="Justify"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="1" width="14" height="2" fill="currentColor"/><rect x="0" y="5" width="14" height="2" fill="currentColor"/><rect x="0" y="9" width="14" height="2" fill="currentColor"/><rect x="0" y="13" width="14" height="2" fill="currentColor"/></svg></button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="fmt('insertUnorderedList')">• List</button>
-        <button class="tb-btn" onclick="fmt('insertOrderedList')">1. List</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="insertSceneBreak()">― Break</button>
-        <button class="tb-btn" onclick="insertDialogue()">❝</button>
-        <button class="tb-btn" onclick="addPage()">📄 Page</button>
-        <div class="tb-sep"></div>
-        <button class="tb-btn" onclick="fmt('undo')">↶</button>
-        <button class="tb-btn" onclick="fmt('redo')">↷</button>
-        <button class="tb-btn" onclick="doFind()">🔍</button>
-        <button class="tb-btn" onclick="clearCurrentPage()" style="color:rgba(180,60,60,.7);">✕ Clear</button>
-      </div>
-      <div class="page-canvas" id="pageCanvas">
-        <div class="doc-page" id="page-1" data-page-num="1" contenteditable="true"
-          data-placeholder="Start writing your manuscript here…"
-          oninput="onEditorInput(this)" onkeydown="handleKey(event)"
-          onfocus="activePageId=this.id" spellcheck="true"></div>
-        <button class="add-page-btn" onclick="addPage()">＋ Add Page</button>
-      </div>
-      <div class="word-bar" id="wordBar">0 words</div>
     </div>
-
-
 
   </div>
-</div>
 
-<!-- NYXEN BOTTOM PANEL -->
-<div class="nyxen-bottom">
-  <div class="nyxen-bottom-inner">
+  <!-- NYXEN AI WORKSPACE -->
+  <div class="section-title">Nyxen — AI Writing Studio</div>
 
-    <!-- Left sidebar - conversation history -->
-    <div class="nyxen-bottom-sidebar">
-      <div style="padding:14px 12px 10px;border-bottom:1px solid rgba(255,255,255,.08);">
-        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
-          <img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" style="width:36px;height:36px;border-radius:9px;border:2px solid #d8b588;object-fit:cover;flex-shrink:0;">
-          <div>
-            <div style="font-family:"Cinzel",serif;font-size:.82rem;font-weight:700;color:#d8b588;">Nyxen</div>
-            <div style="font-size:.6rem;color:rgba(201,160,64,.6);font-style:italic;" id="nyxenBotStatus">Writing assistant</div>
-          </div>
-        </div>
-        <button class="nyx-new-chat" onclick="nyxenNewChat()">+ New Chat</button>
+  <div class="nyx-workspace">
+
+    <!-- LEFT: Chapter Panel -->
+    <div class="nyx-chapters-panel">
+      <div class="nyx-panel-head">📖 Chapters</div>
+      <div id="nyx-chapter-list" class="nyx-chapter-list"></div>
+      <button class="nyx-add-ch-btn" onclick="nyxAddChapter()">＋ Add Chapter</button>
+      <div class="nyx-ch-divider"></div>
+      <div class="nyx-panel-head" style="margin-top:4px;">📋 Book</div>
+      <div style="font-size:9pt;color:var(--text-lt);padding:4px 0;">
+        <div id="nyx-book-title-display" style="font-weight:600;color:var(--text);margin-bottom:2px;">Untitled Book</div>
+        <div id="nyx-chapter-count" style="color:var(--text-lt);">0 chapters</div>
       </div>
-      <div class="nyx-convo-list" id="nyxenConvoList">
-        <div style="padding:12px 8px;text-align:center;color:rgba(255,255,255,.25);font-size:.72rem;font-style:italic;">Your chats appear here</div>
-      </div>
+      <div class="nyx-ch-divider"></div>
+      <div class="nyx-panel-head" style="margin-top:4px;">📤 Export</div>
+      <button class="nyx-export-btn" style="background:var(--gold);color:#1a0a00;font-weight:700;border-color:var(--gold);text-align:center;" onclick="document.getElementById('nyxExportModal').classList.add('open')">📤 Export / Send</button>
     </div>
 
-    <!-- Right - main chat -->
-    <div class="nyxen-bottom-chat">
+    <!-- CENTER: Writing Editor -->
+    <div class="nyx-editor-panel">
+      <!-- Chapter header -->
+      <div class="nyx-editor-header">
+        <input type="text" id="nyx-chapter-title" class="nyx-chapter-title-inp" placeholder="Chapter Title..." oninput="nyxSaveCurrentChapter()">
+        <div class="nyx-editor-stats">
+          <span id="nyx-word-count">0 words</span>
+          <span id="nyx-char-count">0 chars</span>
+        </div>
+      </div>
+      <!-- Formatting Toolbar -->
+      <div class="nyx-fmt-bar">
+        <select class="nyx-fmt-select" onchange="nyxFmt('fontName',this.value)" title="Font Family">
+          <option value="Georgia,serif">Georgia</option>
+          <option value="'Cormorant Garamond',serif">Cormorant</option>
+          <option value="'Times New Roman',serif">Times New Roman</option>
+          <option value="Arial,sans-serif">Arial</option>
+          <option value="'Courier New',monospace">Courier New</option>
+        </select>
+        <select class="nyx-fmt-select" style="width:52px;" onchange="nyxFmt('fontSize',this.value)" title="Font Size">
+          <option value="2">10</option>
+          <option value="3" selected>12</option>
+          <option value="4">14</option>
+          <option value="5">18</option>
+          <option value="6">24</option>
+        </select>
+        <div class="nyx-fmt-sep"></div>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('bold')" title="Bold"><b>B</b></button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('italic')" title="Italic"><i>I</i></button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('underline')" title="Underline"><u>U</u></button>
+        <div class="nyx-fmt-sep"></div>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyLeft')" title="Align Left">≡</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyCenter')" title="Center">≡</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyRight')" title="Align Right">≡</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyFull')" title="Justify">≡</button>
+        <div class="nyx-fmt-sep"></div>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('insertUnorderedList')" title="Bullet List">•</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('insertOrderedList')" title="Numbered List">1.</button>
+        <div class="nyx-fmt-sep"></div>
+        <select class="nyx-fmt-select" onchange="nyxFmtBlock(this.value)" title="Heading">
+          <option value="p">Normal</option>
+          <option value="h1">Heading 1</option>
+          <option value="h2">Heading 2</option>
+          <option value="h3">Heading 3</option>
+          <option value="blockquote">Quote</option>
+        </select>
+      </div>
+      <!-- Writing area — contenteditable for rich formatting -->
+      <div id="nyx-editor" class="nyx-editor-area" contenteditable="true" spellcheck="true" oninput="nyxSaveCurrentChapter();nyxUpdateStats()" data-placeholder="Start writing here — or ask Nyxen to generate content for this chapter..."></div>
+      <!-- AI Tools bar -->
+      <div class="nyx-tools-bar">
+        <button class="nyx-tool-btn" onclick="nyxTool('Write this chapter based on my story so far.')">✍ Write Chapter</button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Expand this section with more detail and description.')">📖 Expand</button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Rewrite this section to improve flow and clarity.')">🔄 Rewrite</button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Improve the writing style and grammar in this chapter.')">✨ Improve</button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Summarize the key events in this chapter.')">📝 Summarize</button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Create a detailed outline for the next chapter.')">🗂 Outline</button>
+      </div>
+    </div><!-- end editor panel -->
 
-      <!-- Welcome / feed -->
-      <div id="nyxenBotFeed" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;background:#fafafa;">
-        <div id="nyxenBotWelcome" style="text-align:center;padding:24px 20px;">
-          <img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" style="width:56px;height:56px;border-radius:14px;border:3px solid #d8b588;margin-bottom:12px;object-fit:cover;">
-          <p style="color:#1a1a1a;font-family:"Cinzel",serif;font-size:1.1rem;font-weight:700;color:#2c1e0f;margin-bottom:6px;">Hey, I'm Nyxen.</p>
-          <p style="color:#555;font-size:.9rem;line-height:1.7;max-width:400px;margin:0 auto;">Storyteller, creative companion, and keeper of your worlds. Ask me to write, review, create characters, or build an entire story.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;">
-            <button onclick="nyxenQuick('Tell me a story')" style="padding:7px 16px;border-radius:999px;border:1.5px solid #C9A040;background:#fff;color:#6b4a1a;font-size:.8rem;cursor:pointer;font-family:'Outfit',sans-serif;">Tell me a story</button>
-            <button onclick="nyxenQuick('Continue writing from where I left off')" style="padding:7px 16px;border-radius:999px;border:1.5px solid #C9A040;background:#fff;color:#6b4a1a;font-size:.8rem;cursor:pointer;font-family:'Outfit',sans-serif;">Continue writing</button>
-            <button onclick="nyxenQuick('Create a character for my story')" style="padding:7px 16px;border-radius:999px;border:1.5px solid #C9A040;background:#fff;color:#6b4a1a;font-size:.8rem;cursor:pointer;font-family:'Outfit',sans-serif;">Create a character</button>
-            <button onclick="nyxenQuick('Review my writing and suggest improvements')" style="padding:7px 16px;border-radius:999px;border:1.5px solid #C9A040;background:#fff;color:#6b4a1a;font-size:.8rem;cursor:pointer;font-family:'Outfit',sans-serif;">Review my writing</button>
-            <button onclick="nyxenQuick('Write a poem about my story')" style="padding:7px 16px;border-radius:999px;border:1.5px solid #C9A040;background:#fff;color:#6b4a1a;font-size:.8rem;cursor:pointer;font-family:'Outfit',sans-serif;">Write a poem</button>
+    <!-- CENTER BOTTOM: Nyxen Chat — same width as editor -->
+    <div class="nyx-chat-area">
+      <div class="nyx-chat-feed" id="nyxFeed">
+        <div class="nyxen-welcome" id="nyxWelcome">
+          <p style="font-size:9pt;color:var(--text-lt);line-height:1.6;">I'm here to help you craft your masterpiece. Ask me anything about your book.</p>
+          <div class="quick-btns" style="margin-top:8px;">
+            <button class="quick-btn" onclick="nyxQuick('Help me set up my book details and structure.')">📋 Set up my book</button>
+            <button class="quick-btn" onclick="nyxQuick('Write Chapter 1 of my book.')">✍ Write Chapter 1</button>
+            <button class="quick-btn" onclick="nyxQuick('Help me develop my main character.')">👤 Character help</button>
+            <button class="quick-btn" onclick="nyxQuick('Create a chapter-by-chapter outline for my story.')">🗂 Build outline</button>
           </div>
         </div>
       </div>
-
-      <!-- File preview -->
-      <div class="file-prev" id="nyxenBotFilePreview" style="margin:0;border-radius:0;border-left:none;border-right:none;">
-        <span>📄</span><span id="nyxenBotFileName" style="flex:1;"></span>
-        <span onclick="clearNyxenBotFile()" style="cursor:pointer;color:#8B5CA8;">✕</span>
-      </div>
-
-      <!-- Input -->
-      <div style="padding:12px 16px;border-top:1px solid #eee;background:#fff;display:flex;gap:8px;align-items:flex-end;">
-        <button class="nyx-up-btn" onclick="document.getElementById('nyxenBotFileInput').click()" title="Upload .docx" style="border-color:#E0CFA8;color:#6b4a1a;background:#FDF8F0;">+</button>
-        <input type="file" id="nyxenBotFileInput" accept=".docx" hidden onchange="nyxenBotHandleFile(event)">
-        <textarea id="nyxenBotInput" placeholder="Message Nyxen…" rows="1"
-          style="flex:1;padding:10px 14px;border-radius:10px;border:2px solid #E0CFA8;background:#fff;color:#1a1a1a;font-family:'Outfit',sans-serif;font-size:.9rem;outline:none;resize:none;line-height:1.5;transition:border-color .2s;"
-          onfocus="this.style.borderColor='#C9A040'" onblur="this.style.borderColor='#E0CFA8'"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxenBotSend();}"
+      <div class="nyx-chat-input-row">
+        <textarea class="nyx-chat-inp" id="nyxInput" placeholder="Ask Nyxen anything — Generate Chapter 1, Rewrite this section, Go to next chapter…" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxSend();}"
           oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
-        <button onclick="nyxenBotSend()" style="padding:10px 20px;background:#2C1E0F;color:#C9A040;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;flex-shrink:0;" onmouseover="this.style.background='#3A2810'" onmouseout="this.style.background='#2C1E0F'">Send</button>
+        <button class="nyx-send-btn" onclick="nyxSend()">➤</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Book Details + Templates + Notes (full height) -->
+    <div class="nyx-right-panel">
+
+      <!-- Nyxen header -->
+      <div class="nyx-right-header">
+        <img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen" class="nyx-avatar">
+        <div>
+          <div class="nyx-right-name">Nyxen</div>
+          <div class="nyx-right-sub" id="nyxStatus">AI Editor &amp; Creative Partner</div>
+        </div>
+        <span class="nyx-online-dot"></span>
       </div>
 
-      <!-- Export strip -->
-      <div style="padding:6px 16px;border-top:1px solid #eee;background:#F5ECD8;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <span style="font-family:"Cinzel",serif;font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b4a1a;margin-right:4px;">Export via Nyxen</span>
-        <button class="exp-btn" onclick="nyxenExport('txt')" style="border-color:#E0CFA8;color:#6b4a1a;">📄 .TXT</button>
-        <button class="exp-btn" onclick="nyxenExport('epub')" style="border-color:#E0CFA8;color:#6b4a1a;">📘 EPUB</button>
-        <button class="exp-btn" onclick="nyxenExport('voicestudio')" style="border-color:#E0CFA8;color:#6b4a1a;">🎙 Voice Studio</button>
-        <button class="exp-btn" onclick="nyxenExport('collections')" style="border-color:#E0CFA8;color:#6b4a1a;">📚 Collections</button>
-        <button class="exp-btn primary" onclick="nyxenExport('review')" style="background:#2C1E0F;color:#C9A040;border-color:#2D1249;">✦ Send to Nyxen</button>
-        <span id="nyxenBotExportStatus" style="font-size:.68rem;color:#6b4a1a;font-style:italic;margin-left:4px;"></span>
+      <!-- Tabs -->
+      <div class="nyx-tabs">
+        <button class="nyx-tab active" onclick="nyxSwitchTab('details',this)">Book Details</button>
+        <button class="nyx-tab" onclick="nyxSwitchTab('templates',this)">Templates</button>
+        <button class="nyx-tab" onclick="nyxSwitchTab('notes',this)">Notes</button>
       </div>
-    </div>
-  </div>
+
+      <!-- Book Details Tab -->
+      <div class="nyx-tab-content" id="nyx-tab-details">
+        <div class="nyx-field">
+          <label class="nyx-lbl">📖 Title</label>
+          <input type="text" id="nyx-title" class="nyx-inp" placeholder="Book title..." oninput="nyxUpdateBookDisplay()">
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">✍ Author</label>
+          <input type="text" id="nyx-author" class="nyx-inp" placeholder="Author name...">
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">© Copyright</label>
+          <input type="text" id="nyx-copyright" class="nyx-inp" placeholder="© 2026 Author Name. All rights reserved.">
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">📄 Description</label>
+          <textarea id="nyx-description" class="nyx-inp" rows="2" placeholder="Brief description..."></textarea>
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">🎭 Genre</label>
+          <select id="nyx-genre" class="nyx-inp">
+            <option value="">Select genre...</option>
+            <option>Fantasy</option><option>Romance</option><option>Mystery</option>
+            <option>Thriller</option><option>Sci-Fi</option><option>Supernatural</option>
+            <option>Horror</option><option>Fiction</option><option>Nonfiction</option>
+            <option>Biography</option><option>Poetry</option><option>Inspirational</option>
+          </select>
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">📚 Series</label>
+          <input type="text" id="nyx-series" class="nyx-inp" placeholder="Series (optional)...">
+        </div>
+        <div style="margin-top:6px;">
+          <div style="font-size:8pt;color:var(--text-lt);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Sections</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-prologue"> Prologue</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-dedication"> Dedication</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-toc" checked> TOC</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-epilogue"> Epilogue</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-about"> About Author</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;margin-top:7px;">
+          <label class="nyx-check" style="flex:1;justify-content:center;background:var(--gold-lt);border-radius:6px;padding:5px;border:1px solid var(--gold-bd);font-size:8pt;">
+            <input type="radio" name="nyx-format" value="epub" checked> 📘 EPUB
+          </label>
+          <label class="nyx-check" style="flex:1;justify-content:center;background:var(--gold-lt);border-radius:6px;padding:5px;border:1px solid var(--gold-bd);font-size:8pt;">
+            <input type="radio" name="nyx-format" value="manuscript"> 📄 Manuscript
+          </label>
+        </div>
+      </div>
+
+      <!-- Templates Tab -->
+      <div class="nyx-tab-content" id="nyx-tab-templates" style="display:none;">
+        <div style="font-size:9pt;color:var(--text-lt);margin-bottom:10px;">Choose a template to get started:</div>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('fiction')">📖 Fiction Novel</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('nonfiction')">📋 Non-Fiction Book</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('memoir')">💭 Memoir</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('poetry')">🌿 Poetry Collection</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('romance')">💕 Romance Novel</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('mystery')">🔍 Mystery / Thriller</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('childrens')">🌟 Children\'s Book</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('selfhelp')">💡 Self-Help / Inspirational</button>
+      </div>
+
+      <!-- Notes Tab -->
+      <div class="nyx-tab-content" id="nyx-tab-notes" style="display:none;">
+        <textarea id="nyx-notes" class="nyx-inp" placeholder="Your notes, ideas, character details, plot points..." style="width:100%;height:calc(100% - 8px);min-height:150px;resize:none;font-size:11pt;"></textarea>
+      </div>
+
+      <!-- Nyxen Chat -->
+
+    </div><!-- end right panel -->
+  </div><!-- end workspace -->
+
 </div>
-<!-- RESOURCES -->
-<div class="resources">
-  <div class="res-inner">
-    <div class="res-title">📚 Resources</div>
-    <div class="res-grid">
-      <div class="res-card">
-        <h4>✍️ Writing Tools</h4>
-        <a class="res-link" href="https://www.scrivener.com" target="_blank">Scrivener <span>→</span></a>
-        <a class="res-link" href="https://www.grammarly.com" target="_blank">Grammarly <span>→</span></a>
-        <a class="res-link" href="https://prowritingaid.com" target="_blank">ProWritingAid <span>→</span></a>
-        <a class="res-link" href="https://www.hemingwayapp.com" target="_blank">Hemingway Editor <span>→</span></a>
+</main>
+
+<!-- EXPORT MODAL -->
+<div class="nyx-export-modal" id="nyxExportModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nyx-export-box">
+    <div class="nyx-export-title">📤 Export Manuscript</div>
+    <div class="nyx-export-group">
+      <div class="nyx-export-group-label">Download to Device</div>
+      <div class="nyx-export-option" onclick="nyxExport('epub')">
+        <span class="nyx-export-option-icon">📘</span>
+        <div><div style="font-weight:600;">Download as EPUB</div><div style="font-size:8pt;color:var(--text-lt);">For publishing, audiobooks &amp; e-readers</div></div>
       </div>
-      <div class="res-card">
-        <h4>📖 Publishing Guides</h4>
-        <a class="res-link" href="https://kdp.amazon.com" target="_blank">KDP Formatting Guide <span>→</span></a>
-        <a class="res-link" href="https://calibre-ebook.com" target="_blank">Calibre EPUB Editor <span>→</span></a>
-        <a class="res-link" href="https://draft2digital.com" target="_blank">Draft2Digital <span>→</span></a>
-        <a class="res-link" href="https://www.epubcheck.org" target="_blank">EPUB Validator <span>→</span></a>
+      <div class="nyx-export-option" onclick="nyxExport('pdf')">
+        <span class="nyx-export-option-icon">📄</span>
+        <div><div style="font-weight:600;">Download as PDF</div><div style="font-size:8pt;color:var(--text-lt);">Print-ready format</div></div>
       </div>
-      <div class="res-card">
-        <h4>🎯 Story Development</h4>
-        <a class="res-link" href="https://nanowrimo.org" target="_blank">NaNoWriMo <span>→</span></a>
-        <a class="res-link" href="https://www.writersdigest.com" target="_blank">Writer's Digest <span>→</span></a>
-        <a class="res-link" href="https://www.masterclass.com/articles/how-to-write-a-novel" target="_blank">How to Write a Novel <span>→</span></a>
-        <a class="res-link" href="https://www.nytimes.com/interactive/2020/books/best-books.html" target="_blank">NYT Best Books <span>→</span></a>
+      <div class="nyx-export-option" onclick="nyxExport('docx')">
+        <span class="nyx-export-option-icon">📝</span>
+        <div><div style="font-weight:600;">Download as DOCX</div><div style="font-size:8pt;color:var(--text-lt);">Microsoft Word document</div></div>
       </div>
-      <div class="res-card">
-        <h4>🌎 Cantrell Creatives</h4>
-        <a class="res-link" href="https://creatives.smcantrellbooks.com/studio">Studio <span>→</span></a>
-        <a class="res-link" href="https://creatives.smcantrellbooks.com/voice-studio">Voice Studio <span>→</span></a>
-        <a class="res-link" href="https://creatives.smcantrellbooks.com/collections">Collections <span>→</span></a>
-        <a class="res-link" href="https://smcantrellbooks.com" target="_blank">S.M. Cantrell Books <span>→</span></a>
+      <div class="nyx-export-option" onclick="nyxExport('txt')">
+        <span class="nyx-export-option-icon">📃</span>
+        <div><div style="font-weight:600;">Download as TXT</div><div style="font-size:8pt;color:var(--text-lt);">Plain text file</div></div>
       </div>
     </div>
+    <div class="nyx-export-group">
+      <div class="nyx-export-group-label">Send to Platform</div>
+      <div class="nyx-export-option" onclick="nyxSendToEditor()">
+        <span class="nyx-export-option-icon">✏️</span>
+        <div><div style="font-weight:600;">Send to Book Editor</div><div style="font-size:8pt;color:var(--text-lt);">Open in full editor for final formatting</div></div>
+      </div>
+      <div class="nyx-export-option" onclick="nyxSendToCollections()">
+        <span class="nyx-export-option-icon">🚀</span>
+        <div><div style="font-weight:600;">Send to Collections</div><div style="font-size:8pt;color:var(--text-lt);">Publish to your storefront</div></div>
+      </div>
+    </div>
+    <div style="font-size:8pt;color:var(--text-lt);padding:8px;background:var(--gold-lt);border-radius:6px;border:1px solid var(--gold-bd);margin-bottom:8px;">
+      💡 To generate an audiobook, first export as EPUB then use the EPUB in Voice Studio.
+    </div>
+    <button class="nyx-export-close" onclick="document.getElementById('nyxExportModal').classList.remove('open')">Close</button>
   </div>
 </div>
 
@@ -465,575 +669,499 @@ html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;font-size:15px;
 
 <script>
 const NYXEN_API = 'https://nyxen-ai.onrender.com/api';
-var projects = JSON.parse(localStorage.getItem('pw_projects')||'[]');
-var activeProject = null;
-var chapters = [{id:1,title:'Chapter 1',content:''}];
-var activeChapter = 0;
-var pageCount = 1;
-var activePageId = 'page-1';
-var nyxenHistory = [];
-var nyxenPendingFile = null;
+var epubFile = null;
+var fileType = null;
 
-var nyxenConvos = JSON.parse(localStorage.getItem('nyxen_pw_convos')||'[]');
+/* ── NYX WORKSPACE ── */
+var nyxChapters = JSON.parse(localStorage.getItem('nyx_chapters')||'[]');
+var nyxActiveChap = 0;
 
-function renderNyxenConvos(){
-  var list = document.getElementById('nyxenConvoList');
+function nyxSaveWorkspace(){
+  localStorage.setItem('nyx_chapters', JSON.stringify(nyxChapters));
+}
+
+function nyxRenderChapters(){
+  var list = document.getElementById('nyx-chapter-list');
   if(!list) return;
-  if(!nyxenConvos.length){
-    list.innerHTML = '<div style="padding:12px 8px;text-align:center;color:rgba(255,255,255,.25);font-size:.72rem;font-style:italic;">Your chats appear here</div>';
-    return;
+  list.innerHTML = '';
+  if(nyxChapters.length === 0){
+    list.innerHTML = '<div style="font-size:8pt;color:var(--text-lt);padding:8px;font-style:italic;">No chapters yet</div>';
   }
-  list.innerHTML = nyxenConvos.map(function(c){
-    return '<div class="nyx-convo-item" onclick="loadNyxConvo(\"'+c.id+'\")">'+c.title+'</div>';
-  }).join('');
-}
-
-function init(){
-  projects.forEach(function(p){
-    if(p.title&&p.title.match(/^Chapter\s*\d+/i))p.title='';
-    if(p.name&&p.name.match(/^Chapter\s*\d+/i))p.name=p.title||'Untitled Book';
-  });
-  if(!projects.length){projects.push(makeProj());saveProjects();}
-  loadProject(projects[0]);
-  renderProjectList();
-  if(typeof renderNyxenConvos==='function') renderNyxenConvos();
-  setTimeout(function(){
-    addNyxMsg("Hello! I'm **Nyxen**, your writing assistant.\n\nI can help you write, review, develop characters, and export your manuscript. Upload a .docx or just ask me anything!", 'ai');
-  }, 500);
-}
-
-function makeProj(){
-  return {id:Date.now(),name:'New Book',title:'',author:'',genre:'Urban Fantasy',series:'',targetWords:80000,chapters:[{id:1,title:'Chapter 1',content:''}],created:new Date().toLocaleDateString()};
-}
-
-function getAllPages(){return document.querySelectorAll('.doc-page');}
-function getActivePage(){return document.getElementById(activePageId)||document.querySelector('.doc-page');}
-
-function getEditorContent(){
-  var pages=getAllPages(),html=[];
-  pages.forEach(function(p){html.push(p.innerHTML);});
-  return JSON.stringify(html);
-}
-function getEditorText(){
-  var t='';
-  getAllPages().forEach(function(p){t+=(p.innerText||p.textContent)+'\n\n';});
-  return t;
-}
-function setEditorContent(data){
-  var canvas=document.getElementById('pageCanvas');
-  var addBtn=canvas.querySelector('.add-page-btn');
-  canvas.querySelectorAll('.doc-page').forEach(function(p){p.remove();});
-  pageCount=0;
-  try{
-    var pages=JSON.parse(data);
-    if(Array.isArray(pages)&&pages.length){
-      pages.forEach(function(html){
-        pageCount++;
-        var pg=createPage(pageCount);
-        pg.innerHTML=html;
-        canvas.insertBefore(pg,addBtn);
-      });
-      renumberPages();return;
-    }
-  }catch(e){}
-  pageCount=1;
-  var pg=createPage(1);
-  if(data)pg.innerHTML=data;
-  canvas.insertBefore(pg,addBtn);
-  activePageId='page-1';
-}
-function createPage(num){
-  var p=document.createElement('div');
-  p.className='doc-page';p.id='page-'+num;
-  p.setAttribute('data-page-num',num);
-  p.setAttribute('contenteditable','true');
-  p.setAttribute('spellcheck','true');
-  p.setAttribute('data-placeholder','Continue writing…');
-  p.addEventListener('input',function(){onEditorInput(this);});
-  p.addEventListener('keydown',handleKey);
-  p.addEventListener('focus',function(){activePageId=this.id;});
-  return p;
-}
-function addPage(){
-  pageCount++;
-  var canvas=document.getElementById('pageCanvas');
-  var addBtn=canvas.querySelector('.add-page-btn');
-  var pg=createPage(pageCount);
-  canvas.insertBefore(pg,addBtn);
-  pg.focus();activePageId=pg.id;
-  renumberPages();saveProject();
-}
-function renumberPages(){
-  getAllPages().forEach(function(p,i){p.setAttribute('data-page-num',i+1);p.id='page-'+(i+1);});
-  pageCount=getAllPages().length;
-}
-function onEditorInput(pg){
-  // Auto add page when content exceeds page height
-  if(pg.scrollHeight > pg.offsetHeight + 100){
-    var pages = getAllPages();
-    if(pg === pages[pages.length-1]){
-      addPage();
-      // Move cursor to new page
-      var newPg = getAllPages()[getAllPages().length-1];
-      if(newPg){ newPg.focus(); }
-    }
-  }
-  updateStats();saveProject();
-}
-function handleKey(e){if(e.key==='Tab'){e.preventDefault();document.execCommand('insertHTML',false,'&nbsp;&nbsp;&nbsp;&nbsp;');}}
-function fmt(cmd,val){
-  var p=getActivePage();
-  if(p){
-    p.focus();
-    // Small delay to ensure focus is set before execCommand
-    setTimeout(function(){
-      try{ document.execCommand(cmd,false,val||null); }catch(e){}
-      updateStats();saveProject();
-    },10);
-  }
-}
-function setFont(f){var p=getActivePage();if(p)p.focus();document.execCommand('fontName',false,f);}
-function insertSceneBreak(){var p=getActivePage();if(p)p.focus();document.execCommand('insertHTML',false,'<p style="text-align:center;letter-spacing:.3em;color:#aaa;">— — —</p><p><br></p>');}
-function insertDialogue(){var p=getActivePage();if(p)p.focus();document.execCommand('insertHTML',false,'<p>\u201c\u201d</p>');}
-function doFind(){var f=prompt('Find:');if(!f)return;var r=prompt('Replace with:','');getAllPages().forEach(function(pg){if(r!==null)pg.innerHTML=pg.innerHTML.split(f).join(r||f);});updateStats();}
-function clearCurrentPage(){if(confirm('Clear this page?')){var p=getActivePage();if(p)p.innerHTML='';updateStats();saveProject();}}
-
-function updateStats(){
-  var text=getEditorText();
-  var words=text.trim()?text.trim().split(/\s+/).length:0;
-  var paras=text.split(/\n\n+/).filter(function(p){return p.trim().length>0;}).length;
-  var pages=getAllPages().length;
-  var target=parseInt(document.getElementById('targetWords').value)||80000;
-  var progress=Math.min(100,Math.round((words/target)*100));
-  document.getElementById('statWords').textContent=words.toLocaleString();
-  document.getElementById('statPages').textContent=pages;
-  document.getElementById('statProgress').textContent=progress+'%';
-  document.getElementById('statParas').textContent=paras;
-  document.getElementById('wordBar').textContent=words.toLocaleString()+' words · '+pages+' page'+(pages!==1?'s':'');
-}
-
-function saveProjects(){localStorage.setItem('pw_projects',JSON.stringify(projects));}
-function saveProject(){
-  if(!activeProject)return;
-  var bt=document.getElementById('bookTitle').value||'';
-  if(!bt.match(/^Chapter\s*\d+/i))activeProject.title=bt;
-  activeProject.author=document.getElementById('authorName').value;
-  activeProject.genre=document.getElementById('projectGenre').value;
-  activeProject.series=document.getElementById('projectSeries').value;
-  activeProject.targetWords=parseInt(document.getElementById('targetWords').value)||80000;
-  if(chapters[activeChapter]){
-    chapters[activeChapter].title=document.getElementById('chapterTitle').value;
-    chapters[activeChapter].content=getEditorContent();
-  }
-  activeProject.chapters=chapters;
-  activeProject.name=activeProject.title||'Untitled Book';
-  document.getElementById('metaBookTitle').value=activeProject.title||'';
-  document.getElementById('metaAuthor').value=activeProject.author||'';
-  saveProjects();renderProjectList();
-}
-function loadProject(project){
-  activeProject=project;
-  chapters=project.chapters||[{id:1,title:'Chapter 1',content:''}];
-  activeChapter=0;
-  var t=project.title||'';
-  if(t.match(/^Chapter\s*\d+/i))t='';
-  document.getElementById('bookTitle').value=t;
-  document.getElementById('metaBookTitle').value=t;
-  document.getElementById('authorName').value=project.author||'';
-  document.getElementById('metaAuthor').value=project.author||'';
-  document.getElementById('projectGenre').value=project.genre||'Urban Fantasy';
-  document.getElementById('projectSeries').value=project.series||'';
-  document.getElementById('targetWords').value=project.targetWords||80000;
-  loadChapter(0);renderChapterTabs();updateStats();
-}
-function renderProjectList(){
-  var list=document.getElementById('projectList');list.innerHTML='';
-  projects.forEach(function(p){
-    var d=document.createElement('div');
-    d.className='proj-item'+(activeProject&&p.id===activeProject.id?' active':'');
-    d.innerHTML='<span>📄</span><span class="proj-name">'+(p.name||'Untitled')+'</span><span class="proj-date">'+p.created+'</span><span class="proj-del" onclick="event.stopPropagation();deleteProject('+p.id+')">✕</span>';
-    d.onclick=function(){saveProject();loadProject(p);renderProjectList();};
+  nyxChapters.forEach(function(ch, i){
+    var d = document.createElement('div');
+    d.className = 'nyx-ch-item' + (i === nyxActiveChap ? ' active' : '');
+    d.innerHTML = '<span>📄</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + (ch.title || 'Chapter '+(i+1)) + '</span>';
+    d.onclick = (function(idx){ return function(){ nyxSaveCurrentChapter(); nyxLoadChapter(idx); }; })(i);
     list.appendChild(d);
   });
-}
-function newProject(){saveProject();var p=makeProj();projects.unshift(p);saveProjects();loadProject(p);renderProjectList();}
-function deleteProject(id){
-  if(!confirm('Delete this project?'))return;
-  projects=projects.filter(function(p){return p.id!=id;});
-  if(!projects.length)projects.push(makeProj());
-  saveProjects();loadProject(projects[0]);renderProjectList();
-}
-function renderChapterTabs(){
-  var tabs=document.getElementById('chapterTabs');tabs.innerHTML='';
-  chapters.forEach(function(ch,i){
-    var b=document.createElement('button');
-    b.className='ch-tab'+(i===activeChapter?' active':'');
-    b.textContent=ch.title||('Chapter '+(i+1));
-    b.onclick=(function(idx){return function(){saveCurrentChapter();loadChapter(idx);};})(i);
-    tabs.appendChild(b);
-  });
-}
-function loadChapter(idx){
-  activeChapter=idx;var ch=chapters[idx];if(!ch)return;
-  document.getElementById('chapterTitle').value=ch.title||'';
-  var canvas=document.getElementById('pageCanvas');
-  var addBtn=canvas.querySelector('.add-page-btn');
-  canvas.querySelectorAll('.doc-page').forEach(function(p){p.remove();});
-  pageCount=1;var pg=createPage(1);
-  canvas.insertBefore(pg,addBtn);activePageId='page-1';
-  if(ch.content)setEditorContent(ch.content);
-  updateStats();renderChapterTabs();
-}
-function saveCurrentChapter(){
-  if(chapters[activeChapter]){
-    chapters[activeChapter].title=document.getElementById('chapterTitle').value;
-    chapters[activeChapter].content=getEditorContent();
-  }
-}
-function addChapter(){saveCurrentChapter();chapters.push({id:Date.now(),title:'Chapter '+(chapters.length+1),content:''});loadChapter(chapters.length-1);saveProject();}
-function deleteChapter(){if(chapters.length===1){alert('Cannot delete the only chapter.');return;}if(!confirm('Delete?'))return;chapters.splice(activeChapter,1);loadChapter(Math.max(0,activeChapter-1));saveProject();}
-function updateChapterTitle(){if(chapters[activeChapter]){chapters[activeChapter].title=document.getElementById('chapterTitle').value;renderChapterTabs();}}
-
-function importManuscript(e){
-  var file=e.target.files[0];if(!file)return;
-  var status=document.getElementById('importStatus');
-  var ext=file.name.split('.').pop().toLowerCase();
-  status.textContent='Reading '+file.name+'...';
-  if(ext==='docx'){
-    if(typeof JSZip==='undefined'){status.textContent='JSZip not loaded.';return;}
-    var r=new FileReader();
-    r.onload=function(ev){
-      JSZip.loadAsync(ev.target.result).then(function(zip){
-        var doc=zip.files['word/document.xml'];
-        if(!doc){status.textContent='Cannot read DOCX.';return;}
-        return doc.async('text').then(function(xml){
-          // Parse paragraphs preserving only bold/italic
-          var paras = [];
-          var paraMatches = xml.match(/<w:p[ >][\s\S]*?<\/w:p>/g)||[];
-          paraMatches.forEach(function(para){
-            // Get paragraph alignment
-            var jc = (para.match(/w:jc w:val="([^"]+)"/) || [])[1] || '';
-            // Get runs
-            var runs = para.match(/<w:r[ >][\s\S]*?<\/w:r>/g)||[];
-            var lineText = '';
-            runs.forEach(function(run){
-              var rpr = (run.match(/<w:rPr>([\s\S]*?)<\/w:rPr>/) || ['',''])[1];
-              var bold = /<w:b[\/>]/.test(rpr) && !/<w:b w:val="0"/.test(rpr);
-              var italic = /<w:i[\/>]/.test(rpr) && !/<w:i w:val="0"/.test(rpr);
-              var tMatch = run.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/);
-              if(!tMatch) return;
-              var t = tMatch[1].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&apos;/g,"'").replace(/&quot;/g,'"');
-              if(bold && italic) t = '<b><i>'+t+'</i></b>';
-              else if(bold) t = '<b>'+t+'</b>';
-              else if(italic) t = '<i>'+t+'</i>';
-              lineText += t;
-            });
-            lineText = lineText.trim();
-            if(lineText) paras.push(lineText);
-          });
-          var text = paras.join('\n\n');
-          finishImport(text,file.name,status);
-        });
-      }).catch(function(err){status.textContent='Error: '+err.message;});
-    };
-    r.readAsArrayBuffer(file);
-  } else {
-    var reader=new FileReader();
-    reader.onload=function(ev){finishImport(ev.target.result,file.name,status);};
-    reader.readAsText(file);
-  }
-  e.target.value='';
-}
-function finishImport(text,filename,status){
-  var paras = text.split(/\n\n+/).filter(function(p){ return p.trim().length > 0; });
-
-  // Extract title (first short non-empty line) and author
-  var bookTitle = '';
-  var bookAuthor = '';
-  for(var li = 0; li < Math.min(paras.length, 8); li++){
-    var lp = paras[li].trim();
-    if(!bookTitle && lp.length > 1 && lp.length < 80 && !lp.match(/^(by\s|©|copyright|all rights|isbn|www|http|s\.m\.|smcantrell)/i)){
-      bookTitle = lp;
-    } else if(!bookAuthor && lp.match(/^s\.m\.|^s\.m\s/i)){
-      bookAuthor = lp;
-    } else if(!bookAuthor && bookTitle && lp.match(/^[A-Z][a-z]+\s+[A-Z][a-z]+$/) && lp.length < 40){
-      bookAuthor = lp;
-    }
-  }
-
-  // Find where TOC ends and real content begins
-  // Skip duplicate chapter listings (TOC) - find first para that is NOT a chapter heading and NOT front matter
-  var contentStart = 0;
-  var tocEnd = -1;
-  var inToc = false;
-  for(var pi = 0; pi < paras.length; pi++){
-    var p = paras[pi].trim();
-    if(p.match(/^table of contents/i)){ inToc = true; continue; }
-    if(inToc && p.match(/^chapter\s+\d+/i)){ tocEnd = pi; continue; }
-    if(tocEnd > 0 && !p.match(/^chapter\s+\d+/i) && p.length > 5){
-      // Check if next chapter heading appears soon (real content started)
-      if(p.match(/^chapter\s+\d+/i)){ contentStart = pi; break; }
-      if(pi > tocEnd + 3){ contentStart = pi - 1; break; }
-    }
-  }
-  if(contentStart === 0) contentStart = 0;
-
-  // Build chapters from content
-  var detectedChapters = [];
-  var curChTitle = 'Chapter 1';
-  var curParas = [];
-  var foundFirstChapter = false;
-
-  for(var pi = contentStart; pi < paras.length; pi++){
-    var p = paras[pi].trim();
-    // Main chapter heading: "Chapter X" or "Chapter X — Title"
-    var isMainChapter = p.match(/^chapter\s+\d+/i) && p.length < 100 && !p.match(/[.!?]$/);
-    // Epilogue/Prologue
-    var isSpecialChapter = p.match(/^(prologue|epilogue|afterword|foreword|preface)\b/i) && p.length < 80;
-
-    if((isMainChapter || isSpecialChapter)){
-      if(curParas.length > 0 && foundFirstChapter){
-        detectedChapters.push({title: curChTitle, paras: curParas});
-      }
-      curChTitle = p;
-      curParas = [];
-      foundFirstChapter = true;
-    } else if(foundFirstChapter){
-      // Part headings become h2 in content
-      if(p.match(/^part\s+\d+\s*[—\-]/i) && p.length < 100 && !p.match(/[.!?]$/)){
-        curParas.push('__HEADING__' + p);
-      } else {
-        curParas.push(p);
-      }
-    }
-  }
-  if(curParas.length > 0) detectedChapters.push({title: curChTitle, paras: curParas});
-  if(!detectedChapters.length) detectedChapters = [{title:'Chapter 1', paras: paras}];
-
-  // Build paginated chapters
-  var newChapters = [];
-  detectedChapters.forEach(function(ch, ci){
-    var chunks = []; var cur = ''; var wordCount = 0;
-    ch.paras.forEach(function(p){
-      if(p.indexOf('__HEADING__') === 0){
-        // Part heading - add as h2, counts toward page
-        if(wordCount > 200 && cur){ chunks.push(cur); cur = ''; wordCount = 0; }
-        cur += '<h2>' + p.replace('__HEADING__','') + '</h2>';
-        wordCount += 5;
-      } else {
-        var pw = p.split(/\s+/).length;
-        if(wordCount + pw > 250 && cur){ chunks.push(cur); cur = ''; wordCount = 0; }
-        cur += '<p>' + p + '</p>';
-        wordCount += pw;
-      }
-    });
-    if(cur) chunks.push(cur);
-    if(!chunks.length) chunks = [''];
-    newChapters.push({id: Date.now()+ci, title: ch.title, content: JSON.stringify(chunks)});
-  });
-
-  // Load into workspace
-  chapters = newChapters;
-  activeChapter = 0;
-  setEditorContent(newChapters[0].content);
-  document.getElementById('chapterTitle').value = newChapters[0].title;
-  renderChapterTabs();
-
-  // Set title and author
-  var titleEl = document.getElementById('bookTitle');
-  var metaTitleEl = document.getElementById('metaBookTitle');
-  var authorEl = document.getElementById('authorName');
-  var metaAuthorEl = document.getElementById('metaAuthor');
-  // Strip HTML tags and use filename if no title found
-  var cleanTitle = bookTitle ? bookTitle.replace(/<[^>]+>/g,'').trim() : filename.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ').trim();
-  var cleanAuthor = bookAuthor ? bookAuthor.replace(/<[^>]+>/g,'').trim() : '';
-  if(cleanTitle){ titleEl.value = cleanTitle; if(metaTitleEl) metaTitleEl.value = cleanTitle; }
-  if(cleanAuthor){ authorEl.value = cleanAuthor; if(metaAuthorEl) metaAuthorEl.value = cleanAuthor; }
-
-  updateStats(); saveProject();
-  var totalPages = newChapters.reduce(function(acc,ch){ try{ return acc+JSON.parse(ch.content).length; }catch(e){ return acc+1; } },0);
-  status.textContent = '\u2713 ' + newChapters.length + ' chapters · ' + totalPages + ' pages';
-}
-function exportManuscript(){
-  saveCurrentChapter();
-  var dest=document.querySelector('input[name="exportDest"]:checked').value;
-  var title=document.getElementById('bookTitle').value.trim()||'Untitled';
-  var author=document.getElementById('authorName').value.trim()||'';
-  var status=document.getElementById('exportStatus');
-  var fullText=chapters.map(function(ch){return (ch.title||'Chapter')+'\n\n'+(ch.content?ch.content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim():'');}).join('\n\n\n');
-  if(dest==='local'){
-    var blob=new Blob([fullText],{type:'text/plain'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title+'.txt';a.click();
-    status.textContent='✓ Downloaded';
-  } else if(dest==='voicestudio'){
-    localStorage.setItem('vs_incoming',JSON.stringify({title:title,author:author,content:fullText}));
-    status.textContent='✓ Sending…';
-    setTimeout(function(){location.href='https://creatives.smcantrellbooks.com/voice_studio';},1000);
-  } else if(dest==='collections'){
-    localStorage.setItem('collections_incoming',JSON.stringify({title:title,author:author}));
-    status.textContent='✓ Sending…';
-    setTimeout(function(){location.href='https://creatives.smcantrellbooks.com/collections';},1000);
-  } else if(dest==='epub'){
-    generateEPUB(title,author);
-  }
-}
-function generateEPUB(title,author){
-  if(typeof JSZip==='undefined'){alert('JSZip not loaded.');return;}
-  var zip=new JSZip();
-  zip.file('mimetype','application/epub+zip',{compression:'STORE'});
-  zip.file('META-INF/container.xml','<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/><\/rootfiles><\/container>');
-  zip.file('OEBPS/style.css','body{font-family:Georgia,serif;line-height:1.8;color:#1a1a1a;margin:1em 2em;}h1,h2{font-family:serif;}p{text-indent:1.5em;margin:0 0 0.4em;}');
-  var manifest='',spine='',toc='';
-  chapters.forEach(function(ch,i){
-    var id='ch'+(i+1);var fname=id+'.xhtml';
-    var body=ch.content?ch.content.replace(/<[^>]+>/g,' '):'';
-    var xhtml='<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="UTF-8"/><title>'+(ch.title||'Chapter')+'<\/title><link rel="stylesheet" type="text/css" href="style.css"/><\/head><body><h2>'+(ch.title||'Chapter')+'<\/h2><p>'+body+'<\/p><\/body><\/html>';
-    zip.file('OEBPS/'+fname,xhtml);
-    manifest+='<item id="'+id+'" href="'+fname+'" media-type="application/xhtml+xml"/>';
-    spine+='<itemref idref="'+id+'"/>';
-    toc+='<navPoint id="nav'+id+'" playOrder="'+(i+1)+'"><navLabel><text>'+(ch.title||'Chapter')+'<\/text><\/navLabel><content src="'+fname+'"/><\/navPoint>';
-  });
-  zip.file('OEBPS/content.opf','<?xml version="1.0"?><package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="uid"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>'+title+'<\/dc:title><dc:creator>'+author+'<\/dc:creator><dc:language>en<\/dc:language><dc:identifier id="uid">urn:uuid:pw-'+Date.now()+'<\/dc:identifier><\/metadata><manifest>'+manifest+'<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/><\/manifest><spine toc="ncx">'+spine+'<\/spine><\/package>');
-  zip.file('OEBPS/toc.ncx','<?xml version="1.0"?><ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1"><head><meta name="dtb:uid" content="uid"/><\/head><docTitle><text>'+title+'<\/text><\/docTitle><navMap>'+toc+'<\/navMap><\/ncx>');
-  zip.generateAsync({type:'blob'}).then(function(blob){
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title+'.epub';a.click();
-    document.getElementById('exportStatus').textContent='✓ EPUB downloaded!';
-  });
+  var cc = document.getElementById('nyx-chapter-count');
+  if(cc) cc.textContent = nyxChapters.length + ' chapter' + (nyxChapters.length !== 1 ? 's' : '');
 }
 
-function addNyxMsg(text,role,showInsert){
-  var feed=document.getElementById('nyxenBotFeed');
-  var d=document.createElement('div');d.className='n-msg '+role;
-  if(role==='ai'){
-    var rendered=typeof marked!=='undefined'?marked.parse(text):text.replace(/\n/g,'<br>');
-    d.innerHTML='<div class="n-lbl">NYXEN</div><div>'+rendered+'</div>';
-    if(showInsert){
-      var btn=document.createElement('button');btn.className='insert-btn';btn.textContent='→ Insert into document';
-      btn.onclick=(function(t){return function(){insertNyxenToDoc(t);};})(text);d.appendChild(btn);
-    }
-  } else {d.textContent=text;}
-  feed.appendChild(d);feed.scrollTop=feed.scrollHeight;
+function nyxLoadChapter(idx){
+  nyxActiveChap = idx;
+  var ch = nyxChapters[idx];
+  if(!ch) return;
+  var titleInp = document.getElementById('nyx-chapter-title');
+  var editor = document.getElementById('nyx-editor');
+  if(titleInp) titleInp.value = ch.title || '';
+  if(editor) editor.innerHTML = ch.content || '';
+  nyxUpdateStats();
+  nyxRenderChapters();
 }
-function insertNyxenToDoc(text){
-  var p=getActivePage();if(p)p.focus();
-  document.execCommand('insertHTML',false,'<p>'+text.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>');
-  updateStats();saveProject();
-}
-function showTyping(){
-  var feed=document.getElementById('nyxenBotFeed');
-  var d=document.createElement('div');d.className='n-msg ai';d.id='nyxBotTyping';
-  d.innerHTML='<div class="n-lbl">NYXEN</div><div class="typing-dots"><span></span><span></span><span></span></div>';
-  feed.appendChild(d);feed.scrollTop=feed.scrollHeight;
-}
-function removeTyping(){var el=document.getElementById('nyxBotTyping');if(el)el.remove();}
-function nyxenQuick(text){document.getElementById('nyxenBotInput').value=text;nyxenBotSend();}
-async function nyxenSend(){
-  var inp=document.getElementById('nyxenBotInput');
-  var text=inp.value.trim();if(!text)return;
-  inp.value='';inp.style.height='';
-  addNyxMsg(text,'user');
-  var ctx=getEditorText().substring(0,800);
-  var title=document.getElementById('bookTitle').value;
-  var ch=document.getElementById('chapterTitle').value;
-  var msg=text;
-  if(ctx)msg=text+'\n\n[Context — Book: "'+title+'", Chapter: "'+ch+'", Text: '+ctx+'...]';
-  if(nyxenPendingFile)msg=msg+'\n\n[Document: '+nyxenPendingFile+']';
-  nyxenHistory.push({role:'user',content:msg});
-  showTyping();
-  document.getElementById('nyxenBotStatus').textContent='Writing…';
-  try{
-    var body={messages:[{role:'user',content:msg}],mode:'storyteller',response_mode:'balanced',system_context:'Publishers Workspace on Cantrell Creatives. Help with manuscript writing. Plain prose, no markdown symbols.'};
-    if(window._nyxCid)body.conversation_id=window._nyxCid;
-    var resp=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    removeTyping();
-    var data=await resp.json();
-    if(data.conversation_id)window._nyxCid=data.conversation_id;
-    var reply=data.response||data.content||data.message||'Something went wrong.';
-    nyxenHistory.push({role:'assistant',content:reply});
-    addNyxMsg(reply,'ai',true);
-    document.getElementById('nyxenBotStatus').textContent='Writing assistant';
-    nyxenPendingFile=null;
-    document.getElementById('nyxenBotFilePreview').classList.remove('show');
-  }catch(err){
-    removeTyping();
-    addNyxMsg('Connection error. Please try again.','ai');
-    document.getElementById('nyxenBotStatus').textContent='Error';
-  }
-}
-function nyxenHandleFile(event){
-  var file=event.target.files[0];if(!file)return;
-  if(typeof JSZip==='undefined'){addNyxMsg('JSZip not loaded.','ai');return;}
-  var r=new FileReader();
-  r.onload=function(ev){
-    JSZip.loadAsync(ev.target.result).then(function(zip){
-      var doc=zip.files['word/document.xml'];
-      if(!doc){addNyxMsg('Cannot read .docx','ai');return;}
-      return doc.async('text').then(function(xml){
-        var text=xml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-        nyxenPendingFile=file.name+' ('+text.split(/\s+/).length.toLocaleString()+' words):\n'+text.substring(0,6000);
-        document.getElementById('nyxenBotFileName').textContent=file.name+' · '+text.split(/\s+/).length.toLocaleString()+' words';
-        document.getElementById('nyxenBotFilePreview').classList.add('show');
-        addNyxMsg('📄 **'+file.name+'** loaded. Ask me to review it!','ai');
-      });
-    }).catch(function(err){addNyxMsg('Error: '+err.message,'ai');});
+
+function nyxSaveCurrentChapter(){
+  if(nyxChapters.length === 0) return;
+  var titleInp = document.getElementById('nyx-chapter-title');
+  var editor = document.getElementById('nyx-editor');
+  nyxChapters[nyxActiveChap] = {
+    title: titleInp ? titleInp.value : ('Chapter '+(nyxActiveChap+1)),
+    content: editor ? editor.innerHTML : ''
   };
-  r.readAsArrayBuffer(file);
-  event.target.value='';
+  nyxSaveWorkspace();
+  nyxRenderChapters();
 }
-function clearNyxenFile(){nyxenPendingFile=null;document.getElementById('nyxenBotFilePreview').classList.remove('show');}
-function nyxenExport(type){
-  saveCurrentChapter();
-  var title=document.getElementById('bookTitle').value.trim()||'Untitled';
-  var author=document.getElementById('authorName').value.trim()||'';
-  var status=document.getElementById('nyxenBotExportStatus');
-  var fullText=chapters.map(function(ch){return (ch.title||'Chapter')+'\n\n'+(ch.content?ch.content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim():'');}).join('\n\n\n');
-  if(type==='txt'){
-    var blob=new Blob([fullText],{type:'text/plain'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=title+'.txt';a.click();
-    status.textContent='✓ Downloaded as .txt';
-  } else if(type==='epub'){
-    generateEPUB(title,author);status.textContent='✓ Generating EPUB…';
-  } else if(type==='voicestudio'){
-    localStorage.setItem('vs_incoming',JSON.stringify({title:title,author:author,content:fullText}));
-    status.textContent='✓ Sending to Voice Studio…';
-    setTimeout(function(){location.href='https://creatives.smcantrellbooks.com/voice_studio';},1000);
-  } else if(type==='collections'){
-    localStorage.setItem('collections_incoming',JSON.stringify({title:title,author:author}));
-    status.textContent='✓ Sending to Collections…';
-    setTimeout(function(){location.href='https://creatives.smcantrellbooks.com/collections';},1000);
-  } else if(type==='review'){
-    document.getElementById('nyxenBotInput').value='Please review my manuscript "'+title+'":\n\n'+fullText.substring(0,3000);
-    nyxenSend();status.textContent='✓ Sent to Nyxen!';
+
+function nyxAddChapter(){
+  nyxSaveCurrentChapter();
+  var num = nyxChapters.length + 1;
+  nyxChapters.push({title: 'Chapter ' + num, content: ''});
+  nyxActiveChap = nyxChapters.length - 1;
+  nyxSaveWorkspace();
+  nyxLoadChapter(nyxActiveChap);
+}
+
+function nyxUpdateStats(){
+  var editor = document.getElementById('nyx-editor');
+  if(!editor) return;
+  var text = editor.innerText || editor.textContent || '';
+  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  var wc = document.getElementById('nyx-word-count');
+  var cc = document.getElementById('nyx-char-count');
+  if(wc) wc.textContent = words.toLocaleString() + ' words';
+  if(cc) cc.textContent = text.length.toLocaleString() + ' chars';
+}
+
+function nyxUpdateBookDisplay(){
+  var titleInp = document.getElementById('nyx-title');
+  var disp = document.getElementById('nyx-book-title-display');
+  if(disp && titleInp) disp.textContent = titleInp.value || 'Untitled Book';
+  var author = document.getElementById('nyx-author');
+  var copyright = document.getElementById('nyx-copyright');
+  if(copyright && !copyright.value && author && author.value){
+    copyright.value = '\u00A9 ' + new Date().getFullYear() + ' ' + author.value + '. All rights reserved.';
   }
 }
 
-window.addEventListener('DOMContentLoaded', function(){
-  // Force clear if version mismatch
-  if(localStorage.getItem('pw_version') !== '2.1'){
-    localStorage.removeItem('pw_projects');
-    localStorage.removeItem('nyxen_pw_convos');
-    localStorage.setItem('pw_version','2.1');
+function nyxSwitchTab(tab, btn){
+  document.querySelectorAll('.nyx-tab-content').forEach(function(el){ el.style.display='none'; });
+  document.querySelectorAll('.nyx-tab').forEach(function(el){ el.classList.remove('active'); });
+  var el = document.getElementById('nyx-tab-'+tab);
+  if(el) el.style.display='block';
+  if(btn) btn.classList.add('active');
+}
+
+var nyxTemplates = {
+  fiction:    {title:'My Novel', chapters:['Chapter 1','Chapter 2','Chapter 3'], note:'Start with a hook that pulls the reader in immediately.'},
+  nonfiction: {title:'My Book', chapters:['Introduction','Chapter 1','Chapter 2','Conclusion'], note:'State your core argument clearly in the introduction.'},
+  memoir:     {title:'My Story', chapters:['The Beginning','Growing Up','The Turning Point','Today'], note:'Write in first person. Be honest and vulnerable.'},
+  poetry:     {title:'My Collection', chapters:['Part I','Part II','Part III'], note:'Each poem should stand alone but connect to the whole.'},
+  romance:    {title:'My Romance', chapters:['The Meeting','Building Connection','The Conflict','The Resolution'], note:'Focus on emotional tension between characters.'},
+  mystery:    {title:'My Mystery', chapters:['The Crime','The Investigation','Red Herrings','The Reveal'], note:'Plant clues early that seem innocent but matter later.'},
+  childrens:  {title:'My Story', chapters:['The Adventure Begins','The Challenge','The Happy Ending'], note:'Use simple language and vivid imagination.'},
+  selfhelp:   {title:'My Guide', chapters:['Introduction','Part 1: Understanding','Part 2: Action Steps','Conclusion'], note:'Each chapter should have one clear takeaway.'}
+};
+
+function nyxUseTemplate(type){
+  var t = nyxTemplates[type]; if(!t) return;
+  var titleInp = document.getElementById('nyx-title');
+  if(titleInp && !titleInp.value) titleInp.value = t.title;
+  nyxChapters = t.chapters.map(function(ch){ return {title:ch, content:''}; });
+  nyxActiveChap = 0;
+  nyxSaveWorkspace();
+  nyxLoadChapter(0);
+  nyxSwitchTab('details', document.querySelector('.nyx-tab'));
+  document.querySelector('.nyx-tab').classList.add('active');
+  nyxAddAiMsg('Template loaded: <strong>' + type + '</strong>. I\'ve set up ' + nyxChapters.length + ' chapters for you. ' + t.note + ' Ready to start writing?');
+}
+
+function nyxTool(prompt){
+  var editor = document.getElementById('nyx-editor');
+  var content = editor ? (editor.innerText || editor.textContent || '') : '';
+  var title = document.getElementById('nyx-chapter-title');
+  var bookTitle = document.getElementById('nyx-title');
+  var fullPrompt = prompt;
+  if(bookTitle && bookTitle.value) fullPrompt += ' Book: "' + bookTitle.value + '".';
+  if(title && title.value) fullPrompt += ' Current chapter: "' + title.value + '".';
+  if(content && content.length > 50) fullPrompt += ' Current content: ' + content.substring(0,400) + '...';
+  document.getElementById('nyxInput').value = fullPrompt;
+  nyxSend();
+}
+
+function nyxGetFullManuscript(){
+  nyxSaveCurrentChapter();
+  return {
+    title: document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '',
+    author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+    copyright: document.getElementById('nyx-copyright') ? document.getElementById('nyx-copyright').value : '',
+    description: document.getElementById('nyx-description') ? document.getElementById('nyx-description').value : '',
+    genre: document.getElementById('nyx-genre') ? document.getElementById('nyx-genre').value : '',
+    series: document.getElementById('nyx-series') ? document.getElementById('nyx-series').value : '',
+    format: document.querySelector('input[name="nyx-format"]:checked') ? document.querySelector('input[name="nyx-format"]:checked').value : 'epub',
+    chapters: nyxChapters
+  };
+}
+
+function nyxSendToEditor(){
+  var ms = nyxGetFullManuscript();
+  if(!ms.title && ms.chapters.length === 0){ alert('Please add a title and at least one chapter first.'); return; }
+  localStorage.setItem('be_incoming_project', JSON.stringify({
+    title: ms.title, author: ms.author, genre: ms.genre, series: ms.series,
+    fromWorkspace: true, format: ms.format,
+    chapters: ms.chapters,
+    nyxenContent: ms.chapters.map(function(ch){ return ch.title + '\n\n' + ch.content; }).join('\n\n\n')
+  }));
+  localStorage.setItem('be_has_incoming', '1');
+  location.href = 'https://creatives.smcantrellbooks.com/editor/';
+}
+
+function nyxSendToCollections(){
+  var ms = nyxGetFullManuscript();
+  localStorage.setItem('collections_incoming', JSON.stringify({
+    title: ms.title, author: ms.author, genre: ms.genre, series: ms.series, fromWorkspace: true
+  }));
+  document.getElementById('nyxExportModal').classList.remove('open');
+  location.href = 'https://creatives.smcantrellbooks.com/collections';
+}
+
+/* ── TOOLBAR FORMATTING ── */
+function nyxFmt(cmd, val){
+  var ed = document.getElementById('nyx-editor');
+  ed.focus();
+  document.execCommand(cmd, false, val || null);
+  nyxSaveCurrentChapter();
+}
+function nyxFmtBlock(tag){
+  var ed = document.getElementById('nyx-editor');
+  ed.focus();
+  document.execCommand('formatBlock', false, tag);
+  nyxSaveCurrentChapter();
+}
+
+/* ── EXPORT DOWNLOADS ── */
+function nyxExport(fmt){
+  var ms = nyxGetFullManuscript();
+  var title = ms.title || 'Manuscript';
+  var author = ms.author || '';
+  var copyright = ms.copyright || ('© ' + new Date().getFullYear() + ' ' + author + '. All rights reserved.');
+  var fullHTML = ms.chapters.map(function(ch){
+    return '<h1>' + (ch.title||'') + '</h1>' + (ch.content||'');
+  }).join('\n');
+  var fullText = ms.chapters.map(function(ch){
+    return (ch.title||'') + '\n\n' + (ch.content||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  }).join('\n\n\n');
+
+  if(fmt === 'txt'){
+    nyxDownload(title + '.txt', fullText, 'text/plain');
+
+  } else if(fmt === 'pdf'){
+    var win = window.open('','_blank');
+    win.document.write('<html><head><title>'+title+'</title><style>body{font-family:Georgia,serif;font-size:12pt;max-width:700px;margin:60px auto;line-height:1.8;color:#1a1a1a;}h1{font-size:16pt;margin:40px 0 16px;}</style></head><body>');
+    win.document.write('<h1 style="font-size:22pt;text-align:center;margin-bottom:6px;">'+title+'</h1>');
+    if(author) win.document.write('<p style="text-align:center;font-style:italic;margin-bottom:40px;">'+author+'</p>');
+    win.document.write(fullHTML);
+    win.document.write('<p style="margin-top:60px;font-size:9pt;color:#666;">'+copyright+'</p>');
+    win.document.write('</body></html>');
+    win.document.close();
+    win.print();
+
+  } else if(fmt === 'docx'){
+    // Basic DOCX via HTML blob — opens in Word
+    var docHTML = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Georgia,serif;font-size:12pt;margin:1in;line-height:1.8;}h1{font-size:16pt;}</style></head><body>';
+    docHTML += '<h1 style="font-size:22pt;text-align:center;">'+title+'</h1>';
+    if(author) docHTML += '<p style="text-align:center;font-style:italic;">'+author+'</p>';
+    docHTML += fullHTML;
+    docHTML += '<p style="margin-top:60px;font-size:9pt;color:#666;">'+copyright+'</p>';
+    docHTML += '</body></html>';
+    nyxDownload(title + '.doc', docHTML, 'application/msword');
+
+  } else if(fmt === 'epub'){
+    nyxBuildEPUB(ms, title, author, copyright, fullHTML);
   }
-  // Version check - if old data exists with large content, wipe it
-  var saved = localStorage.getItem('pw_projects');
-  if(saved){
-    try{
-      var ps = JSON.parse(saved);
-      var hasHugeContent = false;
-      ps.forEach(function(p){
-        if(p.chapters) p.chapters.forEach(function(ch){
-          if(ch.content && ch.content.length > 10000) hasHugeContent = true;
-        });
-      });
-      if(hasHugeContent){
-        localStorage.removeItem('pw_projects');
+
+  document.getElementById('nyxExportModal').classList.remove('open');
+}
+
+function nyxDownload(filename, content, mime){
+  var blob = new Blob([content], {type: mime});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function nyxBuildEPUB(ms, title, author, copyright, fullHTML){
+  if(typeof JSZip === 'undefined'){ alert('JSZip not loaded. Please refresh and try again.'); return; }
+  var zip = new JSZip();
+  var uid = 'urn:uuid:nyx-' + Date.now();
+  var year = new Date().getFullYear();
+
+  // mimetype
+  zip.file('mimetype', 'application/epub+zip');
+
+  // META-INF
+  zip.file('META-INF/container.xml',
+    '<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'+
+    '<rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>');
+
+  // Content OPF
+  var chapterItems = ms.chapters.map(function(ch,i){ return '<item id="ch'+i+'" href="ch'+i+'.xhtml" media-type="application/xhtml+xml"/>'; }).join('');
+  var chapterSpine = ms.chapters.map(function(ch,i){ return '<itemref idref="ch'+i+'"/>'; }).join('');
+  zip.file('OEBPS/content.opf',
+    '<?xml version="1.0" encoding="utf-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="uid">'+
+    '<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>'+title+'</dc:title>'+
+    '<dc:creator>'+author+'</dc:creator><dc:rights>'+copyright+'</dc:rights>'+
+    '<dc:language>en</dc:language><dc:identifier id="uid">'+uid+'</dc:identifier>'+
+    '<meta property="dcterms:modified">'+new Date().toISOString().replace(/\.\d+Z$/,'Z')+'</meta></metadata>'+
+    '<manifest><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>'+
+    chapterItems+'</manifest>'+
+    '<spine><itemref idref="nav" linear="no"/>'+chapterSpine+'</spine></package>');
+
+  // NAV
+  var navItems = ms.chapters.map(function(ch,i){ return '<li><a href="ch'+i+'.xhtml">'+(ch.title||'Chapter '+(i+1))+'</a></li>'; }).join('');
+  zip.file('OEBPS/nav.xhtml',
+    '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">'+
+    '<head><title>'+title+'</title></head><body><nav epub:type="toc"><h1>Contents</h1><ol>'+navItems+'</ol></nav></body></html>');
+
+  // Chapter files
+  var css = 'body{font-family:Georgia,serif;font-size:12pt;line-height:1.8;margin:1em 1.5em;color:#1a1a1a;}h1{font-size:16pt;margin:2em 0 .8em;}p{margin:.6em 0;}';
+  ms.chapters.forEach(function(ch, i){
+    var content = ch.content || '';
+    // If plain text, wrap in paragraphs
+    if(!/<[a-z]/i.test(content)){
+      content = content.split(/\n\n+/).map(function(p){ return '<p>'+p.trim()+'</p>'; }).join('');
+    }
+    zip.file('OEBPS/ch'+i+'.xhtml',
+      '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">'+
+      '<head><title>'+(ch.title||'Chapter '+(i+1))+'</title><style>'+css+'</style></head>'+
+      '<body><h1>'+(ch.title||'Chapter '+(i+1))+'</h1>'+content+'</body></html>');
+  });
+
+  zip.generateAsync({type:'blob', mimeType:'application/epub+zip'}).then(function(blob){
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = title + '.epub';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    // Also store in localStorage for Voice Studio use
+    var reader = new FileReader();
+    reader.onload = function(e){
+      try{
+        localStorage.setItem('pw_epub_b64', e.target.result);
+        localStorage.setItem('pw_epub_name', title + '.epub');
+      }catch(err){}
+    };
+    reader.readAsDataURL(blob);
+  });
+}
+
+/* ── FILE UPLOAD ── */
+function handleFileUpload(e){
+  var file = e.target.files[0]; if(!file) return;
+  routeFile(file); e.target.value = '';
+}
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('epubZone').classList.remove('dragover');
+  var file = e.dataTransfer.files[0]; if(file) routeFile(file);
+}
+function routeFile(file){
+  var ext = file.name.split('.').pop().toLowerCase();
+  if(ext === 'epub'){ fileType='epub'; setEpub(file); }
+  else if(ext === 'docx' || ext === 'pdf'){ fileType='doc'; setDoc(file); }
+  else { alert('Please upload an EPUB, DOCX, or PDF file.'); }
+}
+function setEpub(file){
+  epubFile = file;
+  document.getElementById('epubReady').classList.add('show');
+  document.getElementById('epubReadyIcon').textContent = '\ud83d\udcd8';
+  document.getElementById('epubReadyName').textContent = file.name + ' (' + Math.round(file.size/1024) + ' KB)';
+  document.getElementById('epubZone').style.display = 'none';
+  document.getElementById('epubActions').style.display = 'flex';
+  document.getElementById('docActions').style.display = 'none';
+  document.getElementById('epubPrompt').style.display = 'none';
+  var name = file.name.replace(/\.epub$/i,'').replace(/[-_]/g,' ');
+  if(document.getElementById('nyx-title') && !document.getElementById('nyx-title').value) document.getElementById('nyx-title').value = name;
+  var reader = new FileReader();
+  reader.onload = function(e){ try{ localStorage.setItem('pw_epub_b64', e.target.result); localStorage.setItem('pw_epub_name', file.name); }catch(err){} };
+  reader.readAsDataURL(file);
+}
+function setDoc(file){
+  epubFile = file;
+  document.getElementById('epubReady').classList.add('show');
+  document.getElementById('epubReadyIcon').textContent = file.name.endsWith('.pdf') ? '\ud83d\udcc4' : '\ud83d\udcdd';
+  document.getElementById('epubReadyName').textContent = file.name + ' (' + Math.round(file.size/1024) + ' KB)';
+  document.getElementById('epubZone').style.display = 'none';
+  document.getElementById('epubActions').style.display = 'none';
+  document.getElementById('docActions').style.display = 'flex';
+  document.getElementById('epubPrompt').style.display = 'none';
+  var name = file.name.replace(/\.(docx|pdf)$/i,'').replace(/[-_]/g,' ');
+  if(document.getElementById('nyx-title') && !document.getElementById('nyx-title').value) document.getElementById('nyx-title').value = name;
+}
+function clearEpub(){
+  epubFile = null; fileType = null;
+  localStorage.removeItem('pw_epub_b64'); localStorage.removeItem('pw_epub_name');
+  document.getElementById('epubReady').classList.remove('show');
+  document.getElementById('epubZone').style.display = '';
+  document.getElementById('epubActions').style.display = 'none';
+  document.getElementById('docActions').style.display = 'none';
+  document.getElementById('epubPrompt').style.display = '';
+}
+
+function goPublish(){
+  if(!epubFile){ alert('Please upload your EPUB first.'); return; }
+  localStorage.setItem('collections_incoming', JSON.stringify({
+    title: document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '',
+    author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+    series: document.getElementById('nyx-series') ? document.getElementById('nyx-series').value : '',
+    genre: document.getElementById('nyx-genre') ? document.getElementById('nyx-genre').value : '',
+    epubName: epubFile.name, epubB64Key: 'pw_epub_b64', fromEpub: true
+  }));
+  location.href = 'https://creatives.smcantrellbooks.com/collections';
+}
+function goAudiobook(){
+  var title = document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '';
+  var author = document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '';
+  var data = {title: title, author: author, fromWorkspace: true};
+  if(epubFile){ data.epubName = epubFile.name; data.epubB64Key = 'pw_epub_b64'; }
+  localStorage.setItem('vs_incoming', JSON.stringify(data));
+  fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
+  location.href = 'https://creatives.smcantrellbooks.com/voice-studio';
+}
+function goEditor(){
+  try{
+    localStorage.setItem('be_incoming_project', JSON.stringify({
+      title: document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '',
+      author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+      series: document.getElementById('nyx-series') ? document.getElementById('nyx-series').value : '',
+      genre: document.getElementById('nyx-genre') ? document.getElementById('nyx-genre').value : '',
+      fromWorkspace: true
+    }));
+    localStorage.setItem('be_has_incoming','1');
+  }catch(e){}
+  location.href = 'https://creatives.smcantrellbooks.com/editor/';
+}
+function goEditorWithFile(){
+  try{
+    localStorage.setItem('be_incoming_project', JSON.stringify({
+      title: document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '',
+      author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+      genre: document.getElementById('nyx-genre') ? document.getElementById('nyx-genre').value : '',
+      fromWorkspace: true
+    }));
+    localStorage.setItem('be_has_incoming','1');
+  }catch(e){}
+  location.href = 'https://creatives.smcantrellbooks.com/editor/';
+}
+function updateStructureHint(){}
+
+/* ── CHAT ── */
+function nyxAddAiMsg(html, showInsert){
+  var feed = document.getElementById('nyxFeed');
+  var welcome = document.getElementById('nyxWelcome');
+  if(welcome) welcome.style.display='none';
+  var d = document.createElement('div');
+  d.className = 'nyx-msg ai';
+  d.innerHTML = '<div class="nyx-msg-lbl">Nyxen</div><div>' + html + '</div>';
+  if(showInsert){
+    var plain = html.replace(/<[^>]+>/g,'');
+    var btn = document.createElement('button');
+    btn.className = 'nyx-insert-btn';
+    btn.textContent = '\u2192 Insert into chapter';
+    btn.onclick = function(){
+      var editor = document.getElementById('nyx-editor');
+      if(editor){
+        var pos = editor.selectionStart;
+        editor.focus();
+        document.execCommand('insertText', false, '\n\n' + plain);
+        nyxSaveCurrentChapter(); nyxUpdateStats();
       }
-    }catch(e){ localStorage.removeItem('pw_projects'); }
+    };
+    d.appendChild(btn);
   }
-  init();
+  feed.appendChild(d); feed.scrollTop = feed.scrollHeight;
+}
+function nyxAddUserMsg(text){
+  var feed = document.getElementById('nyxFeed');
+  var welcome = document.getElementById('nyxWelcome');
+  if(welcome) welcome.style.display='none';
+  var d = document.createElement('div');
+  d.className = 'nyx-msg user'; d.textContent = text;
+  feed.appendChild(d); feed.scrollTop = feed.scrollHeight;
+}
+function nyxQuick(text){ document.getElementById('nyxInput').value = text; nyxSend(); }
+
+async function nyxSend(){
+  var inp = document.getElementById('nyxInput');
+  var text = inp.value.trim(); if(!text) return;
+  inp.value=''; inp.style.height='';
+  nyxAddUserMsg(text);
+  var bookTitle = document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '';
+  var chapTitle = document.getElementById('nyx-chapter-title') ? document.getElementById('nyx-chapter-title').value : '';
+  var chapContent = document.getElementById('nyx-editor') ? (document.getElementById('nyx-editor').innerText||'').substring(0,600) : '';
+  var msg = text;
+  if(bookTitle||chapTitle){ msg += ' [Book: "'+bookTitle+'", Chapter: "'+chapTitle+'"'; if(chapContent) msg += ', Content so far: '+chapContent+'...'; msg += ']'; }
+  var feed = document.getElementById('nyxFeed');
+  var td = document.createElement('div');
+  td.className='nyx-msg ai'; td.id='nyxTyping';
+  td.innerHTML='<div class="nyx-msg-lbl">Nyxen</div><div style="display:inline-flex;gap:3px;align-items:center;"><span style="width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite;display:inline-block;"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite .2s;display:inline-block;"></span><span style="width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite .4s;display:inline-block;"></span></div>';
+  feed.appendChild(td); feed.scrollTop=feed.scrollHeight;
+  var status = document.getElementById('nyxStatus');
+  if(status) status.textContent='Writing\u2026';
+  try{
+    var body={messages:[{role:'user',content:msg}],mode:'storyteller',response_mode:'balanced',
+      system_context:'You are Nyxen, an AI creative writing assistant on the Cantrell Creatives Publisher Workspace. Help authors create books chapter by chapter. Write full rich prose when asked. Keep each chapter focused and consistent. Plain prose only — no markdown symbols like ** or ##.'};
+    if(window._nyxCid) body.conversation_id=window._nyxCid;
+    var resp=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    // If server sleeping, wait and retry once
+    if(resp.status===503||resp.status===502){
+      if(status) status.textContent='Waking up…';
+      await new Promise(function(r){setTimeout(r,4000);});
+      resp=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    }
+    var el=document.getElementById('nyxTyping'); if(el) el.remove();
+    var data=await resp.json();
+    if(data.conversation_id) window._nyxCid=data.conversation_id;
+    var reply=data.response||data.content||data.message||'Something went wrong.';
+    nyxAddAiMsg(reply, true);
+    if(status) status.textContent='AI Editor & Creative Partner';
+  }catch(err){
+    var el=document.getElementById('nyxTyping'); if(el) el.remove();
+    nyxAddAiMsg('Connection error. Please try again.');
+    if(status) status.textContent='Error \u2014 try again';
+  }
+}
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', function(){
+  // Wake up Nyxen API on page load
+  fetch(NYXEN_API+'/health').catch(function(){});
+  fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
+  localStorage.removeItem('pw_epub_b64');
+  localStorage.removeItem('pw_epub_name');
+  localStorage.removeItem('pw_epub_text');
+  localStorage.removeItem('pw_project');
+  if(nyxChapters.length === 0){
+    nyxChapters.push({title:'Chapter 1', content:''});
+    nyxSaveWorkspace();
+  }
+  nyxRenderChapters();
+  nyxLoadChapter(0);
 });
 </script>
 
+<!-- AUTH WIDGET -->
 <script>
 (function(){
   var n=localStorage.getItem('cc_user_name')||'';
@@ -1056,8 +1184,8 @@ window.addEventListener('DOMContentLoaded', function(){
         '<div class="auth-dropdown" id="authDropdown">'+
           '<div class="auth-dd-header"><div class="auth-dd-name">'+d+'</div><div class="auth-dd-email">'+e+'</div><div class="auth-dd-tier">'+tl+'</div></div>'+
           '<a class="auth-dd-item" href="'+aU+'">👤 My Account</a>'+
+          '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/editor/">📝 Book Editor</a>'+
           '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/studio">🎬 Studio</a>'+
-          '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#9997; Publishers Workspace</a>'+
           '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/voice-studio">🎙 Voice Studio</a>'+
           '<a class="auth-dd-item" href="https://creatives.smcantrellbooks.com/collections">📚 Collections</a>'+
           '<a class="auth-dd-item" href="https://smcantrellbooks.com">🌎 Main Store</a>'+
@@ -1072,160 +1200,6 @@ window.addEventListener('DOMContentLoaded', function(){
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',buildWidget);}else{buildWidget();}
 })();
-
-// ═══ NYXEN BOTTOM PANEL ═══
-var nyxenConvos = JSON.parse(localStorage.getItem('nyxen_pw_convos')||'[]');
-
-function renderNyxenConvos(){
-  var list = document.getElementById('nyxenConvoList');
-  if(!list) return;
-  if(!nyxenConvos.length){
-    list.innerHTML = '<div style="padding:12px 8px;text-align:center;color:rgba(255,255,255,.25);font-size:.72rem;font-style:italic;">Your chats appear here</div>';
-    return;
-  }
-  list.innerHTML = nyxenConvos.map(function(c){
-    return '<div class="nyx-convo-item" onclick="loadNyxConvo(\"'+c.id+'\")">'+c.title+'</div>';
-  }).join('');
-}
-
-function loadNyxConvo(id){
-  window._nyxBotCid = id;
-  renderNyxenConvos();
-}
-
-function nyxenNewChat(){
-  window._nyxBotCid = null;
-  var feed = document.getElementById('nyxenBotFeed');
-  if(feed){
-    feed.innerHTML = '<div id="nyxenBotWelcome" style="text-align:center;padding:24px 20px;">'
-      + '<img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" style="width:56px;height:56px;border-radius:14px;border:3px solid #d8b588;margin-bottom:12px;object-fit:cover;">'
-      + '<p style="color:#1a1a1a;font-family:Cinzel,serif;font-size:1.1rem;font-weight:700;margin-bottom:6px;">Hey, I am Nyxen.</p>'
-      + '<p style="color:#555;font-size:.9rem;line-height:1.7;max-width:400px;margin:0 auto;">What are we creating today?</p>'
-      + '</div>';
-  }
-  renderNyxenConvos();
-}
-function addNyxBotMsg(text, role, showInsert){
-  var feed = document.getElementById('nyxenBotFeed');
-  var welcome = document.getElementById('nyxenBotWelcome');
-  if(welcome) welcome.remove();
-  var d = document.createElement('div');
-  if(role==='ai'){
-    d.style.cssText='padding:14px 18px;border-radius:12px;background:#fff;border:1px solid #E8D9BF;color:#1a1a1a;font-family:"Outfit",sans-serif;font-size:.88rem;line-height:1.7;max-width:85%;align-self:flex-start;box-shadow:0 1px 4px rgba(0,0,0,.06);';
-    var rendered=typeof marked!=='undefined'?marked.parse(text):text.replace(/\n/g,'<br>');
-    d.innerHTML='<div style="font-size:.52rem;letter-spacing:.15em;color:#C9A040;margin-bottom:5px;font-weight:700;font-family:"Cinzel",serif;">NYXEN</div><div>'+rendered+'</div>';
-    if(showInsert){
-      var btn=document.createElement('button');
-      btn.style.cssText='display:inline-block;margin-top:8px;padding:4px 12px;background:transparent;border:1px solid #C9A040;border-radius:999px;font-family:"Cinzel",serif;font-size:.52rem;font-weight:600;letter-spacing:.06em;color:#6b4a1a;cursor:pointer;';
-      btn.textContent='→ Insert into document';
-      btn.onclick=(function(t){return function(){insertNyxenToDoc(t);};})(text);
-      d.appendChild(btn);
-    }
-  } else {
-    d.style.cssText='padding:12px 16px;border-radius:12px;background:#3A2810;color:#e8dcc8;font-family:"Outfit",sans-serif;font-size:.88rem;line-height:1.65;max-width:80%;align-self:flex-end;';
-    d.textContent=text;
-  }
-  feed.appendChild(d);
-  feed.scrollTop=feed.scrollHeight;
-
-  // Save to convo history
-  if(role==='ai' && window._nyxBotCid){
-    var existing = nyxenConvos.find(function(c){return c.id===window._nyxBotCid;});
-    if(!existing){
-      nyxenConvos.unshift({id:window._nyxBotCid, title:text.substring(0,40)+'...'});
-      nyxenConvos = nyxenConvos.slice(0,30);
-      localStorage.setItem('nyxen_pw_convos', JSON.stringify(nyxenConvos));
-      renderNyxenConvos();
-    }
-  }
-}
-var nyxenBotPendingFile = null;
-
-function addNyxBotMsg(text, role, showInsert){
-  var feed = document.getElementById('nyxenBotFeed');
-  var d = document.createElement('div'); d.className = 'n-msg '+role;
-  if(role==='ai'){
-    var rendered = typeof marked!=='undefined' ? marked.parse(text) : text.replace(/\n/g,'<br>');
-    d.innerHTML = '<div class="n-lbl">NYXEN</div><div>'+rendered+'</div>';
-    if(showInsert){
-      var btn = document.createElement('button'); btn.className='insert-btn'; btn.textContent='→ Insert into document';
-      btn.onclick=(function(t){return function(){insertNyxenToDoc(t);};})(text); d.appendChild(btn);
-    }
-  } else { d.textContent = text; }
-  feed.appendChild(d); feed.scrollTop=feed.scrollHeight;
-}
-
-async function nyxenBotSend(){
-  var inp = document.getElementById('nyxenBotInput');
-  var text = inp.value.trim(); if(!text) return;
-  inp.value=''; inp.style.height='';
-  addNyxBotMsg(text,'user');
-  var ctx = getEditorText().substring(0,2000);
-  var title = document.getElementById('bookTitle').value||'Untitled';
-  var author = document.getElementById('authorName').value||'';
-  var chTitle = document.getElementById('chapterTitle').value||'';
-  var msg = text;
-  var context = 'Book: "'+title+'"'+(author?' by '+author:'')+(chTitle?', Chapter: "'+chTitle+'"':'');
-  if(nyxenBotPendingFile){
-    msg = text+'\n\n[Uploaded manuscript — '+context+':\n'+nyxenBotPendingFile+']';
-  } else if(ctx && ctx.trim().length > 20){
-    msg = text+'\n\n[Current manuscript — '+context+':\n'+ctx+'...]';
-  } else {
-    msg = text+'\n\n['+context+' — workspace is empty, ready to create]';
-  }
-  // show typing
-  var feed=document.getElementById('nyxenBotFeed');
-  var welcome=document.getElementById('nyxenBotWelcome');if(welcome)welcome.remove();
-  var td=document.createElement('div');td.id='nyxBotTyping';
-  td.style.cssText='padding:14px 18px;border-radius:12px;background:#fff;border:1px solid #E8D9BF;max-width:85%;align-self:flex-start;';
-  td.innerHTML='<div style="font-size:.52rem;letter-spacing:.15em;color:#C9A040;margin-bottom:6px;font-weight:700;font-family:"Cinzel",serif;">NYXEN</div><div class="typing-dots"><span></span><span></span><span></span></div>';
-  feed.appendChild(td);feed.scrollTop=feed.scrollHeight;
-  document.getElementById('nyxenBotStatus').textContent='Writing…';
-  try{
-    var body={messages:[{role:'user',content:msg}],mode:'storyteller',response_mode:'balanced',system_context:'You are Nyxen, a creative AI writing assistant. You can CREATE full original stories from scratch, CONTINUE writing, REVIEW manuscripts, DEVELOP characters. When manuscript is provided use it as context. Write full rich prose immediately. Plain prose only.'};
-    if(window._nyxBotCid) body.conversation_id=window._nyxBotCid;
-    var resp=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    var el=document.getElementById('nyxBotTyping');if(el)el.remove();
-    var data=await resp.json();
-    if(data.conversation_id)window._nyxBotCid=data.conversation_id;
-    var reply=data.response||data.content||data.message||'Something went wrong.';
-    addNyxBotMsg(reply,'ai',true);
-    document.getElementById('nyxenBotStatus').textContent='Writing assistant';
-    nyxenBotPendingFile=null;
-    document.getElementById('nyxenBotFilePreview').classList.remove('show');
-  }catch(err){
-    var el=document.getElementById('nyxBotTyping');if(el)el.remove();
-    addNyxBotMsg('Connection error. Please try again.','ai');
-    document.getElementById('nyxenBotStatus').textContent='Error';
-  }
-}
-
-function nyxenBotHandleFile(event){
-  var file=event.target.files[0];if(!file)return;
-  if(typeof JSZip==='undefined'){addNyxBotMsg('JSZip not loaded.','ai');return;}
-  var r=new FileReader();
-  r.onload=function(ev){
-    JSZip.loadAsync(ev.target.result).then(function(zip){
-      var doc=zip.files['word/document.xml'];
-      if(!doc){addNyxBotMsg('Cannot read .docx','ai');return;}
-      return doc.async('text').then(function(xml){
-        var text=xml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-        nyxenBotPendingFile=file.name+':\n'+text.substring(0,6000);
-        document.getElementById('nyxenBotFileName').textContent=file.name+' · '+text.split(/\s+/).length.toLocaleString()+' words';
-        document.getElementById('nyxenBotFilePreview').classList.add('show');
-        addNyxBotMsg('📄 **'+file.name+'** loaded. Ask me to review it!','ai');
-      });
-    }).catch(function(err){addNyxBotMsg('Error: '+err.message,'ai');});
-  };
-  r.readAsArrayBuffer(file);
-  event.target.value='';
-}
-
-function clearNyxenBotFile(){
-  nyxenBotPendingFile=null;
-  document.getElementById('nyxenBotFilePreview').classList.remove('show');
-}
-
 </script>
 </body>
 </html>
