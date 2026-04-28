@@ -485,24 +485,20 @@ function init() {
           saveProjects();
         } else {
           // No EPUB data — build from metadata/structure
-          var s = incoming.structure || {};
-          var isEpub = incoming.format === 'epub' || !incoming.format;
           var chaps = [];
 
-          if (!isEpub) {
-            if (s.titlePage !== false) chaps.push({id: Date.now()+1, title: 'Title Page', content: '<h1>' + (incoming.title||'') + '</h1><p>' + (incoming.author||'') + '</p>'});
-            if (s.copyright)  chaps.push({id: Date.now()+2, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
-            if (s.dedication) chaps.push({id: Date.now()+3, title: 'Dedication', content: '<p><em>For...</em></p>'});
-            if (s.toc)        chaps.push({id: Date.now()+4, title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
-          }
-          if (s.prologue) chaps.push({id: Date.now()+5, title: 'Prologue', content: incoming.nyxenContent || ''});
-          chaps.push({id: Date.now()+6, title: 'Chapter 1', content: (!s.prologue && incoming.nyxenContent) ? incoming.nyxenContent : ''});
-          if (s.epilogue) chaps.push({id: Date.now()+7, title: 'Epilogue', content: ''});
-          if (isEpub) {
-            if (s.toc)        chaps.push({id: Date.now()+8,  title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
-            if (s.dedication) chaps.push({id: Date.now()+9,  title: 'Dedication', content: '<p><em>For...</em></p>'});
-            if (s.copyright)  chaps.push({id: Date.now()+10, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
-            if (s.aboutAuthor)chaps.push({id: Date.now()+11, title: 'About the Author', content: '<p><em>Write a short bio here...</em></p>'});
+          // If Publisher Workspace sent individual chapters, use them directly
+          if (incoming.chapters && incoming.chapters.length > 0) {
+            incoming.chapters.forEach(function(ch, idx) {
+              chaps.push({
+                id: Date.now() + idx,
+                title: ch.title || ('Chapter ' + (idx + 1)),
+                content: ch.content || ''
+              });
+            });
+          } else {
+            // Fallback: create a single chapter from concatenated content
+            chaps.push({id: Date.now()+6, title: 'Chapter 1', content: incoming.nyxenContent || ''});
           }
 
           var newProj = {
@@ -1229,20 +1225,48 @@ function importDocx(zip, filename, status) {
   }).then(function(xml) {
     if (!xml) return;
     var htmlOut = '';
-    var inTOC = false;
+    var tocFieldDepth = 0; // track nested field depth inside TOC
     var paragraphs = xml.match(/<w:p[ >][\s\S]*?<\/w:p>/gi) || [];
-    paragraphs.forEach(function(pXml) {
-      // Detect TOC field start/end and skip those paragraphs
-      if (/<w:instrText[^>]*>[^<]*TOC[^<]*<\/w:instrText>/i.test(pXml)) { inTOC = true; }
-      if (inTOC) {
-        // TOC ends when we hit a w:fldChar with w:fldCharType="end"
-        if (/w:fldCharType="end"/i.test(pXml)) { inTOC = false; }
-        return; // skip TOC paragraphs
+
+    // Detect SDT-based TOC blocks and collect their paragraph content to skip
+    var sdtTocContent = {};
+    var sdtMatches = xml.match(/<w:sdt>[\s\S]*?<\/w:sdt>/gi) || [];
+    sdtMatches.forEach(function(sdt) {
+      if (/<w:docPartGallery\s+w:val="Table of Contents"/i.test(sdt)) {
+        var sdtParagraphs = sdt.match(/<w:p[ >][\s\S]*?<\/w:p>/gi) || [];
+        sdtParagraphs.forEach(function(sp) { sdtTocContent[sp] = true; });
       }
-      // Also skip paragraphs with TOC-related styles
+    });
+
+    paragraphs.forEach(function(pXml) {
+      // Skip paragraphs inside SDT-based TOC blocks
+      if (sdtTocContent[pXml]) return;
+
+      // Track field nesting depth for complex TOC fields
+      var begins = (pXml.match(/w:fldCharType="begin"/gi) || []).length;
+      var ends = (pXml.match(/w:fldCharType="end"/gi) || []).length;
+
+      // Detect TOC field start
+      if (/<w:instrText[^>]*>[^<]*TOC[^<]*<\/w:instrText>/i.test(pXml)) {
+        tocFieldDepth = begins; // start tracking from this paragraph's nesting
+        return; // skip the TOC field start paragraph
+      }
+
+      if (tocFieldDepth > 0) {
+        // We're inside a TOC field — track nesting depth
+        tocFieldDepth += begins - ends;
+        if (tocFieldDepth < 0) tocFieldDepth = 0;
+        return; // skip all TOC paragraphs
+      }
+
+      // Also skip paragraphs with TOC-related styles or hyperlink-based TOC entries
       var styleMatch = pXml.match(/<w:pStyle\s+w:val="([^"]+)"/i);
       var styleId = styleMatch ? styleMatch[1] : '';
-      if (/^toc\d*$/i.test(styleId)) return; // skip TOC style paragraphs
+      if (/^toc\d*$/i.test(styleId) || /^TOCHeading$/i.test(styleId)) return;
+      // Skip paragraphs containing TOC hyperlinks (Word bookmarks like _Toc12345)
+      if (/<w:hyperlink\s[^>]*w:anchor="_Toc/i.test(pXml)) return;
+      // Skip w:fldSimple-based TOC entries
+      if (/<w:fldSimple\s[^>]*TOC[^>]*>/i.test(pXml)) return;
 
       var tag = stylesMap[styleId] || 'p';
       if (tag === 'p') {
@@ -1323,11 +1347,41 @@ function finishImportHTML(html, titleFound, filename, status) {
       if (!/^(chapter|prologue|epilogue)/i.test(chapterTitle)) return;
     }
 
-    // Deduplicate — skip if same title already added (TOC entries duplicate real chapters)
+    // Deduplicate — skip if same chapter number/identifier already exists
+    function normalizeTitle(t) {
+      return t.toLowerCase().trim()
+        .replace(/\s*[\u2014\u2013\-]+\s*/g, ' - ')
+        .replace(/\s+/g, ' ');
+    }
+    function chapterKey(t) {
+      var m = t.match(/^(chapter\s+\S+|prologue|epilogue|part\s+\S+)/i);
+      return m ? m[1].toLowerCase().replace(/\s+/g, ' ') : null;
+    }
+    var normTitle = normalizeTitle(chapterTitle);
+    var thisKey = chapterKey(chapterTitle);
     var alreadyExists = mainChapters.some(function(ch) {
-      return ch.title.toLowerCase().trim() === chapterTitle.toLowerCase().trim();
+      if (normalizeTitle(ch.title) === normTitle) return true;
+      if (thisKey) {
+        var existingKey = chapterKey(ch.title);
+        if (existingKey && existingKey === thisKey) return true;
+      }
+      return false;
     });
-    if (alreadyExists) return;
+    if (alreadyExists) {
+      // If this entry has more content than existing, replace the stub
+      if (thisKey && content && content.replace(/<[^>]+>/g,'').trim().length > 100) {
+        var existingIdx = -1;
+        mainChapters.some(function(ch, i) {
+          var ek = chapterKey(ch.title);
+          if (ek && ek === thisKey) { existingIdx = i; return true; }
+          return false;
+        });
+        if (existingIdx >= 0 && (!mainChapters[existingIdx].content || mainChapters[existingIdx].content.replace(/<[^>]+>/g,'').trim().length < 30)) {
+          mainChapters[existingIdx] = { id: mainChapters[existingIdx].id, title: chapterTitle, content: content };
+        }
+      }
+      return;
+    }
 
     mainChapters.push({
       id: Date.now() + mainChapters.length,
