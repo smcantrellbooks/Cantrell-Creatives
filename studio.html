@@ -194,8 +194,12 @@ html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);fon
           <div style="background:var(--panel);border-top:1px solid var(--border);padding:12px 16px;display:flex;gap:8px;align-items:center;margin:0 12px 12px;border-radius:0 0 8px 8px;">
             <input type="text" id="promptInput" placeholder="Describe your image…" onkeydown="if(event.key==='Enter')generateImage()" style="flex:1;padding:9px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:.95rem;outline:none;">
             <select id="imageModel" style="padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.82rem;outline:none;">
+              <optgroup label="── Cloudflare ──">
+              <option value="@cf/black-forest-labs/flux-1-schnell" selected>Flux 1 Schnell (Fast)</option>
+              <option value="@cf/leonardo/lucid-origin">Leonardo Lucid Origin</option>
+              <option value="@cf/leonardo/phoenix-1.0">Leonardo Phoenix 1.0</option>
+              </optgroup>
               <optgroup label="── Generate ──">
-              <option value="black-forest-labs/flux-1-schnell">Flux Schnell (Fast)</option>
               <option value="google/imagen-4">Imagen 4</option>
               <option value="bytedance/seedream-4.5">Seedream 4.5</option>
               <option value="wan-ai/wan2.6-image">Wan 2.6 Image</option>
@@ -208,7 +212,6 @@ html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);fon
               <option value="bytedance/seedream-4.5/edit">Seedream 4.5 Edit</option>
               <option value="ideogram-ai/ideogram-v2-turbo/edit">Ideogram v2 Edit</option>
               <option value="wan-ai/wan2.6-image-edit">Wan 2.6 Edit</option>
-              <option value="black-forest-labs/flux-2-flash/edit">Flux 2 Flash Edit</option>
               </optgroup>
             </select>
             <select id="imageStyle" style="padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.82rem;outline:none;">
@@ -313,23 +316,20 @@ html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);fon
           <div style="padding:16px;border-bottom:1px solid var(--border);">
             <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Voice</span>
             <select id="voiceSelect" style="width:100%;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.92rem;outline:none;">
-              <optgroup label="── Neutral ──">
-              <option value="voice_01">Alloy — Neutral, balanced</option>
+              <optgroup label="── Female ──">
+              <option value="thalia" selected>Thalia — Warm, theatrical</option>
+              <option value="cordelia">Cordelia — Soft, intimate</option>
+              <option value="hera">Hera — Commanding, authoritative</option>
+              <option value="electra">Electra — Dynamic, engaging</option>
               </optgroup>
               <optgroup label="── Male ──">
-              <option value="voice_02">Ash — Clear narrator</option>
-              <option value="voice_04">Echo — Smooth, calm</option>
-              <option value="voice_05" selected>Fable — British storyteller</option>
-              <option value="voice_07">Onyx — Deep, authoritative</option>
-              </optgroup>
-              <optgroup label="── Female ──">
-              <option value="voice_03">Coral — Warm, friendly</option>
-              <option value="voice_06">Nova — Bright, energetic</option>
-              <option value="voice_08">Sage — Professional</option>
-              <option value="voice_09">Shimmer — Cheerful, articulate</option>
+              <option value="odysseus">Odysseus — Storytelling, expressive</option>
+              <option value="zeus">Zeus — Commanding, powerful</option>
+              <option value="draco">Draco — Deep, dramatic</option>
+              <option value="neptune">Neptune — Smooth, flowing</option>
               </optgroup>
             </select>
-            <p style="font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;">OpenAI TTS HD — powered by Cantrell Creatives Voice Studio</p>
+            <p style="font-size:.75rem;color:var(--muted);margin-top:5px;line-height:1.5;">Deepgram Aura 2 — Cloudflare AI TTS</p>
           </div>
           <div style="padding:16px;border-bottom:1px solid var(--border);">
             <span style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;">Purpose</span>
@@ -741,7 +741,9 @@ function newProject(){
 }
 function toggleSettings(){document.getElementById('settingsPanel').style.transform=document.getElementById('settingsPanel').style.transform==='translateX(0px)'?'translateX(100%)':'translateX(0px)';}
 
-/* ═══ IMAGE GENERATION (apifree Flux) ═══ */
+/* ═══ IMAGE GENERATION ═══ */
+var CC_STUDIO = 'https://cc-studio.smcantrellbooks.workers.dev';
+
 async function generateImage(){
   var prompt=document.getElementById('promptInput').value.trim();
   if(!prompt){showToast('Enter a description','err');return;}
@@ -751,58 +753,63 @@ async function generateImage(){
   lc.style.display='flex';
   var style=document.getElementById('imageStyle').value;
   var fullPrompt=prompt+', '+style+', high quality, detailed';
+  var selectedModel=document.getElementById('imageModel').value;
+  var isCF=selectedModel.startsWith('@cf/');
+  var isEdit=selectedModel.indexOf('/edit')>-1||selectedModel.indexOf('-edit')>-1;
+
+  if(isEdit){
+    var srcImg=document.getElementById('cImg');
+    if(!srcImg||srcImg.style.display==='none'||!srcImg.src||srcImg.src===window.location.href){
+      showToast('Edit models need a source image on canvas first','err');
+      lc.style.display='none';es.style.display='';return;
+    }
+  }
 
   try {
-    // Build request body
-    var selectedModel=document.getElementById('imageModel').value;
-    var isEdit=selectedModel.indexOf('/edit')>-1||selectedModel.indexOf('-edit')>-1;
-    var reqBody={model:selectedModel,prompt:fullPrompt,num_images:1,width:1024,height:1024};
-    // For edit models, include source image from canvas
-    if(isEdit){
-      var srcImg=document.getElementById('cImg');
-      if(!srcImg||srcImg.style.display==='none'||!srcImg.src){
-        showToast('Edit models need a source image on canvas first','err');
-        lc.style.display='none';es.style.display='';return;
+    var blobUrl;
+    if(isCF){
+      var reqBody={prompt:fullPrompt,model:selectedModel};
+      var res=await fetch(CC_STUDIO+'/image',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(reqBody)});
+      if(!res.ok) throw new Error('Worker error '+res.status);
+      var blob=await res.blob();
+      blobUrl=URL.createObjectURL(blob);
+    } else {
+      var reqBody={model:selectedModel,prompt:fullPrompt,num_images:1,width:1024,height:1024};
+      if(isEdit){var srcImg=document.getElementById('cImg');if(srcImg&&srcImg.src) reqBody.image_url=srcImg.src;}
+      var submitRes=await fetch(APIFREE_BASE+'/v1/image/submit',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
+        body:JSON.stringify(reqBody)
+      });
+      var submitData=await submitRes.json();
+      if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed');
+      var requestId=submitData.resp_data.request_id;
+      var maxWait=120000,start=Date.now();
+      while(Date.now()-start<maxWait){
+        await new Promise(function(r){setTimeout(r,3000);});
+        var pollRes=await fetch(APIFREE_BASE+'/v1/image/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
+        var pollData=await pollRes.json();
+        if(pollData.resp_data&&pollData.resp_data.status==='success'){
+          var imgUrl=pollData.resp_data.image_list&&pollData.resp_data.image_list[0];
+          if(!imgUrl) throw new Error('No image URL');
+          var imgResp=await fetch(imgUrl,{referrerPolicy:'no-referrer'});
+          var imgBlob=await imgResp.blob();
+          blobUrl=URL.createObjectURL(imgBlob);
+          break;
+        }
+        if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
       }
-      reqBody.image_url=srcImg.src;
+      if(!blobUrl) throw new Error('Generation timed out');
     }
-    // Submit
-    var submitRes=await fetch(APIFREE_BASE+'/v1/image/submit',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
-      body:JSON.stringify(reqBody)
-    });
-    var submitData=await submitRes.json();
-    if(!submitData.resp_data||!submitData.resp_data.request_id) throw new Error('Submit failed');
-    var requestId=submitData.resp_data.request_id;
-
-    // Poll
-    var maxWait=120000,start=Date.now();
-    while(Date.now()-start<maxWait){
-      await new Promise(function(r){setTimeout(r,3000);});
-      var pollRes=await fetch(APIFREE_BASE+'/v1/image/'+requestId+'/result',{headers:{'Authorization':'Bearer '+APIFREE_KEY}});
-      var pollData=await pollRes.json();
-      if(pollData.resp_data&&pollData.resp_data.status==='success'){
-        var imgUrl=(pollData.resp_data.image_list&&pollData.resp_data.image_list[0]);
-        if(!imgUrl) throw new Error('No image URL in result');
-        // Fetch as blob to bypass CDN Referer ACL
-        var imgResp=await fetch(imgUrl,{referrerPolicy:'no-referrer'});
-        var imgBlob=await imgResp.blob();
-        var blobUrl=URL.createObjectURL(imgBlob);
-        lc.style.display='none';
-        if(bgVid) bgVid.style.display='none';
-        document.getElementById('ES').style.display='none';
-        img.src=blobUrl;img.style.display='block';
-        addAsset({type:'image',src:blobUrl,name:prompt.substring(0,30)});
-        addSidePreview(blobUrl,prompt.substring(0,20));
-        applyAdjustments();
-        usage.img++;updateUsagePanel();
-        showToast('Image generated!','ok');
-        return;
-      }
-      if(pollData.resp_data&&pollData.resp_data.status==='failed') throw new Error('Generation failed');
-    }
-    throw new Error('Generation timed out');
+    lc.style.display='none';
+    if(bgVid) bgVid.style.display='none';
+    es.style.display='none';
+    img.src=blobUrl;img.style.display='block';
+    addAsset({type:'image',src:blobUrl,name:prompt.substring(0,30)});
+    addSidePreview(blobUrl,prompt.substring(0,20));
+    applyAdjustments();
+    usage.img++;updateUsagePanel();
+    showToast('Image generated!','ok');
   } catch(err){
     lc.style.display='none';es.style.display='';
     showToast('Image error: '+err.message,'err');
@@ -875,9 +882,9 @@ function generateVoiceover(){
   btn.disabled=true;btn.textContent='Generating…';
   updateStatus('processing','Generating voiceover…');
 
-  var CC_API='https://cantrell-creatives.onrender.com/api';
+  var CC_WORKER='https://cantrell-creatives.smcantrellbooks.workers.dev';
 
-  fetch(CC_API+'/tts',{
+  fetch(CC_WORKER,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({text:script,voice_id:voiceId,speed:speed})
@@ -1401,7 +1408,7 @@ async function generateFaceSwap(){
   var btn=document.getElementById('genFaceSwapBtn');
   btn.disabled=true;btn.textContent='Swapping…';
   try {
-    var submitRes=await fetch(APIFREE_BASE+'/v1/image/submit',{
+    var submitRes=await fetch('https://cc-studio.smcantrellbooks.workers.dev/image',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+APIFREE_KEY},
       body:JSON.stringify({model:'bytedance/seedream-4.5/edit',prompt:'swap the face with the source face, keep everything else identical',image_url:targetUrl,source_image_url:sourceUrl,num_images:1})
@@ -1691,16 +1698,16 @@ function sendStudioNyx(){
   addStudioNyxMsg(msg,'user'); inp.value='';
   studioNyxHistory.push({role:'user',content:msg});
   document.getElementById('studioNyxStatus').textContent='Thinking…';
-  var body={messages:studioNyxHistory.slice(-20),mode:'assistant',response_mode:'balanced'};
-  if(studioNyxConvId) body.conversation_id=studioNyxConvId;
-  fetch('https://nyxen-ai.onrender.com/api/chat',{
+  var body={messages:studioNyxHistory.slice(-20),mode:'deep'};
+  
+  fetch('https://nyxen-standalone.smcantrellbooks.workers.dev/chat',{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify(body)
   })
   .then(function(r){return r.json();})
   .then(function(d){
-    var reply=d.response||d.content||"I'm here! How can I help?";
-    if(d.conversation_id) studioNyxConvId=d.conversation_id;
+    var reply=d.response||d.content||d.message||'Something went wrong, please try again.';
+    
     studioNyxHistory.push({role:'assistant',content:reply});
     addStudioNyxMsg(reply,'ai');
     document.getElementById('studioNyxStatus').textContent='Your creative assistant';
