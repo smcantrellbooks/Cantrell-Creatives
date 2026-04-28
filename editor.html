@@ -337,17 +337,10 @@ textarea.inp{resize:vertical;line-height:1.85;}
             <input type="radio" name="edExport" value="pdf">
             PDF <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(ebook / print-ready — includes TOC)</span>
           </label>
-          <label class="radio-opt">
-            <input type="radio" name="edExport" value="html">
-            HTML <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(formatted web document)</span>
-          </label>
-          <label class="radio-opt">
-            <input type="radio" name="edExport" value="txt">
-            Plain Text <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(download .txt)</span>
-          </label>
+
           <label class="radio-opt">
             <input type="radio" name="edExport" value="voicestudio">
-            Voice Studio <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(send to audiobook pipeline — EPUB only)</span>
+            Voice Studio <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(auto-converts to EPUB for audiobook pipeline)</span>
           </label>
           <label class="radio-opt">
             <input type="radio" name="edExport" value="collections">
@@ -459,52 +452,73 @@ function init() {
     localStorage.removeItem('be_has_incoming');
     try {
       var incoming = JSON.parse(localStorage.getItem('be_incoming_project') || '{}');
-      if (incoming.fromWorkspace && incoming.title) {
-        // Clear old projects — start fresh with the incoming book
+      if (incoming.fromWorkspace) {
+        // Clear old projects completely — start fresh
         projects = [];
-        var s = incoming.structure || {};
-        var isEpub = incoming.format === 'epub' || !incoming.format;
-        var chaps = [];
-
-        // FRONT MATTER — for manuscript format, or always title page
-        if (!isEpub) {
-          if (s.titlePage !== false) chaps.push({id: Date.now()+1, title: 'Title Page', content: '<h1>' + (incoming.title||'') + '</h1><p>' + (incoming.author||'') + '</p>'});
-          if (s.copyright)  chaps.push({id: Date.now()+2, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
-          if (s.dedication) chaps.push({id: Date.now()+3, title: 'Dedication', content: '<p><em>For...</em></p>'});
-          if (s.toc)        chaps.push({id: Date.now()+4, title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
-        }
-
-        // OPTIONAL FRONT SECTIONS
-        if (s.prologue) chaps.push({id: Date.now()+5, title: 'Prologue', content: incoming.nyxenContent || ''});
-
-        // MAIN CONTENT
-        chaps.push({id: Date.now()+6, title: 'Chapter 1', content: (!s.prologue && incoming.nyxenContent) ? incoming.nyxenContent : ''});
-
-        // OPTIONAL BACK SECTIONS
-        if (s.epilogue)    chaps.push({id: Date.now()+7, title: 'Epilogue', content: ''});
-
-        // BACK MATTER — for EPUB format
-        if (isEpub) {
-          if (s.toc)        chaps.push({id: Date.now()+8,  title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
-          if (s.dedication) chaps.push({id: Date.now()+9,  title: 'Dedication', content: '<p><em>For...</em></p>'});
-          if (s.copyright)  chaps.push({id: Date.now()+10, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
-          if (s.aboutAuthor)chaps.push({id: Date.now()+11, title: 'About the Author', content: '<p><em>Write a short bio here...</em></p>'});
-        }
-
-        var newProj = {
-          id: Date.now(), name: incoming.title || 'New Book',
-          title: incoming.title || '', author: incoming.author || '',
-          genre: incoming.genre || 'Urban Fantasy', series: incoming.series || '',
-          targetWords: incoming.targetWords || 80000,
-          format: incoming.format || 'epub',
-          chapters: chaps,
-          created: new Date().toLocaleDateString()
-        };
-        projects.push(newProj);
-        saveProjects();
+        localStorage.removeItem('be_projects');
         localStorage.removeItem('be_incoming_project');
+
+        // Check for actual EPUB file data from workspace
+        var epubB64 = incoming.epubB64Key ? localStorage.getItem(incoming.epubB64Key) : null;
+        if (epubB64 && typeof JSZip !== 'undefined') {
+          // Store for processing after CKEditor initializes
+          window._pendingEpubImport = {
+            dataUrl: epubB64,
+            title: incoming.title || '',
+            author: incoming.author || '',
+            genre: incoming.genre || 'Urban Fantasy',
+            series: incoming.series || ''
+          };
+          localStorage.removeItem(incoming.epubB64Key);
+          localStorage.removeItem('pw_epub_name');
+
+          // Create a placeholder project (will be populated by EPUB import)
+          var placeholderProj = {
+            id: Date.now(), name: incoming.title || 'New Book',
+            title: incoming.title || '', author: incoming.author || '',
+            genre: incoming.genre || 'Urban Fantasy', series: incoming.series || '',
+            targetWords: 80000,
+            chapters: [{id: 1, title: 'Loading...', content: ''}],
+            created: new Date().toLocaleDateString()
+          };
+          projects.push(placeholderProj);
+          saveProjects();
+        } else {
+          // No EPUB data — build from metadata/structure
+          var s = incoming.structure || {};
+          var isEpub = incoming.format === 'epub' || !incoming.format;
+          var chaps = [];
+
+          if (!isEpub) {
+            if (s.titlePage !== false) chaps.push({id: Date.now()+1, title: 'Title Page', content: '<h1>' + (incoming.title||'') + '</h1><p>' + (incoming.author||'') + '</p>'});
+            if (s.copyright)  chaps.push({id: Date.now()+2, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
+            if (s.dedication) chaps.push({id: Date.now()+3, title: 'Dedication', content: '<p><em>For...</em></p>'});
+            if (s.toc)        chaps.push({id: Date.now()+4, title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
+          }
+          if (s.prologue) chaps.push({id: Date.now()+5, title: 'Prologue', content: incoming.nyxenContent || ''});
+          chaps.push({id: Date.now()+6, title: 'Chapter 1', content: (!s.prologue && incoming.nyxenContent) ? incoming.nyxenContent : ''});
+          if (s.epilogue) chaps.push({id: Date.now()+7, title: 'Epilogue', content: ''});
+          if (isEpub) {
+            if (s.toc)        chaps.push({id: Date.now()+8,  title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
+            if (s.dedication) chaps.push({id: Date.now()+9,  title: 'Dedication', content: '<p><em>For...</em></p>'});
+            if (s.copyright)  chaps.push({id: Date.now()+10, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
+            if (s.aboutAuthor)chaps.push({id: Date.now()+11, title: 'About the Author', content: '<p><em>Write a short bio here...</em></p>'});
+          }
+
+          var newProj = {
+            id: Date.now(), name: incoming.title || 'New Book',
+            title: incoming.title || '', author: incoming.author || '',
+            genre: incoming.genre || 'Urban Fantasy', series: incoming.series || '',
+            targetWords: incoming.targetWords || 80000,
+            format: incoming.format || 'epub',
+            chapters: chaps.length > 0 ? chaps : [{id: 1, title: 'Chapter 1', content: ''}],
+            created: new Date().toLocaleDateString()
+          };
+          projects.push(newProj);
+          saveProjects();
+        }
       }
-    } catch(e) {}
+    } catch(e) { console.error('Incoming project error:', e); }
   }
 
   // Clear corrupted projects — detect JS code in chapter content
@@ -634,6 +648,37 @@ function initCKEditor() {
         }, 500);
       });
       updateStats();
+
+      // Process pending EPUB import from Publisher Workspace
+      if (window._pendingEpubImport) {
+        var pending = window._pendingEpubImport;
+        window._pendingEpubImport = null;
+        try {
+          var dataUrl = pending.dataUrl;
+          var base64 = dataUrl.indexOf(',') >= 0 ? dataUrl.split(',')[1] : dataUrl;
+          var binary = atob(base64);
+          var bytes = new Uint8Array(binary.length);
+          for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+          // Set title/author in DOM before import
+          if (pending.title) document.getElementById('bookTitle').value = pending.title;
+          if (pending.author) document.getElementById('authorName').value = pending.author;
+          if (pending.genre) document.getElementById('projectGenre').value = pending.genre;
+          if (pending.series) document.getElementById('projectSeries').value = pending.series;
+
+          var status = document.getElementById('importStatus');
+          if (status) status.textContent = 'Processing EPUB from workspace...';
+
+          JSZip.loadAsync(bytes.buffer).then(function(zip) {
+            importEpub(zip, (pending.title || 'book') + '.epub', status || {textContent:'', innerHTML:''});
+          }).catch(function(err) {
+            console.error('EPUB import failed:', err);
+            if (status) status.textContent = 'EPUB import failed: ' + err.message;
+          });
+        } catch(e) {
+          console.error('EPUB processing error:', e);
+        }
+      }
     })
     .catch(function(err) {
       console.error('CKEditor init error:', err);
@@ -737,6 +782,12 @@ function deleteProject() {
   var idx = projects.indexOf(activeProject);
   projects.splice(idx, 1);
   saveProjects();
+  // Clear all incoming/transfer state
+  localStorage.removeItem('be_has_incoming');
+  localStorage.removeItem('be_incoming_project');
+  localStorage.removeItem('pw_epub_b64');
+  localStorage.removeItem('pw_epub_name');
+  fullImportedHTML = '';
   if (projects.length === 0) {
     activeProject = null;
     chapters = [{id: 1, title: 'Chapter 1', content: ''}];
@@ -764,6 +815,12 @@ function deleteProjectById(id, e) {
   if (idx === -1) return;
   projects.splice(idx, 1);
   saveProjects();
+  // Clear all incoming/transfer state
+  localStorage.removeItem('be_has_incoming');
+  localStorage.removeItem('be_incoming_project');
+  localStorage.removeItem('pw_epub_b64');
+  localStorage.removeItem('pw_epub_name');
+  fullImportedHTML = '';
   if (projects.length === 0) {
     activeProject = null;
     chapters = [{id: 1, title: 'Chapter 1', content: ''}];
@@ -1436,23 +1493,31 @@ function exportManuscript() {
     showToast('Exported as .html');
 
   } else if (dest === 'voicestudio') {
-    var fullContent = chapters.map(function(ch) {
-      var plainText = ch.content ? ch.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim() : '';
-      return {title: ch.title, text: plainText};
+    status.textContent = 'Generating EPUB for Voice Studio...';
+    // Always generate EPUB for Voice Studio regardless of source format
+    generateEPUB3(title, author, chapters).then(function(blob) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try { localStorage.setItem('pw_epub_b64', e.target.result); } catch(err) {}
+        localStorage.setItem('pw_epub_name', (title || 'book') + '.epub');
+        var fullContent = chapters.map(function(ch) {
+          var plainText = ch.content ? ch.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim() : '';
+          return {title: ch.title, text: plainText};
+        });
+        localStorage.setItem('vs_incoming', JSON.stringify({
+          title: title, author: author, chapters: fullContent,
+          epubB64Key: 'pw_epub_b64', epubName: (title || 'book') + '.epub',
+          fromEditor: true
+        }));
+        status.innerHTML = '&#10003; Sending to Voice Studio...';
+        showToast('Sending to Voice Studio');
+        fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
+        setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/voice-studio'; }, 1000);
+      };
+      reader.readAsDataURL(blob);
+    }).catch(function(err) {
+      status.textContent = 'Error generating EPUB: ' + err.message;
     });
-    // Build plain text from chapters for Voice Studio parser
-    var fullText = fullImportedHTML
-      ? fullImportedHTML.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-      : chapters.map(function(ch){
-          var plain = ch.content ? ch.content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim() : '';
-          return (ch.title||'') + '\n\n' + plain;
-        }).join('\n\n\n');
-    localStorage.setItem('vs_incoming', JSON.stringify({title: title, author: author, content: fullText, chapters: fullContent, fromEditor: true}));
-    status.innerHTML = '&#10003; Sending to Voice Studio...';
-    showToast('Sending to Voice Studio');
-    // Ping backend to wake it, then navigate to the correct page
-    fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
-    setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/voice-studio'; }, 1000);
 
   } else if (dest === 'collections') {
     status.textContent = 'Preparing for Collections...';
@@ -2018,6 +2083,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 <!-- NYXEN BUBBLE -->
-<div class="nyxen-bubble"><div class="nyx-panel" id="nyxPanel"><div class="nyx-ph"><div class="av"></div><div><div class="nm">Nyxen</div><div class="st" id="nyxSt">Writing assistant</div></div><button class="cls" onclick="toggleNyx()">&#10005;</button></div><div class="nyx-qrow"><button class="nyx-q" onclick="nyxQ('Continue writing the next scene.')">&#9997; Continue</button><button class="nyx-q" onclick="nyxQ('Review my writing.')">&#128269; Review</button><button class="nyx-q" onclick="nyxQ('Suggest a plot twist.')">&#9889; Twist</button><button class="nyx-q" onclick="nyxQ('Write dialogue for this scene.')">&#128172; Dialogue</button><button class="nyx-q" onclick="nyxQ('Develop my main character.')">&#128100; Character</button></div><div class="nyx-fd" id="nyxFd"><div class="nyx-m ai"><div class="nyx-lbl">Nyxen</div><div>Hey! I am Nyxen. Ask me to continue your story, review your writing, or create anything new.</div></div></div><div class="nyx-inp"><textarea id="nyxTx" placeholder="Ask Nyxen..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxSend();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,70)+'px'"></textarea><button onclick="nyxSend()">&#10148;</button></div></div><button class="nyxen-bubble-btn" onclick="toggleNyx()" title="Chat with Nyxen"><img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen"></button></div>
+<div class="nyxen-bubble"><div class="nyx-panel" id="nyxPanel"><div class="nyx-ph"><div class="av"></div><div><div class="nm">Nyxen</div><div class="st" id="nyxSt">Writing assistant</div></div><button class="cls" onclick="toggleNyx()">&#10005;</button></div><div class="nyx-qrow"><button class="nyx-q" onclick="nyxQ('Review my writing for grammar and clarity.')">&#128269; Review</button><button class="nyx-q" onclick="nyxQ('Check formatting and consistency.')">&#128196; Format</button><button class="nyx-q" onclick="nyxQ('Suggest improvements to this passage.')">&#9997; Improve</button><button class="nyx-q" onclick="nyxQ('Help tighten this section.')">&#9988; Tighten</button><button class="nyx-q" onclick="nyxQ('Check pacing and flow.')">&#128172; Pacing</button></div><div class="nyx-fd" id="nyxFd"><div class="nyx-m ai"><div class="nyx-lbl">Nyxen</div><div>Hey! I am Nyxen, your editing assistant. I can help review grammar, improve flow, check formatting, and refine your manuscript.</div></div></div><div class="nyx-inp"><textarea id="nyxTx" placeholder="Ask Nyxen..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxSend();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,70)+'px'"></textarea><button onclick="nyxSend()">&#10148;</button></div></div><button class="nyxen-bubble-btn" onclick="toggleNyx()" title="Chat with Nyxen"><img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen"></button></div>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>var NAPI="https://nyxen-ai.onrender.com/api";function toggleNyx(){document.getElementById("nyxPanel").classList.toggle("open");}function nyxQ(t){document.getElementById("nyxTx").value=t;nyxSend();}function addNyxM(text,role,ins){var fd=document.getElementById("nyxFd");var d=document.createElement("div");d.className="nyx-m "+role;if(role==="ai"){var r=typeof marked!=="undefined"?marked.parse(text):"<p>"+text+"</p>";d.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div>"+r+"</div>";if(ins){var b=document.createElement("button");b.className="nyx-ins";b.textContent="Insert into document";b.onclick=(function(t){return function(){if(window.editorInstance){window.editorInstance.model.change(function(w){var p=window.editorInstance.model.document.selection.getFirstPosition();window.editorInstance.model.insertContent(w.createText(t.replace(/<[^>]+>/g," ")),p);});}};})(text);d.appendChild(b);}}else{d.textContent=text;}fd.appendChild(d);fd.scrollTop=fd.scrollHeight;}async function nyxSend(){var inp=document.getElementById("nyxTx");var text=inp.value.trim();if(!text)return;inp.value="";inp.style.height="";addNyxM(text,"user");var ctx="";if(window.editorInstance){var tmp=document.createElement("div");tmp.innerHTML=window.editorInstance.getData();ctx=(tmp.textContent||"").substring(0,800);}var title=document.getElementById("bookTitle")?document.getElementById("bookTitle").value:"";var ch=document.getElementById("chapterTitle")?document.getElementById("chapterTitle").value:"";var msg=text+(ctx?(" [Book: "+title+", Chapter: "+ch+", Text: "+ctx+"...]"):"");var fd=document.getElementById("nyxFd");var td=document.createElement("div");td.className="nyx-m ai";td.id="nyxTd";td.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div class=\"nyx-dots\"><span></span><span></span><span></span></div>";fd.appendChild(td);fd.scrollTop=fd.scrollHeight;document.getElementById("nyxSt").textContent="Writing...";try{var body={messages:[{role:"user",content:msg}],mode:"storyteller",response_mode:"balanced",system_context:"You are Nyxen, a creative AI writing assistant. Help the writer. Write full rich prose when asked. Plain prose only."};if(window._nc)body.conversation_id=window._nc;var resp=await fetch(NAPI+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});var el=document.getElementById("nyxTd");if(el)el.remove();var data=await resp.json();if(data.conversation_id)window._nc=data.conversation_id;addNyxM(data.response||data.content||data.message||"Something went wrong.","ai",true);document.getElementById("nyxSt").textContent="Writing assistant";}catch(e){var el=document.getElementById("nyxTd");if(el)el.remove();addNyxM("Connection error. Please try again.","ai");document.getElementById("nyxSt").textContent="Error";}}</script>
+<script>var NAPI="https://nyxen-ai.onrender.com/api";function toggleNyx(){document.getElementById("nyxPanel").classList.toggle("open");}function nyxQ(t){document.getElementById("nyxTx").value=t;nyxSend();}function addNyxM(text,role,ins){var fd=document.getElementById("nyxFd");var d=document.createElement("div");d.className="nyx-m "+role;if(role==="ai"){var r=typeof marked!=="undefined"?marked.parse(text):"<p>"+text+"</p>";d.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div>"+r+"</div>";if(ins){var b=document.createElement("button");b.className="nyx-ins";b.textContent="Insert into document";b.onclick=(function(t){return function(){if(window.editorInstance){window.editorInstance.model.change(function(w){var p=window.editorInstance.model.document.selection.getFirstPosition();window.editorInstance.model.insertContent(w.createText(t.replace(/<[^>]+>/g," ")),p);});}};})(text);d.appendChild(b);}}else{d.textContent=text;}fd.appendChild(d);fd.scrollTop=fd.scrollHeight;}async function nyxSend(){var inp=document.getElementById("nyxTx");var text=inp.value.trim();if(!text)return;inp.value="";inp.style.height="";addNyxM(text,"user");var ctx="";if(window.editorInstance){var tmp=document.createElement("div");tmp.innerHTML=window.editorInstance.getData();ctx=(tmp.textContent||"").substring(0,800);}var title=document.getElementById("bookTitle")?document.getElementById("bookTitle").value:"";var ch=document.getElementById("chapterTitle")?document.getElementById("chapterTitle").value:"";var msg=text+(ctx?(" [Book: "+title+", Chapter: "+ch+", Text: "+ctx+"...]"):"");var fd=document.getElementById("nyxFd");var td=document.createElement("div");td.className="nyx-m ai";td.id="nyxTd";td.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div class=\"nyx-dots\"><span></span><span></span><span></span></div>";fd.appendChild(td);fd.scrollTop=fd.scrollHeight;document.getElementById("nyxSt").textContent="Writing...";try{var body={messages:[{role:"user",content:msg}],mode:"assistant",response_mode:"balanced",system_context:"You are Nyxen, an AI editing assistant on the Book Editor page. Help the author with editing, formatting, grammar, pacing, and refinement. You are NOT a creative writer here — do not generate new story content. Focus on improving what the author has written. Plain prose only, no markdown symbols."};if(window._nc)body.conversation_id=window._nc;var resp=await fetch(NAPI+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});var el=document.getElementById("nyxTd");if(el)el.remove();var data=await resp.json();if(data.conversation_id)window._nc=data.conversation_id;addNyxM(data.response||data.content||data.message||"Something went wrong.","ai",true);document.getElementById("nyxSt").textContent="Writing assistant";}catch(e){var el=document.getElementById("nyxTd");if(el)el.remove();addNyxM("Connection error. Please try again.","ai");document.getElementById("nyxSt").textContent="Error";}}</script>

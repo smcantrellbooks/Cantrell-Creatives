@@ -1058,7 +1058,8 @@ function goEditorWithFile(){
       title: document.getElementById('nyx-title') ? document.getElementById('nyx-title').value : '',
       author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
       genre: document.getElementById('nyx-genre') ? document.getElementById('nyx-genre').value : '',
-      fromWorkspace: true
+      fromWorkspace: true,
+      epubB64Key: 'pw_epub_b64'
     }));
     localStorage.setItem('be_has_incoming','1');
   }catch(e){}
