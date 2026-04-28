@@ -668,7 +668,7 @@ textarea.nyx-inp{resize:none;line-height:1.4;}
 </footer>
 
 <script>
-const NYXEN_API = 'https://nyxen-ai.onrender.com/api';
+const NYXEN_API = 'https://nyxen-standalone.smcantrellbooks.workers.dev';
 var epubFile = null;
 var fileType = null;
 
@@ -1120,20 +1120,12 @@ async function nyxSend(){
   var status = document.getElementById('nyxStatus');
   if(status) status.textContent='Writing\u2026';
   try{
-    var body={messages:[{role:'user',content:msg}],mode:'storyteller',response_mode:'balanced',
-      system_context:'You are Nyxen, an AI creative writing assistant on the Cantrell Creatives Publisher Workspace. Help authors create books chapter by chapter. Write full rich prose when asked. Keep each chapter focused and consistent. Plain prose only — no markdown symbols like ** or ##.'};
-    if(window._nyxCid) body.conversation_id=window._nyxCid;
+    var body={messages:[{role:'user',content:msg}],
+      system:'You are Nyxen, an AI creative writing assistant on the Cantrell Creatives Publisher Workspace. Help authors create books chapter by chapter. Write full rich prose when asked. Keep each chapter focused and consistent. Plain prose only — no markdown symbols like ** or ##.'};
     var resp=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    // If server sleeping, wait and retry once
-    if(resp.status===503||resp.status===502){
-      if(status) status.textContent='Waking up…';
-      await new Promise(function(r){setTimeout(r,4000);});
-      resp=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    }
     var el=document.getElementById('nyxTyping'); if(el) el.remove();
     var data=await resp.json();
-    if(data.conversation_id) window._nyxCid=data.conversation_id;
-    var reply=data.response||data.content||data.message||'Something went wrong.';
+    var reply=data.response||data.content||(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'Something went wrong.';
     nyxAddAiMsg(reply, true);
     if(status) status.textContent='AI Editor & Creative Partner';
   }catch(err){
@@ -1145,9 +1137,7 @@ async function nyxSend(){
 
 /* ── INIT ── */
 window.addEventListener('DOMContentLoaded', function(){
-  // Wake up Nyxen API on page load
   fetch(NYXEN_API+'/health').catch(function(){});
-  fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
   localStorage.removeItem('pw_epub_b64');
   localStorage.removeItem('pw_epub_name');
   localStorage.removeItem('pw_epub_text');
