@@ -1163,6 +1163,15 @@ function importEpub(zip, filename, status) {
       newChapters.push({id: Date.now(), title: 'Chapter 1', content: fullImportedHTML});
     }
 
+    // If the EPUB produced very few chapters but the content contains multiple
+    // h1 headings, it's likely a single-file EPUB. Re-split using the same
+    // heading-based logic that DOCX import uses (finishImportHTML).
+    var h1Count = (fullImportedHTML.match(/<h1[^>]*>/gi) || []).length;
+    if (newChapters.length <= 2 && h1Count > newChapters.length) {
+      finishImportHTML(fullImportedHTML, titleFound, filename, status);
+      return;
+    }
+
     chapters = newChapters;
     activeChapter = 0;
     if (titleFound) {
