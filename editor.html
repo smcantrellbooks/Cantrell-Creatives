@@ -90,12 +90,11 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
 /* -- CHAPTER MANAGER -- */
 .chapter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-.ch-tab{padding:6px 16px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .18s;font-weight:600;}
+.ch-tab{padding:7px 12px;border-radius:6px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;width:100%;display:block;}
 .ch-tab-front{border-color:rgba(122,31,46,.3);color:var(--burg,#7a1f2e);}
 .ch-tab-toc{border-color:rgba(100,100,200,.3);color:#445;}
 .ch-tab-back{border-color:rgba(80,80,80,.3);color:#666;}
-.ch-divider{display:inline-flex;align-items:center;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-lt);padding:0 8px;margin:0 4px;border-left:1px solid var(--gold-bd);white-space:nowrap;}
-.ch-divider:first-child{border-left:none;padding-left:0;}
+.ch-divider{display:block;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-lt);padding:8px 2px 4px;margin-top:4px;border-top:1px solid var(--gold-bd);width:100%;}
 .ch-tab:hover{background:var(--gold-lt);}
 .ch-tab.active{background:#C9A040;border-color:#C9A040;color:#3a2a1a;font-weight:700;}
 .btn-add-ch{padding:6px 14px;border-radius:999px;border:1px dashed var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;}
@@ -115,11 +114,11 @@ textarea.inp{resize:vertical;line-height:1.85;}
   font-family:'Georgia','Times New Roman',serif;
   font-size:16px;
   line-height:1.8;
-  color:#1a1a1a;
+  color:#000000;
   padding:60px 72px;
   background:#fff;
 }
-/* Hide source editing button and source view — not needed for authors */
+/* Hide source editing button and source view */
 .ck-source-editing-button,
 .ck-source-editing-area{display:none !important;}
 .ck.ck-editor__editable:focus{
@@ -189,17 +188,17 @@ textarea.inp{resize:vertical;line-height:1.85;}
     <div class="banner-sub">Write Like a Pro</div>
   </div>
   <nav class="nav-top">
-    <button class="nt-btn" onclick="location.href='https://creatives.smcantrellbooks.com'">🏠 Home</button>
+    <button class="nt-btn" onclick="location.href='https://creatives.smcantrellbooks.com'">&#127968; Home</button>
     <button class="nt-btn" onclick="location.href='https://creatives.smcantrellbooks.com/my-account'">My Account</button>
     <button class="nt-btn login" onclick="location.href='https://creatives.smcantrellbooks.com/login'">Log In</button>
   </nav>
   <nav class="nav-bot">
     <div class="nb-inner">
-      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/studio'">🎬 Studio</button>
-      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/publisher-workspace'">✍ Publisher Workspace</button>
-      <button class="nb-btn active" onclick="location.href='https://creatives.smcantrellbooks.com/editor/'">📝 Book Editor</button>
-      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/voice-studio'">🎙 Voice Studio</button>
-      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/collections'">📚 Collections</button>
+      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/studio'">&#127916; Studio</button>
+      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/publisher-workspace'">&#9997; Publisher Workspace</button>
+      <button class="nb-btn active" onclick="location.href='https://creatives.smcantrellbooks.com/editor/'">&#128221; Book Editor</button>
+      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/voice-studio'">&#127897; Voice Studio</button>
+      <button class="nb-btn" onclick="location.href='https://creatives.smcantrellbooks.com/collections'">&#128218; Collections</button>
     </div>
   </nav>
 </div>
@@ -212,10 +211,10 @@ textarea.inp{resize:vertical;line-height:1.85;}
   <!-- INTRO -->
   <div style="text-align:center;margin-bottom:24px;">
     <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
-      <span class="feature-badge">✍ CKEditor 5</span>
-      <span class="feature-badge">📖 EPUB 3.0 Export</span>
-      <span class="feature-badge">📄 DOCX Import</span>
-      <span class="feature-badge">💾 Auto-Save</span>
+      <span class="feature-badge">&#9997; CKEditor 5</span>
+      <span class="feature-badge">&#128214; EPUB 3.0 Export</span>
+      <span class="feature-badge">&#128196; DOCX Import</span>
+      <span class="feature-badge">&#128190; Auto-Save</span>
     </div>
     <p style="color:var(--taupe-lt);font-style:italic;max-width:600px;margin:0 auto;">A professional Word-like editor for authors. Write, format, and export your manuscript to EPUB for Kindle, Apple Books, Kobo, and all major platforms.</p>
   </div>
@@ -224,15 +223,21 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
     <!-- LEFT - SAVED MANUSCRIPTS -->
     <div class="panel project-panel">
-      <div class="panel-title"><span class="panel-icon">📚</span> Saved Manuscripts</div>
-      <div class="project-list" id="projectList"></div>
 
-      <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
-        <label class="lbl" style="margin-bottom:6px;">Import Manuscript</label>
-        <label class="drop-zone" id="dropZone" for="importFile" style="display:block;cursor:pointer;" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">📥 Drop file here or click to browse<br><span style="font-size:.75rem;">.txt, .docx, .epub, .pdf, .html, .md</span></label>
-        <input type="file" id="importFile" accept=".txt,.docx,.epub,.pdf,.html,.htm,.md" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="importManuscript(event)">
-        <div id="importStatus" style="font-size:.8rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;"></div>
+      <!-- CHAPTERS IN SIDEBAR -->
+      <div id="sidebarChapters" style="border-bottom:1px solid var(--gold-bd);padding-bottom:12px;margin-bottom:12px;display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div class="panel-title" style="margin:0;padding:0;border:none;"><span class="panel-icon">&#128209;</span> Chapters</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-add-ch" onclick="addChapter()" style="font-size:.8rem;padding:4px 10px;">+ Add</button>
+            <button class="btn-add-ch" onclick="deleteChapter()" style="font-size:.8rem;padding:4px 10px;color:#c03c3c;border-color:rgba(192,60,60,.4);">&#10005;</button>
+          </div>
+        </div>
+        <div class="chapter-tabs" id="chapterTabs" style="display:flex;flex-direction:column;gap:4px;"></div>
       </div>
+
+      <div class="panel-title"><span class="panel-icon">&#128218;</span> Saved Manuscripts</div>
+      <div class="project-list" id="projectList"></div>
 
       <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
         <label class="lbl" style="margin-bottom:8px;">Details</label>
@@ -266,13 +271,13 @@ textarea.inp{resize:vertical;line-height:1.85;}
       </div>
 
       <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
-        <button class="btn-plum" style="width:100%;color:#c03c3c;border-color:rgba(192,60,60,.3);" onclick="deleteProject()">🗑 Remove Manuscript</button>
+        <button class="btn-plum" style="width:100%;color:#c03c3c;border-color:rgba(192,60,60,.3);" onclick="deleteProject()">&#128465; Remove Manuscript</button>
       </div>
     </div>
 
     <!-- RIGHT - EDITOR -->
     <div class="panel editor-wrap">
-      <div class="panel-title"><span class="panel-icon">📝</span> CKEditor 5 — Book Editor</div>
+      <div class="panel-title"><span class="panel-icon">&#128221;</span> CKEditor 5 — Book Editor</div>
 
       <!-- STATS BAR -->
       <div class="stats-bar">
@@ -281,6 +286,14 @@ textarea.inp{resize:vertical;line-height:1.85;}
         <div class="stat-item"><span class="stat-val" id="statParas">0</span><span class="stat-lbl">Paragraphs</span></div>
         <div class="stat-item"><span class="stat-val" id="statPages">0</span><span class="stat-lbl">Est. Pages</span></div>
         <div class="stat-item"><span class="stat-val" id="statProgress">0%</span><span class="stat-lbl">Of Goal</span></div>
+      </div>
+
+      <!-- IMPORT MANUSCRIPT -->
+      <div style="border-bottom:1px solid var(--gold-bd);padding-bottom:16px;margin-bottom:16px;">
+        <label class="lbl" style="margin-bottom:6px;">Import Manuscript</label>
+        <label class="drop-zone" id="dropZone" for="importFile" style="display:block;cursor:pointer;" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">&#128229; Drop file here or click to browse<br><span style="font-size:.75rem;">.docx, .epub, .pdf</span></label>
+        <input type="file" id="importFile" accept=".docx,.epub,.pdf" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="importManuscript(event)">
+        <div id="importStatus" style="font-size:.8rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;"></div>
       </div>
 
       <!-- BOOK INFO -->
@@ -295,20 +308,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
         </div>
       </div>
 
-      <!-- CHAPTER TABS -->
-      <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <label class="lbl" style="margin-bottom:0;">Chapters</label>
-          <div style="display:flex;gap:8px;">
-            <button class="btn-add-ch" onclick="addChapter()">＋ Add Chapter</button>
-            <button class="btn-add-ch" onclick="deleteChapter()" style="color:#c03c3c;border-color:rgba(192,60,60,.4);">✕ Delete</button>
-          </div>
-        </div>
-        <div class="chapter-tabs" id="chapterTabs"></div>
-      </div>
-
       <!-- CHAPTER TITLE -->
-      <div>
+      <div id="chapterTitleRow" style="display:none;">
         <label class="lbl" id="chapterTitleLabel">Chapter Title</label>
         <input class="inp" type="text" id="chapterTitle" placeholder="Chapter 1: The Beginning" oninput="updateChapterTitle()">
       </div>
@@ -324,7 +325,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
         <!-- LEFT: export options -->
         <div class="export-box">
-          <div class="export-title">📤 Export Manuscript</div>
+          <div class="export-title">&#128228; Export Manuscript</div>
           <label class="radio-opt">
             <input type="radio" name="edExport" value="epub" checked="">
             EPUB <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(ebook for Kindle, Apple Books, Kobo)</span>
@@ -363,7 +364,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
                 <input class="inp" type="text" id="epubCover" placeholder="https://..." style="font-size:.82rem;padding:5px 8px;flex:1;" oninput="previewCoverFromUrl(this.value)">
                 <input type="file" id="epubCoverFile" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handleCoverUpload(event)">
                 <button type="button" onclick="document.getElementById('epubCoverFile').click()"
-                  style="padding:5px 8px;border-radius:6px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">📁 Upload</button>
+                  style="padding:5px 8px;border-radius:6px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">&#128193; Upload</button>
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
@@ -390,8 +391,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
           </div>
 
           <div style="margin-top:12px;display:flex;gap:8px;">
-            <button class="btn-gold" style="flex:1;" onclick="exportManuscript()">🚀 Export / Send</button>
-            <button class="btn-sec" style="flex:1;" onclick="quickDownloadEPUB()">📘 Download EPUB</button>
+            <button class="btn-gold" style="flex:1;" onclick="exportManuscript()">&#128640; Export / Send</button>
+            <button class="btn-sec" style="flex:1;" onclick="quickDownloadEPUB()">&#128216; Download EPUB</button>
           </div>
           <div id="exportStatus" style="font-size:.88rem;color:var(--taupe);font-style:italic;margin-top:8px;"></div>
         </div>
@@ -403,7 +404,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
             <img id="coverPreviewImg" src="" alt="Cover preview"
               style="width:180px;height:270px;object-fit:cover;border-radius:6px;border:1px solid var(--gold-bd);display:none;box-shadow:0 4px 16px rgba(0,0,0,.2);">
             <button type="button" onclick="clearCover()" id="coverClearBtn"
-              style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.6rem;cursor:pointer;line-height:1;padding:0;display:none;">✕</button>
+              style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.6rem;cursor:pointer;line-height:1;padding:0;display:none;">&#10005;</button>
           </div>
           <div id="coverEmptyMsg" style="width:180px;height:270px;border:2px dashed var(--gold-bd);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--taupe-lt);text-align:center;padding:8px;line-height:1.4;">No cover set</div>
         </div>
@@ -427,6 +428,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- Mammoth.js for DOCX to HTML conversion -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <!-- CKEditor 5 CDN (super-build includes all plugins) -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
 
@@ -438,10 +441,10 @@ textarea.inp{resize:vertical;line-height:1.85;}
 var editorInstance = null;
 var projects = JSON.parse(localStorage.getItem('be_projects') || '[]');
 var activeProject = null;
-var chapters = [{id: 1, title: 'Chapter 1', content: ''}];
+var chapters = [];
 var activeChapter = 0;
 var saveTimer = null;
-var fullImportedHTML = ''; // Full unfiltered content for Voice Studio
+var fullImportedHTML = '';
 
 function buildCopyright(title, author) {
   var year = new Date().getFullYear();
@@ -453,20 +456,17 @@ function buildCopyright(title, author) {
 
 /* -- INIT -- */
 function init() {
-  // Check for incoming project from Publisher Workspace
   var hasIncoming = localStorage.getItem('be_has_incoming');
   if (hasIncoming) {
     localStorage.removeItem('be_has_incoming');
     try {
       var incoming = JSON.parse(localStorage.getItem('be_incoming_project') || '{}');
       if (incoming.fromWorkspace && incoming.title) {
-        // Clear old projects — start fresh with the incoming book
         projects = [];
         var s = incoming.structure || {};
         var isEpub = incoming.format === 'epub' || !incoming.format;
         var chaps = [];
 
-        // FRONT MATTER — for manuscript format, or always title page
         if (!isEpub) {
           if (s.titlePage !== false) chaps.push({id: Date.now()+1, title: 'Title Page', content: '<h1>' + (incoming.title||'') + '</h1><p>' + (incoming.author||'') + '</p>'});
           if (s.copyright)  chaps.push({id: Date.now()+2, title: 'Copyright', content: buildCopyright(incoming.title, incoming.author)});
@@ -474,16 +474,10 @@ function init() {
           if (s.toc)        chaps.push({id: Date.now()+4, title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
         }
 
-        // OPTIONAL FRONT SECTIONS
         if (s.prologue) chaps.push({id: Date.now()+5, title: 'Prologue', content: incoming.nyxenContent || ''});
-
-        // MAIN CONTENT
         chaps.push({id: Date.now()+6, title: 'Chapter 1', content: (!s.prologue && incoming.nyxenContent) ? incoming.nyxenContent : ''});
+        if (s.epilogue) chaps.push({id: Date.now()+7, title: 'Epilogue', content: ''});
 
-        // OPTIONAL BACK SECTIONS
-        if (s.epilogue)    chaps.push({id: Date.now()+7, title: 'Epilogue', content: ''});
-
-        // BACK MATTER — for EPUB format
         if (isEpub) {
           if (s.toc)        chaps.push({id: Date.now()+8,  title: 'Table of Contents', content: '<p><em>Table of contents will be generated on export.</em></p>'});
           if (s.dedication) chaps.push({id: Date.now()+9,  title: 'Dedication', content: '<p><em>For...</em></p>'});
@@ -507,7 +501,6 @@ function init() {
     } catch(e) {}
   }
 
-  // Clear corrupted projects — detect JS code in chapter content
   projects = projects.filter(function(proj) {
     if (!proj.chapters) return false;
     var isCorrupted = proj.chapters.some(function(ch) {
@@ -519,16 +512,17 @@ function init() {
   if (projects.length === 0) localStorage.removeItem('be_projects');
 
   if (projects.length === 0) {
-    projects.push({
-      id: Date.now(), name: 'My First Book',
-      title: '', author: '', genre: 'Urban Fantasy', series: '', targetWords: 80000,
-      chapters: [{id: 1, title: 'Chapter 1', content: ''}],
-      created: new Date().toLocaleDateString()
-    });
-    saveProjects();
+    localStorage.removeItem('be_projects');
+    localStorage.removeItem('be_incoming_project');
+    localStorage.removeItem('be_has_incoming');
+    activeProject = null;
+    chapters = [];
+    renderChapterTabs();
+    updateStats();
+  } else {
+    activeProject = projects[0];
+    loadProject(activeProject);
   }
-  activeProject = projects[0];
-  loadProject(activeProject);
   renderProjectList();
   initCKEditor();
   setupDragDrop();
@@ -537,6 +531,10 @@ function init() {
 
 /* -- CKEditor 5 initialization (super-build) -- */
 function initCKEditor() {
+  if (typeof CKEDITOR === 'undefined' || !CKEDITOR.ClassicEditor) {
+    setTimeout(initCKEditor, 80);
+    return;
+  }
   CKEDITOR.ClassicEditor
     .create(document.querySelector('#ckEditor'), {
       toolbar: {
@@ -557,7 +555,7 @@ function initCKEditor() {
           '|',
           'outdent', 'indent',
           '|',
-          'link', 'blockQuote', 'insertTable', 'horizontalLine',
+          'link', 'blockQuote', 'insertTable', 'horizontalLine', 'pageBreak',
           '|',
           'findAndReplace',
           '|',
@@ -592,7 +590,6 @@ function initCKEditor() {
       },
       placeholder: 'Start writing your manuscript here...\n\nEvery great story begins with a single word.',
       language: 'en',
-      // Super-build requires listing premium plugins to remove
       removePlugins: [
         'AIAssistant',
         'CKBox',
@@ -621,11 +618,9 @@ function initCKEditor() {
     })
     .then(function(editor) {
       editorInstance = editor;
-      // Load content for current chapter
       if (chapters[activeChapter] && chapters[activeChapter].content) {
         editor.setData(chapters[activeChapter].content);
       }
-      // Listen for changes
       editor.model.document.on('change:data', function() {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(function() {
@@ -684,7 +679,7 @@ function saveProject() {
 
 function loadProject(project) {
   activeProject = project;
-  chapters = project.chapters || [{id: 1, title: 'Chapter 1', content: ''}];
+  chapters = project.chapters || [];
   activeChapter = 0;
   document.getElementById('bookTitle').value = project.title || '';
   document.getElementById('authorName').value = project.author || '';
@@ -710,7 +705,7 @@ function renderProjectList() {
       '<span>&#128196;</span>' +
       '<span class="project-item-name">' + (p.name || 'Untitled') + '</span>' +
       '<span class="project-item-date">' + p.created + '</span>' +
-      '<button class="proj-del-btn" title="Delete project" onclick="deleteProjectById(' + p.id + ',event)">✕</button>';
+      '<button class="proj-del-btn" title="Delete project" onclick="deleteProjectById(' + p.id + ',event)">&#10005;</button>';
     div.onclick = function() { saveProject(); loadProject(p); renderProjectList(); };
     list.appendChild(div);
   });
@@ -721,7 +716,7 @@ function newProject() {
   var p = {
     id: Date.now(), name: 'New Book', title: '', author: '',
     genre: 'Urban Fantasy', series: '', targetWords: 80000,
-    chapters: [{id: 1, title: 'Chapter 1', content: ''}],
+    chapters: [],
     created: new Date().toLocaleDateString()
   };
   projects.unshift(p);
@@ -739,7 +734,7 @@ function deleteProject() {
   saveProjects();
   if (projects.length === 0) {
     activeProject = null;
-    chapters = [{id: 1, title: 'Chapter 1', content: ''}];
+    chapters = [];
     activeChapter = 0;
     document.getElementById('bookTitle').value = '';
     document.getElementById('authorName').value = '';
@@ -766,7 +761,7 @@ function deleteProjectById(id, e) {
   saveProjects();
   if (projects.length === 0) {
     activeProject = null;
-    chapters = [{id: 1, title: 'Chapter 1', content: ''}];
+    chapters = [];
     activeChapter = 0;
     document.getElementById('bookTitle').value = '';
     document.getElementById('authorName').value = '';
@@ -788,7 +783,13 @@ function deleteProjectById(id, e) {
 /* -- CHAPTERS -- */
 function renderChapterTabs() {
   var tabs = document.getElementById('chapterTabs');
+  var sidebar = document.getElementById('sidebarChapters');
   tabs.innerHTML = '';
+  if (!chapters || chapters.length === 0) {
+    if (sidebar) sidebar.style.display = 'none';
+    return;
+  }
+  if (sidebar) sidebar.style.display = 'block';
 
   var hasFront = chapters.some(function(ch){ return ch.isFrontMatter; });
   var hasTOC   = chapters.some(function(ch){ return ch.isTOC; });
@@ -813,31 +814,22 @@ function renderChapterTabs() {
     tabs.appendChild(btn);
   }
 
-  // Front Matter group
   if (hasFront) {
     addDivider('Front Matter');
     chapters.forEach(function(ch, i){ if (ch.isFrontMatter) addTab(ch, i); });
   }
-
-  // TOC group
   if (hasTOC) {
     addDivider('Table of Contents');
     chapters.forEach(function(ch, i){ if (ch.isTOC) addTab(ch, i); });
   }
-
-  // Main chapters group
   if (hasMain) {
     addDivider('Chapters');
     chapters.forEach(function(ch, i){ if (!ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter) addTab(ch, i); });
   }
-
-  // Back Matter group
   if (hasBack) {
     addDivider('Back Matter');
     chapters.forEach(function(ch, i){ if (ch.isBackMatter) addTab(ch, i); });
   }
-
-  // If no flags at all (plain new manuscript) just render tabs normally
   if (!hasFront && !hasTOC && !hasBack && !hasMain) {
     chapters.forEach(function(ch, i){ addTab(ch, i); });
   }
@@ -963,151 +955,165 @@ function importManuscript(e) {
   var file = e.target.files[0]; if (!file) return;
   var status = document.getElementById('importStatus');
   var ext = file.name.split('.').pop().toLowerCase();
+
+  if (ext !== 'epub' && ext !== 'docx' && ext !== 'pdf') {
+    status.textContent = 'Please import a DOCX, EPUB, or PDF file.';
+    return;
+  }
+
   status.textContent = 'Reading ' + file.name + '...';
 
-  if (ext === 'epub' || ext === 'docx') {
+  if (ext === 'epub') {
     if (typeof JSZip === 'undefined') { status.textContent = 'JSZip not loaded. Refresh and try again.'; return; }
     var r2 = new FileReader();
     r2.onload = function(ev) {
       JSZip.loadAsync(ev.target.result).then(function(zip) {
-        if (ext === 'epub') {
-          importEpub(zip, file.name, status);
-        } else {
-          importDocx(zip, file.name, status);
-        }
+        importEpub(zip, file.name, status);
       }).catch(function(err) { status.textContent = 'Error: ' + err.message; });
     };
     r2.readAsArrayBuffer(file);
+  } else if (ext === 'docx') {
+    importDocx(file, status);
   } else if (ext === 'pdf') {
     importPDF(file, status);
-  } else if (ext === 'html' || ext === 'htm') {
-    var reader = new FileReader();
-    reader.onload = function(ev) { finishImportHTML(ev.target.result, '', file.name, status); };
-    reader.readAsText(file);
-  } else {
-    // txt, md, etc
-    var reader = new FileReader();
-    reader.onload = function(ev) { finishImportText(ev.target.result, '', file.name, status); };
-    reader.readAsText(file);
   }
-  if (e.target.value !== undefined) e.target.value = '';
 }
 
+/* ====== EPUB IMPORT — FIX: split multi-chapter files by h1 headings ====== */
 function importEpub(zip, filename, status) {
-  var opfKey = Object.keys(zip.files).find(function(f) { return f.endsWith('.opf'); });
+  var opfKey = Object.keys(zip.files).find(function(f){ return f.endsWith('.opf'); });
   var opfPromise = opfKey ? zip.files[opfKey].async('text') : Promise.resolve('');
   var titleFound = '';
   var opfDir = opfKey ? opfKey.split('/').slice(0,-1).join('/') : '';
 
-  opfPromise.then(function(opfText) {
+  opfPromise.then(function(opfText){
     if (opfText) {
       var tm = opfText.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
       if (tm) titleFound = tm[1].trim();
     }
 
-    // Get spine order from OPF so chapters appear in correct order
+    // Get spine order from OPF
     var spineOrder = [];
     if (opfText) {
       var manifestMap = {};
-      var manifestMatches = opfText.match(/<item[^>]+>/gi) || [];
-      manifestMatches.forEach(function(item) {
+      (opfText.match(/<item[^>]+>/gi) || []).forEach(function(item){
         var idM = item.match(/\bid="([^"]+)"/i);
         var hrefM = item.match(/\bhref="([^"]+)"/i);
         if (idM && hrefM) manifestMap[idM[1]] = hrefM[1];
       });
-      var spineMatches = opfText.match(/<itemref[^>]+>/gi) || [];
-      spineMatches.forEach(function(item) {
+      (opfText.match(/<itemref[^>]+>/gi) || []).forEach(function(item){
         var idM = item.match(/\bidref="([^"]+)"/i);
         if (idM && manifestMap[idM[1]]) spineOrder.push(manifestMap[idM[1]]);
       });
     }
 
-    // Fall back to sorted file list if no spine
-    var contentFiles = Object.keys(zip.files).filter(function(f) {
+    // Get all HTML content files (exclude toc, nav, cover)
+    var contentFiles = Object.keys(zip.files).filter(function(f){
       var fname = f.split('/').pop().toLowerCase().replace(/\.(html|xhtml|htm)$/,'');
       return (f.endsWith('.html') || f.endsWith('.xhtml') || f.endsWith('.htm'))
-        && fname !== 'toc'
-        && fname !== 'nav'
-        && fname !== 'cover'
-        && fname !== 'navigation';
+        && fname !== 'toc' && fname !== 'nav' && fname !== 'cover' && fname !== 'navigation';
     });
 
-    // Use spine order if available
+    // Order by spine
     var orderedFiles = [];
     if (spineOrder.length > 0) {
-      spineOrder.forEach(function(href) {
-        // Try multiple path combinations to find the file
-        var hrefBase = href.split('/').pop(); // just the filename
-        var found = contentFiles.find(function(f) {
+      spineOrder.forEach(function(href){
+        var hrefBase = href.split('/').pop();
+        var found = contentFiles.find(function(f){
           var fBase = f.split('/').pop();
-          return f === href
-            || f === opfDir + '/' + href
-            || f.endsWith('/' + href)
-            || fBase === hrefBase;
+          return f === href || f === opfDir+'/'+href || f.endsWith('/'+href) || fBase === hrefBase;
         });
         if (found && orderedFiles.indexOf(found) === -1) orderedFiles.push(found);
       });
     }
-    if (orderedFiles.length === 0) orderedFiles = contentFiles.sort();
+    // Add any files not in spine
+    contentFiles.forEach(function(f){ if (orderedFiles.indexOf(f) === -1) orderedFiles.push(f); });
 
-    return Promise.all(orderedFiles.map(function(fn) {
-      return zip.files[fn].async('text').then(function(text) { return {fn: fn, text: text}; });
+    return Promise.all(orderedFiles.map(function(fn){
+      return zip.files[fn].async('text').then(function(t){ return {fn:fn, text:t}; });
     }));
-  }).then(function(fileArr) {
-    var epubFrontMatter = [];
-    var epubMainChapters = [];
-    var epubBackMatter = [];
-    fullImportedHTML = '';
 
-    fileArr.forEach(function(file) {
-      var h = file.text;
-      var bodyMatch = h.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-      var content = bodyMatch ? bodyMatch[1] : h;
-      content = content
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-        .replace(/&apos;/g, "'")
-        .replace(/&amp;/g, '&')
-        .trim();
+  }).then(function(fileArr){
+    var epubFront = [];
+    var epubChapters = [];
+    var epubBack = [];
 
-      if (content.length < 20) return;
-      fullImportedHTML += content + '\n';
+    // Helper: classify and push a section
+    function classifySection(chTitle, bodyHTML, fileKey) {
+      var plainText = bodyHTML.replace(/<[^>]+>/g,'').trim();
+      if (plainText.length < 10) return;
 
-      var titleMatch = content.match(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/i);
-      var chTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : '';
+      var titleLower = chTitle.toLowerCase();
 
-      // Skip nav/toc files
+      // Skip pure TOC sections
       if (/^(table of contents|contents|navigation)$/i.test(chTitle)) return;
 
-      // Use filename as fallback title
-      if (!chTitle) {
-        chTitle = file.fn.split('/').pop().replace(/\.(html|xhtml|htm)$/i, '').replace(/[-_]/g, ' ');
-      }
-
-      // Detect front matter (copyright, title page, etc.)
-      if (/^(copyright|title page|dedication|epigraph|foreword|preface|introduction)/i.test(chTitle)
-        || /copyright|all rights reserved/i.test(content.replace(/<[^>]+>/g,'').substring(0,200))) {
-        epubFrontMatter.push({ id: Date.now() + epubFrontMatter.length + 1, title: chTitle, content: content, isFrontMatter: true });
+      // Back matter
+      if (/^(about the author|acknowledgements?|also by|bibliography|afterword|glossary)/.test(titleLower)) {
+        epubBack.push({ id: Date.now()+epubBack.length+800, title: chTitle, content: bodyHTML, isBackMatter: true });
         return;
       }
 
-      // Detect back matter
-      if (/^(about the author|acknowledgements?|also by|bibliography|afterword)/i.test(chTitle)) {
-        epubBackMatter.push({ id: Date.now() + epubBackMatter.length + 800, title: chTitle, content: content, isBackMatter: true });
+      // Front matter
+      var isFront = /^(copyright|title page|dedication|epigraph|foreword|preface)/.test(titleLower)
+        || (plainText.length < 800 && /copyright|all rights reserved/i.test(plainText.substring(0,400)));
+      if (isFront) {
+        epubFront.push({ id: Date.now()+epubFront.length+1, title: chTitle, content: bodyHTML, isFrontMatter: true });
         return;
       }
 
-      epubMainChapters.push({ id: Date.now() + epubMainChapters.length, title: chTitle, content: content });
+      // Main chapter
+      epubChapters.push({ id: Date.now()+epubChapters.length, title: chTitle, content: bodyHTML });
+    }
+
+    fileArr.forEach(function(file){
+      var h = file.text;
+      var bodyMatch = h.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+      var bodyHTML = bodyMatch ? bodyMatch[1] : h;
+      bodyHTML = bodyHTML
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
+        .replace(/&apos;/g,"'").replace(/&amp;/g,'&').trim();
+
+      if (bodyHTML.replace(/<[^>]+>/g,'').trim().length < 10) return;
+
+      // Detect TOC files by first line only (not aggressive short-line heuristic)
+      var plainText = bodyHTML.replace(/<[^>]+>/g,'').trim();
+      var firstLine = plainText.split('\n')[0].trim().toLowerCase();
+      if (/^(table of contents|contents)$/.test(firstLine)) return;
+
+      // Check if this file contains multiple h1 headings — if so, split into separate chapters
+      var h1Matches = bodyHTML.match(/<h1[^>]*>/gi) || [];
+      if (h1Matches.length > 1) {
+        // Split by h1 tags to create separate chapters
+        var sections = bodyHTML.split(/(?=<h1[^>]*>)/i);
+        sections.forEach(function(section) {
+          var sectionTrimmed = section.trim();
+          if (!sectionTrimmed) return;
+
+          var secH1Match = sectionTrimmed.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+          var secTitle = secH1Match ? secH1Match[1].replace(/<[^>]+>/g,'').trim() : '';
+          if (!secTitle) {
+            secTitle = file.fn.split('/').pop().replace(/\.(html|xhtml|htm)$/i,'').replace(/[-_]/g,' ');
+          }
+          classifySection(secTitle, sectionTrimmed, file.fn);
+        });
+      } else {
+        // Single chapter per file (normal case)
+        var titleMatch = bodyHTML.match(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/i);
+        var chTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'').trim() : '';
+        if (!chTitle) {
+          chTitle = file.fn.split('/').pop().replace(/\.(html|xhtml|htm)$/i,'').replace(/[-_]/g,' ');
+        }
+        classifySection(chTitle, bodyHTML, file.fn);
+      }
     });
 
-    // EPUB structure: Chapters → Back Matter → Front Matter (copyright moves to end)
-    var newChapters = [];
-    epubMainChapters.forEach(function(ch){ newChapters.push(ch); });
-    epubBackMatter.forEach(function(ch){ newChapters.push(ch); });
-    epubFrontMatter.forEach(function(ch){ newChapters.push(ch); }); // front matter goes to END for EPUB
+    // EPUB display order: Main Chapters, Back Matter, then Front Matter at the bottom
+    var newChapters = epubChapters.concat(epubBack).concat(epubFront);
 
     if (newChapters.length === 0) {
-      newChapters.push({id: Date.now(), title: 'Chapter 1', content: fullImportedHTML});
+      newChapters.push({ id: Date.now(), title: 'Full Manuscript', content: '<p>Could not parse chapters.</p>' });
     }
 
     chapters = newChapters;
@@ -1117,6 +1123,8 @@ function importEpub(zip, filename, status) {
       if (activeProject) { activeProject.title = titleFound; activeProject.name = titleFound; }
     }
     if (activeProject) activeProject.chapters = chapters;
+    var chRow = document.getElementById('chapterTitleRow');
+    if (chRow) chRow.style.display = 'block';
     document.getElementById('chapterTitle').value = chapters[0].title || '';
     updateChapterTitleLabel();
     renderChapterTabs();
@@ -1125,177 +1133,70 @@ function importEpub(zip, filename, status) {
     if (editorInstance) {
       editorInstance.setData(chapters[0].content || '');
     } else {
-      var check = setInterval(function() {
+      var check = setInterval(function(){
         if (editorInstance) { clearInterval(check); editorInstance.setData(chapters[0].content || ''); }
       }, 100);
     }
-    status.innerHTML = '&#10003; ' + filename + ' imported — ' + newChapters.length + ' chapter' + (newChapters.length !== 1 ? 's' : '') + ' found';
+    status.innerHTML = '&#10003; ' + filename + ' imported \u2014 ' + newChapters.length + ' chapter' + (newChapters.length !== 1 ? 's' : '') + ' found';
     showToast('Imported: ' + newChapters.length + ' chapters');
   });
 }
 
-function importDocx(zip, filename, status) {
-  var stylesMap = {};
-  var titleFound = '';
+/* ====== DOCX IMPORT (mammoth.js) ====== */
+function importDocx(file, status) {
+  var filename = file.name;
+  if (typeof mammoth === 'undefined') {
+    status.textContent = 'Error: mammoth.js not loaded.';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    mammoth.convertToHtml({ arrayBuffer: e.target.result }, {
+      styleMap: [
+        "p[style-name='Title'] => h1:fresh",
+        "p[style-name='Heading 1'] => h1:fresh",
+        "p[style-name='Heading 2'] => h2:fresh",
+        "p[style-name='Heading 3'] => h3:fresh",
+        "br[type='page'] => p.page-break"
+      ],
+      includeDefaultStyleMap: true,
+      ignoreEmptyParagraphs: false
+    }).then(function(result) {
+      var html = result.value;
 
-  // Try to get title from core document properties
-  var coreFile = zip.files['docProps/core.xml'];
-  var corePromise = coreFile ? coreFile.async('text') : Promise.resolve('');
+      // Convert Word page break markers
+      html = html.replace(/<p[^>]*class="[^"]*page-break[^"]*"[^>]*>[\s\S]*?<\/p>/gi, '<div class="page-break" style="page-break-after:always;"><span></span></div>');
+      html = html.replace(/<br\s+data-cke-filler="true"\s*\/?>/gi, '');
 
-  corePromise.then(function(coreXml) {
-    if (coreXml) {
-      var tm = coreXml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
-      if (tm) titleFound = tm[1].trim();
-    }
-    // Fall back to filename if no title in properties
-    if (!titleFound) titleFound = filename.replace(/\.docx$/i, '').replace(/[-_]/g, ' ');
+      // Get title from document
+      var titleFound = filename.replace(/\.docx$/i, '').replace(/[-_]/g, ' ');
+      var h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+      if (h1Match) {
+        var possibleTitle = h1Match[1].replace(/<[^>]+>/g,'').trim();
+        if (possibleTitle && !/^chapter/i.test(possibleTitle)) titleFound = possibleTitle;
+      }
 
-    var stylesFile = zip.files['word/styles.xml'];
-    return stylesFile ? stylesFile.async('text') : Promise.resolve('');
-  }).then(function(stylesXml) {
-    if (stylesXml) {
-      var styleMatches = stylesXml.match(/<w:style[^>]*>[\s\S]*?<\/w:style>/gi) || [];
-      styleMatches.forEach(function(s) {
-        var idMatch = s.match(/w:styleId="([^"]+)"/i);
-        var nameMatch = s.match(/<w:name\s+w:val="([^"]+)"/i);
-        if (idMatch && nameMatch) {
-          var id = idMatch[1], name = nameMatch[1].toLowerCase();
-          if (name.indexOf('heading 1') >= 0 || name === 'title') stylesMap[id] = 'h1';
-          else if (name.indexOf('heading 2') >= 0 || name === 'subtitle') stylesMap[id] = 'h2';
-          else if (name.indexOf('heading 3') >= 0) stylesMap[id] = 'h3';
-        }
+      // Strip TOC section
+      html = html.replace(/<h[1-6][^>]*>[^<]*table of contents[^<]*<\/h[1-6]>[\s\S]*?(?=<h[1-6])/i, '');
+      html = html.replace(/<p[^>]*>[^<]*table of contents[^<]*<\/p>([\s\S]*?)(?=<h[1-6])/i, function() {
+        return '';
       });
-    }
-    var doc = zip.files['word/document.xml'];
-    if (!doc) { status.textContent = 'Could not read DOCX.'; return; }
-    return doc.async('text');
-  }).then(function(xml) {
-    if (!xml) return;
-    var htmlOut = '';
-    var inTOC = false;
-    var paragraphs = xml.match(/<w:p[ >][\s\S]*?<\/w:p>/gi) || [];
-    paragraphs.forEach(function(pXml) {
-      // Detect TOC field start/end and skip those paragraphs
-      if (/<w:instrText[^>]*>[^<]*TOC[^<]*<\/w:instrText>/i.test(pXml)) { inTOC = true; }
-      if (inTOC) {
-        // TOC ends when we hit a w:fldChar with w:fldCharType="end"
-        if (/w:fldCharType="end"/i.test(pXml)) { inTOC = false; }
-        return; // skip TOC paragraphs
-      }
-      // Also skip paragraphs with TOC-related styles
-      var styleMatch = pXml.match(/<w:pStyle\s+w:val="([^"]+)"/i);
-      var styleId = styleMatch ? styleMatch[1] : '';
-      if (/^toc\d*$/i.test(styleId)) return; // skip TOC style paragraphs
 
-      var tag = stylesMap[styleId] || 'p';
-      if (tag === 'p') {
-        var outlineMatch = pXml.match(/<w:outlineLvl\s+w:val="(\d+)"/i);
-        if (outlineMatch) {
-          var lvl = parseInt(outlineMatch[1]);
-          if (lvl === 0) tag = 'h1';
-          else if (lvl === 1) tag = 'h2';
-          else if (lvl === 2) tag = 'h3';
-        }
-      }
-      var runs = pXml.match(/<w:r[ >][\s\S]*?<\/w:r>/gi) || [];
-      var formatted = '';
-      var hasText = false;
-      runs.forEach(function(r) {
-        var tMatch = r.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/gi);
-        if (!tMatch) return;
-        var txt = '';
-        tMatch.forEach(function(tm) { txt += tm.replace(/<[^>]+>/g, ''); });
-        txt = txt.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
-        if (txt.trim()) hasText = true;
-        var isBold = /<w:b[\s\/]/.test(r);
-        var isItalic = /<w:i[\s\/]/.test(r);
-        if (isBold) txt = '<strong>' + txt + '</strong>';
-        if (isItalic) txt = '<em>' + txt + '</em>';
-        formatted += txt;
-      });
-      if (!hasText) return;
-      // Force chapter/prologue/epilogue lines to h1 even without proper Word heading style
-      var plainText = formatted.replace(/<[^>]+>/g, '').trim();
-      if (tag !== 'h1' && /^(chapter\s+\S+|prologue|epilogue)/i.test(plainText)) {
-        tag = 'h1';
-      }
-      htmlOut += '<' + tag + '>' + formatted + '</' + tag + '>';
+      finishImportHTML(html, titleFound, filename, status);
+    }).catch(function(err) {
+      status.textContent = 'Error reading DOCX: ' + err.message;
     });
-    finishImportHTML(htmlOut, titleFound, filename, status);
-  }).catch(function(err) { status.textContent = 'Error reading DOCX: ' + err.message; });
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 function finishImportHTML(html, titleFound, filename, status) {
-  // Store full unfiltered content for Voice Studio (narrator reads everything)
   fullImportedHTML = html;
 
-  var chapterSections = html.split(/(?=<h1[^>]*>)/i);
-  var frontMatterContent = '';
-  var tocContent = '';
-  var mainChapters = [];
-  var backMatter = [];
+  // DOCX loads as one document -- load entire content as-is into editor
+  var docTitle = titleFound || filename.replace(/\.[^.]+$/, '');
 
-  chapterSections.forEach(function(section) {
-    var trimmed = section.trim();
-    if (!trimmed) return;
-
-    var h1Match = trimmed.match(/^<h1[^>]*>([\s\S]*?)<\/h1>/i);
-    var chapterTitle = h1Match ? h1Match[1].replace(/<[^>]+>/g, '').trim() : '';
-    var content = h1Match ? trimmed.slice(h1Match[0].length).trim() : trimmed;
-
-    // No h1 — front matter (copyright, disclaimers etc.)
-    if (!h1Match) {
-      frontMatterContent += content;
-      return;
-    }
-
-    // Table of Contents section
-    if (/^(table of contents|contents)$/i.test(chapterTitle)) {
-      tocContent = content;
-      return;
-    }
-
-    // Back matter
-    if (/^(about the author|acknowledgements?|also by|bibliography|index|glossary)/i.test(chapterTitle)) {
-      backMatter.push({ id: Date.now() + backMatter.length + 900, title: chapterTitle, content: content, isBackMatter: true });
-      return;
-    }
-
-    // Skip TOC nav entries (heading with no real body content)
-    if (!content || content.replace(/<[^>]+>/g,'').trim().length < 30) {
-      if (!/^(chapter|prologue|epilogue)/i.test(chapterTitle)) return;
-    }
-
-    // Deduplicate — skip if same title already added (TOC entries duplicate real chapters)
-    var alreadyExists = mainChapters.some(function(ch) {
-      return ch.title.toLowerCase().trim() === chapterTitle.toLowerCase().trim();
-    });
-    if (alreadyExists) return;
-
-    mainChapters.push({
-      id: Date.now() + mainChapters.length,
-      title: chapterTitle || ('Chapter ' + (mainChapters.length + 1)),
-      content: content
-    });
-  });
-
-  // MANUSCRIPT STRUCTURE: Front Matter → TOC → Chapters → Back Matter
-  var newChapters = [];
-
-  if (frontMatterContent && frontMatterContent.replace(/<[^>]+>/g,'').trim().length > 20) {
-    newChapters.push({ id: Date.now() + 1, title: 'Front Matter', content: frontMatterContent, isFrontMatter: true });
-  }
-  if (tocContent) {
-    newChapters.push({ id: Date.now() + 2, title: 'Table of Contents', content: tocContent, isTOC: true });
-  }
-  mainChapters.forEach(function(ch) { newChapters.push(ch); });
-  backMatter.forEach(function(ch) { newChapters.push(ch); });
-
-  if (newChapters.length === 0) {
-    newChapters.push({ id: Date.now(), title: 'Chapter 1', content: html });
-  }
-
-  chapters = newChapters;
+  chapters = [{ id: Date.now(), title: docTitle, content: html }];
   activeChapter = 0;
 
   if (titleFound) {
@@ -1303,9 +1204,13 @@ function finishImportHTML(html, titleFound, filename, status) {
     if (activeProject) { activeProject.title = titleFound; activeProject.name = titleFound; }
   }
   if (activeProject) activeProject.chapters = chapters;
-  document.getElementById('chapterTitle').value = chapters[0].title || '';
-  updateChapterTitleLabel();
-  renderChapterTabs();
+
+  // Hide chapter sidebar and chapter title -- DOCX is one document
+  var sidebar = document.getElementById('sidebarChapters');
+  if (sidebar) sidebar.style.display = 'none';
+  var chRow = document.getElementById('chapterTitleRow');
+  if (chRow) chRow.style.display = 'none';
+
   updateStats();
   saveProject();
 
@@ -1317,8 +1222,8 @@ function finishImportHTML(html, titleFound, filename, status) {
     }, 100);
   }
 
-  status.innerHTML = '&#10003; ' + filename + ' imported — ' + newChapters.length + ' section' + (newChapters.length !== 1 ? 's' : '') + ' found';
-  showToast('Imported: ' + newChapters.length + ' sections');
+  status.innerHTML = '&#10003; ' + filename + ' imported';
+  showToast('Document imported');
 }
 
 function importPDF(file, status) {
@@ -1327,7 +1232,7 @@ function importPDF(file, status) {
   var reader = new FileReader();
   reader.onload = function(ev) {
     pdfjsLib.getDocument({data: ev.target.result}).promise.then(function(pdf) {
-      status.textContent = 'Reading PDF — ' + pdf.numPages + ' pages...';
+      status.textContent = 'Reading PDF \u2014 ' + pdf.numPages + ' pages...';
       var pagePromises = [];
       for (var i = 1; i <= pdf.numPages; i++) {
         pagePromises.push(pdf.getPage(i).then(function(page) {
@@ -1338,7 +1243,6 @@ function importPDF(file, status) {
       }
       return Promise.all(pagePromises);
     }).then(function(pages) {
-      // Join all pages and pass through text importer (detects chapter headings)
       var fullText = pages.join('\n\n');
       finishImportText(fullText, '', file.name, status);
     }).catch(function(err) { status.textContent = 'PDF Error: ' + err.message; });
@@ -1379,27 +1283,60 @@ function exportManuscript() {
     showToast('Exported as .txt');
 
   } else if (dest === 'docx') {
-    // Build HTML that Word can open as DOCX — includes TOC
+    /* ====== DOCX EXPORT — FIX: order is Title, Front Matter, TOC, Chapters, Back Matter ====== */
+    var frontChs = chapters.filter(function(ch){ return ch.isFrontMatter; });
+    var tocChs = chapters.filter(function(ch){ return ch.isTOC; });
+    var mainChs = chapters.filter(function(ch){ return !ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter; });
+    var backChs = chapters.filter(function(ch){ return ch.isBackMatter; });
+
+    // DOCX order: Title -> Front Matter (includes TOC) -> Main Chapters -> Back Matter
+    var orderedChs = frontChs.concat(tocChs).concat(mainChs).concat(backChs);
+    // If no chapter flags set (plain manuscript), use original order
+    if (frontChs.length === 0 && tocChs.length === 0 && backChs.length === 0) orderedChs = chapters;
+
+    // Build TOC from all ordered chapters
     var tocHtml = '<h2>Table of Contents</h2><ul>' +
-      chapters.map(function(ch, i) { return '<li>' + escHtml(ch.title || 'Chapter ' + (i+1)) + '</li>'; }).join('') +
+      orderedChs.map(function(ch, i) { return '<li>' + escHtml(ch.title || 'Chapter ' + (i+1)) + '</li>'; }).join('') +
       '</ul><hr/>';
-    var bodyHtml = chapters.map(function(ch) {
+
+    // Build front matter body
+    var frontHtml = frontChs.map(function(ch) {
       return '<h1>' + escHtml(ch.title || '') + '</h1>' + (ch.content || '');
     }).join('');
+
+    // Build main chapter body
+    var mainHtml = mainChs.map(function(ch) {
+      return '<h1>' + escHtml(ch.title || '') + '</h1>' + (ch.content || '');
+    }).join('');
+
+    // Build back matter body
+    var backHtml = backChs.map(function(ch) {
+      return '<h1>' + escHtml(ch.title || '') + '</h1>' + (ch.content || '');
+    }).join('');
+
+    // If no flags, just render all chapters in order
+    var bodyHtml;
+    if (frontChs.length === 0 && tocChs.length === 0 && backChs.length === 0) {
+      bodyHtml = chapters.map(function(ch) {
+        return '<h1>' + escHtml(ch.title || '') + '</h1>' + (ch.content || '');
+      }).join('');
+    } else {
+      bodyHtml = frontHtml + tocHtml + mainHtml + backHtml;
+    }
+
     var docHtml = '<!DOCTYPE html><html><head><meta charset="utf-8">' +
       '<style>body{font-family:Georgia,serif;font-size:12pt;margin:1in;line-height:1.8;}' +
       'h1{font-size:16pt;page-break-before:always;}h2{font-size:14pt;}p{margin:.5em 0;text-indent:1.5em;}</style>' +
       '</head><body>' +
       '<h1 style="text-align:center;font-size:22pt;page-break-before:auto;">' + escHtml(title) + '</h1>' +
       (author ? '<p style="text-align:center;font-style:italic;">' + escHtml(author) + '</p>' : '') +
-      tocHtml + bodyHtml + '</body></html>';
+      bodyHtml + '</body></html>';
     var docBlob = new Blob([docHtml], {type: 'application/msword'});
     downloadBlob(docBlob, title + '.doc');
     status.innerHTML = '&#10003; Downloaded as DOCX (Word document).';
     showToast('Exported as .doc');
 
   } else if (dest === 'pdf') {
-    // Open print dialog for PDF — includes TOC
     var win = window.open('', '_blank');
     var tocLines = chapters.map(function(ch, i) { return '<li>' + escHtml(ch.title || 'Chapter ' + (i+1)) + '</li>'; }).join('');
     var bodyLines = chapters.map(function(ch) {
@@ -1440,7 +1377,6 @@ function exportManuscript() {
       var plainText = ch.content ? ch.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim() : '';
       return {title: ch.title, text: plainText};
     });
-    // Build plain text from chapters for Voice Studio parser
     var fullText = fullImportedHTML
       ? fullImportedHTML.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
       : chapters.map(function(ch){
@@ -1450,7 +1386,6 @@ function exportManuscript() {
     localStorage.setItem('vs_incoming', JSON.stringify({title: title, author: author, content: fullText, chapters: fullContent, fromEditor: true}));
     status.innerHTML = '&#10003; Sending to Voice Studio...';
     showToast('Sending to Voice Studio');
-    // Ping backend to wake it, then navigate to the correct page
     fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
     setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/voice-studio'; }, 1000);
 
@@ -1524,10 +1459,8 @@ async function generateEPUB3(title, author, chapterList) {
   var bookId = 'urn:uuid:' + crypto.randomUUID();
   var now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 
-  // mimetype (must be first, uncompressed)
   zip.file('mimetype', 'application/epub+zip', {compression: 'STORE'});
 
-  // META-INF/container.xml
   zip.file('META-INF/container.xml',
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n' +
@@ -1537,7 +1470,6 @@ async function generateEPUB3(title, author, chapterList) {
     '</container>'
   );
 
-  // Shared CSS
   var bookCSS =
     'body{font-family:"Georgia","Times New Roman",serif;line-height:1.8;color:#1a1a1a;margin:1em 1.5em;}\n' +
     'h1{font-size:1.8em;text-align:center;margin:2em 0 1em;page-break-before:always;font-weight:700;}\n' +
@@ -1557,7 +1489,6 @@ async function generateEPUB3(title, author, chapterList) {
     'hr{border:none;border-top:1px solid #ccc;margin:2em auto;width:40%;}\n';
   zip.file('OEBPS/style.css', bookCSS);
 
-  // Build chapter XHTML files
   var manifestItems = [];
   var spineItems = [];
   var tocEntries = [];
@@ -1598,18 +1529,16 @@ async function generateEPUB3(title, author, chapterList) {
     spineItems.push('copyright');
   }
 
-  // Process each chapter
-  // Auto-restructure chapters for EPUB format
-  // EPUB order: Cover → Title Page → Copyright/Front Matter → TOC → Chapters → Back Matter
+  /* ====== EPUB EXPORT — FIX: front matter goes to the bottom ====== */
   var epubChapters = [];
   var frontMatterChs = chapterList.filter(function(ch){ return ch.isFrontMatter; });
   var tocChs = chapterList.filter(function(ch){ return ch.isTOC; });
   var mainChs = chapterList.filter(function(ch){ return !ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter; });
   var backMatterChs = chapterList.filter(function(ch){ return ch.isBackMatter; });
 
-  // EPUB puts front matter first (copyright etc.), then main chapters, then back matter
-  epubChapters = frontMatterChs.concat(mainChs).concat(backMatterChs);
-  // TOC is handled by EPUB nav.xhtml — skip TOC chapters from spine
+  // EPUB order: Main Chapters -> Back Matter -> Front Matter (front matter at the bottom)
+  epubChapters = mainChs.concat(backMatterChs).concat(frontMatterChs);
+  // TOC is handled by EPUB nav.xhtml -- skip TOC chapters from spine
   if (epubChapters.length === 0) epubChapters = chapterList;
 
   epubChapters.forEach(function(ch, idx) {
@@ -1627,7 +1556,7 @@ async function generateEPUB3(title, author, chapterList) {
     tocEntries.push({id: chId, href: chFile, title: chTitle});
   });
 
-  // Cover image (if provided)
+  // Cover image
   var coverMeta = '';
   var coverUrl = window._coverDataUrl || '';
   if (!coverUrl) {
@@ -1698,7 +1627,6 @@ async function generateEPUB3(title, author, chapterList) {
   zip.file('OEBPS/toc.ncx', ncx);
   manifestItems.push({id: 'ncx', href: 'toc.ncx', type: 'application/x-dtbncx+xml'});
 
-  // Stylesheet manifest
   manifestItems.push({id: 'css', href: 'style.css', type: 'text/css'});
 
   // content.opf
@@ -1794,10 +1722,8 @@ function convertToEpubXHTML(html) {
       }
       result += '</' + tag + '>\n';
     } else if (tag === 'figure') {
-      // CKEditor wraps tables/images in figure
       for (var i = 0; i < children.length; i++) processNode(children[i]);
     } else if (tag === 'table') {
-      // Convert table to simple text
       var rows = node.querySelectorAll('tr');
       rows.forEach(function(row) {
         var cells = row.querySelectorAll('td,th');
@@ -1953,7 +1879,6 @@ function clearCover() {
 
 /* -- INIT ON LOAD -- */
 window.addEventListener('DOMContentLoaded', function() {
-  // Set initial cover state
   var img = document.getElementById('coverPreviewImg');
   if (img) img.style.display = 'none';
   init();
@@ -2020,4 +1945,81 @@ window.addEventListener('DOMContentLoaded', function() {
 <!-- NYXEN BUBBLE -->
 <div class="nyxen-bubble"><div class="nyx-panel" id="nyxPanel"><div class="nyx-ph"><div class="av"></div><div><div class="nm">Nyxen</div><div class="st" id="nyxSt">Writing assistant</div></div><button class="cls" onclick="toggleNyx()">&#10005;</button></div><div class="nyx-qrow"><button class="nyx-q" onclick="nyxQ('Continue writing the next scene.')">&#9997; Continue</button><button class="nyx-q" onclick="nyxQ('Review my writing.')">&#128269; Review</button><button class="nyx-q" onclick="nyxQ('Suggest a plot twist.')">&#9889; Twist</button><button class="nyx-q" onclick="nyxQ('Write dialogue for this scene.')">&#128172; Dialogue</button><button class="nyx-q" onclick="nyxQ('Develop my main character.')">&#128100; Character</button></div><div class="nyx-fd" id="nyxFd"><div class="nyx-m ai"><div class="nyx-lbl">Nyxen</div><div>Hey! I am Nyxen. Ask me to continue your story, review your writing, or create anything new.</div></div></div><div class="nyx-inp"><textarea id="nyxTx" placeholder="Ask Nyxen..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxSend();}" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,70)+'px'"></textarea><button onclick="nyxSend()">&#10148;</button></div></div><button class="nyxen-bubble-btn" onclick="toggleNyx()" title="Chat with Nyxen"><img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen"></button></div>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>var NAPI="https://nyxen-ai.onrender.com/api";function toggleNyx(){document.getElementById("nyxPanel").classList.toggle("open");}function nyxQ(t){document.getElementById("nyxTx").value=t;nyxSend();}function addNyxM(text,role,ins){var fd=document.getElementById("nyxFd");var d=document.createElement("div");d.className="nyx-m "+role;if(role==="ai"){var r=typeof marked!=="undefined"?marked.parse(text):"<p>"+text+"</p>";d.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div>"+r+"</div>";if(ins){var b=document.createElement("button");b.className="nyx-ins";b.textContent="Insert into document";b.onclick=(function(t){return function(){if(window.editorInstance){window.editorInstance.model.change(function(w){var p=window.editorInstance.model.document.selection.getFirstPosition();window.editorInstance.model.insertContent(w.createText(t.replace(/<[^>]+>/g," ")),p);});}};})(text);d.appendChild(b);}}else{d.textContent=text;}fd.appendChild(d);fd.scrollTop=fd.scrollHeight;}async function nyxSend(){var inp=document.getElementById("nyxTx");var text=inp.value.trim();if(!text)return;inp.value="";inp.style.height="";addNyxM(text,"user");var ctx="";if(window.editorInstance){var tmp=document.createElement("div");tmp.innerHTML=window.editorInstance.getData();ctx=(tmp.textContent||"").substring(0,800);}var title=document.getElementById("bookTitle")?document.getElementById("bookTitle").value:"";var ch=document.getElementById("chapterTitle")?document.getElementById("chapterTitle").value:"";var msg=text+(ctx?(" [Book: "+title+", Chapter: "+ch+", Text: "+ctx+"...]"):"");var fd=document.getElementById("nyxFd");var td=document.createElement("div");td.className="nyx-m ai";td.id="nyxTd";td.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div class=\"nyx-dots\"><span></span><span></span><span></span></div>";fd.appendChild(td);fd.scrollTop=fd.scrollHeight;document.getElementById("nyxSt").textContent="Writing...";try{var body={messages:[{role:"user",content:msg}],mode:"storyteller",response_mode:"balanced",system_context:"You are Nyxen, a creative AI writing assistant. Help the writer. Write full rich prose when asked. Plain prose only."};if(window._nc)body.conversation_id=window._nc;var resp=await fetch(NAPI+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});var el=document.getElementById("nyxTd");if(el)el.remove();var data=await resp.json();if(data.conversation_id)window._nc=data.conversation_id;addNyxM(data.response||data.content||data.message||"Something went wrong.","ai",true);document.getElementById("nyxSt").textContent="Writing assistant";}catch(e){var el=document.getElementById("nyxTd");if(el)el.remove();addNyxM("Connection error. Please try again.","ai");document.getElementById("nyxSt").textContent="Error";}}</script>
+<script>
+function toggleNyx(){document.getElementById("nyxPanel").classList.toggle("open");}
+function nyxQ(t){document.getElementById("nyxTx").value=t;nyxSend();}
+function addNyxM(text,role,ins){
+  var fd=document.getElementById("nyxFd");
+  var d=document.createElement("div");
+  d.className="nyx-m "+role;
+  if(role==="ai"){
+    var r=typeof marked!=="undefined"?marked.parse(text):"<p>"+text+"</p>";
+    d.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div>"+r+"</div>";
+    if(ins){
+      var b=document.createElement("button");
+      b.className="nyx-ins";
+      b.textContent="Insert into document";
+      b.onclick=(function(t){return function(){
+        if(window.editorInstance){
+          window.editorInstance.model.change(function(w){
+            var p=window.editorInstance.model.document.selection.getFirstPosition();
+            window.editorInstance.model.insertContent(w.createText(t.replace(/<[^>]+>/g," ")),p);
+          });
+        }
+      };})(text);
+      d.appendChild(b);
+    }
+  } else {
+    d.textContent=text;
+  }
+  fd.appendChild(d);
+  fd.scrollTop=fd.scrollHeight;
+}
+async function nyxSend(){
+  var inp=document.getElementById("nyxTx");
+  var text=inp.value.trim();
+  if(!text)return;
+  inp.value="";
+  inp.style.height="";
+  addNyxM(text,"user");
+  var ctx="";
+  if(window.editorInstance){
+    var tmp=document.createElement("div");
+    tmp.innerHTML=window.editorInstance.getData();
+    ctx=(tmp.textContent||"").substring(0,800);
+  }
+  var title=document.getElementById("bookTitle")?document.getElementById("bookTitle").value:"";
+  var ch=document.getElementById("chapterTitle")?document.getElementById("chapterTitle").value:"";
+  var msg=text+(ctx?(" [Book: "+title+", Chapter: "+ch+", Text: "+ctx+"...]"):"");
+  var fd=document.getElementById("nyxFd");
+  var td=document.createElement("div");
+  td.className="nyx-m ai";
+  td.id="nyxTd";
+  td.innerHTML="<div class=\"nyx-lbl\">Nyxen</div><div class=\"nyx-dots\"><span></span><span></span><span></span></div>";
+  fd.appendChild(td);
+  fd.scrollTop=fd.scrollHeight;
+  document.getElementById("nyxSt").textContent="Writing...";
+  try{
+    var resp=await fetch("https://nyxen-standalone.smcantrellbooks.workers.dev/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        messages:[{role:"user",content:msg}],
+        system:"You are Nyxen, a creative AI writing assistant on the Cantrell Creatives Book Editor. Help the writer. Write full rich prose when asked. Plain prose only, no markdown symbols."
+      })
+    });
+    var el=document.getElementById("nyxTd");
+    if(el)el.remove();
+    var data=await resp.json();
+    addNyxM(data.response||data.content||data.message||"Something went wrong.","ai",true);
+    document.getElementById("nyxSt").textContent="Writing assistant";
+  }catch(e){
+    var el=document.getElementById("nyxTd");
+    if(el)el.remove();
+    addNyxM("Connection error. Please try again.","ai");
+    document.getElementById("nyxSt").textContent="Error";
+  }
+}
+</script>
+</body>
+</html>
