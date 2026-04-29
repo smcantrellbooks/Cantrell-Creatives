@@ -90,12 +90,11 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
 /* -- CHAPTER MANAGER -- */
 .chapter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-.ch-tab{padding:6px 16px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .18s;font-weight:600;}
+.ch-tab{padding:7px 12px;border-radius:6px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;width:100%;display:block;}
 .ch-tab-front{border-color:rgba(122,31,46,.3);color:var(--burg,#7a1f2e);}
 .ch-tab-toc{border-color:rgba(100,100,200,.3);color:#445;}
 .ch-tab-back{border-color:rgba(80,80,80,.3);color:#666;}
-.ch-divider{display:inline-flex;align-items:center;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-lt);padding:0 8px;margin:0 4px;border-left:1px solid var(--gold-bd);white-space:nowrap;}
-.ch-divider:first-child{border-left:none;padding-left:0;}
+.ch-divider{display:block;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-lt);padding:8px 2px 4px;margin-top:4px;border-top:1px solid var(--gold-bd);width:100%;}
 .ch-tab:hover{background:var(--gold-lt);}
 .ch-tab.active{background:#C9A040;border-color:#C9A040;color:#3a2a1a;font-weight:700;}
 .btn-add-ch{padding:6px 14px;border-radius:999px;border:1px dashed var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;}
@@ -115,7 +114,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
   font-family:'Georgia','Times New Roman',serif;
   font-size:16px;
   line-height:1.8;
-  color:#1a1a1a;
+  color:#000000;
   padding:60px 72px;
   background:#fff;
 }
@@ -224,15 +223,21 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
     <!-- LEFT - SAVED MANUSCRIPTS -->
     <div class="panel project-panel">
+
+      <!-- CHAPTERS IN SIDEBAR -->
+      <div id="sidebarChapters" style="border-bottom:1px solid var(--gold-bd);padding-bottom:12px;margin-bottom:12px;display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div class="panel-title" style="margin:0;padding:0;border:none;"><span class="panel-icon">📑</span> Chapters</div>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-add-ch" onclick="addChapter()" style="font-size:.8rem;padding:4px 10px;">＋ Add</button>
+            <button class="btn-add-ch" onclick="deleteChapter()" style="font-size:.8rem;padding:4px 10px;color:#c03c3c;border-color:rgba(192,60,60,.4);">✕</button>
+          </div>
+        </div>
+        <div class="chapter-tabs" id="chapterTabs" style="display:flex;flex-direction:column;gap:4px;"></div>
+      </div>
+
       <div class="panel-title"><span class="panel-icon">📚</span> Saved Manuscripts</div>
       <div class="project-list" id="projectList"></div>
-
-      <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
-        <label class="lbl" style="margin-bottom:6px;">Import Manuscript</label>
-        <label class="drop-zone" id="dropZone" for="importFile" style="display:block;cursor:pointer;" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">📥 Drop file here or click to browse<br><span style="font-size:.75rem;">.txt, .docx, .epub, .pdf, .html, .md</span></label>
-        <input type="file" id="importFile" accept=".txt,.docx,.epub,.pdf,.html,.htm,.md" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="importManuscript(event)">
-        <div id="importStatus" style="font-size:.8rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;"></div>
-      </div>
 
       <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
         <label class="lbl" style="margin-bottom:8px;">Details</label>
@@ -283,6 +288,14 @@ textarea.inp{resize:vertical;line-height:1.85;}
         <div class="stat-item"><span class="stat-val" id="statProgress">0%</span><span class="stat-lbl">Of Goal</span></div>
       </div>
 
+      <!-- IMPORT MANUSCRIPT -->
+      <div style="border-bottom:1px solid var(--gold-bd);padding-bottom:16px;margin-bottom:16px;">
+        <label class="lbl" style="margin-bottom:6px;">Import Manuscript</label>
+        <label class="drop-zone" id="dropZone" for="importFile" style="display:block;cursor:pointer;" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">📥 Drop file here or click to browse<br><span style="font-size:.75rem;">.docx, .epub, .pdf</span></label>
+        <input type="file" id="importFile" accept=".docx,.epub,.pdf" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="importManuscript(event)">
+        <div id="importStatus" style="font-size:.8rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;"></div>
+      </div>
+
       <!-- BOOK INFO -->
       <div class="editor-meta">
         <div>
@@ -295,20 +308,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
         </div>
       </div>
 
-      <!-- CHAPTER TABS -->
-      <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <label class="lbl" style="margin-bottom:0;">Chapters</label>
-          <div style="display:flex;gap:8px;">
-            <button class="btn-add-ch" onclick="addChapter()">＋ Add Chapter</button>
-            <button class="btn-add-ch" onclick="deleteChapter()" style="color:#c03c3c;border-color:rgba(192,60,60,.4);">✕ Delete</button>
-          </div>
-        </div>
-        <div class="chapter-tabs" id="chapterTabs"></div>
-      </div>
-
-      <!-- CHAPTER TITLE -->
-      <div>
+      <!-- CHAPTER TITLE — only shown for EPUB imports -->
+      <div id="chapterTitleRow" style="display:none;">
         <label class="lbl" id="chapterTitleLabel">Chapter Title</label>
         <input class="inp" type="text" id="chapterTitle" placeholder="Chapter 1: The Beginning" oninput="updateChapterTitle()">
       </div>
@@ -427,6 +428,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- Mammoth.js — proper DOCX to HTML conversion -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <!-- CKEditor 5 CDN (super-build includes all plugins) -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
 
@@ -438,7 +441,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
 var editorInstance = null;
 var projects = JSON.parse(localStorage.getItem('be_projects') || '[]');
 var activeProject = null;
-var chapters = [{id: 1, title: 'Chapter 1', content: ''}];
+var chapters = [];
 var activeChapter = 0;
 var saveTimer = null;
 var fullImportedHTML = ''; // Full unfiltered content for Voice Studio
@@ -519,16 +522,17 @@ function init() {
   if (projects.length === 0) localStorage.removeItem('be_projects');
 
   if (projects.length === 0) {
-    projects.push({
-      id: Date.now(), name: 'My First Book',
-      title: '', author: '', genre: 'Urban Fantasy', series: '', targetWords: 80000,
-      chapters: [{id: 1, title: 'Chapter 1', content: ''}],
-      created: new Date().toLocaleDateString()
-    });
-    saveProjects();
+    localStorage.removeItem('be_projects');
+    localStorage.removeItem('be_incoming_project');
+    localStorage.removeItem('be_has_incoming');
+    activeProject = null;
+    chapters = [];
+    renderChapterTabs();
+    updateStats();
+  } else {
+    activeProject = projects[0];
+    loadProject(activeProject);
   }
-  activeProject = projects[0];
-  loadProject(activeProject);
   renderProjectList();
   initCKEditor();
   setupDragDrop();
@@ -537,6 +541,10 @@ function init() {
 
 /* -- CKEditor 5 initialization (super-build) -- */
 function initCKEditor() {
+  if (typeof CKEDITOR === 'undefined' || !CKEDITOR.ClassicEditor) {
+    setTimeout(initCKEditor, 80);
+    return;
+  }
   CKEDITOR.ClassicEditor
     .create(document.querySelector('#ckEditor'), {
       toolbar: {
@@ -557,7 +565,7 @@ function initCKEditor() {
           '|',
           'outdent', 'indent',
           '|',
-          'link', 'blockQuote', 'insertTable', 'horizontalLine',
+          'link', 'blockQuote', 'insertTable', 'horizontalLine', 'pageBreak',
           '|',
           'findAndReplace',
           '|',
@@ -684,7 +692,7 @@ function saveProject() {
 
 function loadProject(project) {
   activeProject = project;
-  chapters = project.chapters || [{id: 1, title: 'Chapter 1', content: ''}];
+  chapters = project.chapters || [];
   activeChapter = 0;
   document.getElementById('bookTitle').value = project.title || '';
   document.getElementById('authorName').value = project.author || '';
@@ -721,7 +729,7 @@ function newProject() {
   var p = {
     id: Date.now(), name: 'New Book', title: '', author: '',
     genre: 'Urban Fantasy', series: '', targetWords: 80000,
-    chapters: [{id: 1, title: 'Chapter 1', content: ''}],
+    chapters: [],
     created: new Date().toLocaleDateString()
   };
   projects.unshift(p);
@@ -739,7 +747,7 @@ function deleteProject() {
   saveProjects();
   if (projects.length === 0) {
     activeProject = null;
-    chapters = [{id: 1, title: 'Chapter 1', content: ''}];
+    chapters = [];
     activeChapter = 0;
     document.getElementById('bookTitle').value = '';
     document.getElementById('authorName').value = '';
@@ -766,7 +774,7 @@ function deleteProjectById(id, e) {
   saveProjects();
   if (projects.length === 0) {
     activeProject = null;
-    chapters = [{id: 1, title: 'Chapter 1', content: ''}];
+    chapters = [];
     activeChapter = 0;
     document.getElementById('bookTitle').value = '';
     document.getElementById('authorName').value = '';
@@ -788,7 +796,13 @@ function deleteProjectById(id, e) {
 /* -- CHAPTERS -- */
 function renderChapterTabs() {
   var tabs = document.getElementById('chapterTabs');
+  var sidebar = document.getElementById('sidebarChapters');
   tabs.innerHTML = '';
+  if (!chapters || chapters.length === 0) {
+    if (sidebar) sidebar.style.display = 'none';
+    return;
+  }
+  if (sidebar) sidebar.style.display = 'block';
 
   var hasFront = chapters.some(function(ch){ return ch.isFrontMatter; });
   var hasTOC   = chapters.some(function(ch){ return ch.isTOC; });
@@ -963,160 +977,141 @@ function importManuscript(e) {
   var file = e.target.files[0]; if (!file) return;
   var status = document.getElementById('importStatus');
   var ext = file.name.split('.').pop().toLowerCase();
+
+  if (ext !== 'epub' && ext !== 'docx' && ext !== 'pdf') {
+    status.textContent = 'Please import a DOCX, EPUB, or PDF file.';
+    return;
+  }
+
   status.textContent = 'Reading ' + file.name + '...';
 
-  if (ext === 'epub' || ext === 'docx') {
+  if (ext === 'epub') {
     if (typeof JSZip === 'undefined') { status.textContent = 'JSZip not loaded. Refresh and try again.'; return; }
     var r2 = new FileReader();
     r2.onload = function(ev) {
       JSZip.loadAsync(ev.target.result).then(function(zip) {
-        if (ext === 'epub') {
-          importEpub(zip, file.name, status);
-        } else {
-          importDocx(zip, file.name, status);
-        }
+        importEpub(zip, file.name, status);
       }).catch(function(err) { status.textContent = 'Error: ' + err.message; });
     };
     r2.readAsArrayBuffer(file);
+  } else if (ext === 'docx') {
+    // Pass file directly — do NOT clear input before mammoth reads it
+    importDocx(file, status);
   } else if (ext === 'pdf') {
     importPDF(file, status);
-  } else if (ext === 'html' || ext === 'htm') {
-    var reader = new FileReader();
-    reader.onload = function(ev) { finishImportHTML(ev.target.result, '', file.name, status); };
-    reader.readAsText(file);
-  } else {
-    // txt, md, etc
-    var reader = new FileReader();
-    reader.onload = function(ev) { finishImportText(ev.target.result, '', file.name, status); };
-    reader.readAsText(file);
   }
-  if (e.target.value !== undefined) e.target.value = '';
 }
 
 function importEpub(zip, filename, status) {
-  var opfKey = Object.keys(zip.files).find(function(f) { return f.endsWith('.opf'); });
+  var opfKey = Object.keys(zip.files).find(function(f){ return f.endsWith('.opf'); });
   var opfPromise = opfKey ? zip.files[opfKey].async('text') : Promise.resolve('');
   var titleFound = '';
   var opfDir = opfKey ? opfKey.split('/').slice(0,-1).join('/') : '';
 
-  opfPromise.then(function(opfText) {
+  opfPromise.then(function(opfText){
     if (opfText) {
       var tm = opfText.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
       if (tm) titleFound = tm[1].trim();
     }
 
-    // Get spine order from OPF so chapters appear in correct order
+    // ── Get spine order from OPF ──
     var spineOrder = [];
     if (opfText) {
       var manifestMap = {};
-      var manifestMatches = opfText.match(/<item[^>]+>/gi) || [];
-      manifestMatches.forEach(function(item) {
+      (opfText.match(/<item[^>]+>/gi) || []).forEach(function(item){
         var idM = item.match(/\bid="([^"]+)"/i);
         var hrefM = item.match(/\bhref="([^"]+)"/i);
         if (idM && hrefM) manifestMap[idM[1]] = hrefM[1];
       });
-      var spineMatches = opfText.match(/<itemref[^>]+>/gi) || [];
-      spineMatches.forEach(function(item) {
+      (opfText.match(/<itemref[^>]+>/gi) || []).forEach(function(item){
         var idM = item.match(/\bidref="([^"]+)"/i);
         if (idM && manifestMap[idM[1]]) spineOrder.push(manifestMap[idM[1]]);
       });
     }
 
-    // Fall back to sorted file list if no spine
-    var contentFiles = Object.keys(zip.files).filter(function(f) {
+    // ── Get all HTML content files ──
+    var contentFiles = Object.keys(zip.files).filter(function(f){
       var fname = f.split('/').pop().toLowerCase().replace(/\.(html|xhtml|htm)$/,'');
       return (f.endsWith('.html') || f.endsWith('.xhtml') || f.endsWith('.htm'))
-        && fname !== 'toc'
-        && fname !== 'nav'
-        && fname !== 'cover'
-        && fname !== 'navigation';
+        && fname !== 'toc' && fname !== 'nav' && fname !== 'cover' && fname !== 'navigation';
     });
 
-    // Use spine order if available
+    // ── Order by spine, not alphabetically ──
     var orderedFiles = [];
     if (spineOrder.length > 0) {
-      spineOrder.forEach(function(href) {
-        // Try multiple path combinations to find the file
-        var hrefBase = href.split('/').pop(); // just the filename
-        var found = contentFiles.find(function(f) {
+      spineOrder.forEach(function(href){
+        var hrefBase = href.split('/').pop();
+        var found = contentFiles.find(function(f){
           var fBase = f.split('/').pop();
-          return f === href
-            || f === opfDir + '/' + href
-            || f.endsWith('/' + href)
-            || fBase === hrefBase;
+          return f === href || f === opfDir+'/'+href || f.endsWith('/'+href) || fBase === hrefBase;
         });
         if (found && orderedFiles.indexOf(found) === -1) orderedFiles.push(found);
       });
     }
-    if (orderedFiles.length === 0) orderedFiles = contentFiles.sort();
+    // Add any files not in spine
+    contentFiles.forEach(function(f){ if (orderedFiles.indexOf(f) === -1) orderedFiles.push(f); });
 
-    return Promise.all(orderedFiles.map(function(fn) {
-      return zip.files[fn].async('text').then(function(text) { return {fn: fn, text: text}; });
+    return Promise.all(orderedFiles.map(function(fn){
+      return zip.files[fn].async('text').then(function(t){ return {fn:fn, text:t}; });
     }));
-  }).then(function(fileArr) {
-    var epubFrontMatter = [];
-    var epubMainChapters = [];
-    var epubBackMatter = [];
-    fullImportedHTML = '';
 
-    fileArr.forEach(function(file) {
+  }).then(function(fileArr){
+    var epubFront = [];
+    var epubChapters = [];
+    var epubBack = [];
+
+    fileArr.forEach(function(file){
       var h = file.text;
       var bodyMatch = h.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-      var content = bodyMatch ? bodyMatch[1] : h;
-      content = content
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-        .replace(/&apos;/g, "'")
-        .replace(/&amp;/g, '&')
-        .trim();
+      var bodyHTML = bodyMatch ? bodyMatch[1] : h;
+      bodyHTML = bodyHTML
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
+        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
+        .replace(/&apos;/g,"'").replace(/&amp;/g,'&').trim();
 
-      if (content.length < 20) return;
-      fullImportedHTML += content + '\n';
+      if (bodyHTML.replace(/<[^>]+>/g,'').trim().length < 20) return;
 
-      var titleMatch = content.match(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/i);
-      var chTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : '';
+      // ── Detect TOC files by content — skip entirely ──
+      var plainText = bodyHTML.replace(/<[^>]+>/g,'').trim();
+      var firstLine = plainText.split('\n')[0].trim().toLowerCase();
+      if (/^(table of contents|contents)$/.test(firstLine)) return;
+      // Also skip if the file is mostly short lines (TOC entries)
+      var lines = plainText.split('\n').filter(function(l){ return l.trim().length > 0; });
+      var shortLines = lines.filter(function(l){ return l.trim().length < 60; });
+      if (lines.length > 3 && shortLines.length / lines.length > 0.85 && lines.length < 40) return;
 
-      // Skip nav/toc files
-      if (/^(table of contents|contents|navigation)$/i.test(chTitle)) return;
-
-      // Use filename as fallback title
+      // ── Get chapter title from first heading ──
+      var titleMatch = bodyHTML.match(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/i);
+      var chTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'').trim() : '';
       if (!chTitle) {
-        chTitle = file.fn.split('/').pop().replace(/\.(html|xhtml|htm)$/i, '').replace(/[-_]/g, ' ');
+        chTitle = file.fn.split('/').pop().replace(/\.(html|xhtml|htm)$/i,'').replace(/[-_]/g,' ');
       }
 
-      // Detect front matter (copyright, title page, etc.)
-      if (/^(copyright|title page|dedication|epigraph|foreword|preface|introduction)/i.test(chTitle)
-        || /copyright|all rights reserved/i.test(content.replace(/<[^>]+>/g,'').substring(0,200))) {
-        epubFrontMatter.push({ id: Date.now() + epubFrontMatter.length + 1, title: chTitle, content: content, isFrontMatter: true });
+      var titleLower = chTitle.toLowerCase();
+
+      // ── Back matter ──
+      if (/^(about the author|acknowledgements?|also by|bibliography|afterword|glossary)/.test(titleLower)) {
+        epubBack.push({ id: Date.now()+epubBack.length+800, title: chTitle, content: bodyHTML, isBackMatter: true });
         return;
       }
 
-      // Detect back matter
-      if (/^(about the author|acknowledgements?|also by|bibliography|afterword)/i.test(chTitle)) {
-        epubBackMatter.push({ id: Date.now() + epubBackMatter.length + 800, title: chTitle, content: content, isBackMatter: true });
+      // ── Front matter — short files or known front matter titles ──
+      var isFront = /^(copyright|title page|dedication|epigraph|foreword|preface)/.test(titleLower)
+        || (plainText.length < 800 && /copyright|all rights reserved/i.test(plainText.substring(0,400)));
+      if (isFront) {
+        epubFront.push({ id: Date.now()+epubFront.length+1, title: chTitle, content: bodyHTML, isFrontMatter: true });
         return;
       }
 
-      epubMainChapters.push({ id: Date.now() + epubMainChapters.length, title: chTitle, content: content });
+      // ── Main chapter ──
+      epubChapters.push({ id: Date.now()+epubChapters.length, title: chTitle, content: bodyHTML });
     });
 
-    // EPUB structure: Chapters → Back Matter → Front Matter (copyright moves to end)
-    var newChapters = [];
-    epubMainChapters.forEach(function(ch){ newChapters.push(ch); });
-    epubBackMatter.forEach(function(ch){ newChapters.push(ch); });
-    epubFrontMatter.forEach(function(ch){ newChapters.push(ch); }); // front matter goes to END for EPUB
+    // ── Final order: Chapters → Back Matter → Front Matter ──
+    var newChapters = epubChapters.concat(epubBack).concat(epubFront);
 
     if (newChapters.length === 0) {
-      newChapters.push({id: Date.now(), title: 'Chapter 1', content: fullImportedHTML});
-    }
-
-    // If the EPUB produced very few chapters but the content contains multiple
-    // h1 headings, it's likely a single-file EPUB. Re-split using the same
-    // heading-based logic that DOCX import uses (finishImportHTML).
-    var h1Count = (fullImportedHTML.match(/<h1[^>]*>/gi) || []).length;
-    if (newChapters.length <= 2 && h1Count > newChapters.length) {
-      finishImportHTML(fullImportedHTML, titleFound, filename, status);
-      return;
+      newChapters.push({ id: Date.now(), title: 'Full Manuscript', content: '<p>Could not parse chapters.</p>' });
     }
 
     chapters = newChapters;
@@ -1126,6 +1121,8 @@ function importEpub(zip, filename, status) {
       if (activeProject) { activeProject.title = titleFound; activeProject.name = titleFound; }
     }
     if (activeProject) activeProject.chapters = chapters;
+    var chRow = document.getElementById('chapterTitleRow');
+    if (chRow) chRow.style.display = 'block';
     document.getElementById('chapterTitle').value = chapters[0].title || '';
     updateChapterTitleLabel();
     renderChapterTabs();
@@ -1134,177 +1131,77 @@ function importEpub(zip, filename, status) {
     if (editorInstance) {
       editorInstance.setData(chapters[0].content || '');
     } else {
-      var check = setInterval(function() {
+      var check = setInterval(function(){
         if (editorInstance) { clearInterval(check); editorInstance.setData(chapters[0].content || ''); }
       }, 100);
     }
-    status.innerHTML = '&#10003; ' + filename + ' imported — ' + newChapters.length + ' chapter' + (newChapters.length !== 1 ? 's' : '') + ' found';
+    status.innerHTML = '&#10003; ' + filename + ' imported \u2014 ' + newChapters.length + ' chapter' + (newChapters.length !== 1 ? 's' : '') + ' found';
     showToast('Imported: ' + newChapters.length + ' chapters');
   });
 }
 
-function importDocx(zip, filename, status) {
-  var stylesMap = {};
-  var titleFound = '';
+function importDocx(file, status) {
+  var filename = file.name;
+  // Use mammoth.js for proper Word formatting preservation
+  if (typeof mammoth === 'undefined') {
+    status.textContent = 'Error: mammoth.js not loaded.';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    mammoth.convertToHtml({ arrayBuffer: e.target.result }, {
+      styleMap: [
+        "p[style-name='Title'] => h1:fresh",
+        "p[style-name='Heading 1'] => h1:fresh",
+        "p[style-name='Heading 2'] => h2:fresh",
+        "p[style-name='Heading 3'] => h3:fresh",
+        "br[type='page'] => p.page-break"
+      ],
+      includeDefaultStyleMap: true,
+      ignoreEmptyParagraphs: false
+    }).then(function(result) {
+      var html = result.value;
 
-  // Try to get title from core document properties
-  var coreFile = zip.files['docProps/core.xml'];
-  var corePromise = coreFile ? coreFile.async('text') : Promise.resolve('');
+      // Convert Word page break markers to CKEditor page break format
+      html = html.replace(/<p[^>]*class="[^"]*page-break[^"]*"[^>]*>[\s\S]*?<\/p>/gi, '<div class="page-break" style="page-break-after:always;"><span></span></div>');
+      // Also handle inline page breaks mammoth may output
+      html = html.replace(/<br\s+data-cke-filler="true"\s*\/?>/gi, '');
 
-  corePromise.then(function(coreXml) {
-    if (coreXml) {
-      var tm = coreXml.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
-      if (tm) titleFound = tm[1].trim();
-    }
-    // Fall back to filename if no title in properties
-    if (!titleFound) titleFound = filename.replace(/\.docx$/i, '').replace(/[-_]/g, ' ');
+      // Get title from document
+      var titleFound = filename.replace(/\.docx$/i, '').replace(/[-_]/g, ' ');
+      var h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+      if (h1Match) {
+        var possibleTitle = h1Match[1].replace(/<[^>]+>/g,'').trim();
+        if (possibleTitle && !/^chapter/i.test(possibleTitle)) titleFound = possibleTitle;
+      }
 
-    var stylesFile = zip.files['word/styles.xml'];
-    return stylesFile ? stylesFile.async('text') : Promise.resolve('');
-  }).then(function(stylesXml) {
-    if (stylesXml) {
-      var styleMatches = stylesXml.match(/<w:style[^>]*>[\s\S]*?<\/w:style>/gi) || [];
-      styleMatches.forEach(function(s) {
-        var idMatch = s.match(/w:styleId="([^"]+)"/i);
-        var nameMatch = s.match(/<w:name\s+w:val="([^"]+)"/i);
-        if (idMatch && nameMatch) {
-          var id = idMatch[1], name = nameMatch[1].toLowerCase();
-          if (name.indexOf('heading 1') >= 0 || name === 'title') stylesMap[id] = 'h1';
-          else if (name.indexOf('heading 2') >= 0 || name === 'subtitle') stylesMap[id] = 'h2';
-          else if (name.indexOf('heading 3') >= 0) stylesMap[id] = 'h3';
-        }
+      // Strip TOC section — handles both heading-style and plain paragraph TOC
+      // Pattern 1: TOC as a heading tag
+      html = html.replace(/<h[1-6][^>]*>[^<]*table of contents[^<]*<\/h[1-6]>[\s\S]*?(?=<h[1-6])/i, '');
+      // Pattern 2: TOC as a plain paragraph (mammoth often outputs this way)
+      // Find <p>TABLE OF CONTENTS</p> and remove it plus all following <p> lines
+      // that look like TOC entries (chapter titles / page numbers) until a real chapter heading
+      html = html.replace(/<p[^>]*>[^<]*table of contents[^<]*<\/p>([\s\S]*?)(?=<h[1-6])/i, function(match) {
+        // Only strip if what follows are short lines (TOC entries, not real content)
+        return '';
       });
-    }
-    var doc = zip.files['word/document.xml'];
-    if (!doc) { status.textContent = 'Could not read DOCX.'; return; }
-    return doc.async('text');
-  }).then(function(xml) {
-    if (!xml) return;
-    var htmlOut = '';
-    var inTOC = false;
-    var paragraphs = xml.match(/<w:p[ >][\s\S]*?<\/w:p>/gi) || [];
-    paragraphs.forEach(function(pXml) {
-      // Detect TOC field start/end and skip those paragraphs
-      if (/<w:instrText[^>]*>[^<]*TOC[^<]*<\/w:instrText>/i.test(pXml)) { inTOC = true; }
-      if (inTOC) {
-        // TOC ends when we hit a w:fldChar with w:fldCharType="end"
-        if (/w:fldCharType="end"/i.test(pXml)) { inTOC = false; }
-        return; // skip TOC paragraphs
-      }
-      // Also skip paragraphs with TOC-related styles
-      var styleMatch = pXml.match(/<w:pStyle\s+w:val="([^"]+)"/i);
-      var styleId = styleMatch ? styleMatch[1] : '';
-      if (/^toc\d*$/i.test(styleId)) return; // skip TOC style paragraphs
 
-      var tag = stylesMap[styleId] || 'p';
-      if (tag === 'p') {
-        var outlineMatch = pXml.match(/<w:outlineLvl\s+w:val="(\d+)"/i);
-        if (outlineMatch) {
-          var lvl = parseInt(outlineMatch[1]);
-          if (lvl === 0) tag = 'h1';
-          else if (lvl === 1) tag = 'h2';
-          else if (lvl === 2) tag = 'h3';
-        }
-      }
-      var runs = pXml.match(/<w:r[ >][\s\S]*?<\/w:r>/gi) || [];
-      var formatted = '';
-      var hasText = false;
-      runs.forEach(function(r) {
-        var tMatch = r.match(/<w:t[^>]*>([\s\S]*?)<\/w:t>/gi);
-        if (!tMatch) return;
-        var txt = '';
-        tMatch.forEach(function(tm) { txt += tm.replace(/<[^>]+>/g, ''); });
-        txt = txt.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
-        if (txt.trim()) hasText = true;
-        var isBold = /<w:b[\s\/]/.test(r);
-        var isItalic = /<w:i[\s\/]/.test(r);
-        if (isBold) txt = '<strong>' + txt + '</strong>';
-        if (isItalic) txt = '<em>' + txt + '</em>';
-        formatted += txt;
-      });
-      if (!hasText) return;
-      // Force chapter/prologue/epilogue lines to h1 even without proper Word heading style
-      var plainText = formatted.replace(/<[^>]+>/g, '').trim();
-      if (tag !== 'h1' && /^(chapter\s+\S+|prologue|epilogue)/i.test(plainText)) {
-        tag = 'h1';
-      }
-      htmlOut += '<' + tag + '>' + formatted + '</' + tag + '>';
+      finishImportHTML(html, titleFound, filename, status);
+    }).catch(function(err) {
+      status.textContent = 'Error reading DOCX: ' + err.message;
     });
-    finishImportHTML(htmlOut, titleFound, filename, status);
-  }).catch(function(err) { status.textContent = 'Error reading DOCX: ' + err.message; });
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 function finishImportHTML(html, titleFound, filename, status) {
-  // Store full unfiltered content for Voice Studio (narrator reads everything)
   fullImportedHTML = html;
 
-  var chapterSections = html.split(/(?=<h1[^>]*>)/i);
-  var frontMatterContent = '';
-  var tocContent = '';
-  var mainChapters = [];
-  var backMatter = [];
+  // DOCX loads as one document — pages are already separated in the Word file
+  // Load the entire content as-is into the editor, no splitting
+  var docTitle = titleFound || filename.replace(/\.[^.]+$/, '');
 
-  chapterSections.forEach(function(section) {
-    var trimmed = section.trim();
-    if (!trimmed) return;
-
-    var h1Match = trimmed.match(/^<h1[^>]*>([\s\S]*?)<\/h1>/i);
-    var chapterTitle = h1Match ? h1Match[1].replace(/<[^>]+>/g, '').trim() : '';
-    var content = h1Match ? trimmed.slice(h1Match[0].length).trim() : trimmed;
-
-    // No h1 — front matter (copyright, disclaimers etc.)
-    if (!h1Match) {
-      frontMatterContent += content;
-      return;
-    }
-
-    // Table of Contents section
-    if (/^(table of contents|contents)$/i.test(chapterTitle)) {
-      tocContent = content;
-      return;
-    }
-
-    // Back matter
-    if (/^(about the author|acknowledgements?|also by|bibliography|index|glossary)/i.test(chapterTitle)) {
-      backMatter.push({ id: Date.now() + backMatter.length + 900, title: chapterTitle, content: content, isBackMatter: true });
-      return;
-    }
-
-    // Skip TOC nav entries (heading with no real body content)
-    if (!content || content.replace(/<[^>]+>/g,'').trim().length < 30) {
-      if (!/^(chapter|prologue|epilogue)/i.test(chapterTitle)) return;
-    }
-
-    // Deduplicate — skip if same title already added (TOC entries duplicate real chapters)
-    var alreadyExists = mainChapters.some(function(ch) {
-      return ch.title.toLowerCase().trim() === chapterTitle.toLowerCase().trim();
-    });
-    if (alreadyExists) return;
-
-    mainChapters.push({
-      id: Date.now() + mainChapters.length,
-      title: chapterTitle || ('Chapter ' + (mainChapters.length + 1)),
-      content: content
-    });
-  });
-
-  // MANUSCRIPT STRUCTURE: Front Matter → TOC → Chapters → Back Matter
-  var newChapters = [];
-
-  if (frontMatterContent && frontMatterContent.replace(/<[^>]+>/g,'').trim().length > 20) {
-    newChapters.push({ id: Date.now() + 1, title: 'Front Matter', content: frontMatterContent, isFrontMatter: true });
-  }
-  if (tocContent) {
-    newChapters.push({ id: Date.now() + 2, title: 'Table of Contents', content: tocContent, isTOC: true });
-  }
-  mainChapters.forEach(function(ch) { newChapters.push(ch); });
-  backMatter.forEach(function(ch) { newChapters.push(ch); });
-
-  if (newChapters.length === 0) {
-    newChapters.push({ id: Date.now(), title: 'Chapter 1', content: html });
-  }
-
-  chapters = newChapters;
+  chapters = [{ id: Date.now(), title: docTitle, content: html }];
   activeChapter = 0;
 
   if (titleFound) {
@@ -1312,9 +1209,13 @@ function finishImportHTML(html, titleFound, filename, status) {
     if (activeProject) { activeProject.title = titleFound; activeProject.name = titleFound; }
   }
   if (activeProject) activeProject.chapters = chapters;
-  document.getElementById('chapterTitle').value = chapters[0].title || '';
-  updateChapterTitleLabel();
-  renderChapterTabs();
+
+  // Hide chapter sidebar and chapter title — DOCX is one document
+  var sidebar = document.getElementById('sidebarChapters');
+  if (sidebar) sidebar.style.display = 'none';
+  var chRow = document.getElementById('chapterTitleRow');
+  if (chRow) chRow.style.display = 'none';
+
   updateStats();
   saveProject();
 
@@ -1326,8 +1227,8 @@ function finishImportHTML(html, titleFound, filename, status) {
     }, 100);
   }
 
-  status.innerHTML = '&#10003; ' + filename + ' imported — ' + newChapters.length + ' section' + (newChapters.length !== 1 ? 's' : '') + ' found';
-  showToast('Imported: ' + newChapters.length + ' sections');
+  status.innerHTML = '&#10003; ' + filename + ' imported';
+  showToast('Document imported');
 }
 
 function importPDF(file, status) {
