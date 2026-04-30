@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&amp;family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&amp;family=Cinzel:wght@400;600;700&amp;display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;max-width:100%;min-height:100vh;background:#F5ECD8;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--taupe);overflow-x:hidden;}
+html,body{width:100%;max-width:100%;min-height:100vh;background:#F5ECD8;font-family:'Cormorant Garamond',serif;font-size:18px;color:#000000;overflow-x:hidden;}
 
 :root{
   --taupe:#3a2a1a;--taupe-lt:rgba(58,42,26,.6);
@@ -45,22 +45,26 @@ html,body{width:100%;max-width:100%;min-height:100vh;background:#F5ECD8;font-fam
 
 /* -- PANELS -- */
 .panel{background:var(--card);border:1px solid var(--gold-bd);border-radius:14px;padding:24px;box-shadow:0 8px 28px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:16px;min-width:0;}
-.panel-title{display:flex;align-items:center;gap:10px;font-family:'Cinzel',serif;color:#6b4a1a;font-size:1.3rem;font-weight:700;border-bottom:1px solid var(--gold-bd);padding-bottom:10px;}
+.panel-title{display:flex;align-items:center;gap:10px;font-family:'Cinzel',serif;color:#000000;font-size:1.4rem;font-weight:700;border-bottom:1px solid var(--gold-bd);padding-bottom:10px;}
 .panel-icon{font-size:16px;color:var(--gold);}
-.lbl{display:block;font-size:1rem;color:var(--taupe);font-weight:700;margin-bottom:5px;}
+.lbl{display:block;font-size:1.05rem;color:#000000;font-weight:700;margin-bottom:6px;}
 
 /* -- INPUTS -- */
-.inp,select.inp,textarea.inp{width:100%;padding:11px 13px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--taupe);background:#fff;outline:none;transition:border .18s;}
+.inp,select.inp,textarea.inp{width:100%;padding:11px 13px;border:1px solid var(--gold-bd);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#000000;background:#fff;outline:none;transition:border .18s,box-shadow .18s;}
+.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,160,64,.35);}
 .inp:focus{border-color:var(--gold);}
 textarea.inp{resize:vertical;line-height:1.85;}
 
 /* -- BUTTONS -- */
-.btn-gold{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:8px;border:none;background:var(--gold);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-gold{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:8px;border:none;background:var(--gold);color:#000000;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-gold:focus-visible{outline:3px solid #000;outline-offset:2px;}
+.btn-sec{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#000000;font-family:'Cormorant Garamond',serif;font-size:1.1rem;cursor:pointer;transition:all .2s;font-weight:600;}
+.btn-sec:focus-visible{outline:3px solid #000;outline-offset:2px;}
 .btn-gold:hover{background:#d4b870;transform:translateY(-1px);}
-.btn-sec{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:1.05rem;cursor:pointer;transition:all .2s;font-weight:600;}
 .btn-sec:hover{background:rgba(201,169,97,.28);}
 .btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-.btn-plum{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-plum{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#000000;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-plum:focus-visible{outline:3px solid #000;outline-offset:2px;}
 .btn-plum:hover{background:rgba(201,160,64,.28);border-color:var(--gold);}
 
 /* -- MAIN GRID -- */
@@ -70,12 +74,13 @@ textarea.inp{resize:vertical;line-height:1.85;}
 /* -- LEFT - PROJECT PANEL -- */
 .project-panel{display:flex;flex-direction:column;gap:14px;min-width:0;overflow:hidden;}
 .project-list{display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;}
-.project-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);cursor:pointer;transition:all .18s;font-size:.9rem;min-width:0;}
+.project-item{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:8px;border:1px solid var(--gold-bd);background:var(--gold-lt);cursor:pointer;transition:all .18s;font-size:1rem;color:#000000;min-width:0;}
 .project-item:hover{background:rgba(201,169,97,.25);border-color:var(--gold);}
 .project-item.active{background:#C9A040;border-color:#C9A040;color:#3a2a1a;font-weight:700;}
 .project-item-name{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.project-item-date{font-size:.85rem;opacity:.85;flex-shrink:0;}
-.btn-new-project{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;border-radius:8px;border:1px dashed var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;font-weight:600;}
+.project-item-date{font-size:.95rem;color:#000000;opacity:.75;flex-shrink:0;}
+.btn-new-project{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:8px;border:1px dashed var(--gold-bd);background:var(--gold-lt);color:#000000;font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .18s;font-weight:600;}
+.btn-new-project:focus-visible{outline:3px solid #000;outline-offset:2px;}
 .btn-new-project:hover{background:rgba(201,160,64,.28);border-color:var(--gold);}
 
 /* -- RIGHT - EDITOR -- */
@@ -85,19 +90,21 @@ textarea.inp{resize:vertical;line-height:1.85;}
 /* -- STATS BAR -- */
 .stats-bar{display:flex;gap:20px;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,#f5ead0,#ede0c0);border:1px solid var(--gold-bd);flex-wrap:wrap;}
 .stat-item{display:flex;flex-direction:column;gap:2px;}
-.stat-val{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:#6b4a1a;}
-.stat-lbl{font-size:.85rem;color:var(--taupe);text-transform:uppercase;letter-spacing:.1em;}
+.stat-val{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;color:#000000;}
+.stat-lbl{font-size:.95rem;color:#000000;text-transform:uppercase;letter-spacing:.1em;}
 
 /* -- CHAPTER MANAGER -- */
 .chapter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-.ch-tab{padding:7px 12px;border-radius:6px;border:1px solid var(--gold-bd);background:#fff;color:var(--taupe);font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;width:100%;display:block;}
+.ch-tab{padding:9px 14px;border-radius:6px;border:1px solid var(--gold-bd);background:#fff;color:#000000;font-family:'Cormorant Garamond',serif;font-size:1.05rem;cursor:pointer;transition:all .18s;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;width:100%;display:block;}
+.ch-tab:focus-visible{outline:3px solid #000;outline-offset:2px;}
 .ch-tab-front{border-color:rgba(122,31,46,.3);color:var(--burg,#7a1f2e);}
 .ch-tab-toc{border-color:rgba(100,100,200,.3);color:#445;}
 .ch-tab-back{border-color:rgba(80,80,80,.3);color:#666;}
-.ch-divider{display:block;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-lt);padding:8px 2px 4px;margin-top:4px;border-top:1px solid var(--gold-bd);width:100%;}
+.ch-divider{display:block;font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#000000;padding:8px 2px 4px;margin-top:4px;border-top:1px solid var(--gold-bd);width:100%;}
 .ch-tab:hover{background:var(--gold-lt);}
 .ch-tab.active{background:#C9A040;border-color:#C9A040;color:#3a2a1a;font-weight:700;}
-.btn-add-ch{padding:6px 14px;border-radius:999px;border:1px dashed var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-family:'Cormorant Garamond',serif;font-size:.95rem;cursor:pointer;transition:all .18s;}
+.btn-add-ch{padding:7px 16px;border-radius:999px;border:1px dashed var(--gold-bd);background:var(--gold-lt);color:#000000;font-family:'Cormorant Garamond',serif;font-size:1rem;cursor:pointer;transition:all .18s;}
+.btn-add-ch:focus-visible{outline:3px solid #000;outline-offset:2px;}
 .btn-add-ch:hover{background:rgba(201,160,64,.25);}
 
 /* -- CKEditor container -- */
@@ -112,7 +119,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
   min-height:600px;
   max-height:800px;
   font-family:'Georgia','Times New Roman',serif;
-  font-size:16px;
+  font-size:18px;
   line-height:1.8;
   color:#000000;
   padding:60px 72px;
@@ -123,7 +130,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
 .ck-source-editing-area{display:none !important;}
 .ck.ck-editor__editable:focus{
   border-color:var(--gold) !important;
-  box-shadow:0 0 0 2px rgba(201,160,64,.2) !important;
+  box-shadow:0 0 0 3px rgba(201,160,64,.45) !important;
 }
 .ck.ck-toolbar{
   background:#f8f0e0 !important;
@@ -138,34 +145,34 @@ textarea.inp{resize:vertical;line-height:1.85;}
   border-radius:8px;
 }
 
-.word-count{font-size:.9rem;color:var(--taupe);font-style:italic;text-align:right;margin-top:4px;}
+.word-count{font-size:1rem;color:#000000;font-style:italic;text-align:right;margin-top:4px;}
 
 /* -- EXPORT BOX -- */
 .export-box{padding:16px;border-radius:10px;background:linear-gradient(135deg,#f5ead0,#ede0c0);border:1px solid var(--gold-bd);}
-.export-title{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:#6b4a1a;margin-bottom:10px;}
-.radio-opt{display:flex;align-items:center;gap:8px;font-size:1rem;cursor:pointer;margin-bottom:6px;}
+.export-title{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;color:#000000;margin-bottom:10px;}
+.radio-opt{display:flex;align-items:center;gap:8px;font-size:1.1rem;color:#000000;cursor:pointer;margin-bottom:8px;}
 .radio-opt:last-child{margin-bottom:0;}
 .radio-opt input[type=radio]{accent-color:#C9A040;width:16px;height:16px;cursor:pointer;}
 
 /* -- EPUB OPTION (collapsible) -- */
 .epub-option{margin-top:8px;padding:12px;background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:8px;display:none;}
 .epub-option.show{display:block;}
-.epub-note{font-size:.88rem;color:var(--taupe);font-style:italic;margin-top:6px;}
+.epub-note{font-size:1rem;color:#000000;font-style:italic;margin-top:6px;}
 
 /* -- FOOTER -- */
 .footer{border-top:1px solid var(--gold-bd);padding:20px 24px;text-align:center;background:#EDE0C8;}
-.footer a{font-size:.82rem;color:var(--taupe-lt);margin:0 10px;transition:color .2s;text-decoration:none;}
+.footer a{font-size:.95rem;color:#000000;margin:0 10px;transition:color .2s;text-decoration:none;}
 .footer a:hover{color:#C9A040;}
 
 /* -- FEATURE BADGE -- */
-.feature-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:rgba(201,160,64,.12);border:1px solid var(--gold-bd);font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6b4a1a;}
+.feature-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;background:rgba(201,160,64,.18);border:1px solid var(--gold-bd);font-family:'Cinzel',serif;font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#000000;}
 
 /* -- IMPORT DRAG ZONE -- */
-.drop-zone{border:2px dashed var(--gold-bd);border-radius:10px;padding:16px;text-align:center;color:var(--taupe-lt);font-style:italic;transition:all .2s;cursor:pointer;}
+.drop-zone{border:2px dashed var(--gold-bd);border-radius:10px;padding:16px;text-align:center;color:#000000;font-style:italic;transition:all .2s;cursor:pointer;}
 .drop-zone:hover,.drop-zone.dragover{border-color:var(--gold);background:rgba(201,160,64,.08);color:var(--taupe);}
 
 /* -- TOAST -- */
-.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;background:#1a1410;color:#e8d9be;font-family:'Cormorant Garamond',serif;font-size:.95rem;box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s ease;}
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 22px;border-radius:10px;background:#1a1410;color:#ffffff;font-family:'Cormorant Garamond',serif;font-size:1.05rem;box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s ease;}
 .toast.show{transform:translateY(0);opacity:1;}
 
 @media(max-width:600px){
@@ -174,7 +181,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
   .ck.ck-editor__main>.ck-editor__editable{padding:24px 20px;min-height:400px;}
   .editor-meta{grid-template-columns:1fr;}
 }
-.nyxen-bubble{position:fixed;bottom:24px;right:24px;z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}.nyxen-bubble-btn{width:56px;height:56px;border-radius:50%;background:#2C1E0F;border:3px solid #C9A040;cursor:pointer;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.35);transition:transform .2s;padding:0;}.nyxen-bubble-btn:hover{transform:scale(1.08);}.nyxen-bubble-btn img{width:100%;height:100%;object-fit:cover;display:block;}.nyx-panel{width:340px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.25);border:1px solid rgba(201,160,64,.3);overflow:hidden;display:none;flex-direction:column;max-height:500px;}.nyx-panel.open{display:flex;}.nyx-ph{background:#2C1E0F;padding:11px 14px;display:flex;align-items:center;gap:9px;flex-shrink:0;}.nyx-ph .av{width:30px;height:30px;border-radius:8px;background:url('https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg') center/cover;border:2px solid #C9A040;flex-shrink:0;}.nyx-ph .nm{font-family:'Cinzel',serif;font-size:.8rem;font-weight:700;color:#C9A040;}.nyx-ph .st{font-size:.6rem;color:rgba(255,255,255,.4);font-style:italic;}.nyx-ph .cls{margin-left:auto;color:rgba(255,255,255,.5);cursor:pointer;background:none;border:none;font-size:1rem;padding:2px 6px;}.nyx-qrow{display:flex;flex-wrap:wrap;gap:4px;padding:7px 10px;border-bottom:1px solid #EEE;background:#fff;flex-shrink:0;}.nyx-q{padding:3px 8px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:#6b4a1a;font-size:.64rem;cursor:pointer;}.nyx-q:hover{background:rgba(201,160,64,.1);}.nyx-fd{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;background:#FAFAFA;min-height:180px;}.nyx-m{padding:9px 12px;border-radius:10px;font-size:.81rem;line-height:1.6;max-width:92%;}.nyx-m.ai{background:#fff;border:1px solid #E8D9BF;color:#2c1e0f;align-self:flex-start;}.nyx-lbl{font-size:.44rem;letter-spacing:.14em;color:#C9A040;margin-bottom:3px;font-weight:700;font-family:'Cinzel',serif;text-transform:uppercase;}.nyx-m.user{background:#2C1E0F;color:rgba(255,255,255,.8);align-self:flex-end;}.nyx-dots{display:inline-flex;gap:3px;align-items:center;}.nyx-dots span{width:4px;height:4px;border-radius:50%;background:#C9A040;animation:nxd 1.2s ease-in-out infinite;}.nyx-dots span:nth-child(2){animation-delay:.2s;}.nyx-dots span:nth-child(3){animation-delay:.4s;}@keyframes nxd{0%,80%,100%{opacity:.35;transform:translateY(0);}40%{opacity:1;transform:translateY(-4px);}}.nyx-ins{display:inline-block;margin-top:5px;padding:2px 8px;border:1px solid rgba(201,160,64,.4);border-radius:999px;font-size:.44rem;color:#6b4a1a;cursor:pointer;background:transparent;}.nyx-ins:hover{background:#C9A040;color:#1a0a00;}.nyx-inp{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #EEE;background:#fff;flex-shrink:0;}.nyx-inp textarea{flex:1;padding:7px 10px;border-radius:7px;border:1.5px solid #E0D0B0;font-size:.82rem;color:#2c1e0f;outline:none;resize:none;min-height:32px;max-height:70px;line-height:1.4;font-family:inherit;}.nyx-inp textarea:focus{border-color:#C9A040;}.nyx-inp button{width:32px;height:32px;border-radius:7px;border:none;background:#2C1E0F;color:#C9A040;cursor:pointer;font-size:.85rem;flex-shrink:0;}
+.nyxen-bubble{position:fixed;bottom:24px;right:24px;z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}.nyxen-bubble-btn{width:56px;height:56px;border-radius:50%;background:#2C1E0F;border:3px solid #C9A040;cursor:pointer;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.35);transition:transform .2s;padding:0;}.nyxen-bubble-btn:hover{transform:scale(1.08);}.nyxen-bubble-btn img{width:100%;height:100%;object-fit:cover;display:block;}.nyx-panel{width:340px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.25);border:1px solid rgba(201,160,64,.3);overflow:hidden;display:none;flex-direction:column;max-height:500px;}.nyx-panel.open{display:flex;}.nyx-ph{background:#2C1E0F;padding:11px 14px;display:flex;align-items:center;gap:9px;flex-shrink:0;}.nyx-ph .av{width:30px;height:30px;border-radius:8px;background:url('https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg') center/cover;border:2px solid #C9A040;flex-shrink:0;}.nyx-ph .nm{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:#C9A040;}.nyx-ph .st{font-size:.6rem;color:rgba(255,255,255,.4);font-style:italic;}.nyx-ph .cls{margin-left:auto;color:rgba(255,255,255,.5);cursor:pointer;background:none;border:none;font-size:1rem;padding:2px 6px;}.nyx-qrow{display:flex;flex-wrap:wrap;gap:4px;padding:7px 10px;border-bottom:1px solid #EEE;background:#fff;flex-shrink:0;}.nyx-q{padding:3px 8px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:#000000;font-size:.64rem;cursor:pointer;}.nyx-q:hover{background:rgba(201,160,64,.1);}.nyx-fd{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px;background:#FAFAFA;min-height:180px;}.nyx-m{padding:9px 12px;border-radius:10px;font-size:.81rem;line-height:1.6;max-width:92%;}.nyx-m.ai{background:#fff;border:1px solid #E8D9BF;color:#2c1e0f;align-self:flex-start;}.nyx-lbl{font-size:.44rem;letter-spacing:.14em;color:#C9A040;margin-bottom:3px;font-weight:700;font-family:'Cinzel',serif;text-transform:uppercase;}.nyx-m.user{background:#2C1E0F;color:rgba(255,255,255,.8);align-self:flex-end;}.nyx-dots{display:inline-flex;gap:3px;align-items:center;}.nyx-dots span{width:4px;height:4px;border-radius:50%;background:#C9A040;animation:nxd 1.2s ease-in-out infinite;}.nyx-dots span:nth-child(2){animation-delay:.2s;}.nyx-dots span:nth-child(3){animation-delay:.4s;}@keyframes nxd{0%,80%,100%{opacity:.35;transform:translateY(0);}40%{opacity:1;transform:translateY(-4px);}}.nyx-ins{display:inline-block;margin-top:5px;padding:2px 8px;border:1px solid rgba(201,160,64,.4);border-radius:999px;font-size:.44rem;color:#000000;cursor:pointer;background:transparent;}.nyx-ins:hover{background:#C9A040;color:#1a0a00;}.nyx-inp{display:flex;gap:6px;padding:8px 10px;border-top:1px solid #EEE;background:#fff;flex-shrink:0;}.nyx-inp textarea{flex:1;padding:7px 10px;border-radius:7px;border:1.5px solid #E0D0B0;font-size:1rem;color:#2c1e0f;outline:none;resize:none;min-height:32px;max-height:70px;line-height:1.4;font-family:inherit;}.nyx-inp textarea:focus{border-color:#C9A040;}.nyx-inp button{width:32px;height:32px;border-radius:7px;border:none;background:#2C1E0F;color:#C9A040;cursor:pointer;font-size:1rem;flex-shrink:0;}
 </style>
 
 
@@ -216,7 +223,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
       <span class="feature-badge">📄 DOCX Import</span>
       <span class="feature-badge">💾 Auto-Save</span>
     </div>
-    <p style="color:var(--taupe-lt);font-style:italic;max-width:600px;margin:0 auto;">A professional Word-like editor for authors. Write, format, and export your manuscript to EPUB for Kindle, Apple Books, Kobo, and all major platforms.</p>
+    <p style="color:#000000;font-style:italic;max-width:600px;margin:0 auto;">A professional Word-like editor for authors. Write, format, and export your manuscript to EPUB for Kindle, Apple Books, Kobo, and all major platforms.</p>
   </div>
 
   <div class="workspace-grid">
@@ -229,8 +236,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
           <div class="panel-title" style="margin:0;padding:0;border:none;"><span class="panel-icon">📑</span> Chapters</div>
           <div style="display:flex;gap:6px;">
-            <button class="btn-add-ch" onclick="addChapter()" style="font-size:.8rem;padding:4px 10px;">＋ Add</button>
-            <button class="btn-add-ch" onclick="deleteChapter()" style="font-size:.8rem;padding:4px 10px;color:#c03c3c;border-color:rgba(192,60,60,.4);">✕</button>
+            <button class="btn-add-ch" onclick="addChapter()" style="font-size:1rem;padding:4px 10px;">＋ Add</button>
+            <button class="btn-add-ch" onclick="deleteChapter()" style="font-size:1rem;padding:4px 10px;color:#c03c3c;border-color:rgba(192,60,60,.4);">✕</button>
           </div>
         </div>
         <div class="chapter-tabs" id="chapterTabs" style="display:flex;flex-direction:column;gap:4px;"></div>
@@ -243,8 +250,8 @@ textarea.inp{resize:vertical;line-height:1.85;}
         <label class="lbl" style="margin-bottom:8px;">Details</label>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <div>
-            <label class="lbl" style="font-size:.78rem;">Genre</label>
-            <select class="inp" id="projectGenre" style="font-size:.9rem;padding:7px 10px;">
+            <label class="lbl" style="font-size:1rem;">Genre</label>
+            <select class="inp" id="projectGenre" style="font-size:1.05rem;padding:7px 10px;">
               <option>Urban Fantasy</option>
               <option>Fantasy Romance</option>
               <option>Paranormal</option>
@@ -260,12 +267,12 @@ textarea.inp{resize:vertical;line-height:1.85;}
             </select>
           </div>
           <div>
-            <label class="lbl" style="font-size:.78rem;">Series</label>
-            <input class="inp" type="text" id="projectSeries" placeholder="Series name (optional)" style="font-size:.9rem;padding:7px 10px;">
+            <label class="lbl" style="font-size:1rem;">Series</label>
+            <input class="inp" type="text" id="projectSeries" placeholder="Series name (optional)" style="font-size:1.05rem;padding:7px 10px;">
           </div>
           <div>
-            <label class="lbl" style="font-size:.78rem;">Target Word Count</label>
-            <input class="inp" type="number" id="targetWords" placeholder="80000" value="80000" style="font-size:.9rem;padding:7px 10px;">
+            <label class="lbl" style="font-size:1rem;">Target Word Count</label>
+            <input class="inp" type="number" id="targetWords" placeholder="80000" value="80000" style="font-size:1.05rem;padding:7px 10px;">
           </div>
         </div>
       </div>
@@ -291,9 +298,9 @@ textarea.inp{resize:vertical;line-height:1.85;}
       <!-- IMPORT MANUSCRIPT -->
       <div style="border-bottom:1px solid var(--gold-bd);padding-bottom:16px;margin-bottom:16px;">
         <label class="lbl" style="margin-bottom:6px;">Import Manuscript</label>
-        <label class="drop-zone" id="dropZone" for="importFile" style="display:block;cursor:pointer;" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">📥 Drop file here or click to browse<br><span style="font-size:.75rem;">.docx, .epub, .pdf</span></label>
-        <input type="file" id="importFile" accept=".docx,.epub,.pdf" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="importManuscript(event)">
-        <div id="importStatus" style="font-size:.8rem;color:var(--taupe-lt);font-style:italic;margin-top:6px;"></div>
+        <label class="drop-zone" id="dropZone" for="importFile" style="display:block;cursor:pointer;" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">📥 Drop file here or click to browse<br><span style="font-size:.95rem;">.docx, .pdf</span></label>
+        <input type="file" id="importFile" accept=".docx,.pdf" style="position:absolute;opacity:0;width:1px;height:1px;" onchange="importManuscript(event)">
+        <div id="importStatus" style="font-size:1rem;color:#000000;font-style:italic;margin-top:6px;"></div>
       </div>
 
       <!-- BOOK INFO -->
@@ -327,64 +334,64 @@ textarea.inp{resize:vertical;line-height:1.85;}
         <div class="export-box">
           <div class="export-title">📤 Export Manuscript</div>
           <label class="radio-opt">
-            <input type="radio" name="edExport" value="epub" checked="">
-            EPUB <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(ebook for Kindle, Apple Books, Kobo)</span>
-          </label>
-          <label class="radio-opt">
-            <input type="radio" name="edExport" value="docx">
-            DOCX <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(ebook / manuscript — includes TOC)</span>
+            <input type="radio" name="edExport" value="docx" checked="">
+            DOCX <span style="font-size:1rem;color:#000000;margin-left:4px;">(manuscript — includes TOC)</span>
           </label>
           <label class="radio-opt">
             <input type="radio" name="edExport" value="pdf">
-            PDF <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(ebook / print-ready — includes TOC)</span>
+            PDF <span style="font-size:1rem;color:#000000;margin-left:4px;">(print-ready — includes TOC)</span>
           </label>
           <label class="radio-opt">
             <input type="radio" name="edExport" value="html">
-            HTML <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(formatted web document)</span>
+            HTML <span style="font-size:1rem;color:#000000;margin-left:4px;">(formatted web document)</span>
           </label>
           <label class="radio-opt">
             <input type="radio" name="edExport" value="txt">
-            Plain Text <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(download .txt)</span>
-          </label>
-          <label class="radio-opt">
-            <input type="radio" name="edExport" value="voicestudio">
-            Voice Studio <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(send to audiobook pipeline — EPUB only)</span>
+            Plain Text <span style="font-size:1rem;color:#000000;margin-left:4px;">(download .txt)</span>
           </label>
           <label class="radio-opt">
             <input type="radio" name="edExport" value="collections">
-            Collections <span style="font-size:.8rem;color:var(--taupe-lt);margin-left:4px;">(publish directly)</span>
+            Send to Collections <span style="font-size:1rem;color:#000000;margin-left:4px;">(DOCX — publish-ready)</span>
+          </label>
+          <label class="radio-opt">
+            <input type="radio" name="edExport" value="voicestudio">
+            Send to Voice Studio <span style="font-size:1rem;color:#000000;margin-left:4px;">(auto-converts to EPUB)</span>
           </label>
 
+          <div style="margin-top:8px;padding:10px;background:var(--gold-lt);border:1px solid var(--gold-bd);border-radius:8px;font-size:1rem;color:var(--taupe);font-style:italic;">
+            Voice Studio requires EPUB format. Your manuscript will be auto-converted when sent — no action needed.
+          </div>
+
           <!-- EPUB options -->
-          <div class="epub-option show" id="epubOption">
-            <div style="font-family:'Cinzel',serif;font-size:.78rem;font-weight:700;color:#6b4a1a;margin-bottom:8px;">EPUB 3.0 Options</div>
+          <div class="epub-option" id="epubOption">
+            <div style="font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:#000000;margin-bottom:8px;">EPUB 3.0 Options</div>
             <div style="margin-bottom:8px;">
-              <label class="lbl" style="font-size:.75rem;">Cover Image</label>
+              <label class="lbl" style="font-size:.95rem;">Cover Image</label>
               <div style="display:flex;gap:4px;align-items:center;">
-                <input class="inp" type="text" id="epubCover" placeholder="https://..." style="font-size:.82rem;padding:5px 8px;flex:1;" oninput="previewCoverFromUrl(this.value)">
+                <input class="inp" type="text" id="epubCover" placeholder="https://..." style="font-size:1rem;padding:5px 8px;flex:1;" oninput="previewCoverFromUrl(this.value)">
                 <input type="file" id="epubCoverFile" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handleCoverUpload(event)">
                 <button type="button" onclick="document.getElementById('epubCoverFile').click()"
-                  style="padding:5px 8px;border-radius:6px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#6b4a1a;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">📁 Upload</button>
+                  style="padding:5px 8px;border-radius:6px;border:1px solid var(--gold-bd);background:var(--gold-lt);color:#000000;font-size:.95rem;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;">📁 Upload</button>
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
               <div style="flex-shrink:0;">
-                <label class="lbl" style="font-size:.75rem;">Language</label>
-                <input class="inp" type="text" id="epubLang" value="en" style="font-size:.85rem;padding:6px 9px;width:60px;">
+                <label class="lbl" style="font-size:.95rem;">Language</label>
+                <input class="inp" type="text" id="epubLang" value="en" style="font-size:1rem;padding:6px 9px;width:60px;">
               </div>
               <div style="flex:1;">
-                <label class="lbl" style="font-size:.75rem;">Publisher</label>
-                <input class="inp" type="text" id="epubPublisher" placeholder="Publisher name" style="font-size:.85rem;padding:6px 9px;">
+                <label class="lbl" style="font-size:.95rem;">Publisher</label>
+                <input class="inp" type="text" id="epubPublisher" placeholder="Publisher name" style="font-size:1rem;padding:6px 9px;">
               </div>
             </div>
             <div style="margin-bottom:8px;">
-              <label class="lbl" style="font-size:.75rem;">Description / Blurb</label>
-              <textarea class="inp" id="epubDescription" placeholder="Book description for metadata..." rows="2" style="font-size:.85rem;padding:6px 9px;"></textarea>
+              <label class="lbl" style="font-size:.95rem;">Description / Blurb</label>
+              <textarea class="inp" id="epubDescription" placeholder="Book description for metadata..." rows="2" style="font-size:1rem;padding:6px 9px;"></textarea>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <label class="lbl" style="font-size:.75rem;margin-bottom:0;">Include Title Page</label>
+              <label class="lbl" style="font-size:.95rem;margin-bottom:0;">Include Title Page</label>
               <input type="checkbox" id="epubTitlePage" checked="" style="accent-color:#C9A040;width:16px;height:16px;">
-              <label class="lbl" style="font-size:.75rem;margin-bottom:0;margin-left:12px;">Include TOC</label>
+              <label class="lbl" style="font-size:.95rem;margin-bottom:0;margin-left:12px;">Include TOC</label>
               <input type="checkbox" id="epubTOC" checked="" style="accent-color:#C9A040;width:16px;height:16px;">
             </div>
             <div class="epub-note">Generates a valid EPUB 3.0 file with proper navigation, chapter structure, and metadata.</div>
@@ -392,21 +399,20 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
           <div style="margin-top:12px;display:flex;gap:8px;">
             <button class="btn-gold" style="flex:1;" onclick="exportManuscript()">🚀 Export / Send</button>
-            <button class="btn-sec" style="flex:1;" onclick="quickDownloadEPUB()">📘 Download EPUB</button>
           </div>
-          <div id="exportStatus" style="font-size:.88rem;color:var(--taupe);font-style:italic;margin-top:8px;"></div>
+          <div id="exportStatus" style="font-size:1rem;color:var(--taupe);font-style:italic;margin-top:8px;"></div>
         </div>
 
         <!-- RIGHT: cover preview -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding-top:4px;">
-          <div style="font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;color:var(--taupe-lt);text-transform:uppercase;letter-spacing:.08em;">Cover</div>
+          <div style="font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:.08em;">Cover</div>
           <div id="coverPreviewWrap" style="position:relative;">
             <img id="coverPreviewImg" src="" alt="Cover preview"
               style="width:180px;height:270px;object-fit:cover;border-radius:6px;border:1px solid var(--gold-bd);display:none;box-shadow:0 4px 16px rgba(0,0,0,.2);">
             <button type="button" onclick="clearCover()" id="coverClearBtn"
               style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:.6rem;cursor:pointer;line-height:1;padding:0;display:none;">✕</button>
           </div>
-          <div id="coverEmptyMsg" style="width:180px;height:270px;border:2px dashed var(--gold-bd);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--taupe-lt);text-align:center;padding:8px;line-height:1.4;">No cover set</div>
+          <div id="coverEmptyMsg" style="width:180px;height:270px;border:2px dashed var(--gold-bd);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#000000;text-align:center;padding:8px;line-height:1.4;">No cover set</div>
         </div>
 
       </div>
@@ -648,8 +654,8 @@ function initCKEditor() {
       document.getElementById('ckEditor').innerHTML =
         '<div style="padding:40px;color:#c03c3c;text-align:center;">' +
         '<p style="font-size:1.2rem;font-weight:700;">Editor failed to load</p>' +
-        '<p style="font-size:.9rem;margin-top:8px;">' + err.message + '</p>' +
-        '<p style="font-size:.85rem;margin-top:12px;color:var(--taupe-lt);">Try refreshing the page. If the issue persists, check your internet connection.</p>' +
+        '<p style="font-size:1.05rem;margin-top:8px;">' + err.message + '</p>' +
+        '<p style="font-size:1rem;margin-top:12px;color:#000000;">Try refreshing the page. If the issue persists, check your internet connection.</p>' +
         '</div>';
     });
 }
@@ -708,7 +714,7 @@ function renderProjectList() {
   var list = document.getElementById('projectList');
   list.innerHTML = '';
   if (projects.length === 0) {
-    list.innerHTML = '<div style="font-size:.85rem;color:var(--taupe-lt);font-style:italic;padding:8px;text-align:center;">No saved manuscripts — import a file or send from Publisher Workspace</div>';
+    list.innerHTML = '<div style="font-size:1rem;color:#000000;font-style:italic;padding:8px;text-align:center;">No saved manuscripts — import a file or send from Publisher Workspace</div>';
     return;
   }
   projects.forEach(function(p) {
@@ -959,7 +965,8 @@ function setupExportToggle() {
   document.addEventListener('change', function(e) {
     if (e.target.name === 'edExport') {
       var opt = document.getElementById('epubOption');
-      if (e.target.value === 'epub') {
+      // Show EPUB metadata options only when sending to Voice Studio (auto-converts to EPUB)
+      if (e.target.value === 'voicestudio') {
         opt.classList.add('show');
       } else {
         opt.classList.remove('show');
@@ -978,23 +985,14 @@ function importManuscript(e) {
   var status = document.getElementById('importStatus');
   var ext = file.name.split('.').pop().toLowerCase();
 
-  if (ext !== 'epub' && ext !== 'docx' && ext !== 'pdf') {
-    status.textContent = 'Please import a DOCX, EPUB, or PDF file.';
+  if (ext !== 'docx' && ext !== 'pdf') {
+    status.textContent = 'Please import a DOCX or PDF file. EPUB import is handled by Voice Studio.';
     return;
   }
 
   status.textContent = 'Reading ' + file.name + '...';
 
-  if (ext === 'epub') {
-    if (typeof JSZip === 'undefined') { status.textContent = 'JSZip not loaded. Refresh and try again.'; return; }
-    var r2 = new FileReader();
-    r2.onload = function(ev) {
-      JSZip.loadAsync(ev.target.result).then(function(zip) {
-        importEpub(zip, file.name, status);
-      }).catch(function(err) { status.textContent = 'Error: ' + err.message; });
-    };
-    r2.readAsArrayBuffer(file);
-  } else if (ext === 'docx') {
+  if (ext === 'docx') {
     // Pass file directly — do NOT clear input before mammoth reads it
     importDocx(file, status);
   } else if (ext === 'pdf') {
@@ -1002,143 +1000,6 @@ function importManuscript(e) {
   }
 }
 
-function importEpub(zip, filename, status) {
-  var opfKey = Object.keys(zip.files).find(function(f){ return f.endsWith('.opf'); });
-  var opfPromise = opfKey ? zip.files[opfKey].async('text') : Promise.resolve('');
-  var titleFound = '';
-  var opfDir = opfKey ? opfKey.split('/').slice(0,-1).join('/') : '';
-
-  opfPromise.then(function(opfText){
-    if (opfText) {
-      var tm = opfText.match(/<dc:title[^>]*>([^<]+)<\/dc:title>/i);
-      if (tm) titleFound = tm[1].trim();
-    }
-
-    // ── Get spine order from OPF ──
-    var spineOrder = [];
-    if (opfText) {
-      var manifestMap = {};
-      (opfText.match(/<item[^>]+>/gi) || []).forEach(function(item){
-        var idM = item.match(/\bid="([^"]+)"/i);
-        var hrefM = item.match(/\bhref="([^"]+)"/i);
-        if (idM && hrefM) manifestMap[idM[1]] = hrefM[1];
-      });
-      (opfText.match(/<itemref[^>]+>/gi) || []).forEach(function(item){
-        var idM = item.match(/\bidref="([^"]+)"/i);
-        if (idM && manifestMap[idM[1]]) spineOrder.push(manifestMap[idM[1]]);
-      });
-    }
-
-    // ── Get all HTML content files ──
-    var contentFiles = Object.keys(zip.files).filter(function(f){
-      var fname = f.split('/').pop().toLowerCase().replace(/\.(html|xhtml|htm)$/,'');
-      return (f.endsWith('.html') || f.endsWith('.xhtml') || f.endsWith('.htm'))
-        && fname !== 'toc' && fname !== 'nav' && fname !== 'cover' && fname !== 'navigation';
-    });
-
-    // ── Order by spine, not alphabetically ──
-    var orderedFiles = [];
-    if (spineOrder.length > 0) {
-      spineOrder.forEach(function(href){
-        var hrefBase = href.split('/').pop();
-        var found = contentFiles.find(function(f){
-          var fBase = f.split('/').pop();
-          return f === href || f === opfDir+'/'+href || f.endsWith('/'+href) || fBase === hrefBase;
-        });
-        if (found && orderedFiles.indexOf(found) === -1) orderedFiles.push(found);
-      });
-    }
-    // Add any files not in spine
-    contentFiles.forEach(function(f){ if (orderedFiles.indexOf(f) === -1) orderedFiles.push(f); });
-
-    return Promise.all(orderedFiles.map(function(fn){
-      return zip.files[fn].async('text').then(function(t){ return {fn:fn, text:t}; });
-    }));
-
-  }).then(function(fileArr){
-    var epubFront = [];
-    var epubChapters = [];
-    var epubBack = [];
-
-    fileArr.forEach(function(file){
-      var h = file.text;
-      var bodyMatch = h.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-      var bodyHTML = bodyMatch ? bodyMatch[1] : h;
-      bodyHTML = bodyHTML
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'')
-        .replace(/<script[^>]*>[\s\S]*?<\/script>/gi,'')
-        .replace(/&apos;/g,"'").replace(/&amp;/g,'&').trim();
-
-      if (bodyHTML.replace(/<[^>]+>/g,'').trim().length < 20) return;
-
-      // ── Detect TOC files by content — skip entirely ──
-      var plainText = bodyHTML.replace(/<[^>]+>/g,'').trim();
-      var firstLine = plainText.split('\n')[0].trim().toLowerCase();
-      if (/^(table of contents|contents)$/.test(firstLine)) return;
-      // Also skip if the file is mostly short lines (TOC entries)
-      var lines = plainText.split('\n').filter(function(l){ return l.trim().length > 0; });
-      var shortLines = lines.filter(function(l){ return l.trim().length < 60; });
-      if (lines.length > 3 && shortLines.length / lines.length > 0.85 && lines.length < 40) return;
-
-      // ── Get chapter title from first heading ──
-      var titleMatch = bodyHTML.match(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/i);
-      var chTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g,'').trim() : '';
-      if (!chTitle) {
-        chTitle = file.fn.split('/').pop().replace(/\.(html|xhtml|htm)$/i,'').replace(/[-_]/g,' ');
-      }
-
-      var titleLower = chTitle.toLowerCase();
-
-      // ── Back matter ──
-      if (/^(about the author|acknowledgements?|also by|bibliography|afterword|glossary)/.test(titleLower)) {
-        epubBack.push({ id: Date.now()+epubBack.length+800, title: chTitle, content: bodyHTML, isBackMatter: true });
-        return;
-      }
-
-      // ── Front matter — short files or known front matter titles ──
-      var isFront = /^(copyright|title page|dedication|epigraph|foreword|preface)/.test(titleLower)
-        || (plainText.length < 800 && /copyright|all rights reserved/i.test(plainText.substring(0,400)));
-      if (isFront) {
-        epubFront.push({ id: Date.now()+epubFront.length+1, title: chTitle, content: bodyHTML, isFrontMatter: true });
-        return;
-      }
-
-      // ── Main chapter ──
-      epubChapters.push({ id: Date.now()+epubChapters.length, title: chTitle, content: bodyHTML });
-    });
-
-    // ── Final order: Chapters → Back Matter → Front Matter ──
-    var newChapters = epubChapters.concat(epubBack).concat(epubFront);
-
-    if (newChapters.length === 0) {
-      newChapters.push({ id: Date.now(), title: 'Full Manuscript', content: '<p>Could not parse chapters.</p>' });
-    }
-
-    chapters = newChapters;
-    activeChapter = 0;
-    if (titleFound) {
-      document.getElementById('bookTitle').value = titleFound;
-      if (activeProject) { activeProject.title = titleFound; activeProject.name = titleFound; }
-    }
-    if (activeProject) activeProject.chapters = chapters;
-    var chRow = document.getElementById('chapterTitleRow');
-    if (chRow) chRow.style.display = 'block';
-    document.getElementById('chapterTitle').value = chapters[0].title || '';
-    updateChapterTitleLabel();
-    renderChapterTabs();
-    updateStats();
-    saveProject();
-    if (editorInstance) {
-      editorInstance.setData(chapters[0].content || '');
-    } else {
-      var check = setInterval(function(){
-        if (editorInstance) { clearInterval(check); editorInstance.setData(chapters[0].content || ''); }
-      }, 100);
-    }
-    status.innerHTML = '&#10003; ' + filename + ' imported \u2014 ' + newChapters.length + ' chapter' + (newChapters.length !== 1 ? 's' : '') + ' found';
-    showToast('Imported: ' + newChapters.length + ' chapters');
-  });
-}
 
 function importDocx(file, status) {
   var filename = file.name;
@@ -1197,11 +1058,61 @@ function importDocx(file, status) {
 function finishImportHTML(html, titleFound, filename, status) {
   fullImportedHTML = html;
 
-  // DOCX loads as one document — pages are already separated in the Word file
-  // Load the entire content as-is into the editor, no splitting
   var docTitle = titleFound || filename.replace(/\.[^.]+$/, '');
 
-  chapters = [{ id: Date.now(), title: docTitle, content: html }];
+  // ---- SPLIT INTO CHAPTERS BY <h1> HEADINGS ----
+  // Anything before the first <h1> = front matter (copyright, dedication, etc.)
+  // Each <h1> starts a new chapter.
+  // Trailing sections like "About the Author" / "Acknowledgments" / "Also by" = back matter.
+
+  var BACK_MATTER_PATTERNS = /^(about the author|acknowledg(e)?ments|also by|other (books|works)|author('s)? note|epilogue note|afterword|appendix|glossary|bibliography|dedication\s*$)/i;
+  var FRONT_MATTER_PATTERNS = /^(dedication|foreword|preface|introduction|copyright|table of contents|toc)\b/i;
+
+  var newChapters = [];
+  var headingRegex = /<h1[^>]*>([\s\S]*?)<\/h1>/gi;
+  var matches = [];
+  var m;
+  while ((m = headingRegex.exec(html)) !== null) {
+    matches.push({ index: m.index, fullMatch: m[0], titleHtml: m[1], end: m.index + m[0].length });
+  }
+
+  if (matches.length === 0) {
+    // No <h1> headings at all — fall back to single chapter (old behavior)
+    newChapters.push({ id: Date.now(), title: docTitle, content: html });
+  } else {
+    // Front matter = everything before the first <h1>
+    var frontHTML = html.substring(0, matches[0].index).trim();
+    if (frontHTML && frontHTML.replace(/<[^>]+>/g, '').trim().length > 20) {
+      newChapters.push({
+        id: Date.now(),
+        title: 'Front Matter',
+        content: frontHTML,
+        isFrontMatter: true
+      });
+    }
+
+    // Each <h1> through the start of the next <h1> = one chapter
+    for (var i = 0; i < matches.length; i++) {
+      var titleText = matches[i].titleHtml.replace(/<[^>]+>/g, '').trim();
+      var contentStart = matches[i].end;
+      var contentEnd = (i + 1 < matches.length) ? matches[i + 1].index : html.length;
+      var chapterContent = html.substring(contentStart, contentEnd).trim();
+      var fullChapterHTML = '<h1>' + matches[i].titleHtml + '</h1>' + chapterContent;
+
+      var isBack = BACK_MATTER_PATTERNS.test(titleText);
+      var isFront = FRONT_MATTER_PATTERNS.test(titleText);
+
+      newChapters.push({
+        id: Date.now() + i + 1,
+        title: titleText || ('Chapter ' + (i + 1)),
+        content: fullChapterHTML,
+        isFrontMatter: isFront || undefined,
+        isBackMatter: isBack || undefined
+      });
+    }
+  }
+
+  chapters = newChapters;
   activeChapter = 0;
 
   if (titleFound) {
@@ -1210,11 +1121,14 @@ function finishImportHTML(html, titleFound, filename, status) {
   }
   if (activeProject) activeProject.chapters = chapters;
 
-  // Hide chapter sidebar and chapter title — DOCX is one document
+  // Show chapter sidebar — there are real chapters now
   var sidebar = document.getElementById('sidebarChapters');
-  if (sidebar) sidebar.style.display = 'none';
+  if (sidebar) sidebar.style.display = '';
   var chRow = document.getElementById('chapterTitleRow');
-  if (chRow) chRow.style.display = 'none';
+  if (chRow) chRow.style.display = '';
+
+  // Re-render the chapter tab list in the sidebar
+  if (typeof renderChapterTabs === 'function') renderChapterTabs();
 
   updateStats();
   saveProject();
@@ -1227,8 +1141,9 @@ function finishImportHTML(html, titleFound, filename, status) {
     }, 100);
   }
 
-  status.innerHTML = '&#10003; ' + filename + ' imported';
-  showToast('Document imported');
+  var chapterCount = chapters.filter(function(c){ return !c.isFrontMatter && !c.isBackMatter; }).length;
+  status.innerHTML = '&#10003; ' + filename + ' imported &mdash; ' + chapterCount + ' chapter' + (chapterCount !== 1 ? 's' : '') + ' detected';
+  showToast('Imported: ' + chapterCount + ' chapters');
 }
 
 function importPDF(file, status) {
@@ -1289,21 +1204,7 @@ function exportManuscript() {
     showToast('Exported as .txt');
 
   } else if (dest === 'docx') {
-    // Build HTML that Word can open as DOCX — includes TOC
-    var tocHtml = '<h2>Table of Contents</h2><ul>' +
-      chapters.map(function(ch, i) { return '<li>' + escHtml(ch.title || 'Chapter ' + (i+1)) + '</li>'; }).join('') +
-      '</ul><hr/>';
-    var bodyHtml = chapters.map(function(ch) {
-      return '<h1>' + escHtml(ch.title || '') + '</h1>' + (ch.content || '');
-    }).join('');
-    var docHtml = '<!DOCTYPE html><html><head><meta charset="utf-8">' +
-      '<style>body{font-family:Georgia,serif;font-size:12pt;margin:1in;line-height:1.8;}' +
-      'h1{font-size:16pt;page-break-before:always;}h2{font-size:14pt;}p{margin:.5em 0;text-indent:1.5em;}</style>' +
-      '</head><body>' +
-      '<h1 style="text-align:center;font-size:22pt;page-break-before:auto;">' + escHtml(title) + '</h1>' +
-      (author ? '<p style="text-align:center;font-style:italic;">' + escHtml(author) + '</p>' : '') +
-      tocHtml + bodyHtml + '</body></html>';
-    var docBlob = new Blob([docHtml], {type: 'application/msword'});
+    var docBlob = buildDocxBlob(title, author, chapters);
     downloadBlob(docBlob, title + '.doc');
     status.innerHTML = '&#10003; Downloaded as DOCX (Word document).';
     showToast('Exported as .doc');
@@ -1346,52 +1247,104 @@ function exportManuscript() {
     showToast('Exported as .html');
 
   } else if (dest === 'voicestudio') {
-    var fullContent = chapters.map(function(ch) {
-      var plainText = ch.content ? ch.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g,' ').trim() : '';
-      return {title: ch.title, text: plainText};
+    status.textContent = 'Preparing for Voice Studio...';
+
+    // Voice Studio reads narration content. Send only narratable chapters
+    // (skip front matter — copyright, dedication, TOC — and back matter — author bio, ack).
+    var narratable = chapters.filter(function(ch){
+      return !ch.isFrontMatter && !ch.isBackMatter;
     });
-    // Build plain text from chapters for Voice Studio parser
-    var fullText = fullImportedHTML
-      ? fullImportedHTML.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
-      : chapters.map(function(ch){
-          var plain = ch.content ? ch.content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim() : '';
-          return (ch.title||'') + '\n\n' + plain;
-        }).join('\n\n\n');
-    localStorage.setItem('vs_incoming', JSON.stringify({title: title, author: author, content: fullText, chapters: fullContent, fromEditor: true}));
-    status.innerHTML = '&#10003; Sending to Voice Studio...';
-    showToast('Sending to Voice Studio');
-    // Ping backend to wake it, then navigate to the correct page
-    fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
-    setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/voice-studio'; }, 1000);
+    if (narratable.length === 0) narratable = chapters; // fallback if nothing tagged
+
+    // Structured chapter payload — keep HTML so paragraph structure survives narration parsing
+    var vsChapters = narratable.map(function(ch) {
+      var html = ch.content || '';
+      // Strip the chapter heading from content (we send title separately)
+      var stripped = html.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '');
+      var plainText = stripped.replace(/<\/(p|div|h[1-6]|li)>/gi, '\n\n')
+                              .replace(/<br\s*\/?>(\s*)/gi, '\n')
+                              .replace(/<[^>]+>/g, '')
+                              .replace(/\n{3,}/g, '\n\n')
+                              .replace(/[ \t]+/g, ' ')
+                              .trim();
+      return { title: ch.title || '', html: stripped, text: plainText, content: plainText };
+    });
+
+    // Combined plain-text fallback — paragraph-preserving
+    var fullText = vsChapters.map(function(c){
+      return c.title + '\n\n' + c.text;
+    }).join('\n\n\n');
+
+    // Generate a real EPUB blob from narratable chapters and ship it like Collections does
+    generateEPUB3(title, author, narratable).then(function(blob) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try { localStorage.setItem('vs_epub_b64', e.target.result); } catch(err) {}
+        localStorage.setItem('vs_epub_name', (title || 'book') + '.epub');
+        localStorage.setItem('vs_incoming', JSON.stringify({
+          title: title,
+          author: author,
+          content: fullText,
+          chapters: vsChapters,
+          epubB64Key: 'vs_epub_b64',
+          epubName: (title || 'book') + '.epub',
+          fromEditor: true
+        }));
+        status.innerHTML = '&#10003; Sending to Voice Studio...';
+        showToast('Sending to Voice Studio');
+        // Wake backend, then navigate
+        fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
+        setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/voice-studio'; }, 1000);
+      };
+      reader.readAsDataURL(blob);
+    }).catch(function(err) {
+      // EPUB build failed — still hand off the structured chapters so Voice Studio can work
+      localStorage.setItem('vs_incoming', JSON.stringify({
+        title: title,
+        author: author,
+        content: fullText,
+        chapters: vsChapters,
+        fromEditor: true
+      }));
+      status.innerHTML = '&#10003; Sending to Voice Studio (without EPUB attachment)...';
+      showToast('Sending to Voice Studio');
+      fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
+      setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/voice-studio'; }, 1000);
+    });
 
   } else if (dest === 'collections') {
     status.textContent = 'Preparing for Collections...';
     var series = document.getElementById('projectSeries') ? document.getElementById('projectSeries').value : '';
     var genre = document.getElementById('projectGenre') ? document.getElementById('projectGenre').value : '';
-    generateEPUB3(title, author, chapters).then(function(blob) {
-      var reader = new FileReader();
-      reader.onload = function(e) {
-        try { localStorage.setItem('pw_epub_b64', e.target.result); } catch(err) {}
-        localStorage.setItem('pw_epub_name', (title || 'book') + '.epub');
-        localStorage.setItem('collections_incoming', JSON.stringify({
-          title: title, author: author, series: series, genre: genre,
-          epubB64Key: 'pw_epub_b64',
-          epubName: (title || 'book') + '.epub',
-          fromEditor: true
-        }));
-        status.innerHTML = '&#10003; Sending to Collections...';
-        showToast('Sending to Collections');
-        setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/collections'; }, 800);
-      };
-      reader.readAsDataURL(blob);
-    }).catch(function() {
+
+    // Collections receives a DOCX (publish-ready manuscript), not EPUB.
+    var docBlob = buildDocxBlob(title, author, chapters);
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try { localStorage.setItem('pw_docx_b64', e.target.result); } catch(err) {}
+      var safeName = (title || 'book').replace(/[^a-zA-Z0-9\s\-]/g, '').replace(/\s+/g, '_');
+      localStorage.setItem('pw_docx_name', safeName + '.doc');
+      localStorage.setItem('collections_incoming', JSON.stringify({
+        title: title, author: author, series: series, genre: genre,
+        docxB64Key: 'pw_docx_b64',
+        docxName: safeName + '.doc',
+        format: 'docx',
+        fromEditor: true
+      }));
+      status.innerHTML = '&#10003; Sending to Collections...';
+      showToast('Sending to Collections');
+      setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/collections'; }, 800);
+    };
+    reader.onerror = function() {
+      // Fallback — send metadata only
       localStorage.setItem('collections_incoming', JSON.stringify({
         title: title, author: author, series: series, genre: genre, fromEditor: true
       }));
       status.innerHTML = '&#10003; Sending to Collections...';
       showToast('Sending to Collections');
       setTimeout(function() { location.href = 'https://creatives.smcantrellbooks.com/collections'; }, 800);
-    });
+    };
+    reader.readAsDataURL(docBlob);
 
   } else if (dest === 'epub') {
     status.textContent = 'Generating EPUB 3.0...';
@@ -1422,6 +1375,27 @@ function downloadBlob(blob, filename) {
 }
 
 function escHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+/* ====== DOCX BUILDER (Word-compatible HTML in .doc wrapper) ====== */
+function buildDocxBlob(title, author, chapterList) {
+  var tocHtml = '<h2>Table of Contents</h2><ul>' +
+    chapterList.map(function(ch, i) { return '<li>' + escHtml(ch.title || 'Chapter ' + (i+1)) + '</li>'; }).join('') +
+    '</ul><hr/>';
+  var bodyHtml = chapterList.map(function(ch) {
+    // Strip leading h1 from content if present (we render the title separately)
+    var content = (ch.content || '').replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '');
+    return '<h1>' + escHtml(ch.title || '') + '</h1>' + content;
+  }).join('');
+  var docHtml = '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+    '<style>body{font-family:Georgia,serif;font-size:12pt;margin:1in;line-height:1.8;}' +
+    'h1{font-size:16pt;page-break-before:always;}h2{font-size:14pt;}p{margin:.5em 0;text-indent:1.5em;}</style>' +
+    '</head><body>' +
+    '<h1 style="text-align:center;font-size:22pt;page-break-before:auto;">' + escHtml(title) + '</h1>' +
+    (author ? '<p style="text-align:center;font-style:italic;">' + escHtml(author) + '</p>' : '') +
+    tocHtml + bodyHtml + '</body></html>';
+  return new Blob([docHtml], {type: 'application/msword'});
+}
+
 
 /* ====== EPUB 3.0 GENERATOR ====== */
 async function generateEPUB3(title, author, chapterList) {
