@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publisher's Workspace — Cantrell Creatives</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100vh;font-family:'Outfit',sans-serif;font-size:9pt;overflow-x:hidden;background:#F5ECD8;}
+
+:root{
+  --gold:#C9A040;--gold2:#E2B84A;
+  --gold-lt:rgba(201,160,64,.12);--gold-bd:rgba(201,160,64,.3);
+  --sidebar:#2C1E0F;--sidebar2:#3A2810;
+  --cream:#FDF8F0;--warm:#F5ECD8;
+  --border:#E0CFA8;--text:#2c1e0f;--text-lt:rgba(44,30,15,.5);
+  --burg:#7a1f2e;--burg-lt:rgba(122,31,46,.08);--burg-bd:rgba(122,31,46,.25);
+}
+
+/* ── HEADER STRIP ─────────────────────────────────────── */
+.hdr{position:sticky;top:0;z-index:200;height:56px;background:var(--sidebar);border-bottom:1px solid rgba(201,160,64,.2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;flex-shrink:0;}
+.hdr-logo img{height:32px;border-radius:4px;}
+.hdr-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;}
+.hdr-btn{padding:5px 13px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:rgba(232,201,122,.75);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.hdr-btn:hover{background:rgba(201,160,64,.18);border-color:var(--gold);color:rgba(232,201,122,1);}
+.hdr-btn.logout{border-color:rgba(180,60,60,.4);color:rgba(220,120,120,.85);}
+.hdr-btn.logout:hover{background:rgba(140,32,32,.22);}
+.hdr-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;background:rgba(201,160,64,.1);border:1px solid rgba(201,160,64,.25);}
+.hdr-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.hdr-chip-name{font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.07em;color:rgba(232,201,122,.85);}
+
+/* ── TOOL BAR ─────────────────────────────────────────── */
+.tool-bar{background:var(--sidebar2);border-bottom:1px solid rgba(201,160,64,.12);display:flex;justify-content:center;gap:6px;padding:7px 20px;flex-wrap:wrap;}
+.tool-btn{padding:5px 15px;border-radius:999px;border:1px solid rgba(201,160,64,.28);background:transparent;color:rgba(232,201,122,.6);font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.tool-btn:hover{background:rgba(201,160,64,.14);border-color:var(--gold);color:rgba(232,201,122,.9);}
+.tool-btn.active{background:var(--gold);border-color:var(--gold);color:#1a0a00;}
+.tool-btn i{font-size:.85rem;}
+
+/* ── GOLD LINE ────────────────────────────────────────── */
+.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent,rgba(201,160,64,.3) 10%,var(--gold) 30%,var(--gold2) 50%,var(--gold) 70%,rgba(201,160,64,.3) 90%,transparent);}
+
+/* ── PAGE ─────────────────────────────────────────────── */
+.page{max-width:1440px;margin:0 auto;padding:28px 20px 56px;}
+.section-title{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(44,30,15,.45);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── PATH CARDS ───────────────────────────────────────── */
+.path-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:36px;}
+.path-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:24px 22px;display:flex;flex-direction:column;gap:13px;position:relative;overflow:hidden;transition:all .2s;}
+.path-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);opacity:0;transition:.2s;}
+.path-card:hover{border-color:var(--gold-bd);box-shadow:0 6px 28px rgba(201,160,64,.12);transform:translateY(-2px);}
+.path-card:hover::before{opacity:1;}
+.path-card.highlight{border-color:rgba(201,160,64,.4);background:linear-gradient(135deg,#fff 65%,rgba(201,160,64,.04));}
+.path-icon{width:46px;height:46px;border-radius:11px;background:var(--gold-lt);border:1px solid var(--gold-bd);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;color:var(--gold);}
+.path-title{font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--text);}
+.path-desc{font-size:9pt;color:var(--text-lt);line-height:1.65;}
+.path-actions{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.btn-primary{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:8px;border:none;background:var(--gold);color:#1a0a00;font-family:'Outfit',sans-serif;font-size:9pt;font-weight:700;cursor:pointer;transition:all .18s;text-decoration:none;}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px);}
+.btn-secondary{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:8px;border:1.5px solid var(--gold-bd);background:transparent;color:#6b4a1a;font-family:'Outfit',sans-serif;font-size:9pt;font-weight:600;cursor:pointer;transition:all .18s;text-decoration:none;}
+.btn-secondary:hover{background:var(--gold-lt);border-color:var(--gold);}
+
+/* ── UPLOAD ZONE ──────────────────────────────────────── */
+.upload-zone{border:2px dashed var(--gold-bd);border-radius:9px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(201,160,64,.03);}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--gold);background:rgba(201,160,64,.07);}
+.upload-zone-icon{font-size:1.5rem;margin-bottom:6px;color:var(--gold);}
+.upload-zone-text{font-size:9pt;color:var(--text-lt);font-style:italic;line-height:1.6;}
+.epub-ready{display:none;background:#fff;border:1.5px solid rgba(100,160,100,.4);border-radius:9px;padding:13px 14px;gap:9px;align-items:center;}
+.epub-ready.show{display:flex;}
+.epub-ready-name{flex:1;font-size:9pt;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.epub-clear{color:rgba(180,60,60,.6);cursor:pointer;font-size:.95rem;flex-shrink:0;}
+.epub-clear:hover{color:#c03c3c;}
+
+/* ── NYX WORKSPACE ────────────────────────────────────── */
+.nyx-workspace{
+  display:grid;
+  grid-template-columns:200px 1fr 300px;
+  grid-template-rows:1fr auto;
+  gap:0;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 6px 28px rgba(0,0,0,.09);
+  margin-bottom:36px;
+  min-height:800px;
+  height:85vh;
+}
+.nyx-chapters-panel{
+  grid-column:1;grid-row:1/3;
+  background:#FDF8F0;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:14px 11px;gap:7px;overflow-y:auto;
+}
+.nyx-editor-panel{
+  grid-column:2;grid-row:1;
+  display:flex;flex-direction:column;
+  border-bottom:1px solid var(--border);background:#fff;min-height:0;
+}
+.nyx-chat-area{
+  grid-column:2;grid-row:2;
+  display:flex;flex-direction:column;
+  border-top:2px solid var(--border);background:#fff;
+  min-height:220px;max-height:300px;
+}
+.nyx-right-panel{
+  grid-column:3;grid-row:1/3;
+  display:flex;flex-direction:column;
+  background:#FDF8F0;border-left:1px solid var(--border);overflow:hidden;min-height:0;
+}
+.nyx-panel-head{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;display:flex;align-items:center;gap:5px;}
+.nyx-panel-head i{font-size:.85rem;}
+.nyx-chapter-list{display:flex;flex-direction:column;gap:3px;flex:1;}
+.nyx-ch-item{padding:7px 9px;border-radius:7px;font-size:9pt;color:var(--text);cursor:pointer;border:1px solid transparent;transition:.14s;display:flex;align-items:center;gap:5px;}
+.nyx-ch-item:hover{background:var(--gold-lt);border-color:var(--gold-bd);}
+.nyx-ch-item.active{background:var(--gold);color:#1a0a00;font-weight:700;border-color:var(--gold);}
+.nyx-ch-item i{font-size:.8rem;flex-shrink:0;}
+.nyx-ch-divider{height:1px;background:var(--border);margin:4px 0;}
+.nyx-add-ch-btn{padding:8px;border-radius:8px;border:1px dashed var(--gold-bd);background:transparent;color:var(--gold);font-family:'Cinzel',serif;font-size:8.5pt;font-weight:700;cursor:pointer;transition:.14s;text-align:center;display:flex;align-items:center;justify-content:center;gap:4px;}
+.nyx-add-ch-btn:hover{background:var(--gold-lt);}
+.nyx-export-btn{padding:7px 10px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#1a0a00;font-size:9pt;cursor:pointer;transition:.14s;text-align:center;font-family:'Outfit',sans-serif;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;}
+.nyx-export-btn:hover{background:var(--gold2);}
+
+/* ── FORMATTING TOOLBAR ───────────────────────────────── */
+.nyx-fmt-bar{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:6px 11px;border-bottom:1px solid var(--border);background:#FEFAF4;}
+.nyx-fmt-select{padding:3px 6px;border:1px solid var(--border);border-radius:5px;font-size:9pt;color:var(--text);background:#fff;outline:none;cursor:pointer;font-family:'Outfit',sans-serif;}
+.nyx-fmt-btn{width:26px;height:26px;border:1px solid var(--border);border-radius:5px;background:#fff;color:var(--text);font-size:9pt;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.12s;font-family:'Georgia',serif;}
+.nyx-fmt-btn:hover{background:var(--gold-lt);border-color:var(--gold-bd);}
+.nyx-fmt-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex-shrink:0;}
+
+/* ── EDITOR ───────────────────────────────────────────── */
+.nyx-editor-header{display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid var(--border);background:#FDF8F0;}
+.nyx-chapter-title-inp{flex:1;border:none;background:transparent;font-family:'Cinzel',serif;font-size:10pt;font-weight:700;color:var(--text);outline:none;}
+.nyx-chapter-title-inp::placeholder{color:rgba(44,30,15,.28);}
+.nyx-editor-stats{display:flex;gap:11px;font-size:9pt;color:var(--text-lt);white-space:nowrap;flex-shrink:0;}
+.nyx-editor-area{flex:1;border:none;outline:none;padding:22px 28px;font-family:'Georgia',serif;font-size:12pt;line-height:1.85;color:var(--text);background:#fff;min-height:400px;overflow-y:auto;}
+.nyx-editor-area:empty:before{content:attr(data-placeholder);color:rgba(44,30,15,.22);font-style:italic;pointer-events:none;font-size:11pt;}
+.nyx-tools-bar{display:flex;gap:5px;flex-wrap:wrap;padding:9px 14px;border-top:1px solid var(--border);background:#FDF8F0;}
+.nyx-tool-btn{padding:5px 11px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--text);font-size:9pt;cursor:pointer;transition:.14s;font-family:'Outfit',sans-serif;display:inline-flex;align-items:center;gap:4px;}
+.nyx-tool-btn:hover{background:var(--gold);color:#1a0a00;border-color:var(--gold);}
+.nyx-tool-btn i{font-size:.85rem;}
+
+/* ── CHAT AREA ────────────────────────────────────────── */
+.nyx-chat-feed{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.nyx-chat-feed::-webkit-scrollbar{width:3px;}
+.nyx-chat-feed::-webkit-scrollbar-thumb{background:var(--gold-bd);border-radius:2px;}
+.nyx-chat-input-row{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--border);background:#FDF8F0;flex-shrink:0;}
+.nyx-chat-inp{flex:1;padding:7px 10px;border-radius:8px;border:1px solid var(--border);font-family:'Outfit',sans-serif;font-size:9pt;color:var(--text);outline:none;resize:none;min-height:34px;max-height:70px;line-height:1.4;background:#fff;}
+.nyx-chat-inp:focus{border-color:var(--gold);}
+.nyx-send-btn{width:34px;height:34px;border-radius:8px;border:none;background:var(--burg);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;flex-shrink:0;}
+.nyx-send-btn:hover{opacity:.85;}
+.nyx-msg{padding:8px 12px;border-radius:10px;font-size:9pt;line-height:1.6;max-width:92%;}
+.nyx-msg.ai{background:var(--gold-lt);border:1px solid var(--gold-bd);color:var(--text);align-self:flex-start;}
+.nyx-msg.user{background:var(--burg);color:#fff;align-self:flex-end;}
+.nyx-msg-lbl{font-size:8pt;letter-spacing:.14em;color:var(--gold);margin-bottom:3px;font-weight:700;font-family:'Cinzel',serif;text-transform:uppercase;}
+.nyx-insert-btn{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 9px;border:1px solid var(--gold-bd);border-radius:999px;font-size:8pt;color:var(--text);cursor:pointer;background:transparent;font-family:'Outfit',sans-serif;}
+.nyx-insert-btn:hover{background:var(--gold);color:#1a0a00;border-color:var(--gold);}
+.quick-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.quick-btn{padding:4px 10px;border-radius:999px;border:1px solid var(--gold-bd);background:#fff;color:var(--text);font-size:8pt;cursor:pointer;transition:.14s;font-family:'Outfit',sans-serif;display:inline-flex;align-items:center;gap:3px;}
+.quick-btn:hover{background:var(--gold-lt);}
+.quick-btn i{font-size:.78rem;}
+.nyxen-welcome p{font-size:9pt;color:var(--text-lt);line-height:1.6;}
+
+/* ── RIGHT PANEL ──────────────────────────────────────── */
+.nyx-right-header{display:flex;align-items:center;gap:9px;padding:11px 13px;background:var(--burg);border-bottom:1px solid var(--burg-bd);flex-shrink:0;}
+.nyx-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex-shrink:0;}
+.nyx-right-name{font-family:'Cinzel',serif;font-size:9pt;font-weight:700;color:var(--gold);}
+.nyx-right-sub{font-size:8pt;color:rgba(255,255,255,.5);font-style:italic;}
+.nyx-online-dot{width:8px;height:8px;border-radius:50%;background:#4caf50;margin-left:auto;flex-shrink:0;box-shadow:0 0 6px rgba(76,175,80,.6);}
+.nyx-tabs{display:flex;border-bottom:1px solid var(--border);background:#fff;flex-shrink:0;}
+.nyx-tab{flex:1;padding:8px 4px;border:none;background:transparent;font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-lt);cursor:pointer;border-bottom:2px solid transparent;transition:.14s;}
+.nyx-tab.active{color:var(--burg);border-bottom-color:var(--burg);}
+.nyx-tab-content{overflow-y:auto;padding:10px;flex:1;min-height:0;}
+.nyx-field{margin-bottom:7px;}
+.nyx-lbl{display:block;font-size:8pt;font-weight:700;color:var(--text-lt);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.nyx-inp{width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-family:'Outfit',sans-serif;font-size:11pt;color:var(--text);background:#fff;outline:none;transition:.14s;}
+.nyx-inp:focus{border-color:var(--gold);}
+textarea.nyx-inp{resize:none;line-height:1.4;}
+.nyx-check{display:flex;align-items:center;gap:5px;font-size:8pt;color:var(--text);cursor:pointer;padding:2px 0;}
+.nyx-check input{accent-color:var(--burg);width:12px;height:12px;}
+.nyx-template-btn{display:flex;align-items:center;gap:6px;width:100%;padding:7px 10px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:8pt;cursor:pointer;text-align:left;margin-bottom:5px;transition:.14s;font-family:'Outfit',sans-serif;}
+.nyx-template-btn:hover{background:var(--gold-lt);border-color:var(--gold-bd);}
+.nyx-template-btn i{font-size:.9rem;color:var(--gold);flex-shrink:0;}
+
+/* ── EXPORT MODAL ─────────────────────────────────────── */
+.nyx-export-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;}
+.nyx-export-modal.open{display:flex;}
+.nyx-export-box{background:#fff;border-radius:13px;padding:22px;width:360px;box-shadow:0 16px 48px rgba(0,0,0,.25);}
+.nyx-export-title{font-family:'Cinzel',serif;font-size:11pt;font-weight:700;color:var(--text);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.nyx-export-title i{color:var(--gold);}
+.nyx-export-group{margin-bottom:12px;}
+.nyx-export-group-label{font-size:8pt;font-weight:700;color:var(--text-lt);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;}
+.nyx-export-option{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-bottom:5px;transition:.14s;font-size:9pt;color:var(--text);font-family:'Outfit',sans-serif;}
+.nyx-export-option:hover{border-color:var(--gold);background:var(--gold-lt);}
+.nyx-export-option-icon{font-size:1.2rem;flex-shrink:0;color:var(--gold);}
+.nyx-export-option-icon i{font-size:1.2rem;}
+.nyx-export-close{width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-lt);font-size:9pt;cursor:pointer;margin-top:7px;font-family:'Outfit',sans-serif;}
+.nyx-export-close:hover{background:#f5f5f5;}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+.footer{border-top:1px solid var(--border);padding:14px 20px;text-align:center;background:#EDE0C8;margin-top:36px;}
+.footer a{font-size:8pt;color:var(--text-lt);margin:0 8px;text-decoration:none;}
+.footer a:hover{color:var(--gold);}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media(max-width:1000px){.nyx-workspace{grid-template-columns:160px 1fr 250px;}}
+@media(max-width:768px){
+  .nyx-workspace{grid-template-columns:1fr;grid-template-rows:auto;}
+  .path-grid{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  .hdr-nav .hdr-btn:not(.logout){display:none;}
+  .hdr-chip-name{display:none;}
+}
+/* ── AUTH GATE ── */
+#authGate{position:fixed;inset:0;z-index:9999;background:rgba(14,10,6,.93);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(7px);}
+#authGate.hidden{display:none;}
+.gate-card{background:#1E1508;border:1px solid rgba(184,148,46,.32);border-radius:18px;padding:48px 52px;text-align:center;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.gate-card .gate-icon{font-size:2.4rem;color:#B8942E;margin-bottom:16px;}
+.gate-card h2{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;color:#FFF8EE;margin-bottom:8px;letter-spacing:.06em;}
+.gate-card p{font-size:.88rem;color:rgba(168,152,128,.75);font-style:italic;margin-bottom:28px;line-height:1.6;}
+.gate-card .gate-btn{display:inline-flex;align-items:center;gap:6px;background:#B8942E;color:#0e0a06;font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px 32px;border-radius:999px;text-decoration:none;transition:.18s;}
+.gate-card .gate-btn:hover{background:#d4aa42;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HEADER STRIP
+═══════════════════════════════════════════════════════ -->
+<header class="hdr">
+  <a href="https://creatives.smcantrellbooks.com">
+    <div class="hdr-logo">
+      <img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives">
+    </div>
+  </a>
+  <nav class="hdr-nav" id="hdrNav">
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com">
+      <i class="ph ph-house"></i> Home
+    </a>
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com/myaccount">
+      <i class="ph ph-user-circle"></i> My Account
+    </a>
+    <div class="hdr-chip" id="hdrUserChip" style="display:none;">
+      <div class="hdr-chip-dot"></div>
+      <span class="hdr-chip-name" id="hdrUserName"></span>
+    </div>
+    <button class="hdr-btn logout" id="hdrLogoutBtn" onclick="authSignOut()" style="display:none;">
+      <i class="ph ph-sign-out"></i> Log Out
+    </button>
+  </nav>
+</header>
+
+<!-- TOOL BAR -->
+<div class="tool-bar">
+  <a class="tool-btn active" href="https://creatives.smcantrellbooks.com/publisher-workspace">
+    <i class="ph ph-pencil-line"></i> Publisher Workspace
+  </a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/studio">
+    <i class="ph ph-film-strip"></i> Studio
+  </a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/voice-studio">
+    <i class="ph ph-microphone"></i> Voice Studio
+  </a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/collections">
+    <i class="ph ph-books"></i> Collections
+  </a>
+</div>
+
+<div class="gold-line"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════════════════ -->
+<main id="mainContent" role="main" style="width:100%;overflow-x:hidden;">
+<div class="page">
+
+  <!-- PATH SELECTION -->
+  <div class="section-title">Where are you in your journey?</div>
+  <div class="path-grid">
+
+    <!-- PATH 1: UPLOAD FILE -->
+    <div class="path-card highlight">
+      <div class="path-icon"><i class="ph ph-upload-simple"></i></div>
+      <div class="path-title">Upload Your EPUB or DOCX</div>
+      <div class="path-desc">Upload a finished EPUB, DOCX, or PDF to open in the Book Editor for review, formatting, or publishing.</div>
+      <input type="file" id="epubFile" accept=".epub,.docx,.pdf" hidden onchange="handleFileUpload(event)">
+      <div class="upload-zone" id="epubZone"
+        onclick="document.getElementById('epubFile').click()"
+        ondragover="event.preventDefault();this.classList.add('dragover')"
+        ondragleave="this.classList.remove('dragover')"
+        ondrop="handleFileDrop(event)">
+        <div class="upload-zone-icon"><i class="ph ph-file-arrow-up"></i></div>
+        <div class="upload-zone-text">Drop your EPUB, DOCX, or PDF here or click to browse</div>
+      </div>
+      <div class="epub-ready" id="epubReady">
+        <i class="ph ph-file-text" id="epubReadyIcon" style="font-size:1.2rem;color:var(--gold);flex-shrink:0;"></i>
+        <span class="epub-ready-name" id="epubReadyName"></span>
+        <span class="epub-clear" onclick="clearEpub()"><i class="ph ph-x-circle"></i></span>
+      </div>
+      <div class="path-actions" id="epubActions" style="display:none;">
+        <button class="btn-primary" onclick="goEditorWithFile()">
+          <i class="ph ph-pencil-simple"></i> Open in Book Editor
+        </button>
+      </div>
+      <div class="path-actions" id="docActions" style="display:none;"></div>
+      <div class="path-actions" id="epubPrompt">
+        <div style="font-size:8pt;color:var(--text-lt);text-align:center;font-style:italic;">Upload your file to open in the editor</div>
+      </div>
+    </div>
+
+    <!-- PATH 2: OPEN EDITOR -->
+    <div class="path-card highlight">
+      <div class="path-icon"><i class="ph ph-pencil-simple"></i></div>
+      <div class="path-title">Open Book Editor</div>
+      <div class="path-desc">Go directly to the editor to write, import a manuscript, or continue working on a saved manuscript.</div>
+      <div class="path-actions">
+        <button class="btn-primary" onclick="goEditor()">
+          <i class="ph ph-pencil-simple"></i> Open in Book Editor
+        </button>
+      </div>
+      <div style="font-size:8pt;color:var(--text-lt);line-height:1.6;padding:9px;background:var(--gold-lt);border-radius:8px;border:1px solid var(--gold-bd);display:flex;align-items:flex-start;gap:6px;">
+        <i class="ph ph-lightbulb" style="color:var(--gold);flex-shrink:0;margin-top:1px;"></i>
+        Import DOCX, PDF or EPUB — or start writing fresh. Your manuscript auto-saves by title.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NYXEN AI WORKSPACE -->
+  <div class="section-title">Nyxen — AI Writing Studio</div>
+
+  <div class="nyx-workspace">
+
+    <!-- LEFT: Chapter Panel -->
+    <div class="nyx-chapters-panel">
+      <div class="nyx-panel-head"><i class="ph ph-book-open"></i> Chapters</div>
+      <div id="nyx-chapter-list" class="nyx-chapter-list"></div>
+      <button class="nyx-add-ch-btn" onclick="nyxAddChapter()">
+        <i class="ph ph-plus"></i> Add Chapter
+      </button>
+      <div class="nyx-ch-divider"></div>
+      <div class="nyx-panel-head" style="margin-top:4px;"><i class="ph ph-books"></i> Book</div>
+      <div style="font-size:9pt;color:var(--text-lt);padding:4px 0;">
+        <div id="nyx-book-title-display" style="font-weight:600;color:var(--text);margin-bottom:2px;">Untitled Book</div>
+        <div id="nyx-chapter-count" style="color:var(--text-lt);">0 chapters</div>
+      </div>
+      <div class="nyx-ch-divider"></div>
+      <div class="nyx-panel-head" style="margin-top:4px;"><i class="ph ph-export"></i> Export</div>
+      <button class="nyx-export-btn" onclick="document.getElementById('nyxExportModal').classList.add('open')">
+        <i class="ph ph-upload-simple"></i> Export / Send
+      </button>
+    </div>
+
+    <!-- CENTER: Writing Editor -->
+    <div class="nyx-editor-panel">
+      <div class="nyx-editor-header">
+        <input type="text" id="nyx-chapter-title" class="nyx-chapter-title-inp" placeholder="Chapter Title…" oninput="nyxSaveCurrentChapter()">
+        <div class="nyx-editor-stats">
+          <span id="nyx-word-count">0 words</span>
+          <span id="nyx-char-count">0 chars</span>
+        </div>
+      </div>
+      <!-- Formatting Toolbar -->
+      <div class="nyx-fmt-bar">
+        <select class="nyx-fmt-select" onchange="nyxFmt('fontName',this.value)" title="Font Family">
+          <option value="Georgia,serif">Georgia</option>
+          <option value="'Cormorant Garamond',serif">Cormorant</option>
+          <option value="'Times New Roman',serif">Times New Roman</option>
+          <option value="Arial,sans-serif">Arial</option>
+          <option value="'Courier New',monospace">Courier New</option>
+        </select>
+        <select class="nyx-fmt-select" style="width:52px;" onchange="nyxFmt('fontSize',this.value)" title="Font Size">
+          <option value="2">10</option>
+          <option value="3" selected>12</option>
+          <option value="4">14</option>
+          <option value="5">18</option>
+          <option value="6">24</option>
+        </select>
+        <div class="nyx-fmt-sep"></div>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('bold')" title="Bold"><b>B</b></button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('italic')" title="Italic"><i style="font-style:italic;font-family:Georgia,serif;">I</i></button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('underline')" title="Underline"><u>U</u></button>
+        <div class="nyx-fmt-sep"></div>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyLeft')" title="Align Left">&#8678;</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyCenter')" title="Center">&#8644;</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyRight')" title="Align Right">&#8680;</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('justifyFull')" title="Justify">&#8803;</button>
+        <div class="nyx-fmt-sep"></div>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('insertUnorderedList')" title="Bullet List">&bull;</button>
+        <button class="nyx-fmt-btn" onclick="nyxFmt('insertOrderedList')" title="Numbered List">1.</button>
+        <div class="nyx-fmt-sep"></div>
+        <select class="nyx-fmt-select" onchange="nyxFmtBlock(this.value)" title="Heading">
+          <option value="p">Normal</option>
+          <option value="h1">Heading 1</option>
+          <option value="h2">Heading 2</option>
+          <option value="h3">Heading 3</option>
+          <option value="blockquote">Quote</option>
+        </select>
+      </div>
+      <!-- Writing area -->
+      <div id="nyx-editor" class="nyx-editor-area" contenteditable="true" spellcheck="true"
+        oninput="nyxSaveCurrentChapter();nyxUpdateStats()"
+        data-placeholder="Start writing here — or ask Nyxen to generate content for this chapter…"></div>
+      <!-- AI Tools bar -->
+      <div class="nyx-tools-bar">
+        <button class="nyx-tool-btn" onclick="nyxTool('Write this chapter based on my story so far.')">
+          <i class="ph ph-pencil-line"></i> Write Chapter
+        </button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Expand this section with more detail and description.')">
+          <i class="ph ph-arrows-out"></i> Expand
+        </button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Rewrite this section to improve flow and clarity.')">
+          <i class="ph ph-arrows-clockwise"></i> Rewrite
+        </button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Improve the writing style and grammar in this chapter.')">
+          <i class="ph ph-sparkle"></i> Improve
+        </button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Summarize the key events in this chapter.')">
+          <i class="ph ph-article"></i> Summarize
+        </button>
+        <button class="nyx-tool-btn" onclick="nyxTool('Create a detailed outline for the next chapter.')">
+          <i class="ph ph-list-bullets"></i> Outline
+        </button>
+      </div>
+    </div><!-- end editor panel -->
+
+    <!-- CENTER BOTTOM: Nyxen Chat -->
+    <div class="nyx-chat-area">
+      <div class="nyx-chat-feed" id="nyxFeed">
+        <div class="nyxen-welcome" id="nyxWelcome">
+          <p>I'm here to help you craft your masterpiece. Ask me anything about your book.</p>
+          <div class="quick-btns">
+            <button class="quick-btn" onclick="nyxQuick('Help me set up my book details and structure.')">
+              <i class="ph ph-gear"></i> Set up my book
+            </button>
+            <button class="quick-btn" onclick="nyxQuick('Write Chapter 1 of my book.')">
+              <i class="ph ph-pencil-line"></i> Write Chapter 1
+            </button>
+            <button class="quick-btn" onclick="nyxQuick('Help me develop my main character.')">
+              <i class="ph ph-user"></i> Character help
+            </button>
+            <button class="quick-btn" onclick="nyxQuick('Create a chapter-by-chapter outline for my story.')">
+              <i class="ph ph-list-bullets"></i> Build outline
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="nyx-chat-input-row">
+        <textarea class="nyx-chat-inp" id="nyxInput"
+          placeholder="Ask Nyxen anything — Generate Chapter 1, Rewrite this section, Go to next chapter…"
+          rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxSend();}"
+          oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,70)+'px'"></textarea>
+        <button class="nyx-send-btn" onclick="nyxSend()">
+          <i class="ph ph-paper-plane-tilt"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Book Details + Templates + Notes -->
+    <div class="nyx-right-panel">
+      <div class="nyx-right-header">
+        <img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen" class="nyx-avatar">
+        <div>
+          <div class="nyx-right-name">Nyxen</div>
+          <div class="nyx-right-sub" id="nyxStatus">AI Editor &amp; Creative Partner</div>
+        </div>
+        <span class="nyx-online-dot"></span>
+      </div>
+
+      <div class="nyx-tabs">
+        <button class="nyx-tab active" onclick="nyxSwitchTab('details',this)">Book Details</button>
+        <button class="nyx-tab" onclick="nyxSwitchTab('templates',this)">Templates</button>
+        <button class="nyx-tab" onclick="nyxSwitchTab('notes',this)">Notes</button>
+      </div>
+
+      <!-- Book Details Tab -->
+      <div class="nyx-tab-content" id="nyx-tab-details">
+        <div class="nyx-field">
+          <label class="nyx-lbl">Title</label>
+          <input type="text" id="nyx-title" class="nyx-inp" placeholder="Book title…" oninput="nyxUpdateBookDisplay()">
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">Author</label>
+          <input type="text" id="nyx-author" class="nyx-inp" placeholder="Author name…">
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">Copyright</label>
+          <input type="text" id="nyx-copyright" class="nyx-inp" placeholder="&copy; 2026 Author Name">
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">Description</label>
+          <textarea id="nyx-description" class="nyx-inp" rows="2" placeholder="Brief description…"></textarea>
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">Genre</label>
+          <select id="nyx-genre" class="nyx-inp">
+            <option value="">Select genre…</option>
+            <option>Fantasy</option><option>Romance</option><option>Mystery</option>
+            <option>Thriller</option><option>Sci-Fi</option><option>Supernatural</option>
+            <option>Horror</option><option>Fiction</option><option>Nonfiction</option>
+            <option>Biography</option><option>Poetry</option><option>Inspirational</option>
+          </select>
+        </div>
+        <div class="nyx-field">
+          <label class="nyx-lbl">Series</label>
+          <input type="text" id="nyx-series" class="nyx-inp" placeholder="Series (optional)…">
+        </div>
+        <div style="margin-top:6px;">
+          <div style="font-size:8pt;color:var(--text-lt);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Sections</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-prologue"> Prologue</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-dedication"> Dedication</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-toc" checked> TOC</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-epilogue"> Epilogue</label>
+            <label class="nyx-check"><input type="checkbox" id="nyx-incl-about"> About Author</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;margin-top:7px;">
+          <label class="nyx-check" style="flex:1;justify-content:center;background:var(--gold-lt);border-radius:6px;padding:5px;border:1px solid var(--gold-bd);font-size:8pt;">
+            <input type="radio" name="nyx-format" value="epub" checked> EPUB
+          </label>
+          <label class="nyx-check" style="flex:1;justify-content:center;background:var(--gold-lt);border-radius:6px;padding:5px;border:1px solid var(--gold-bd);font-size:8pt;">
+            <input type="radio" name="nyx-format" value="manuscript"> Manuscript
+          </label>
+        </div>
+      </div>
+
+      <!-- Templates Tab -->
+      <div class="nyx-tab-content" id="nyx-tab-templates" style="display:none;">
+        <div style="font-size:9pt;color:var(--text-lt);margin-bottom:10px;">Choose a template to get started:</div>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('fiction')"><i class="ph ph-book"></i> Fiction Novel</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('nonfiction')"><i class="ph ph-clipboard-text"></i> Non-Fiction Book</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('memoir')"><i class="ph ph-user-circle"></i> Memoir</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('poetry')"><i class="ph ph-leaf"></i> Poetry Collection</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('romance')"><i class="ph ph-heart"></i> Romance Novel</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('mystery')"><i class="ph ph-magnifying-glass"></i> Mystery / Thriller</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('childrens')"><i class="ph ph-star"></i> Children's Book</button>
+        <button class="nyx-template-btn" onclick="nyxUseTemplate('selfhelp')"><i class="ph ph-lightbulb"></i> Self-Help / Inspirational</button>
+      </div>
+
+      <!-- Notes Tab -->
+      <div class="nyx-tab-content" id="nyx-tab-notes" style="display:none;">
+        <textarea id="nyx-notes" class="nyx-inp"
+          placeholder="Your notes, ideas, character details, plot points…"
+          style="width:100%;height:calc(100% - 8px);min-height:150px;resize:none;font-size:11pt;"></textarea>
+      </div>
+    </div><!-- end right panel -->
+  </div><!-- end workspace -->
+
+</div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════
+     EXPORT MODAL
+═══════════════════════════════════════════════════════ -->
+<div class="nyx-export-modal" id="nyxExportModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="nyx-export-box">
+    <div class="nyx-export-title"><i class="ph ph-upload-simple"></i> Export Manuscript</div>
+    <div class="nyx-export-group">
+      <div class="nyx-export-group-label">Download to Device</div>
+      <div class="nyx-export-option" onclick="nyxExport('epub')">
+        <div class="nyx-export-option-icon"><i class="ph ph-book-bookmark"></i></div>
+        <div><div style="font-weight:600;">Download as EPUB</div><div style="font-size:8pt;color:var(--text-lt);">For publishing, audiobooks &amp; e-readers</div></div>
+      </div>
+      <div class="nyx-export-option" onclick="nyxExport('pdf')">
+        <div class="nyx-export-option-icon"><i class="ph ph-file-pdf"></i></div>
+        <div><div style="font-weight:600;">Download as PDF</div><div style="font-size:8pt;color:var(--text-lt);">Print-ready format</div></div>
+      </div>
+      <div class="nyx-export-option" onclick="nyxExport('docx')">
+        <div class="nyx-export-option-icon"><i class="ph ph-file-doc"></i></div>
+        <div><div style="font-weight:600;">Download as DOCX</div><div style="font-size:8pt;color:var(--text-lt);">Microsoft Word document</div></div>
+      </div>
+      <div class="nyx-export-option" onclick="nyxExport('txt')">
+        <div class="nyx-export-option-icon"><i class="ph ph-file-text"></i></div>
+        <div><div style="font-weight:600;">Download as TXT</div><div style="font-size:8pt;color:var(--text-lt);">Plain text file</div></div>
+      </div>
+    </div>
+    <div class="nyx-export-group">
+      <div class="nyx-export-group-label">Send to Platform</div>
+      <div class="nyx-export-option" onclick="nyxSendToEditor()">
+        <div class="nyx-export-option-icon"><i class="ph ph-pencil-simple"></i></div>
+        <div><div style="font-weight:600;">Send to Book Editor</div><div style="font-size:8pt;color:var(--text-lt);">Open in full editor for final formatting</div></div>
+      </div>
+      <div class="nyx-export-option" onclick="nyxSendToCollections()">
+        <div class="nyx-export-option-icon"><i class="ph ph-rocket-launch"></i></div>
+        <div><div style="font-weight:600;">Send to Collections</div><div style="font-size:8pt;color:var(--text-lt);">Publish to your storefront</div></div>
+      </div>
+    </div>
+    <div style="font-size:8pt;color:var(--text-lt);padding:8px;background:var(--gold-lt);border-radius:6px;border:1px solid var(--gold-bd);margin-bottom:7px;display:flex;align-items:flex-start;gap:5px;">
+      <i class="ph ph-lightbulb" style="color:var(--gold);flex-shrink:0;margin-top:1px;"></i>
+      To generate an audiobook, export as EPUB first then use it in Voice Studio.
+    </div>
+    <button class="nyx-export-close" onclick="document.getElementById('nyxExportModal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Publishing Terms</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure">Audio Disclosures</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Platform Terms</a> &middot;
+  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy">Our Philosophy</a>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ── CONFIG ── */
+const NYXEN_API  = 'https://nyxen-standalone.smcantrellbooks.workers.dev';
+const CC_URL     = 'https://creatives.smcantrellbooks.com';
+var currentUser = null;
+const SB_URL     = 'https://recyyhvdvuupxhbxmzal.supabase.co';
+const SB_KEY     = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
+
+var _sb = null;
+function getSB(){ if(!_sb) _sb = supabase.createClient(SB_URL, SB_KEY); return _sb; }
+
+/* ── AUTH ── */
+function authSignOut(){
+  if(!confirm('Sign out of Cantrell Creatives?')) return;
+  getSB().auth.signOut().then(function(){ window.location.href = CC_URL + '/login'; });
+}
+
+function initAuth(){
+  getSB().auth.getSession().then(function(res){
+    var session = res.data && res.data.session;
+    if(session && session.user) applyUser(session.user);
+  });
+  getSB().auth.onAuthStateChange(function(event, session){
+    if(session && session.user) applyUser(session.user);
+    else clearUser();
+  });
+}
+
+function applyUser(user){
+  currentUser = user;
+  document.getElementById('authGate').classList.add('hidden');
+  var meta = user.user_metadata || {};
+  var name = meta.full_name || meta.username || meta.name || user.email.split('@')[0];
+  document.getElementById('hdrUserName').textContent = name;
+  document.getElementById('hdrUserChip').style.display = 'inline-flex';
+  document.getElementById('hdrLogoutBtn').style.display = 'inline-flex';
+}
+function clearUser(){
+  currentUser = null;
+  document.getElementById('hdrUserChip').style.display = 'none';
+  document.getElementById('hdrLogoutBtn').style.display = 'none';
+  document.getElementById('authGate').classList.remove('hidden');
+  setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/workspace'; }, 1500);
+}
+
+/* ── FILE UPLOAD ── */
+var epubFile = null;
+var fileType  = null;
+
+function handleFileDrop(e){
+  e.preventDefault();
+  document.getElementById('epubZone').classList.remove('dragover');
+  var f = e.dataTransfer.files[0];
+  if(f) setEpubFile(f);
+}
+function handleFileUpload(e){
+  var f = e.target.files[0];
+  if(f) setEpubFile(f);
+}
+function setEpubFile(file){
+  var ext = file.name.split('.').pop().toLowerCase();
+  if(!['epub','docx','pdf'].includes(ext)){ alert('Please upload an EPUB, DOCX, or PDF file.'); return; }
+  fileType = ext;
+
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{ localStorage.setItem('pw_epub_b64', ev.target.result); localStorage.setItem('pw_epub_name', file.name); }catch(e){}
+  };
+  reader.readAsDataURL(file);
+
+  epubFile = file;
+  document.getElementById('epubReady').classList.add('show');
+  document.getElementById('epubReadyName').textContent = file.name + ' (' + Math.round(file.size/1024) + ' KB)';
+  document.getElementById('epubZone').style.display = 'none';
+  document.getElementById('epubActions').style.display = 'none';
+  document.getElementById('docActions').style.display = 'flex';
+  document.getElementById('epubPrompt').style.display = 'none';
+  var name = file.name.replace(/\.(epub|docx|pdf)$/i,'').replace(/[-_]/g,' ');
+  var titleInp = document.getElementById('nyx-title');
+  if(titleInp && !titleInp.value) titleInp.value = name;
+
+  /* show open-in-editor button */
+  var docActions = document.getElementById('docActions');
+  docActions.innerHTML = '<button class="btn-primary" onclick="goEditorWithFile()"><i class="ph ph-pencil-simple"></i> Open in Book Editor</button>';
+}
+function clearEpub(){
+  epubFile = null; fileType = null;
+  try{ localStorage.removeItem('pw_epub_b64'); localStorage.removeItem('pw_epub_name'); }catch(e){}
+  document.getElementById('epubReady').classList.remove('show');
+  document.getElementById('epubZone').style.display = '';
+  document.getElementById('epubActions').style.display = 'none';
+  document.getElementById('docActions').style.display = 'none';
+  document.getElementById('epubPrompt').style.display = '';
+}
+
+/* ── NAVIGATION ── */
+function goEditor(){
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/workspace'; return; }
+  try{
+    localStorage.setItem('be_incoming_project', JSON.stringify({
+      title:  document.getElementById('nyx-title')  ? document.getElementById('nyx-title').value  : '',
+      author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+      series: document.getElementById('nyx-series') ? document.getElementById('nyx-series').value : '',
+      genre:  document.getElementById('nyx-genre')  ? document.getElementById('nyx-genre').value  : '',
+      fromWorkspace: true
+    }));
+    localStorage.setItem('be_has_incoming','1');
+  }catch(e){}
+  location.href = CC_URL + '/editor';
+}
+function goEditorWithFile(){
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/workspace'; return; }
+  try{
+    localStorage.setItem('be_incoming_project', JSON.stringify({
+      title:  document.getElementById('nyx-title')  ? document.getElementById('nyx-title').value  : '',
+      author: document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+      genre:  document.getElementById('nyx-genre')  ? document.getElementById('nyx-genre').value  : '',
+      fromWorkspace: true
+    }));
+    localStorage.setItem('be_has_incoming','1');
+  }catch(e){}
+  location.href = CC_URL + '/editor';
+}
+function goPublish(){
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/workspace'; return; }
+  if(!epubFile){ alert('Please upload your EPUB first.'); return; }
+  localStorage.setItem('collections_incoming', JSON.stringify({
+    title:     document.getElementById('nyx-title')  ? document.getElementById('nyx-title').value  : '',
+    author:    document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '',
+    series:    document.getElementById('nyx-series') ? document.getElementById('nyx-series').value : '',
+    genre:     document.getElementById('nyx-genre')  ? document.getElementById('nyx-genre').value  : '',
+    epubName: epubFile.name, epubB64Key:'pw_epub_b64', fromEpub:true
+  }));
+  location.href = CC_URL + '/collections';
+}
+function goAudiobook(){
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/workspace'; return; }
+  var title  = document.getElementById('nyx-title')  ? document.getElementById('nyx-title').value  : '';
+  var author = document.getElementById('nyx-author') ? document.getElementById('nyx-author').value : '';
+  var data   = {title:title, author:author, fromWorkspace:true};
+  if(epubFile){ data.epubName = epubFile.name; data.epubB64Key = 'pw_epub_b64'; }
+  localStorage.setItem('vs_incoming', JSON.stringify(data));
+  location.href = CC_URL + '/voice';
+}
+function updateStructureHint(){}
+
+/* ── NYX WORKSPACE ── */
+var nyxChapters  = JSON.parse(localStorage.getItem('nyx_chapters')||'[]');
+var nyxActiveChap = 0;
+
+function nyxSaveWorkspace(){ localStorage.setItem('nyx_chapters', JSON.stringify(nyxChapters)); }
+
+function nyxRenderChapters(){
+  var list = document.getElementById('nyx-chapter-list');
+  if(!list) return;
+  list.innerHTML = '';
+  if(nyxChapters.length === 0){
+    list.innerHTML = '<div style="font-size:8pt;color:var(--text-lt);padding:8px;font-style:italic;">No chapters yet</div>';
+  }
+  nyxChapters.forEach(function(ch, i){
+    var d = document.createElement('div');
+    d.className = 'nyx-ch-item' + (i === nyxActiveChap ? ' active' : '');
+    d.innerHTML = '<i class="ph ph-file-text"></i><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+      escHtml(ch.title || 'Chapter '+(i+1)) + '</span>';
+    d.onclick = (function(idx){ return function(){ nyxSaveCurrentChapter(); nyxLoadChapter(idx); }; })(i);
+    list.appendChild(d);
+  });
+  var cc = document.getElementById('nyx-chapter-count');
+  if(cc) cc.textContent = nyxChapters.length + ' chapter' + (nyxChapters.length !== 1 ? 's' : '');
+}
+
+function nyxLoadChapter(idx){
+  nyxActiveChap = idx;
+  var ch = nyxChapters[idx];
+  if(!ch) return;
+  var titleInp = document.getElementById('nyx-chapter-title');
+  var editor   = document.getElementById('nyx-editor');
+  if(titleInp) titleInp.value    = ch.title   || '';
+  if(editor)   editor.innerHTML  = ch.content || '';
+  nyxUpdateStats();
+  nyxRenderChapters();
+}
+
+function nyxSaveCurrentChapter(){
+  if(nyxChapters.length === 0) return;
+  var titleInp = document.getElementById('nyx-chapter-title');
+  var editor   = document.getElementById('nyx-editor');
+  nyxChapters[nyxActiveChap] = {
+    title:   titleInp ? titleInp.value : ('Chapter '+(nyxActiveChap+1)),
+    content: editor   ? editor.innerHTML : ''
+  };
+  nyxSaveWorkspace();
+  nyxRenderChapters();
+}
+
+function nyxAddChapter(){
+  nyxSaveCurrentChapter();
+  var num = nyxChapters.length + 1;
+  nyxChapters.push({title:'Chapter '+num, content:''});
+  nyxActiveChap = nyxChapters.length - 1;
+  nyxSaveWorkspace();
+  nyxLoadChapter(nyxActiveChap);
+}
+
+function nyxUpdateStats(){
+  var editor = document.getElementById('nyx-editor');
+  if(!editor) return;
+  var text  = editor.innerText || editor.textContent || '';
+  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  var wc = document.getElementById('nyx-word-count');
+  var cc = document.getElementById('nyx-char-count');
+  if(wc) wc.textContent = words.toLocaleString() + ' words';
+  if(cc) cc.textContent = text.length.toLocaleString() + ' chars';
+}
+
+function nyxUpdateBookDisplay(){
+  var titleInp = document.getElementById('nyx-title');
+  var disp     = document.getElementById('nyx-book-title-display');
+  if(disp && titleInp) disp.textContent = titleInp.value || 'Untitled Book';
+  var author    = document.getElementById('nyx-author');
+  var copyright = document.getElementById('nyx-copyright');
+  if(copyright && !copyright.value && author && author.value){
+    copyright.value = '\u00A9 ' + new Date().getFullYear() + ' ' + author.value + '. All rights reserved.';
+  }
+}
+
+/* ── FORMATTING ── */
+function nyxFmt(cmd, val){
+  document.getElementById('nyx-editor').focus();
+  document.execCommand(cmd, false, val || null);
+}
+function nyxFmtBlock(tag){
+  document.getElementById('nyx-editor').focus();
+  document.execCommand('formatBlock', false, tag);
+}
+
+/* ── TABS ── */
+function nyxSwitchTab(tab, btn){
+  ['details','templates','notes'].forEach(function(t){
+    var el = document.getElementById('nyx-tab-'+t);
+    if(el) el.style.display = (t === tab) ? '' : 'none';
+  });
+  document.querySelectorAll('.nyx-tab').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+}
+
+/* ── TEMPLATES ── */
+var TEMPLATES = {
+  fiction:    {title:'My Novel',    chapters:['Chapter 1 — The Beginning','Chapter 2','Chapter 3','Epilogue']},
+  nonfiction: {title:'My Book',     chapters:['Introduction','Chapter 1','Chapter 2','Chapter 3','Conclusion']},
+  memoir:     {title:'My Memoir',   chapters:['Prologue','Early Years','Chapter 1','Chapter 2','Reflections']},
+  poetry:     {title:'My Poems',    chapters:['Part I','Part II','Part III']},
+  romance:    {title:'My Romance',  chapters:['Chapter 1 — First Meeting','Chapter 2','Chapter 3','Happily Ever After']},
+  mystery:    {title:'My Mystery',  chapters:['Prologue','Chapter 1 — The Crime','Chapter 2','Chapter 3','Resolution']},
+  childrens:  {title:'My Story',    chapters:['The Beginning','The Adventure','The Ending']},
+  selfhelp:   {title:'My Guide',    chapters:['Introduction','Part 1 — Foundation','Part 2 — Practice','Part 3 — Results','Conclusion']}
+};
+function nyxUseTemplate(type){
+  var t = TEMPLATES[type]; if(!t) return;
+  nyxChapters = t.chapters.map(function(c){ return {title:c, content:''}; });
+  nyxActiveChap = 0;
+  nyxSaveWorkspace();
+  var titleInp = document.getElementById('nyx-title');
+  if(titleInp && !titleInp.value) titleInp.value = t.title;
+  nyxUpdateBookDisplay();
+  nyxLoadChapter(0);
+  nyxSwitchTab('details', document.querySelector('.nyx-tab'));
+}
+
+/* ── AI TOOL SHORTCUT ── */
+function nyxTool(prompt){
+  document.getElementById('nyxInput').value = prompt;
+  nyxSend();
+}
+
+/* ── CHAT ── */
+function nyxAddAiMsg(html, showInsert){
+  var feed    = document.getElementById('nyxFeed');
+  var welcome = document.getElementById('nyxWelcome');
+  if(welcome) welcome.style.display = 'none';
+  var d = document.createElement('div');
+  d.className = 'nyx-msg ai';
+  d.innerHTML = '<div class="nyx-msg-lbl">Nyxen</div><div>' + html + '</div>';
+  if(showInsert){
+    var plain = html.replace(/<[^>]+>/g,'');
+    var btn   = document.createElement('button');
+    btn.className = 'nyx-insert-btn';
+    btn.innerHTML = '<i class="ph ph-arrow-bend-down-right"></i> Insert into chapter';
+    btn.onclick = function(){
+      var editor = document.getElementById('nyx-editor');
+      if(editor){
+        editor.focus();
+        document.execCommand('insertText', false, '\n\n' + plain);
+        nyxSaveCurrentChapter(); nyxUpdateStats();
+      }
+    };
+    d.appendChild(btn);
+  }
+  feed.appendChild(d);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function nyxAddUserMsg(text){
+  var feed    = document.getElementById('nyxFeed');
+  var welcome = document.getElementById('nyxWelcome');
+  if(welcome) welcome.style.display = 'none';
+  var d = document.createElement('div');
+  d.className = 'nyx-msg user';
+  d.textContent = text;
+  feed.appendChild(d);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function nyxQuick(text){ document.getElementById('nyxInput').value = text; nyxSend(); }
+
+async function nyxSend(){
+  var inp  = document.getElementById('nyxInput');
+  var text = inp.value.trim();
+  if(!text) return;
+  inp.value = ''; inp.style.height = '';
+  nyxAddUserMsg(text);
+
+  var bookTitle  = document.getElementById('nyx-title')         ? document.getElementById('nyx-title').value : '';
+  var chapTitle  = document.getElementById('nyx-chapter-title') ? document.getElementById('nyx-chapter-title').value : '';
+  var chapContent= document.getElementById('nyx-editor')        ? (document.getElementById('nyx-editor').innerText||'').substring(0,600) : '';
+  var msg = text;
+  if(bookTitle||chapTitle){
+    msg += ' [Book: "'+bookTitle+'", Chapter: "'+chapTitle+'"';
+    if(chapContent) msg += ', Content so far: '+chapContent+'...';
+    msg += ']';
+  }
+
+  var feed = document.getElementById('nyxFeed');
+  var td   = document.createElement('div');
+  td.className = 'nyx-msg ai'; td.id = 'nyxTyping';
+  td.innerHTML = '<div class="nyx-msg-lbl">Nyxen</div>' +
+    '<div style="display:inline-flex;gap:3px;align-items:center;">' +
+    '<span style="width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite;display:inline-block;"></span>' +
+    '<span style="width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite .2s;display:inline-block;"></span>' +
+    '<span style="width:5px;height:5px;border-radius:50%;background:var(--gold);animation:td 1.2s ease-in-out infinite .4s;display:inline-block;"></span>' +
+    '</div>';
+  feed.appendChild(td); feed.scrollTop = feed.scrollHeight;
+
+  var status = document.getElementById('nyxStatus');
+  if(status) status.textContent = 'Writing\u2026';
+
+  try{
+    var body = {
+      messages: [{role:'user', content:msg}],
+      system: 'You are Nyxen, an AI creative writing assistant on the Cantrell Creatives Publisher Workspace. Help authors create books chapter by chapter. Write full rich prose when asked. Keep each chapter focused and consistent. Plain prose only, no markdown symbols.'
+    };
+    var resp = await fetch(NYXEN_API+'/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    var el = document.getElementById('nyxTyping'); if(el) el.remove();
+    var data = await resp.json();
+    var reply = data.response || data.content || 'Something went wrong.';
+    nyxAddAiMsg(reply, true);
+    if(status) status.textContent = 'AI Editor & Creative Partner';
+  }catch(err){
+    var el = document.getElementById('nyxTyping'); if(el) el.remove();
+    nyxAddAiMsg('Connection error. Please try again.');
+    if(status) status.textContent = 'Error — try again';
+  }
+}
+
+/* ── EXPORT ── */
+function nyxExport(format){
+  var title = (document.getElementById('nyx-title')||{}).value || 'manuscript';
+  var author= (document.getElementById('nyx-author')||{}).value || '';
+  var safe  = title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_').substring(0,60) || 'manuscript';
+
+  if(format === 'txt'){
+    var txt = nyxChapters.map(function(ch){ return ch.title+'\n\n'+(ch.content ? ch.content.replace(/<[^>]+>/g,'') : ''); }).join('\n\n---\n\n');
+    dlBlob(txt,'text/plain',safe+'.txt'); close(); return;
+  }
+  if(format === 'docx'){
+    var html = buildDocHtml(title, author);
+    dlBlob(html,'application/vnd.openxmlformats-officedocument.wordprocessingml.document',safe+'.docx'); close(); return;
+  }
+  if(format === 'pdf'){
+    var win = window.open('','_blank');
+    win.document.write('<html><head><title>'+escHtml(title)+'</title><style>body{font-family:Georgia,serif;font-size:12pt;max-width:720px;margin:40px auto;line-height:1.8;color:#1a0a00;}h1{font-size:18pt;}h2{font-size:13pt;}p{margin-bottom:8px;}</style></head><body>');
+    win.document.write('<h1>'+escHtml(title)+'</h1>');
+    if(author) win.document.write('<p><em>by '+escHtml(author)+'</em></p><hr>');
+    nyxChapters.forEach(function(ch){ win.document.write('<h2>'+escHtml(ch.title||'')+'</h2>'+(ch.content||'')); });
+    win.document.write('</body></html>');
+    win.document.close(); setTimeout(function(){ win.print(); },300);
+    close(); return;
+  }
+  if(format === 'epub'){
+    buildEpub(title, author, safe);
+    close(); return;
+  }
+  function close(){ document.getElementById('nyxExportModal').classList.remove('open'); }
+}
+
+function buildDocHtml(title, author){
+  var parts = ['<html><body>','<h1>'+escHtml(title)+'</h1>'];
+  if(author) parts.push('<p><em>by '+escHtml(author)+'</em></p>');
+  nyxChapters.forEach(function(ch){ parts.push('<h2>'+escHtml(ch.title||'')+'</h2>'+(ch.content||'')); });
+  parts.push('</body></html>');
+  return parts.join('');
+}
+
+async function buildEpub(title, author, safe){
+  try{
+    var zip = new JSZip();
+    zip.file('mimetype','application/epub+zip');
+    var meta = zip.folder('META-INF');
+    meta.file('container.xml','<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>');
+    var oebps = zip.folder('OEBPS');
+    var spine = []; var manifest = [];
+    nyxChapters.forEach(function(ch, i){
+      var id = 'ch'+(i+1);
+      var fn = id+'.html';
+      var html = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title>'+escHtml(ch.title||'Chapter '+(i+1))+'</title></head><body><h1>'+escHtml(ch.title||'Chapter '+(i+1))+'</h1>'+(ch.content||'')+'</body></html>';
+      oebps.file(fn, html);
+      manifest.push('<item id="'+id+'" href="'+fn+'" media-type="application/xhtml+xml"/>');
+      spine.push('<itemref idref="'+id+'"/>');
+    });
+    oebps.file('content.opf',
+      '<?xml version="1.0" encoding="utf-8"?><package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="id">'+
+      '<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>'+escHtml(title)+'</dc:title><dc:creator>'+escHtml(author)+'</dc:creator><dc:language>en</dc:language></metadata>'+
+      '<manifest>'+manifest.join('')+'</manifest>'+
+      '<spine>'+spine.join('')+'</spine></package>'
+    );
+    var blob = await zip.generateAsync({type:'blob',compression:'DEFLATE'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = safe+'.epub'; a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+  }catch(err){ alert('EPUB generation failed: '+err.message); }
+}
+
+function dlBlob(content, type, filename){
+  var blob = new Blob([content],{type:type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+}
+
+function nyxSendToEditor(){
+  document.getElementById('nyxExportModal').classList.remove('open');
+  goEditor();
+}
+function nyxSendToCollections(){
+  document.getElementById('nyxExportModal').classList.remove('open');
+  goPublish();
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── TYPING ANIMATION CSS ── */
+(function(){
+  var s=document.createElement('style');
+  s.textContent='@keyframes td{0%,80%,100%{opacity:.35;transform:translateY(0);}40%{opacity:1;transform:translateY(-4px);}}';
+  document.head.appendChild(s);
+})();
+
+/* ── INIT ── */
+window.addEventListener('DOMContentLoaded', function(){
+  fetch(NYXEN_API+'/health').catch(function(){});
+  try{
+    localStorage.removeItem('pw_epub_b64');
+    localStorage.removeItem('pw_epub_name');
+    localStorage.removeItem('pw_epub_text');
+  }catch(e){}
+  if(nyxChapters.length === 0){
+    nyxChapters.push({title:'Chapter 1', content:''});
+    nyxSaveWorkspace();
+  }
+  nyxRenderChapters();
+  nyxLoadChapter(0);
+  initAuth();
+});
+</script>
+
+<!-- AUTH GATE OVERLAY -->
+<div id="authGate" class="hidden">
+  <div class="gate-card">
+    <div class="gate-icon"><i class="ph ph-lock"></i></div>
+    <h2>Sign In Required</h2>
+    <p>Please sign in to access the Publisher Workspace and your projects.</p>
+    <a class="gate-btn" href="https://creatives.smcantrellbooks.com/login?next=/workspace"><i class="ph ph-sign-in"></i> Sign In</a>
+  </div>
+</div>
+
+</body>
+</html>
