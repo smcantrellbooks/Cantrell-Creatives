@@ -649,9 +649,9 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
         <div style="margin-bottom:14px;">
           <div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:6px;">Author Profiles</div>
           <div class="ext-links-row">
-            <a class="ext-link" href="https://smcantrellbooks.com/author" target="_blank"><i class="ph ph-user"></i> Author Page</a>
-            <a class="ext-link" href="https://smcantrellbooks.com/audiobooks" target="_blank"><i class="ph ph-headphones"></i> Audiobooks</a>
-            <a class="ext-link" href="https://smcantrellbooks.com/collections" target="_blank"><i class="ph ph-books"></i> Collections</a>
+            <a class="ext-link" href="https://smcantrellbooks.com/#author" target="_blank"><i class="ph ph-user"></i> Author Page</a>
+            <a class="ext-link" href="https://smcantrellbooks.com/#audiobooks" target="_blank"><i class="ph ph-headphones"></i> Audiobooks</a>
+            <a class="ext-link" href="https://smcantrellbooks.com/#collections" target="_blank"><i class="ph ph-books"></i> Collections</a>
           </div>
         </div>
 
@@ -829,9 +829,9 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       <div class="sec-body">
         <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Storefront &amp; Distribution</div>
         <div class="resources-grid" style="margin-bottom:16px;">
-          <a class="res-link" href="https://smcantrellbooks.com/collections" target="_blank"><i class="ph ph-books"></i> SM Cantrell Collections</a>
-          <a class="res-link" href="https://smcantrellbooks.com/audiobooks" target="_blank"><i class="ph ph-headphones"></i> SM Cantrell Audiobooks</a>
-          <a class="res-link" href="https://smcantrellbooks.com/author" target="_blank"><i class="ph ph-user"></i> Author Bio Page</a>
+          <a class="res-link" href="https://smcantrellbooks.com/#collections" target="_blank"><i class="ph ph-books"></i> SM Cantrell Collections</a>
+          <a class="res-link" href="https://smcantrellbooks.com/#audiobooks" target="_blank"><i class="ph ph-headphones"></i> SM Cantrell Audiobooks</a>
+          <a class="res-link" href="https://smcantrellbooks.com/#author" target="_blank"><i class="ph ph-user"></i> Author Bio Page</a>
           <a class="res-link" href="https://smcantrellbooks.com" target="_blank"><i class="ph ph-storefront"></i> Main Storefront</a>
         </div>
 
@@ -860,7 +860,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
       <h3><i class="ph ph-check-circle"></i> Book Published!</h3>
       <p id="publishSuccessMsg">Your book has been submitted to the collection.</p>
       <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-        <a id="viewStorefrontBtn" href="https://smcantrellbooks.com/collections" target="_blank" class="btn btn-primary"><i class="ph ph-storefront"></i> View on Storefront</a>
+        <a id="viewStorefrontBtn" href="https://smcantrellbooks.com/#collections" target="_blank" class="btn btn-primary"><i class="ph ph-storefront"></i> View on Storefront</a>
         <button class="btn btn-outline" onclick="resetForm()"><i class="ph ph-plus"></i> Publish Another Book</button>
       </div>
     </div>
@@ -907,9 +907,9 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
     <div class="side-card">
       <div class="side-card-title"><i class="ph ph-link"></i> Quick Links</div>
       <div style="display:flex;flex-direction:column;gap:6px;">
-        <a class="res-link" href="https://smcantrellbooks.com/collections" target="_blank"><i class="ph ph-books"></i> SM Cantrell Collections</a>
-        <a class="res-link" href="https://smcantrellbooks.com/audiobooks" target="_blank"><i class="ph ph-headphones"></i> SM Cantrell Audiobooks</a>
-        <a class="res-link" href="https://smcantrellbooks.com/author" target="_blank"><i class="ph ph-user"></i> Author Bio</a>
+        <a class="res-link" href="https://smcantrellbooks.com/#collections" target="_blank"><i class="ph ph-books"></i> SM Cantrell Collections</a>
+        <a class="res-link" href="https://smcantrellbooks.com/#audiobooks" target="_blank"><i class="ph ph-headphones"></i> SM Cantrell Audiobooks</a>
+        <a class="res-link" href="https://smcantrellbooks.com/#author" target="_blank"><i class="ph ph-user"></i> Author Bio</a>
         <a class="res-link" href="https://kdp.amazon.com" target="_blank" rel="noopener"><i class="ph ph-shopping-cart"></i> Amazon KDP</a>
       </div>
     </div>
@@ -1565,9 +1565,9 @@ async function doPublish(){
     document.getElementById('publishSuccess').scrollIntoView({behavior:'smooth',block:'center'});
     var coll=collection==='audiobook'?'Audiobooks':'Collections';
     document.getElementById('publishSuccessMsg').textContent='Your book "'+esc(title)+'" has been submitted to the '+coll+'. It will appear on the storefront once reviewed.';
-    document.getElementById('viewStorefrontBtn').href=collection==='audiobook'?(STORE_URL+'/audiobooks'):(STORE_URL+'/collections');
+    document.getElementById('viewStorefrontBtn').href=collection==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections');
 
-    setTimeout(function(){window.location.href=collection==='audiobook'?(STORE_URL+'/audiobooks'):(STORE_URL+'/collections');},8000);
+    setTimeout(function(){window.location.href=collection==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections');},8000);
   }catch(e){
     btn.disabled=false;
     btn.innerHTML='<i class="ph ph-rocket-launch"></i> <span id="publishBtnLabel">'+collPublishLabel[collection]+'</span>';
