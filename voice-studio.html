@@ -4,61 +4,59 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Voice Studio — Cantrell Creatives</title>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<meta name="description" content="Professional text-to-speech and audiobook generation. 40 voice profiles, EPUB import, chapter-by-chapter narration.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root{
-  --bg:#faf7f2;
-  --surface:#ffffff;
-  --surface-el:#f3ede3;
-  --border:rgba(44,24,16,.15);
-  --border-hover:rgba(184,150,46,.5);
-  --text-primary:#1a0f08;
-  --text-secondary:rgba(26,15,8,.90);
-  --text-tertiary:rgba(26,15,8,.70);
+  --bg:#faf7f2;--surface:#ffffff;--surface-el:#f3ede3;
+  --border:rgba(44,24,16,.15);--border-hover:rgba(184,150,46,.5);
+  --text-primary:#1a0f08;--text-secondary:rgba(26,15,8,.90);--text-tertiary:rgba(26,15,8,.70);
   --gold:#b8962e;--gold2:#d4ae50;--gold-lt:rgba(184,150,46,.12);--gold-bd:rgba(184,150,46,.3);
   --burg:#7a2638;--burg2:#9b3047;--burg-lt:rgba(122,38,56,.07);--burg-bd:rgba(122,38,56,.25);
   --smoke:#1a0f08;--ink:#1a0f08;
-  --success:#2a6b3c;--error:#c03c3c;
-  --oak-dark:#ede4d6;
+  --success:#2a6b3c;--error:#c03c3c;--oak-dark:#ede4d6;
+  --sidebar:#2C1E0F;--sidebar2:#3A2810;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{
-  background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:19px;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:19px;-webkit-font-smoothing:antialiased;overflow-x:hidden;
   background-image:url('https://cdn1.site-media.eu/images/0/25001905/StorefrontBackground-PE3btRSdKPEL1AYfwFgGBA.png');
-  background-attachment:fixed;background-size:cover;background-position:center top;background-repeat:no-repeat;
-}
-.wv-header,.wv-nav,.wv-footer,header.site-header,nav.site-nav,[class*="sitejet-header"],[class*="sitejet-nav"],[class*="sitejet-footer"],[class*="webcard-header"],[class*="webcard-nav"],[class*="webcard-footer"]{display:none!important;}
+  background-attachment:fixed;background-size:cover;background-position:center top;background-repeat:no-repeat;}
 ::-webkit-scrollbar{width:6px;height:6px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--gold-bd);border-radius:4px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--gold);}
 
-/* ── BANNER ── */
-.banner{position:relative;overflow:hidden;display:block;width:100%;height:260px;}
-.banner-img{position:absolute;top:0;left:0;width:100%;height:260px;object-fit:cover;object-position:center;}
-.title-block{position:absolute;top:50%;left:6%;transform:translateY(-54%);z-index:100;pointer-events:none;}
-.title-voice{font-family:'Cinzel',serif;font-size:42px;font-weight:700;color:var(--burg);line-height:1;letter-spacing:6px;text-shadow:0 2px 12px rgba(250,247,242,.4);}
-.title-studio{font-family:'Pinyon Script',cursive;font-size:52px;color:var(--smoke);line-height:.95;margin-left:8px;text-shadow:0 2px 12px rgba(250,247,242,.4);}
-.title-tagline{font-family:'EB Garamond',serif;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--burg);margin-top:8px;font-style:italic;}
-.gold-wave{width:100px;height:2px;background:linear-gradient(to right,var(--burg),transparent);margin-top:8px;border-radius:999px;}
-.nav-top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:14px 28px;background:linear-gradient(rgba(250,247,242,.6) 0%,transparent 100%);z-index:200;}
-.nt-btn{padding:5px 14px;border-radius:999px;border:1px solid var(--gold-bd);background:rgba(250,247,242,.7);color:var(--smoke);font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-block;white-space:nowrap;}
-.nt-btn:hover{background:rgba(184,150,46,.2);border-color:var(--gold);}
-.nt-btn.login{background:var(--burg);border-color:var(--burg);color:#fff;font-weight:800;}
-.nt-btn.login:hover{background:var(--burg2);}
-.nav-bot{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;background:linear-gradient(to top,rgba(250,247,242,.85) 0%,rgba(250,247,242,.4) 55%,transparent 100%);z-index:100;}
-.nb-inner{display:flex;align-items:center;gap:10px;padding:10px 28px 14px;}
-.nb-btn{padding:7px 22px;border-radius:999px;border:1px solid var(--gold-bd);background:rgba(250,247,242,.7);color:var(--smoke);font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.22s;text-decoration:none;display:inline-block;white-space:nowrap;}
-.nb-btn:hover{background:rgba(184,150,46,.2);border-color:var(--gold);transform:translateY(-1px);}
-.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,var(--gold-bd) 10%,var(--gold) 30%,var(--gold2) 50%,var(--gold) 70%,var(--gold-bd) 90%,transparent 100%);background-size:200%;animation:shimmer 4s linear infinite;}
+/* ── HEADER STRIP ─────────────────────────────────────── */
+.hdr{position:sticky;top:0;z-index:200;height:56px;background:var(--sidebar);border-bottom:1px solid rgba(201,160,64,.2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;flex-shrink:0;}
+.hdr-logo img{height:32px;border-radius:4px;}
+.hdr-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;}
+.hdr-btn{padding:5px 13px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:rgba(232,201,122,.75);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.hdr-btn:hover{background:rgba(201,160,64,.18);border-color:#C9A040;color:rgba(232,201,122,1);}
+.hdr-btn.logout{border-color:rgba(180,60,60,.4);color:rgba(220,120,120,.85);}
+.hdr-btn.logout:hover{background:rgba(140,32,32,.22);}
+.hdr-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;background:rgba(201,160,64,.1);border:1px solid rgba(201,160,64,.25);}
+.hdr-chip-dot{width:7px;height:7px;border-radius:50%;background:#C9A040;flex-shrink:0;}
+.hdr-chip-name{font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.07em;color:rgba(232,201,122,.85);}
+
+/* ── TOOL BAR ─────────────────────────────────────────── */
+.tool-bar{background:var(--sidebar2);border-bottom:1px solid rgba(201,160,64,.12);display:flex;justify-content:center;gap:6px;padding:7px 20px;flex-wrap:wrap;}
+.tool-btn{padding:5px 15px;border-radius:999px;border:1px solid rgba(201,160,64,.28);background:transparent;color:rgba(232,201,122,.6);font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.tool-btn:hover{background:rgba(201,160,64,.14);border-color:#C9A040;color:rgba(232,201,122,.9);}
+.tool-btn.active{background:#C9A040;border-color:#C9A040;color:#1a0a00;}
+.tool-btn i{font-size:.85rem;}
+
+/* ── GOLD LINE ────────────────────────────────────────── */
+.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent,var(--gold-bd) 10%,var(--gold) 30%,var(--gold2) 50%,var(--gold) 70%,var(--gold-bd) 90%,transparent);background-size:200%;animation:shimmer 4s linear infinite;}
 @keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
 
-/* ── NAV TABS ── */
-.nav-tabs-bar{display:flex;align-items:center;background:rgba(250,247,242,.97);border-bottom:1px solid var(--border);padding:0 24px;flex-wrap:wrap;backdrop-filter:blur(6px);position:sticky;top:0;z-index:100;}
+/* ── NAV TABS ─────────────────────────────────────────── */
+.nav-tabs-bar{display:flex;align-items:center;background:rgba(250,247,242,.97);border-bottom:1px solid var(--border);padding:0 24px;flex-wrap:wrap;backdrop-filter:blur(6px);position:sticky;top:56px;z-index:100;}
 .nav-tab{background:none;border:none;color:var(--text-tertiary);font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:14px 18px;cursor:pointer;transition:color 150ms,border-color 150ms;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;white-space:nowrap;}
 .nav-tab:hover{color:var(--text-secondary);}
 .nav-tab.active{color:var(--burg);border-bottom-color:var(--gold);}
@@ -66,15 +64,15 @@ body{
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse-glow 2s infinite;}
 @keyframes pulse-glow{0%,100%{opacity:1;}50%{opacity:.4;}}
 
-/* ── MAIN ── */
-.main{min-height:calc(100vh - 320px);}
+/* ── MAIN ─────────────────────────────────────────────── */
+.main{min-height:calc(100vh - 200px);}
 .tab-content{display:none;padding:32px 24px;max-width:1440px;margin:0 auto;}
 .tab-content.active{display:block;}
 .section-header{margin-bottom:32px;}
 .section-title{font-family:'Cinzel',serif;font-weight:700;font-size:2.2rem;letter-spacing:.02em;line-height:1;margin-bottom:8px;color:var(--burg);}
 .section-sub{font-family:'EB Garamond',serif;font-size:15px;color:var(--text-tertiary);letter-spacing:.06em;font-style:italic;}
 
-/* ── VOICE CARDS ── */
+/* ── VOICE CARDS ──────────────────────────────────────── */
 .voice-grid{display:flex;flex-direction:column;gap:0;}
 .voice-card{background:var(--surface);padding:20px;cursor:pointer;transition:background 150ms;display:flex;flex-direction:column;gap:12px;}
 .voice-card:hover{background:var(--surface-el);}
@@ -92,7 +90,7 @@ body{
 .btn-play.playing{background:var(--burg);color:#fff;border-color:var(--burg);}
 .btn-select:hover{border-color:var(--gold);color:var(--gold);}
 
-/* ── TTS LAYOUT ── */
+/* ── TTS LAYOUT ───────────────────────────────────────── */
 .tts-layout{display:grid;grid-template-columns:1fr 360px;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;min-height:500px;}
 @media(max-width:768px){.tts-layout{grid-template-columns:1fr;}}
 .tts-editor{background:var(--surface);display:flex;flex-direction:column;}
@@ -113,7 +111,7 @@ body{
 .btn-generate:active{transform:scale(.98);}
 .btn-generate:disabled{opacity:.45;cursor:not-allowed;transform:none;}
 
-/* ── AUDIO RESULT ── */
+/* ── AUDIO RESULT ─────────────────────────────────────── */
 .audio-result{border:1px solid var(--border);background:var(--surface);padding:20px;display:none;flex-direction:column;gap:12px;margin-top:24px;border-radius:10px;}
 .audio-result.visible{display:flex;}
 .audio-result audio{width:100%;height:40px;outline:none;}
@@ -122,7 +120,7 @@ body{
 .btn-download:hover{border-color:var(--gold);color:var(--gold);}
 .waveform-canvas{width:100%;height:80px;background:var(--surface-el);border:1px solid var(--border);display:block;border-radius:8px;}
 
-/* ── AUDIOBOOK LAYOUT ── */
+/* ── AUDIOBOOK LAYOUT ─────────────────────────────────── */
 .audiobook-layout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 @media(max-width:900px){.audiobook-layout{grid-template-columns:1fr;}}
 .audiobook-input,.audiobook-config{background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:20px;}
@@ -141,31 +139,7 @@ body{
 .segment-badge.dialogue{color:var(--gold);border-color:var(--gold);}
 .segment-text{color:var(--text-secondary);line-height:1.4;}
 
-/* ── CHAT ── */
-.chat-layout{border:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;height:calc(100vh - 400px);max-height:600px;border-radius:12px;overflow:hidden;}
-.chat-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface-el);}
-.chat-header-title{font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--burg);}
-.chat-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
-.chat-msg{max-width:80%;display:flex;flex-direction:column;gap:4px;}
-.chat-msg.user{align-self:flex-end;}
-.chat-msg.assistant{align-self:flex-start;}
-.chat-msg-role{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
-.chat-msg-content{padding:12px 16px;font-size:15px;line-height:1.6;border-radius:10px;}
-.chat-msg.user .chat-msg-content{background:var(--burg);color:#fff;}
-.chat-msg.assistant .chat-msg-content{background:var(--surface-el);border:1px solid var(--border);color:var(--text-secondary);}
-.chat-input-area{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;}
-.chat-input{flex:1;background:#fff;border:1px solid var(--border);color:var(--text-primary);font-family:'Cormorant Garamond',serif;font-size:15px;padding:10px 14px;outline:none;border-radius:8px;}
-.chat-input:focus{border-color:var(--burg);}
-.btn-send{padding:10px 20px;background:var(--burg);border:none;color:#fff;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background 150ms;border-radius:8px;}
-.btn-send:hover{background:var(--burg2);}
-.btn-send:disabled{opacity:.5;cursor:not-allowed;}
-.loading-indicator{display:inline-flex;gap:4px;align-items:center;}
-.loading-indicator span{width:6px;height:6px;background:var(--burg);border-radius:50%;animation:blink 1.2s infinite;}
-.loading-indicator span:nth-child(2){animation-delay:.2s;}
-.loading-indicator span:nth-child(3){animation-delay:.4s;}
-@keyframes blink{0%,60%,100%{opacity:.2;}30%{opacity:1;}}
-
-/* ── COMPARE ── */
+/* ── COMPARE ──────────────────────────────────────────── */
 .compare-voice-option{display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer;transition:background 150ms;font-size:14px;color:var(--text-secondary);border-radius:6px;}
 .compare-voice-option:hover{background:var(--surface-el);}
 .compare-voice-option input[type="checkbox"]{-webkit-appearance:none;appearance:none;width:14px;height:14px;border:1px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;position:relative;border-radius:3px;}
@@ -177,7 +151,7 @@ body{
 .compare-result-card .card-meta{font-family:'EB Garamond',serif;font-size:11px;color:var(--text-tertiary);font-style:italic;}
 .compare-result-card audio{width:100%;height:36px;}
 
-/* ── HISTORY ── */
+/* ── HISTORY ──────────────────────────────────────────── */
 .history-table{width:100%;border:1px solid var(--border);background:var(--surface);border-radius:12px;overflow:hidden;}
 .history-header{display:grid;grid-template-columns:60px 100px 120px 1fr 160px 80px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface-el);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);}
 .history-row{display:grid;grid-template-columns:60px 100px 120px 1fr 160px 80px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 150ms;cursor:pointer;font-size:14px;}
@@ -192,9 +166,8 @@ body{
 .history-play-btn{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:4px 10px;font-family:'Cinzel',serif;font-size:10px;cursor:pointer;transition:all 150ms;text-transform:uppercase;letter-spacing:.05em;border-radius:4px;}
 .history-play-btn:hover{border-color:var(--burg);color:var(--burg);}
 .history-empty,.empty-state{text-align:center;padding:60px 24px;color:var(--text-tertiary);font-family:'Cinzel',serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase;}
-.empty-state-icon{font-size:48px;margin-bottom:16px;opacity:.3;}
 
-/* ── MISC ── */
+/* ── MISC ─────────────────────────────────────────────── */
 .char-voice-option{display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer;transition:background 150ms;font-size:14px;color:var(--text-secondary);border-radius:6px;}
 .char-voice-option:hover{background:var(--surface-el);}
 .char-voice-option input[type="checkbox"]{-webkit-appearance:none;appearance:none;width:14px;height:14px;border:1px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;position:relative;border-radius:3px;}
@@ -202,14 +175,15 @@ body{
 .char-voice-option input[type="checkbox"]:checked::after{content:'';position:absolute;top:1px;left:4px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 .fade-in{animation:fadeIn 200ms ease-out forwards;}
+@keyframes blink{0%,60%,100%{opacity:.2;}30%{opacity:1;}}
 @media(max-width:768px){.history-header,.history-row{grid-template-columns:60px 100px 1fr 80px;}.history-header>:nth-child(4),.history-row>:nth-child(4),.history-header>:nth-child(5),.history-row>:nth-child(5){display:none;}}
 @media(max-width:640px){.nav-tab{padding:10px 10px;font-size:10px;}.section-title{font-size:1.5rem;}.tab-content{padding:20px 12px;}}
+@media(max-width:600px){.hdr-nav .hdr-btn:not(.logout){display:none;}.hdr-chip-name{display:none;}}
 
-/* ── NYXEN BUBBLE ── */
+/* ── NYXEN BUBBLE ─────────────────────────────────────── */
 #nyxen-bubble{position:fixed;bottom:28px;right:28px;z-index:9999;}
-#nyxen-toggle{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--burg),var(--burg2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(122,38,56,.4);transition:transform .2s;}
+#nyxen-toggle{width:56px;height:56px;border-radius:50%;background:var(--burg);border:3px solid var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(122,38,56,.4);transition:transform .2s;overflow:hidden;padding:0;}
 #nyxen-toggle:hover{transform:scale(1.08);}
-#nyxen-toggle svg{width:26px;height:26px;fill:#fff;}
 #nyxen-panel{position:absolute;bottom:68px;right:0;width:340px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(44,24,16,.15);display:none;flex-direction:column;overflow:hidden;max-height:480px;}
 #nyxen-panel.open{display:flex;}
 #nyxen-head{padding:14px 18px;background:var(--burg);display:flex;align-items:center;gap:10px;}
@@ -229,36 +203,69 @@ body{
 .nyxen-dots span{width:6px;height:6px;background:var(--burg);border-radius:50%;animation:blink 1.2s infinite;}
 .nyxen-dots span:nth-child(2){animation-delay:.2s;}
 .nyxen-dots span:nth-child(3){animation-delay:.4s;}
+/* ── AUTH GATE ── */
+#authGate{position:fixed;inset:0;z-index:9999;background:rgba(14,10,6,.93);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(7px);}
+#authGate.hidden{display:none;}
+.gate-card{background:#1E1508;border:1px solid rgba(184,148,46,.32);border-radius:18px;padding:48px 52px;text-align:center;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.gate-card .gate-icon{font-size:2.4rem;color:#B8942E;margin-bottom:16px;}
+.gate-card h2{font-family:'Cinzel',serif;font-size:1.15rem;font-weight:700;color:#FFF8EE;margin-bottom:8px;letter-spacing:.06em;}
+.gate-card p{font-size:.88rem;color:rgba(168,152,128,.75);font-style:italic;margin-bottom:28px;line-height:1.6;}
+.gate-card .gate-btn{display:inline-flex;align-items:center;gap:6px;background:#B8942E;color:#0e0a06;font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px 32px;border-radius:999px;text-decoration:none;transition:.18s;}
+.gate-card .gate-btn:hover{background:#d4aa42;}
 </style>
 </head>
 <body>
 
-<!-- BANNER -->
-<div class="banner">
-  <img class="banner-img" src="https://cdn1.site-media.eu/images/0/24164929/voicestudioofficial-gSFc-Wi6R19hbmveJtP7bg.png" alt="Voice Studio">
-  <div class="title-block">
-    <div class="title-voice">VOICE</div>
-    <div class="title-studio">Studio</div>
-    <div class="title-tagline">Give Your Stories A Voice</div>
-    <div class="gold-wave"></div>
-  </div>
-  <nav class="nav-top">
-    <a class="nt-btn" href="https://creatives.smcantrellbooks.com">&#x1F3E0; Home</a>
-    <a class="nt-btn" href="https://creatives.smcantrellbooks.com/myaccount">My Account</a>
-    <a class="nt-btn login" href="https://creatives.smcantrellbooks.com/login">Log In</a>
-  </nav>
-  <nav class="nav-bot">
-    <div class="nb-inner">
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/studio">&#127916; Studio</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">&#9997;&#65039; Publisher Workspace</a>
-      <a class="nb-btn" href="https://creatives.smcantrellbooks.com/collections">&#128218; Collections</a>
-      <a class="nb-btn" href="https://smcantrellbooks.com">&#127758; Main Site</a>
+<!-- ═══════════════════════════════════════════════════════
+     HEADER STRIP
+═══════════════════════════════════════════════════════ -->
+<header class="hdr">
+  <a href="https://creatives.smcantrellbooks.com">
+    <div class="hdr-logo">
+      <img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives">
     </div>
+  </a>
+  <nav class="hdr-nav" id="hdrNav">
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com">
+      <i class="ph ph-house"></i> Home
+    </a>
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com/myaccount">
+      <i class="ph ph-user-circle"></i> My Account
+    </a>
+    <div class="hdr-chip" id="hdrUserChip" style="display:none;">
+      <div class="hdr-chip-dot"></div>
+      <span class="hdr-chip-name" id="hdrUserName"></span>
+    </div>
+    <button class="hdr-btn logout" id="hdrLogoutBtn" onclick="authSignOut()" style="display:none;">
+      <i class="ph ph-sign-out"></i> Log Out
+    </button>
   </nav>
+</header>
+
+<!-- TOOL BAR -->
+<div class="tool-bar">
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">
+    <i class="ph ph-pencil-line"></i> Publisher Workspace
+  </a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/studio">
+    <i class="ph ph-film-strip"></i> Studio
+  </a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/editor">
+    <i class="ph ph-pencil-simple"></i> Book Editor
+  </a>
+  <a class="tool-btn active" href="https://creatives.smcantrellbooks.com/voice-studio">
+    <i class="ph ph-microphone"></i> Voice Studio
+  </a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/collections">
+    <i class="ph ph-books"></i> Collections
+  </a>
 </div>
+
 <div class="gold-line"></div>
 
-<!-- NAV TABS -->
+<!-- ═══════════════════════════════════════════════════════
+     NAV TABS
+═══════════════════════════════════════════════════════ -->
 <div class="nav-tabs-bar">
   <button class="nav-tab active" data-tab="voices"><i class="ph ph-waveform" style="font-size:14px;"></i> Voices</button>
   <button class="nav-tab" data-tab="tts"><i class="ph ph-microphone" style="font-size:14px;"></i> TTS Studio</button>
@@ -268,18 +275,21 @@ body{
   <div class="nav-status"><span class="status-dot"></span><span id="health-status">READY</span></div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════ -->
 <main class="main">
 
-  <!-- VOICES TAB -->
+  <!-- ── VOICES TAB ─────────────────────────────────── -->
   <section id="voices-tab" class="tab-content active">
     <div class="section-header">
       <h1 class="section-title">Voice Library</h1>
-      <p class="section-sub">24 voice profiles &mdash; Cloudflare Workers AI &mdash; minimax/speech-2.8-turbo</p>
+      <p class="section-sub">40 voice profiles &mdash; Cloudflare Workers AI &mdash; minimax/speech-2.8-turbo</p>
     </div>
     <div id="voice-grid" class="voice-grid"></div>
   </section>
 
-  <!-- TTS STUDIO TAB -->
+  <!-- ── TTS STUDIO TAB ─────────────────────────────── -->
   <section id="tts-tab" class="tab-content">
     <div class="section-header">
       <h1 class="section-title">TTS Studio</h1>
@@ -330,7 +340,7 @@ body{
     </div>
   </section>
 
-  <!-- AUDIOBOOK TAB -->
+  <!-- ── AUDIOBOOK TAB ──────────────────────────────── -->
   <section id="audiobook-tab" class="tab-content">
     <div class="section-header">
       <h1 class="section-title">Audiobook Studio</h1>
@@ -347,6 +357,7 @@ body{
           </div>
           <div id="upload-info" style="display:none;font-family:'Cinzel',serif;font-size:11px;color:var(--success);margin-top:4px;letter-spacing:.04em;"></div>
         </div>
+
         <!-- Chapter Navigator -->
         <div id="chapter-nav" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -358,6 +369,7 @@ body{
           </div>
           <div id="chapter-list" style="border:1px solid var(--border);border-radius:8px;overflow:hidden;max-height:380px;overflow-y:auto;background:var(--surface);"></div>
         </div>
+
         <!-- Chapter Preview -->
         <div id="chapter-preview" style="display:none;margin-top:12px;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -367,12 +379,14 @@ body{
           <div id="chapter-preview-text" style="border:1px solid var(--border);border-radius:8px;padding:16px;max-height:220px;overflow-y:auto;font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.7;color:var(--text-secondary);background:#fff;white-space:pre-wrap;"></div>
         </div>
         <textarea id="audiobook-text" style="display:none;"></textarea>
+
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button id="audiobook-preview-btn" class="btn-generate" style="background:transparent;border:1px solid var(--border);color:var(--text-tertiary);flex:1;">Preview Segments</button>
           <button id="epub-convert-btn" class="btn-generate" style="background:transparent;border:1px solid var(--gold);color:var(--gold);flex:1;"><i class="ph ph-book-bookmark"></i> EPUB</button>
         </div>
         <div id="segments-preview" class="segments-preview" style="display:none;"></div>
       </div>
+
       <div class="audiobook-config">
         <div class="control-group">
           <label class="control-label">Number of Voices</label>
@@ -408,7 +422,7 @@ body{
     </div>
   </section>
 
-  <!-- COMPARE TAB -->
+  <!-- ── COMPARE TAB ────────────────────────────────── -->
   <section id="compare-tab" class="tab-content">
     <div class="section-header">
       <h1 class="section-title">Voice Compare</h1>
@@ -432,7 +446,7 @@ body{
     </div>
   </section>
 
-  <!-- HISTORY TAB -->
+  <!-- ── HISTORY TAB ────────────────────────────────── -->
   <section id="history-tab" class="tab-content">
     <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
       <div>
@@ -453,16 +467,22 @@ body{
 
 </main>
 
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
 <footer style="border-top:1px solid var(--border);padding:20px 24px;text-align:center;background:var(--oak-dark);margin-top:40px;">
   <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Publishing Terms</a> &middot;
   <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Audio Disclosures</a> &middot;
   <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.8rem;color:var(--text-tertiary);margin:0 10px;text-decoration:none;">Our Philosophy</a>
 </footer>
 
-<!-- NYXEN BUBBLE -->
+<!-- ═══════════════════════════════════════════════════════
+     NYXEN BUBBLE
+═══════════════════════════════════════════════════════ -->
 <div id="nyxen-bubble">
   <div id="nyxen-panel">
     <div id="nyxen-head">
+      <img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen" style="width:32px;height:32px;border-radius:50%;border:2px solid rgba(255,255,255,.4);object-fit:cover;flex-shrink:0;">
       <div><div id="nyxen-head-name">Nyxen</div><div id="nyxen-head-sub">Your Publishing AI</div></div>
     </div>
     <div id="nyxen-msgs">
@@ -474,15 +494,47 @@ body{
     </div>
   </div>
   <button id="nyxen-toggle" title="Chat with Nyxen">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.05 21.95l4.782-1.388A9.954 9.954 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.952 7.952 0 01-4.073-1.118l-.29-.174-3.006.872.872-2.965-.19-.305A7.954 7.954 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+    <img src="https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg" alt="Nyxen" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
   </button>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════ -->
 <script>
-// ── CLOUDFLARE WORKER ENDPOINT ──
+// ── CONFIG ──
 var WORKER = 'https://cantrell-creatives.smcantrellbooks.workers.dev';
+var SB_URL = 'https://recyyhvdvuupxhbxmzal.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
+var CC_URL = 'https://creatives.smcantrellbooks.com';
+var currentUser = null;
 
-// ── VOICE PROFILES (24) ──
+// ── SUPABASE AUTH ──
+var _sb = null;
+function getSB(){ if(!_sb) _sb = supabase.createClient(SB_URL, SB_KEY); return _sb; }
+function authSignOut(){ if(!confirm('Sign out of Cantrell Creatives?')) return; getSB().auth.signOut().then(function(){ window.location.href = CC_URL + '/login'; }); }
+function initAuth(){
+  getSB().auth.getSession().then(function(res){ if(res.data && res.data.session) applyUser(res.data.session.user); });
+  getSB().auth.onAuthStateChange(function(event, session){ if(session && session.user) applyUser(session.user); else clearUser(); });
+}
+function applyUser(user){
+  currentUser = user;
+  document.getElementById('authGate').classList.add('hidden');
+  var meta = user.user_metadata || {};
+  var name = meta.full_name || meta.username || meta.name || user.email.split('@')[0];
+  document.getElementById('hdrUserName').textContent = name;
+  document.getElementById('hdrUserChip').style.display = 'inline-flex';
+  document.getElementById('hdrLogoutBtn').style.display = 'inline-flex';
+}
+function clearUser(){
+  currentUser = null;
+  document.getElementById('hdrUserChip').style.display = 'none';
+  document.getElementById('hdrLogoutBtn').style.display = 'none';
+  document.getElementById('authGate').classList.remove('hidden');
+  setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice'; }, 1500);
+}
+
+// ── VOICE PROFILES (40) ──
 var VOICES = [
   {id:'amalthea', name:'Amalthea', gender:'female', style:'Warm',        accent:'English', description:'Warm and expressive female voice. Great for storytelling and narration.'},
   {id:'andromeda',name:'Andromeda',gender:'female', style:'Confident',   accent:'English', description:'Clear and confident female voice. Ideal for presentations and guides.'},
@@ -590,9 +642,12 @@ var audiobookWaveform=new WaveformViz('audiobook-waveform');
 var historyWaveform=new WaveformViz('history-waveform');
 
 // ── INIT ──
-document.addEventListener('DOMContentLoaded',init);
+document.addEventListener('DOMContentLoaded', function() {
+  init();
+  initAuth();
+});
+
 function init(){
-  // Check for incoming content from publisher workspace
   var incoming=localStorage.getItem('vs_incoming');
   if(incoming){try{var data=JSON.parse(incoming);localStorage.removeItem('vs_incoming');setTimeout(function(){var ta=document.getElementById('audiobook-text');if(ta&&data.content){ta.value=data.content;bookChapters=parseChapters(data.content);renderChapterList(bookChapters);}var info=document.getElementById('upload-info');if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}},800);}catch(e){}}
   setupTabs();
@@ -622,11 +677,8 @@ function switchTab(tab){
 // ── RENDER VOICES ──
 function renderVoices(){
   var grid=document.getElementById('voice-grid');if(!grid)return;
-  // Group by accent
   var groups={};
-  VOICES.forEach(function(v){
-    var a=v.accent;if(!groups[a])groups[a]=[];groups[a].push(v);
-  });
+  VOICES.forEach(function(v){ var a=v.accent;if(!groups[a])groups[a]=[];groups[a].push(v); });
   grid.innerHTML='';
   Object.keys(groups).forEach(function(accent,groupIdx){
     var groupVoices=groups[accent];
@@ -659,7 +711,6 @@ function renderVoices(){
   });
 }
 
-// Preview voice with a short sample text via worker
 function previewVoice(voiceId,voiceName,btn){
   if(currentAudio){currentAudio.pause();currentAudio=null;if(currentPlayingCard){currentPlayingCard.classList.remove('playing');currentPlayingCard.innerHTML='<i class="ph ph-play"></i> Play Sample';}}
   if(currentPlayingCard===btn){currentPlayingCard=null;return;}
@@ -689,14 +740,10 @@ function populateVoiceSelects(){
     sel.innerHTML='';
     VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' — '+v.style+' ('+v.accent+')';sel.appendChild(opt);});
   });
-  // 2nd voice select for TTS (has None option)
   var sel2=document.getElementById('tts-voice2-select');
   if(sel2){
     VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' — '+v.style+' ('+v.accent+')';sel2.appendChild(opt);});
-    sel2.addEventListener('change',function(){
-      var wrap=document.getElementById('tts-char2-wrap');
-      if(wrap)wrap.style.display=sel2.value?'block':'none';
-    });
+    sel2.addEventListener('change',function(){ var wrap=document.getElementById('tts-char2-wrap');if(wrap)wrap.style.display=sel2.value?'block':'none'; });
   }
   var compC=document.getElementById('compare-voices-list');
   if(compC){compC.innerHTML='';VOICES.forEach(function(v){var l=document.createElement('label');l.className='compare-voice-option';l.innerHTML='<input type="checkbox" value="'+v.id+'"><span>'+v.name+' <span style="color:var(--text-tertiary);font-size:11px;">('+v.accent+')</span></span>';l.querySelector('input').addEventListener('change',updateCompareCount);compC.appendChild(l);});}
@@ -711,6 +758,7 @@ function setupTTSForm(){
 }
 
 function generateTTS(){
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice'; return; }
   var text=document.getElementById('tts-text').value.trim();
   var voiceId=document.getElementById('tts-voice-select').value;
   var voice2Id=document.getElementById('tts-voice2-select').value;
@@ -719,11 +767,8 @@ function generateTTS(){
   var btn=document.getElementById('tts-generate-btn'),result=document.getElementById('tts-result');
   if(!text)return;
   btn.disabled=true;btn.textContent='GENERATING...';
-
-  // If 2nd voice — interleave dialogue
   var voice=VOICES.find(function(v){return v.id===voiceId;})||{};
   var payload={text:text,voice_id:voiceId,format:format};
-
   fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){if(!r.ok)throw new Error('Worker returned '+r.status);return r.blob();})
   .then(function(blob){
@@ -732,7 +777,7 @@ function generateTTS(){
     setTimeout(function(){ttsWaveform.drawIdle&&ttsWaveform.drawIdle();},50);
     var audioEl=result.querySelector('audio');audioEl.src=url;audioEl.load();audioEl.play().catch(function(){});
     var info=result.querySelector('.audio-result-info span');
-    if(info)info.textContent=voice.name+' — '+format.toUpperCase()+' — '+(blob.size/1024).toFixed(1)+' KB';
+    if(info)info.textContent=(voice.name||voiceId)+' — '+format.toUpperCase()+' — '+(blob.size/1024).toFixed(1)+' KB';
     var dl=result.querySelector('.btn-download');
     if(dl)dl.onclick=function(){var a=document.createElement('a');a.href=url;a.download='vs-tts-'+(voice.name||voiceId).replace(/\s+/g,'_').toLowerCase()+'.'+format;a.click();};
     saveHistory({type:'tts',voice_name:voice.name||voiceId,text:text,audio_url:url,created_at:new Date().toISOString()});
@@ -810,8 +855,7 @@ function loadEPUB(file){
 }
 
 function extractAllHTML(zip,filename){
-  var texts=[];
-  var promises=[];
+  var texts=[]; var promises=[];
   zip.forEach(function(path,f){
     if(path.endsWith('.html')||path.endsWith('.xhtml')||path.endsWith('.htm')){
       promises.push(f.async('string').then(function(html){
@@ -829,56 +873,29 @@ function extractAllHTML(zip,filename){
   });
 }
 
-function parseChapters(text) {
-  var lines = text.split('\n');
-  var allSegments = [];
-  var currentTitle = null;
-  var currentLines = [];
-  var headingPattern = /^\s*(chapter\s+\S+|prologue|epilogue|part\s+\d+)/i;
-
-  var frontMatterLines = [];
-  var firstHeadingFound = false;
-
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    if (headingPattern.test(line.trim())) {
-      firstHeadingFound = true;
-      if (currentTitle !== null) {
-        allSegments.push({ title: currentTitle, content: currentLines.join('\n').trim() });
-      }
-      currentTitle = line.trim();
-      currentLines = [];
+function parseChapters(text){
+  var lines=text.split('\n');var allSegments=[];var currentTitle=null;var currentLines=[];
+  var headingPattern=/^\s*(chapter\s+\S+|prologue|epilogue|part\s+\d+)/i;
+  var frontMatterLines=[];var firstHeadingFound=false;
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    if(headingPattern.test(line.trim())){
+      firstHeadingFound=true;
+      if(currentTitle!==null){allSegments.push({title:currentTitle,content:currentLines.join('\n').trim()});}
+      currentTitle=line.trim();currentLines=[];
     } else {
-      if (!firstHeadingFound) {
-        frontMatterLines.push(line);
-      } else if (currentTitle !== null) {
-        currentLines.push(line);
-      }
+      if(!firstHeadingFound){frontMatterLines.push(line);}
+      else if(currentTitle!==null){currentLines.push(line);}
     }
   }
-  if (currentTitle !== null) {
-    allSegments.push({ title: currentTitle, content: currentLines.join('\n').trim() });
-  }
-
-  var withContent = allSegments.filter(function(s){ return s.content.trim().length > 100 || /^chapter\s/i.test(s.title) || /^(prologue|epilogue)/i.test(s.title); });
-  if (withContent.length === 0) withContent = allSegments;
-
-  var seen = {};
-  var result = withContent.filter(function(s){
-    var key = s.title.toLowerCase().trim();
-    if(seen[key]) return false;
-    seen[key] = true;
-    return true;
-  });
-
-  var frontMatterText = frontMatterLines.join('\n').trim();
-  if (frontMatterText.length > 20) {
-    result.push({ title: 'Copyright & Credits', content: frontMatterText, isFrontMatter: true });
-  }
-
-  if (result.length === 0) {
-    return [{ title: 'Full Manuscript', content: text }];
-  }
+  if(currentTitle!==null){allSegments.push({title:currentTitle,content:currentLines.join('\n').trim()});}
+  var withContent=allSegments.filter(function(s){return s.content.trim().length>100||/^chapter\s/i.test(s.title)||/^(prologue|epilogue)/i.test(s.title);});
+  if(withContent.length===0)withContent=allSegments;
+  var seen={};
+  var result=withContent.filter(function(s){var key=s.title.toLowerCase().trim();if(seen[key])return false;seen[key]=true;return true;});
+  var frontMatterText=frontMatterLines.join('\n').trim();
+  if(frontMatterText.length>20){result.push({title:'Copyright & Credits',content:frontMatterText,isFrontMatter:true});}
+  if(result.length===0){return[{title:'Full Manuscript',content:text}];}
   return result;
 }
 
@@ -919,32 +936,25 @@ function previewSegments(){
 }
 
 function generateAudiobook(){
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice'; return; }
   var narratorId=document.getElementById('narrator-voice-select').value||'voice_01';
   var modeEl=document.querySelector('input[name="voice-mode"]:checked');
   var mode=modeEl?modeEl.value:'single';
   var char2Id=mode==='multi'?(document.getElementById('narrator2-voice-select').value||null):null;
   var btn=document.getElementById('audiobook-generate-btn');
   var result=document.getElementById('audiobook-result');
-
   var selectedChapters=[];
   var list=document.getElementById('chapter-list');
   if(list&&bookChapters.length>0){
-    list.querySelectorAll('input[type=checkbox]').forEach(function(cb){
-      if(cb.checked)selectedChapters.push(bookChapters[parseInt(cb.dataset.idx)]);
-    });
+    list.querySelectorAll('input[type=checkbox]').forEach(function(cb){if(cb.checked)selectedChapters.push(bookChapters[parseInt(cb.dataset.idx)]);});
   }
   if(selectedChapters.length===0){
     var fallback=document.getElementById('audiobook-text').value.trim();
     if(!fallback){alert('Please upload a manuscript first.');return;}
     selectedChapters=[{title:'Full Manuscript',content:fallback}];
   }
-
   btn.disabled=true;
-  var total=selectedChapters.length;
-  var completedUrls=[];
-  var completedCount=0;
-
-  // Progress UI
+  var total=selectedChapters.length;var completedUrls=[];var completedCount=0;
   var pb=document.getElementById('audiobook-progress');
   if(!pb){pb=document.createElement('div');pb.id='audiobook-progress';result.parentNode.insertBefore(pb,result);}
   pb.style.cssText='margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);display:block;';
@@ -952,13 +962,12 @@ function generateAudiobook(){
     +'<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px;"><div id="ab-bar" style="height:100%;background:linear-gradient(90deg,var(--burg),var(--gold));width:0%;transition:width 400ms;border-radius:3px;"></div></div>'
     +'<div id="ab-msg" style="font-family:\'Cinzel\',serif;font-size:10px;color:var(--text-tertiary);">Starting...</div>'
     +'<div id="ab-chapter-list" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;"></div>';
-
   var chapterListEl=document.getElementById('ab-chapter-list');
   selectedChapters.forEach(function(ch,i){
     var row=document.createElement('div');row.id='ab-ch-'+i;
     row.style.cssText='display:flex;flex-direction:column;gap:4px;padding:6px 0;border-bottom:1px solid var(--border);';
     row.innerHTML='<div style="display:flex;align-items:center;gap:8px;font-family:\'Cinzel\',serif;font-size:10px;color:var(--text-tertiary);">'
-      +'<span id="ab-ch-icon-'+i+'" style="flex-shrink:0;">&#9633;</span>'
+      +'<span id="ab-ch-icon-'+i+'" style="flex-shrink:0;"><i class="ph ph-square"></i></span>'
       +'<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escapeHtml(ch.title)+'</span>'
       +'<span id="ab-ch-status-'+i+'">Waiting</span>'
       +'</div><div id="ab-ch-player-'+i+'" style="display:none;"></div>';
@@ -973,7 +982,11 @@ function generateAudiobook(){
 
   function setChapterStatus(i,status,success,audioUrl){
     var icon=document.getElementById('ab-ch-icon-'+i),st=document.getElementById('ab-ch-status-'+i),player=document.getElementById('ab-ch-player-'+i);
-    if(icon)icon.textContent=success===true?'✅':success===false?'❌':'⏳';
+    if(icon){
+      if(success===true) icon.innerHTML='<i class="ph ph-check-circle" style="color:var(--success);"></i>';
+      else if(success===false) icon.innerHTML='<i class="ph ph-x-circle" style="color:var(--error);"></i>';
+      else icon.innerHTML='<i class="ph ph-spinner" style="color:var(--gold);"></i>';
+    }
     if(st){st.textContent=status;st.style.color=success===true?'var(--success)':success===false?'var(--error)':'var(--gold)';}
     if(success===true&&audioUrl&&player){
       player.style.cssText='display:flex;align-items:center;gap:8px;margin-top:4px;';
@@ -991,15 +1004,12 @@ function generateAudiobook(){
     if(!ch.content||!ch.content.trim()){setChapterStatus(i,'Skipped',null);completedCount++;updateProgress(completedCount);return Promise.resolve(null);}
     var content=cleanText(ch.content);
     if(!content){setChapterStatus(i,'No readable content',null);completedCount++;updateProgress(completedCount);return Promise.resolve(null);}
-    // Chunk if over 4000 chars
     var chunks=[];
     while(content.length>0){chunks.push(content.substring(0,3800));content=content.substring(3800);}
     setChapterStatus(i,'Generating ('+chunks.length+' part'+(chunks.length>1?'s':'')+')...',null);
-    var narratorVoice=VOICES.find(function(v){return v.id===narratorId;})||{speed:1.0};
     return Promise.all(chunks.map(function(chunk){
       return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chunk,voice_id:narratorId,format:'mp3'})}).then(function(r){if(!r.ok)throw new Error('Worker error '+r.status);return r.blob();});
     })).then(function(blobs){
-      // Combine blobs
       var combined=new Blob(blobs,{type:'audio/mpeg'});
       var url=URL.createObjectURL(combined);
       completedUrls.push({title:ch.title,url:url,index:i});
@@ -1032,7 +1042,6 @@ function generateAudiobook(){
     var audioEl=result.querySelector('audio');audioEl.src=lastUrl;audioEl.load();audioEl.play().catch(function(){});
     var info=result.querySelector('.audio-result-info span');
     if(info)info.textContent=completedUrls.length+' of '+total+' segments generated';
-    // Download all ZIP
     var existing=document.getElementById('ab-chapter-downloads');if(existing)existing.remove();
     var dlBlock=document.createElement('div');dlBlock.id='ab-chapter-downloads';
     dlBlock.style.cssText='margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);';
@@ -1049,7 +1058,6 @@ function generateAudiobook(){
       dlList.appendChild(row);
     });
   }
-
   processBatch(0);
 }
 
@@ -1076,7 +1084,6 @@ function convertEPUB(){
   var author=prompt('Author name:','Author')||'Author';
   var btn=document.getElementById('epub-convert-btn');
   btn.disabled=true;btn.innerHTML='<i class="ph ph-spinner"></i> CONVERTING...';
-  // Client-side EPUB generation using JSZip
   if(typeof JSZip==='undefined'){alert('JSZip not available.');btn.disabled=false;btn.innerHTML='<i class="ph ph-book-bookmark"></i> EPUB';return;}
   var zip=new JSZip();
   zip.file('mimetype','application/epub+zip');
@@ -1099,9 +1106,7 @@ function updateCompareCount(){
   var checked=document.querySelectorAll('#compare-voices-list input:checked');
   var el=document.getElementById('compare-selected-count');if(el)el.textContent=checked.length+' voices selected';
 }
-
 function setupCompareForm(){var btn=document.getElementById('compare-generate-btn');if(btn)btn.addEventListener('click',generateComparison);}
-
 function generateComparison(){
   var text=document.getElementById('compare-text').value.trim();
   var cbs=document.querySelectorAll('#compare-voices-list input:checked');
@@ -1109,10 +1114,9 @@ function generateComparison(){
   var btn=document.getElementById('compare-generate-btn'),rd=document.getElementById('compare-results'),grid=document.getElementById('compare-grid');
   if(!text){alert('Enter comparison text');return;}if(vids.length<2){alert('Select at least 2 voices');return;}
   btn.disabled=true;btn.textContent='GENERATING...';rd.style.display='none';grid.innerHTML='';
-  // Generate each voice sequentially, display as they come
   rd.style.display='block';
   var promises=vids.map(function(vid){
-    var voice=VOICES.find(function(v){return v.id===vid;})||{name:vid,style:'',accent:'',speed:1.0};
+    var voice=VOICES.find(function(v){return v.id===vid;})||{name:vid,style:'',accent:''};
     var card=document.createElement('div');card.className='compare-result-card fade-in';
     card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">Generating...</div></div></div>';
     grid.appendChild(card);
@@ -1134,12 +1138,10 @@ function saveHistory(entry){
   if(generationHistory.length>100)generationHistory=generationHistory.slice(0,100);
   localStorage.setItem('vs_history',JSON.stringify(generationHistory));
 }
-
 function setupHistoryTab(){
   var clearBtn=document.getElementById('clear-history-btn');
   if(clearBtn)clearBtn.addEventListener('click',function(){if(confirm('Clear all history?')){generationHistory=[];localStorage.removeItem('vs_history');loadHistory();}});
 }
-
 function loadHistory(){
   var c=document.getElementById('history-container');if(!c)return;
   generationHistory=JSON.parse(localStorage.getItem('vs_history')||'[]');
@@ -1162,7 +1164,6 @@ function loadHistory(){
     btn.addEventListener('click',function(e){e.stopPropagation();playHistoryItem(btn.dataset.url,btn.dataset.voice,btn.dataset.type);});
   });
 }
-
 function playHistoryItem(audioUrl,voiceName,type){
   var p=document.getElementById('history-player'),a=p.querySelector('audio'),info=document.getElementById('history-player-info'),dl=p.querySelector('.btn-download');
   a.src=audioUrl;a.play();p.classList.add('visible');
@@ -1187,20 +1188,32 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
 
 // ── NYXEN CHAT ──
 (function(){
-  var API_N='https://cantrell-creatives-e3q2.onrender.com/api';
+  var NYXEN_WORKER='https://nyxen-standalone.smcantrellbooks.workers.dev';
   var panel=document.getElementById('nyxen-panel'),toggle=document.getElementById('nyxen-toggle');
   var msgs=document.getElementById('nyxen-msgs'),input=document.getElementById('nyxen-input'),send=document.getElementById('nyxen-send');
-  var sessionId=null;
+  var chatHistory=[];
   if(!toggle)return;
   toggle.addEventListener('click',function(){panel.classList.toggle('open');if(panel.classList.contains('open'))input.focus();});
-  function addMsg(role,content){var d=document.createElement('div');d.className='nm '+role;d.textContent=content;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
+  function addMsg(role,content){var d=document.createElement('div');d.className='nm '+role;d.textContent=content;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
   function sendMsg(){
     var text=input.value.trim();if(!text)return;
     addMsg('user',text);input.value='';send.disabled=true;
+    chatHistory.push({role:'user',content:text});
+    if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
     var loader=document.createElement('div');loader.className='nm assistant';loader.innerHTML='<div class="nyxen-dots"><span></span><span></span><span></span></div>';msgs.appendChild(loader);msgs.scrollTop=msgs.scrollHeight;
-    fetch(API_N+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text,session_id:sessionId})})
+    fetch(NYXEN_WORKER+'/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:chatHistory,
+        system:'You are Nyxen, a support assistant on the Cantrell Creatives Voice Studio. Help users with questions about voice selection, audiobook generation, EPUB processing, and chapter narration. Be concise and helpful.'
+      })
+    })
     .then(function(r){return r.json();})
-    .then(function(d){sessionId=d.session_id;loader.remove();addMsg('assistant',d.response||'Sorry, I had trouble with that.');})
+    .then(function(d){
+      var reply=d.response||d.content||(d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content)||'Sorry, I had trouble with that.';
+      chatHistory.push({role:'assistant',content:reply});
+      loader.remove();addMsg('assistant',reply);
+    })
     .catch(function(){loader.remove();addMsg('assistant','Connection issue — please try again.');})
     .finally(function(){send.disabled=false;input.focus();});
   }
@@ -1208,6 +1221,16 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
   input.addEventListener('keydown',function(e){if(e.key==='Enter')sendMsg();});
 })();
 </script>
+
+<!-- AUTH GATE OVERLAY -->
+<div id="authGate" class="hidden">
+  <div class="gate-card">
+    <div class="gate-icon"><i class="ph ph-lock"></i></div>
+    <h2>Sign In Required</h2>
+    <p>Please sign in to access CC Voice Studio and generate audio.</p>
+    <a class="gate-btn" href="https://creatives.smcantrellbooks.com/login?next=/voice"><i class="ph ph-sign-in"></i> Sign In</a>
+  </div>
+</div>
 
 </body>
 </html>
