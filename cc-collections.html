@@ -274,7 +274,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
   </a>
   <nav class="hdr-nav" id="hdrNav">
     <a class="hdr-btn" href="https://creatives.smcantrellbooks.com"><i class="ph ph-house"></i> Home</a>
-    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com/myaccount"><i class="ph ph-user-circle"></i> My Account</a>
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com/myaccount"><i class="ph ph-user-circle"></i> Account</a>
     <div class="hdr-chip" id="hdrChip" style="display:none;"><div class="hdr-chip-dot"></div><span class="hdr-chip-name" id="hdrUserName"></span></div>
     <button class="hdr-btn logout" id="hdrLogout" onclick="doSignOut()" style="display:none;"><i class="ph ph-sign-out"></i> Log Out</button>
   </nav>
@@ -661,6 +661,7 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
           <div class="seg-btns">
             <button class="seg-btn active" id="btnGrace" onclick="setCollection('grace')" aria-pressed="true">Grace Collection</button>
             <button class="seg-btn" id="btnHorizon" onclick="setCollection('horizon')" aria-pressed="false">Horizon Collection</button>
+            <button class="seg-btn" id="btnAudio" onclick="setCollection('audiobook')" aria-pressed="false">Audiobook</button>
           </div>
           <div style="font-size:.75rem;color:var(--subtle);margin-top:4px;" id="collDesc">The Grace Collection — curated fiction and literary works published on smcantrellbooks.com.</div>
         </div>
@@ -953,6 +954,7 @@ var SUPABASE_URL  = 'https://recyyhvdvuupxhbxmzal.supabase.co';
 var SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
 var CC_STUDIO     = 'https://cc-studio.smcantrellbooks.workers.dev';
 var NYXEN_API     = 'https://nyxen-standalone.smcantrellbooks.workers.dev';
+var R2_WORKER     = 'https://nyxen-video-worker.smcantrellbooks.workers.dev';
 var CC_URL        = 'https://creatives.smcantrellbooks.com';
 var STORE_URL     = 'https://smcantrellbooks.com';
 var AUDIO_TABLE   = 'audio_generations';
@@ -1082,18 +1084,19 @@ function copyVal(elId){
 /* ─── COLLECTION ─── */
 var collDescMap={
   grace:'The Grace Collection — curated fiction and literary works on smcantrellbooks.com.',
-  horizon:'The Horizon Collection — upcoming and new releases (Coming Soon). Books move to Grace on release.'
+  horizon:'The Horizon Collection — upcoming and new releases (marked Coming Soon).',
+  audiobook:'Audiobook Publication — listed in the SM Cantrell Audiobooks catalog.'
 };
-var collPublishLabel={grace:'Publish to Grace Collection',horizon:'Publish to Horizon Collection'};
+var collPublishLabel={grace:'Publish to Grace Collection',horizon:'Publish to Horizon Collection',audiobook:'Publish Audiobook'};
 function setCollection(c){
   collection=c;
-  ['grace','horizon'].forEach(function(id){
+  ['grace','horizon','audiobook'].forEach(function(id){
     var b=document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1));
     if(b){b.classList.toggle('active',c===id);b.setAttribute('aria-pressed',c===id);}
   });
   document.getElementById('collDesc').textContent=collDescMap[c]||'';
   document.getElementById('publishBtnLabel').textContent=collPublishLabel[c]||'Publish';
-  document.getElementById('previewColl').innerHTML='<i class="ph ph-books"></i> '+(c==='horizon'?'Horizon Collection':'Grace Collection');
+  document.getElementById('previewColl').innerHTML='<i class="ph ph-books"></i> '+(c==='grace'?'Grace Collection':c==='horizon'?'Horizon Collection':'Audiobook');
 }
 
 /* ─── TIER ─── */
@@ -1513,22 +1516,34 @@ async function doPublish(){
   btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Publishing...';
 
   try{
+    // ── Step 1: Upload manuscript file to R2 (if provided) ──
+    var fileUrl=null;
+    var manuscriptFile=document.getElementById('manuscriptFile').files[0];
+    if(manuscriptFile){
+      btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Uploading manuscript...';
+      var fd=new FormData();
+      fd.append('file',manuscriptFile);
+      fd.append('folder','manuscripts');
+      var upRes=await fetch(R2_WORKER+'/upload',{method:'POST',body:fd});
+      if(!upRes.ok)throw new Error('Manuscript upload failed.');
+      var upData=await upRes.json();
+      if(!upData.success||!upData.url)throw new Error('Manuscript upload returned no URL.');
+      fileUrl=upData.url;
+    }
+
+    // ── Step 2: Build payload — only columns that exist on books table ──
+    btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Saving record...';
     var fmt=document.querySelector('input[name="book-format"]:checked').value;
     var payload={
       title:title,
-      subtitle:document.getElementById('bookSubtitle').value||null,
       description:document.getElementById('bookDesc').value||null,
       author:author,
-      genre:document.getElementById('bookGenre').value||null,
-      keywords:document.getElementById('bookKeywords').value||null,
       collection:collection,
-      series_name:document.getElementById('seriesName').value||null,
-      series_order:parseInt(document.getElementById('seriesOrder').value)||null,
       price:parseFloat(document.getElementById('bookPrice').value)||0,
       format:fmt,
       smcb_id:currentBookId||null,
-      storefront_url:fmt==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections'),
-      user_id:currentUser?currentUser.id:null,
+      file_url:fileUrl,
+      creator_id:currentUser?currentUser.id:null,
       status:'pending'
     };
 
@@ -1538,17 +1553,21 @@ async function doPublish(){
         headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
         body:JSON.stringify(payload)
       });
-      if(!r.ok&&r.status!==409){throw new Error('Could not save to database.');}
+      if(!r.ok&&r.status!==409){
+        var errText=await r.text();
+        console.error('Supabase insert failed:',r.status,errText);
+        throw new Error('Could not save to database.');
+      }
     }
 
     // Show success
     document.getElementById('publishSuccess').style.display='block';
     document.getElementById('publishSuccess').scrollIntoView({behavior:'smooth',block:'center'});
-    var coll=fmt==='audiobook'?'Audiobooks':'Collections';
+    var coll=collection==='audiobook'?'Audiobooks':'Collections';
     document.getElementById('publishSuccessMsg').textContent='Your book "'+esc(title)+'" has been submitted to the '+coll+'. It will appear on the storefront once reviewed.';
-    document.getElementById('viewStorefrontBtn').href=fmt==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections');
+    document.getElementById('viewStorefrontBtn').href=collection==='audiobook'?(STORE_URL+'/audiobooks'):(STORE_URL+'/collections');
 
-    setTimeout(function(){window.location.href=fmt==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections');},8000);
+    setTimeout(function(){window.location.href=collection==='audiobook'?(STORE_URL+'/audiobooks'):(STORE_URL+'/collections');},8000);
   }catch(e){
     btn.disabled=false;
     btn.innerHTML='<i class="ph ph-rocket-launch"></i> <span id="publishBtnLabel">'+collPublishLabel[collection]+'</span>';
@@ -1584,7 +1603,7 @@ async function nyxSend(){
   document.getElementById('nyxStatus').textContent='Thinking...';
   try{
     var body={messages:nyxHistory.slice(-20),mode:'assistant',response_mode:'balanced',
-      system_context:'You are Nyxen, the assistant on the Cantrell Creatives Publisher Hub. Help publishers complete book submission forms and understand the publication flow. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish — never mention publication limits. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Publication tier creators keep 100% of earnings; Free tier creators pay a 15% platform cut. Cover generation is included with publication and is never charged. Audiobook generation in Voice Studio costs 150 credits per book. The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. If you do not have a documented answer, say so honestly instead of guessing.'};
+      system_context:'You are on the Cantrell Creatives Publisher Hub page. Help publishers complete their book submission forms, understand pricing, cover generation, and publication steps. Be concise and helpful. Do not use markdown formatting symbols.'};
     if(nyxConvId)body.conversation_id=nyxConvId;
     var r=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     var d=await r.json();
