@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Publisher Hub — Cantrell Creatives</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Publish your books to the Cantrell Creatives platform. Complete your book details, upload your manuscript, generate a cover, and go live.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cinzel:wght@400;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F7F4F0;--bg2:#F0EBE3;--surface:#FFFFFF;--surface2:#FDFAF6;
+  --border:#D8D0C4;--border2:#C4B89A;
+  --gold:#B8942E;--gold2:#C9A040;--gold3:#D4AA38;
+  --text:#1A1208;--text2:#2D2010;--muted:#6B5E4A;--subtle:#9A8A74;
+  --sidebar:#1C1208;--sidebar2:#2A1C0C;
+  --red:#C53030;--green:#2A6B3C;--blue:#005FCC;
+  --focus:#005fcc;
+}
+html,body{min-height:100vh;font-family:'Outfit',system-ui,sans-serif;color:var(--text);background:var(--bg);font-size:16px;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:inherit;}
+input,select,textarea{font-family:inherit;font-size:inherit;}
+*:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+.hidden{display:none!important;}
+
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:200;height:54px;background:var(--sidebar);border-bottom:1px solid rgba(184,148,46,.2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;}
+.hdr-logo img{height:30px;border-radius:4px;}
+.hdr-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;}
+.hdr-btn{padding:5px 13px;border-radius:999px;border:1px solid rgba(184,148,46,.35);background:transparent;color:rgba(220,190,100,.75);font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.hdr-btn:hover{background:rgba(184,148,46,.18);border-color:var(--gold);color:rgba(220,190,100,1);}
+.hdr-btn.logout{border-color:rgba(180,60,60,.4);color:rgba(220,120,120,.85);}
+.hdr-btn.logout:hover{background:rgba(140,32,32,.22);}
+.hdr-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;background:rgba(184,148,46,.1);border:1px solid rgba(184,148,46,.25);}
+.hdr-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.hdr-chip-name{font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.07em;color:rgba(220,190,100,.85);}
+
+/* ── TOOL BAR ── */
+.tool-bar{background:var(--sidebar2);border-bottom:1px solid rgba(184,148,46,.12);display:flex;justify-content:center;gap:4px;padding:6px 20px;flex-wrap:wrap;}
+.tool-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(184,148,46,.28);background:transparent;color:rgba(220,190,100,.55);font-family:'Cinzel',serif;font-size:.52rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.18s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.tool-btn:hover{background:rgba(184,148,46,.14);border-color:var(--gold);color:rgba(220,190,100,.9);}
+.tool-btn.active{background:var(--gold);border-color:var(--gold);color:#1a0a00;}
+.tool-btn i{font-size:.85rem;}
+
+/* ── GOLD SHIMMER ── */
+.gold-line{width:100%;height:3px;background:linear-gradient(to right,transparent 0%,rgba(184,148,46,.35) 10%,var(--gold) 30%,var(--gold3) 50%,var(--gold) 70%,rgba(184,148,46,.35) 90%,transparent 100%) 0 0/200%;animation:shimmer 4s linear infinite;}
+@keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+
+/* ── TIER BAR ── */
+.tier-bar{background:linear-gradient(135deg,#fffbf0,#fff8e6);border-bottom:1px solid rgba(184,148,46,.3);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.tier-badge{background:var(--text);color:var(--gold);font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:999px;text-transform:uppercase;flex-shrink:0;}
+.tier-bar p{font-size:.85rem;color:var(--text2);font-family:'Outfit',sans-serif;}
+.tier-bar strong{color:#8a6a10;font-weight:700;}
+.upgrade-link{font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;color:#fff;background:var(--text);border:1px solid var(--text);padding:6px 16px;border-radius:6px;transition:all .2s;white-space:nowrap;}
+.upgrade-link:hover{background:var(--gold);border-color:var(--gold);color:#000;}
+
+/* ── LAYOUT ── */
+.pub-wrap{display:grid;grid-template-columns:1fr 320px;gap:0;min-height:calc(100vh - 120px);}
+.pub-form{padding:24px;overflow-y:auto;}
+.pub-sidebar{background:var(--surface2);border-left:1px solid var(--border);padding:20px;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+
+/* ── SECTION CARDS ── */
+.sec-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:background .18s;}
+.sec-hdr:hover{background:rgba(184,148,46,.04);}
+.sec-hdr.open{border-bottom-color:var(--border);}
+.sec-step{width:28px;height:28px;border-radius:50%;background:var(--bg2);border:2px solid var(--border2);color:var(--muted);font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s;}
+.sec-hdr.open .sec-step,.sec-hdr.done .sec-step{background:var(--gold);border-color:var(--gold);color:#0e0a00;}
+.sec-title-wrap{flex:1;}
+.sec-name{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;letter-spacing:.06em;color:var(--text);}
+.sec-sub{font-size:.75rem;color:var(--subtle);margin-top:2px;}
+.sec-chev{color:var(--subtle);font-size:1rem;transition:transform .2s;}
+.sec-hdr.open .sec-chev{transform:rotate(180deg);}
+.sec-body{padding:18px;display:none;}
+.sec-hdr.open + .sec-body{display:block;}
+.sec-done-mark{color:var(--gold);font-size:1rem;display:none;}
+.sec-hdr.done .sec-done-mark{display:block;}
+
+/* ── FORM ELEMENTS ── */
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.02em;}
+.fg label .req{color:var(--red);margin-left:2px;}
+.fg label .opt{color:var(--subtle);font-weight:400;font-size:.72rem;margin-left:4px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 13px;border:1px solid var(--border);border-radius:7px;font-size:.93rem;background:var(--surface);color:var(--text);transition:border .18s;outline:none;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg textarea{resize:vertical;}
+.fg .hint{font-size:.75rem;color:var(--subtle);margin-top:4px;}
+.fg .err{font-size:.74rem;color:var(--red);margin-top:3px;display:none;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fg-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--red);}
+.radio-group{display:flex;gap:18px;flex-wrap:wrap;margin-top:6px;}
+.radio-opt{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:.93rem;color:var(--text2);}
+.radio-opt input{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;}
+
+/* ── UPLOAD BOX ── */
+.upload-box{border:2px dashed var(--border2);border-radius:8px;padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2);}
+.upload-box:hover{border-color:var(--gold);background:rgba(184,148,46,.04);}
+.upload-box i{font-size:1.8rem;color:var(--subtle);display:block;margin-bottom:6px;}
+.upload-box p{font-size:.88rem;color:var(--text2);font-weight:600;}
+.upload-box span{font-size:.75rem;color:var(--subtle);}
+.upload-status{font-size:.78rem;color:var(--gold2);margin-top:6px;font-weight:600;}
+.uploaded-file{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(184,148,46,.06);border:1px solid rgba(184,148,46,.25);border-radius:7px;margin-top:8px;font-size:.85rem;}
+.uploaded-file i{color:var(--gold);font-size:1rem;flex-shrink:0;}
+.uploaded-file .fname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.uploaded-file .fsize{color:var(--subtle);font-size:.75rem;flex-shrink:0;}
+
+/* ── COVER GENERATOR ── */
+.cover-tabs{display:flex;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.cover-tab{flex:1;padding:9px;font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);color:var(--subtle);border:none;}
+.cover-tab.active{background:var(--gold);color:#0e0a00;}
+.cover-tab:not(:last-child){border-right:1px solid var(--border);}
+.gen-options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.btn-gen{width:100%;padding:11px;border-radius:8px;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0e0a00;border:2px solid var(--gold);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:8px;}
+.btn-gen:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 4px 16px rgba(184,148,46,.35);}
+.btn-gen:disabled{opacity:.5;cursor:not-allowed;background:#ccc;border-color:#ccc;color:#888;box-shadow:none;}
+.gen-loading{text-align:center;padding:20px;color:var(--subtle);font-size:.85rem;display:none;}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.gen-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.gen-results img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:7px;border:2px solid transparent;cursor:pointer;transition:all .2s;}
+.gen-results img:hover{border-color:var(--gold);transform:translateY(-2px);}
+.gen-results img.selected{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,148,46,.28);}
+.gen-error{background:#fff5f5;border:1px solid #fed7d7;color:var(--red);padding:10px 12px;border-radius:7px;font-size:.82rem;margin-top:10px;text-align:center;}
+.cover-preview-wrap{text-align:center;margin-top:12px;}
+.cover-preview-wrap img{max-width:120px;border-radius:6px;border:2px solid var(--border2);display:inline-block;}
+
+/* ── BUTTONS ── */
+.btn{padding:9px 18px;border-radius:7px;font-size:.82rem;font-weight:700;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:var(--text);color:var(--gold);border:1px solid var(--text);}
+.btn-primary:hover{background:var(--gold);color:#000;border-color:var(--gold);}
+.btn-outline{border:1px solid var(--border);color:var(--text);background:transparent;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-gold{background:var(--gold);color:#0e0a00;border:1px solid var(--gold);font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;}
+.btn-gold:hover{background:var(--gold2);box-shadow:0 4px 16px rgba(184,148,46,.35);}
+.btn-sm{padding:5px 12px;font-size:.72rem;}
+.btn-link{background:none;border:none;color:var(--gold);font-size:.82rem;text-decoration:underline;padding:0;}
+.btn-danger{background:transparent;border:1px solid rgba(197,48,48,.4);color:var(--red);}
+.btn-danger:hover{background:rgba(197,48,48,.08);}
+
+/* ── EARNINGS ── */
+.earn-row{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:7px;align-items:center;}
+.earn-row.total{border-top:1px solid var(--border);padding-top:8px;margin-top:8px;font-weight:700;font-size:.95rem;}
+.earn-row.fee{color:var(--red);}
+
+/* ── TIER TOGGLE ── */
+.seg-btns{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:12px;}
+.seg-btn{flex:1;padding:8px 10px;font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:none;background:var(--surface);color:var(--subtle);cursor:pointer;transition:.18s;}
+.seg-btn:not(:last-child){border-right:1px solid var(--border);}
+.seg-btn.active{background:var(--text);color:var(--gold);}
+
+/* ── ID CHIP ── */
+.id-chip{display:flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid rgba(184,148,46,.35);border-radius:7px;background:rgba(184,148,46,.04);font-family:monospace;font-size:.85rem;color:var(--muted);letter-spacing:.06em;font-weight:700;}
+.id-val{flex:1;}
+.id-copy{background:transparent;border:none;color:var(--gold);cursor:pointer;font-size:.9rem;padding:2px 6px;}
+
+/* ── SIDEBAR CARD ── */
+.side-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;overflow:hidden;}
+.side-card-title{font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.side-card-title i{color:var(--gold);}
+
+/* ── BOOK CARD PREVIEW ── */
+.book-card{display:flex;gap:12px;align-items:flex-start;}
+.book-thumb{width:68px;height:96px;background:var(--bg2);border-radius:5px;border:1px solid var(--border2);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--subtle);font-size:1.6rem;}
+.book-thumb img{width:100%;height:100%;object-fit:cover;}
+.book-info{flex:1;min-width:0;}
+.book-info .bt{font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.book-info .ba{font-size:.78rem;color:var(--subtle);margin-bottom:4px;}
+.book-info .bp{font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--gold);}
+.book-coll-badge{display:inline-flex;align-items:center;gap:4px;margin-top:5px;padding:2px 8px;border-radius:999px;background:rgba(184,148,46,.1);border:1px solid rgba(184,148,46,.25);font-family:'Cinzel',serif;font-size:.56rem;font-weight:700;letter-spacing:.08em;color:var(--gold2);}
+
+/* ── CHECKLIST ── */
+.checklist{display:flex;flex-direction:column;gap:7px;}
+.chk-item{display:flex;align-items:center;gap:8px;font-size:.83rem;color:var(--text2);}
+.chk-item i{font-size:1rem;flex-shrink:0;}
+.chk-item.done i{color:var(--green);}
+.chk-item.pending i{color:var(--border2);}
+.chk-item.warn i{color:var(--gold);}
+
+/* ── PUBLISH BUTTON ── */
+.publish-btn{width:100%;padding:14px;border-radius:9px;font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0e0a00;background:linear-gradient(135deg,var(--gold),var(--gold2));border:2px solid var(--gold);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.publish-btn:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 6px 24px rgba(184,148,46,.4);}
+.publish-btn:disabled{opacity:.5;cursor:not-allowed;background:#ccc;border-color:#ccc;box-shadow:none;}
+
+/* ── AUDIO LIST ── */
+.audio-list{border:1px solid var(--border);border-radius:8px;max-height:220px;overflow-y:auto;background:var(--surface);}
+.audio-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);font-size:.83rem;cursor:pointer;transition:background .15s;}
+.audio-item:last-child{border-bottom:none;}
+.audio-item:hover{background:var(--bg2);}
+.audio-item input{accent-color:var(--gold);width:14px;height:14px;flex-shrink:0;}
+
+/* ── PAYMENT FIELDS ── */
+.payment-fields{margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;}
+
+/* ── RESOURCES ── */
+.resources-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.res-link{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--text2);transition:all .18s;}
+.res-link:hover{border-color:var(--gold);color:var(--gold);}
+.res-link i{font-size:1rem;color:var(--gold);flex-shrink:0;}
+
+/* ── TAX ── */
+.tax-disclaimer{font-size:.73rem;color:var(--subtle);margin-top:10px;padding:10px;background:var(--bg2);border-radius:6px;line-height:1.6;}
+.tax-success{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px;text-align:center;}
+.tax-success h4{color:#166534;font-size:.95rem;margin-bottom:4px;font-family:'Cinzel',serif;}
+.tax-success p{font-size:.78rem;color:#166534;}
+
+/* ── PUBLISH SUCCESS ── */
+.publish-success{background:linear-gradient(135deg,#f0fff4,#e6ffed);border:2px solid #86efac;border-radius:10px;padding:20px;text-align:center;display:none;}
+.publish-success h3{color:#166534;font-family:'Cinzel',serif;font-size:1.1rem;margin-bottom:8px;}
+.publish-success p{font-size:.88rem;color:#166534;margin-bottom:14px;}
+
+/* ── MODE TOGGLE ── */
+.mode-bar{display:flex;align-items:center;gap:12px;padding:14px 24px 0;flex-wrap:wrap;}
+.mode-bar h2{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--text);}
+.mode-btns{display:flex;gap:6px;margin-left:auto;}
+.mode-btn{padding:5px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;}
+.mode-btn.active{background:var(--gold);border-color:var(--gold);color:#0e0a00;}
+
+/* ── EXTERNAL LINKS ── */
+.ext-links-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.ext-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-family:'Cinzel',serif;font-size:.57rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:.18s;}
+.ext-link:hover{border-color:var(--gold2);color:var(--gold2);}
+.ext-link i{font-size:.85rem;}
+
+/* ── NYXEN ── */
+.nyxen-bubble{position:fixed;bottom:24px;right:24px;width:54px;height:54px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:2px solid var(--gold);cursor:pointer;z-index:9999;transition:transform .2s;flex-shrink:0;}
+.nyxen-bubble:hover{transform:scale(1.08);}
+.nyxen-panel{position:fixed;bottom:90px;right:24px;width:340px;height:480px;background:#FBF7F2;border:1px solid rgba(184,148,46,.4);border-radius:14px;box-shadow:0 14px 48px rgba(0,0,0,.22);display:none;flex-direction:column;overflow:hidden;z-index:9999;}
+@media(max-width:480px){.nyxen-panel{width:92vw;right:4vw;}}
+.nyxen-hdr{display:flex;align-items:center;gap:8px;padding:11px 14px;background:linear-gradient(to right,var(--sidebar),var(--sidebar2));flex-shrink:0;}
+.nyxen-av{width:32px;height:32px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:1.5px solid var(--gold);flex-shrink:0;}
+.nyxen-hdr-name{font-family:'Cinzel',serif;font-size:.78rem;color:var(--gold2);font-weight:700;}
+.nyxen-hdr-status{font-size:.65rem;color:rgba(255,255,255,.5);font-style:italic;}
+.nyxen-close{cursor:pointer;font-size:1.1rem;color:rgba(255,255,255,.6);border:none;background:none;margin-left:auto;padding:2px 6px;border-radius:4px;}
+.nyxen-close:hover{color:#fff;background:rgba(255,255,255,.1);}
+.nyxen-feed{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px;}
+.msg{display:flex;gap:6px;align-items:flex-end;}
+.msg.user{flex-direction:row-reverse;}
+.msg-bubble{max-width:82%;padding:8px 11px;border-radius:10px;font-size:.85rem;line-height:1.5;color:#1a0f08;}
+.msg.ai .msg-bubble{background:rgba(184,148,46,.1);border:1px solid rgba(184,148,46,.2);border-bottom-left-radius:3px;}
+.msg.user .msg-bubble{background:var(--gold);color:#0e0a00;border-bottom-right-radius:3px;}
+.nyxen-input-bar{display:flex;align-items:flex-end;gap:6px;padding:10px;border-top:1px solid rgba(184,148,46,.2);flex-shrink:0;}
+.nyxen-tbox{flex:1;min-height:36px;max-height:80px;padding:7px 10px;border-radius:7px;border:1px solid rgba(184,148,46,.35);font-size:.88rem;color:var(--text);background:#fff;outline:none;resize:none;}
+.nyxen-tbox:focus{border-color:var(--gold);}
+.nyxen-send{width:32px;height:32px;border-radius:6px;border:none;background:var(--gold);color:#0e0a00;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .pub-wrap{grid-template-columns:1fr;}
+  .pub-sidebar{position:static;height:auto;border-left:none;border-top:1px solid var(--border);}
+  .fg-row,.fg-row3,.gen-options-grid,.resources-grid{grid-template-columns:1fr;}
+  .side-sidebar-desktop-only{display:none;}
+}
+@media(max-width:600px){
+  .hdr-nav .hdr-btn:not(.logout){display:none;}
+  .hdr-chip-name{display:none;}
+  .mode-bar{padding:10px 16px 0;}
+  .pub-form{padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <a href="https://creatives.smcantrellbooks.com">
+    <div class="hdr-logo"><img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives"></div>
+  </a>
+  <nav class="hdr-nav" id="hdrNav">
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com"><i class="ph ph-house"></i> Home</a>
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com/myaccount"><i class="ph ph-user-circle"></i> My Account</a>
+    <div class="hdr-chip" id="hdrChip" style="display:none;"><div class="hdr-chip-dot"></div><span class="hdr-chip-name" id="hdrUserName"></span></div>
+    <button class="hdr-btn logout" id="hdrLogout" onclick="doSignOut()" style="display:none;"><i class="ph ph-sign-out"></i> Log Out</button>
+  </nav>
+</header>
+
+<!-- TOOL BAR -->
+<div class="tool-bar">
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace"><i class="ph ph-pencil-line"></i> Publisher Workspace</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/studio"><i class="ph ph-film-strip"></i> Studio</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/editor"><i class="ph ph-pencil-simple"></i> Book Editor</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/voice-studio"><i class="ph ph-microphone"></i> Voice Studio</a>
+  <a class="tool-btn active" href="https://creatives.smcantrellbooks.com/collections"><i class="ph ph-books"></i> Collections</a>
+</div>
+
+<div class="gold-line"></div>
+
+<!-- TIER BAR -->
+<div class="tier-bar" id="tierBar">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span class="tier-badge" id="tierBadge">Free Tier</span>
+    <p id="tierMsg">A <strong>15% platform fee</strong> applies to all sales on the free tier. Upgrade to Publication Member to keep 100% of earnings.</p>
+  </div>
+  <a class="upgrade-link" href="https://creatives.smcantrellbooks.com/myaccount">Upgrade Plan &rarr;</a>
+</div>
+
+<!-- MODE BAR -->
+<div class="mode-bar">
+  <h2><i class="ph ph-book-open-text" style="color:var(--gold);margin-right:4px;"></i> Publisher Hub</h2>
+  <div style="flex:1;"></div>
+  <div class="mode-btns">
+    <button class="mode-btn active" id="btnNewBook" onclick="setBookMode('new')">New Book</button>
+    <button class="mode-btn" id="btnExisting" onclick="setBookMode('existing')">Update Existing</button>
+  </div>
+</div>
+<div id="existingSelector" style="display:none;padding:8px 24px 0;">
+  <select id="existingBookSelect" onchange="loadExistingBook(this.value)" style="width:100%;max-width:420px;padding:9px 12px;border:1px solid var(--border);border-radius:7px;font-size:.9rem;background:var(--surface);color:var(--text);outline:none;">
+    <option value="">— Select a book to update —</option>
+  </select>
+</div>
+<div id="bookModeHint" style="padding:4px 24px 2px;font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold2);letter-spacing:.05em;">Creating a new book — complete the steps below and click Publish.</div>
+
+<!-- MAIN LAYOUT -->
+<div class="pub-wrap">
+
+  <!-- ── LEFT: FORM STEPS ── -->
+  <div class="pub-form">
+
+    <!-- STEP 1: Book Details -->
+    <div class="sec-card">
+      <div class="sec-hdr open" onclick="toggleSec(this)" id="hdr1">
+        <div class="sec-step">1</div>
+        <div class="sec-title-wrap"><div class="sec-name">Book Details</div><div class="sec-sub">Title, format, genre, description</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <!-- Format -->
+        <div class="fg">
+          <label>Format</label>
+          <div class="radio-group">
+            <label class="radio-opt"><input type="radio" name="book-format" value="ebook" onchange="onFormatChange()" checked> Ebook</label>
+            <label class="radio-opt"><input type="radio" name="book-format" value="audiobook" onchange="onFormatChange()"> Audiobook</label>
+            <label class="radio-opt"><input type="radio" name="book-format" value="both" onchange="onFormatChange()"> Both</label>
+          </div>
+        </div>
+
+        <!-- Book ID -->
+        <div class="fg">
+          <label style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);">Book ID</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="id-chip" style="flex:1;"><span class="id-val" id="bookIdVal">Not assigned</span></div>
+            <button class="btn btn-primary btn-sm" id="initBookBtn" onclick="initializeBook()"><i class="ph ph-key"></i> Initialize</button>
+            <button class="btn btn-outline btn-sm" id="copyBookIdBtn" onclick="copyVal('bookIdVal')" style="display:none;">Copy</button>
+          </div>
+          <div class="hint" id="bookIdHint">Initialize first to lock in your SMCB Book ID.</div>
+        </div>
+
+        <div id="ebookIdSection" class="fg">
+          <label style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);">Ebook ID</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="id-chip" style="flex:1;"><span class="id-val" id="ebookIdVal">Not assigned</span></div>
+            <button class="btn btn-outline btn-sm" onclick="generateFormatId('ebook')">Generate</button>
+            <button class="btn btn-outline btn-sm" id="copyEbookIdBtn" onclick="copyVal('ebookIdVal')" style="display:none;">Copy</button>
+          </div>
+        </div>
+
+        <div id="audiobookIdSection" class="fg" style="display:none;">
+          <label style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);">Audiobook ID</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="id-chip" style="flex:1;"><span class="id-val" id="audiobookIdVal">Not assigned</span></div>
+            <button class="btn btn-outline btn-sm" onclick="generateFormatId('audiobook')">Generate</button>
+            <button class="btn btn-outline btn-sm" id="copyAudioIdBtn" onclick="copyVal('audiobookIdVal')" style="display:none;">Copy</button>
+          </div>
+        </div>
+
+        <!-- Title & Subtitle -->
+        <div class="fg-row">
+          <div class="fg">
+            <label>Book Title <span class="req">*</span></label>
+            <input id="bookTitle" type="text" maxlength="200" aria-required="true" oninput="updatePreview()">
+          </div>
+          <div class="fg">
+            <label>Subtitle <span class="opt">(optional)</span></label>
+            <input id="bookSubtitle" type="text" maxlength="200" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div class="fg-row">
+          <div class="fg">
+            <label>Genre</label>
+            <select id="bookGenre">
+              <option value="">— Select Genre —</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="romance">Romance</option>
+              <option value="mystery">Mystery</option>
+              <option value="thriller">Thriller</option>
+              <option value="sci-fi">Sci-Fi</option>
+              <option value="supernatural">Supernatural</option>
+              <option value="horror">Horror</option>
+              <option value="fiction">Fiction</option>
+              <option value="literary-fiction">Literary Fiction</option>
+              <option value="nonfiction">Nonfiction</option>
+              <option value="biography">Biography</option>
+              <option value="documentary">Documentary</option>
+              <option value="spiritual">Spiritual</option>
+              <option value="inspirational">Inspirational</option>
+              <option value="poetry">Poetry</option>
+              <option value="health">Health &amp; Fitness</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Keywords <span class="opt">(comma-separated)</span></label>
+            <input id="bookKeywords" type="text" maxlength="200">
+          </div>
+        </div>
+
+        <div class="fg">
+          <label>Description</label>
+          <textarea id="bookDesc" rows="5" oninput="checkDescWords(this)"></textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span class="hint">Max 500 words</span>
+            <span class="hint" id="descWordCount">0 / 500 words</span>
+          </div>
+          <div class="err" id="descErr">Description exceeds 500 words.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Manuscript -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr2">
+        <div class="sec-step">2</div>
+        <div class="sec-title-wrap"><div class="sec-name">Manuscript</div><div class="sec-sub">Upload your manuscript file for publication</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <input type="file" id="manuscriptFile" accept=".docx,.doc,.pdf,.epub,.txt" style="display:none;" onchange="handleManuscript(event)">
+        <div class="upload-box" onclick="document.getElementById('manuscriptFile').click()" tabindex="0" role="button" aria-label="Upload manuscript">
+          <i class="ph ph-file-text"></i>
+          <p>Upload Manuscript</p>
+          <span>EPUB, DOCX, PDF, TXT — up to 50MB</span>
+          <div class="upload-status" id="manuscriptStatus"></div>
+        </div>
+        <div id="manuscriptPreview"></div>
+
+        <!-- Post to website option -->
+        <div style="margin-top:12px;padding:12px;background:rgba(184,148,46,.06);border:1px solid rgba(184,148,46,.2);border-radius:8px;">
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="postToWebsite" style="accent-color:var(--gold);width:15px;height:15px;margin-top:2px;flex-shrink:0;">
+            <div>
+              <div style="font-size:.88rem;font-weight:600;color:var(--text);">Post sample chapter on storefront</div>
+              <div style="font-size:.75rem;color:var(--subtle);margin-top:2px;">A preview excerpt will appear on your book listing at smcantrellbooks.com to help readers discover your work.</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Audiobook section -->
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+          <div style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Audiobook <span style="font-weight:400;text-transform:none;letter-spacing:0;font-family:'Outfit',sans-serif;color:var(--subtle);font-size:.75rem;">(optional)</span></div>
+          <div class="seg-btns" style="margin-bottom:10px;">
+            <button class="seg-btn active" id="audioModeVS" onclick="setAudioMode('vs')"><i class="ph ph-waveform"></i> From Voice Studio</button>
+            <button class="seg-btn" id="audioModeUpload" onclick="setAudioMode('upload')"><i class="ph ph-upload-simple"></i> Upload Audio</button>
+          </div>
+
+          <div id="audioVSPanel">
+            <div style="padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;margin-bottom:8px;font-size:.78rem;color:var(--subtle);line-height:1.6;">
+              Generate your audiobook in <a href="https://creatives.smcantrellbooks.com/voice" style="color:var(--gold);font-weight:600;">Voice Studio</a>, then refresh below to select chapters for publication. ~150 credits per book.
+            </div>
+            <div class="audio-list" id="vsAudioList">
+              <div style="text-align:center;padding:20px;color:var(--subtle);font-size:.83rem;font-style:italic;">Click Refresh to load your audio history.</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button class="btn btn-outline btn-sm" onclick="loadVoiceStudioAssets()"><i class="ph ph-arrows-clockwise"></i> Refresh</button>
+              <span class="hint" id="audioSelectedCount" style="line-height:1;align-self:center;"></span>
+            </div>
+          </div>
+
+          <div id="audioUploadPanel" style="display:none;">
+            <input type="file" id="audioFiles" accept=".mp3,.m4b,.wav,audio/*" multiple style="display:none;" onchange="handleAudioUpload(event)">
+            <div class="upload-box" onclick="document.getElementById('audioFiles').click()">
+              <i class="ph ph-music-notes"></i>
+              <p>Upload Audio Files</p>
+              <span>MP3, M4B, WAV — multiple chapters allowed</span>
+              <div class="upload-status" id="audioUploadStatus"></div>
+            </div>
+            <div id="audioChapterList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Book Cover -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr3">
+        <div class="sec-step">3</div>
+        <div class="sec-title-wrap"><div class="sec-name">Book Cover</div><div class="sec-sub">Upload a cover or generate one with AI</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <div class="cover-tabs" role="group">
+          <button class="cover-tab active" id="coverTabUpload" onclick="setCoverMode('upload')"><i class="ph ph-upload-simple"></i> Upload</button>
+          <button class="cover-tab" id="coverTabGen" onclick="setCoverMode('generate')"><i class="ph ph-sparkle"></i> AI Generate</button>
+        </div>
+
+        <!-- Upload Panel -->
+        <div id="coverUploadPanel">
+          <input type="file" id="coverFile" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handleCoverUpload(event)">
+          <div class="upload-box" onclick="document.getElementById('coverFile').click()">
+            <i class="ph ph-image"></i>
+            <p>Upload Cover Image</p>
+            <span>JPG, PNG, WebP &mdash; 1600&times;2400 recommended (KDP standard)</span>
+            <div class="upload-status" id="coverUploadStatus"></div>
+          </div>
+          <div id="coverUploadPreview" class="cover-preview-wrap"></div>
+
+          <!-- Text overlay -->
+          <div id="coverOverlayPanel" style="display:none;margin-top:12px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;">
+            <div style="font-family:'Cinzel',serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Add Text to Cover</div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:.85rem;">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="overlayTitle" onchange="renderTextOverlay()" style="accent-color:var(--gold);"> Title</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="overlayAuthor" onchange="renderTextOverlay()" style="accent-color:var(--gold);"> Author</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="overlaySeries" onchange="renderTextOverlay()" style="accent-color:var(--gold);"> Series</label>
+            </div>
+            <div class="fg-row">
+              <div class="fg" style="margin-bottom:8px;">
+                <label>Text Color</label>
+                <select id="overlayColor" onchange="renderTextOverlay()">
+                  <option value="#FFFFFF">White</option>
+                  <option value="#C9A040">Gold</option>
+                  <option value="#000000">Black</option>
+                  <option value="#e8c97a">Light Gold</option>
+                </select>
+              </div>
+              <div class="fg" style="margin-bottom:8px;">
+                <label>Position</label>
+                <select id="overlayPos" onchange="renderTextOverlay()">
+                  <option value="bottom">Bottom</option>
+                  <option value="top">Top</option>
+                  <option value="center">Center</option>
+                </select>
+              </div>
+            </div>
+            <canvas id="coverCanvas" style="display:none;"></canvas>
+          </div>
+        </div>
+
+        <!-- AI Generate Panel -->
+        <div id="coverGenPanel" style="display:none;">
+          <div style="padding:10px;background:rgba(184,148,46,.06);border:1px solid rgba(184,148,46,.2);border-radius:7px;margin-bottom:12px;font-size:.78rem;color:var(--subtle);">
+            <strong style="color:var(--text);">KDP-ready covers.</strong> AI generates professional book covers in portrait format (2:3 ratio). Select a style below and click Generate. <span style="color:var(--gold);font-weight:600;">5 credits per image.</span>
+          </div>
+
+          <!-- Book info auto-fill notice -->
+          <div id="genContextNote" style="display:none;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;margin-bottom:10px;font-size:.78px;"></div>
+
+          <div class="gen-options-grid">
+            <div class="fg" style="margin-bottom:0;">
+              <label>Style</label>
+              <select id="genStyle">
+                <option value="">Auto</option>
+                <option value="illustrated">Illustrated</option>
+                <option value="photographic">Photographic</option>
+                <option value="minimalist">Minimalist</option>
+                <option value="typographic">Typographic</option>
+                <option value="painterly">Painterly / Oil</option>
+                <option value="dark-moody">Dark &amp; Moody</option>
+                <option value="watercolor">Watercolor</option>
+                <option value="vintage">Vintage / Retro</option>
+              </select>
+            </div>
+            <div class="fg" style="margin-bottom:0;">
+              <label>Mood</label>
+              <select id="genMood">
+                <option value="">Auto</option>
+                <option value="dramatic">Dramatic</option>
+                <option value="romantic">Romantic</option>
+                <option value="mysterious">Mysterious</option>
+                <option value="whimsical">Whimsical</option>
+                <option value="dark">Dark</option>
+                <option value="epic">Epic</option>
+                <option value="serene">Serene</option>
+                <option value="suspenseful">Suspenseful</option>
+              </select>
+            </div>
+            <div class="fg" style="margin-bottom:0;">
+              <label>Central Imagery</label>
+              <input id="genSubject" type="text" placeholder="e.g. ancient ruins, woman in red" maxlength="200">
+            </div>
+            <div class="fg" style="margin-bottom:0;">
+              <label>Color Theme</label>
+              <input id="genColor" type="text" placeholder="e.g. deep blue and gold" maxlength="100">
+            </div>
+          </div>
+
+          <div class="fg" style="margin-top:4px;">
+            <label>Additional Details <span class="opt">(optional prompt)</span></label>
+            <input id="genExtra" type="text" placeholder="e.g. misty forest background, cinematic lighting" maxlength="300">
+          </div>
+
+          <!-- Text on cover checkboxes -->
+          <div style="margin-bottom:10px;">
+            <div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:6px;">Include text on cover:</div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem;">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="genIncTitle" checked style="accent-color:var(--gold);"> Title</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="genIncAuthor" checked style="accent-color:var(--gold);"> Author</label>
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="genIncSeries" style="accent-color:var(--gold);"> Series</label>
+            </div>
+          </div>
+
+          <button class="btn-gen" id="btnGenerate" onclick="generateCover()">
+            <i class="ph ph-sparkle"></i> Generate Cover (2 options)
+          </button>
+
+          <div class="gen-loading" id="genLoading">
+            <span class="spin"></span> Generating your cover — this takes 20–40 seconds&hellip;
+          </div>
+          <div id="genError" class="gen-error" style="display:none;"></div>
+          <div class="gen-results" id="genResults"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Author & Collection -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr4">
+        <div class="sec-step">4</div>
+        <div class="sec-title-wrap"><div class="sec-name">Author &amp; Collection</div><div class="sec-sub">Bio, photo, collection, and series info</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <div class="fg">
+          <label>Author Name <span class="req">*</span></label>
+          <input id="authorName" type="text" maxlength="100" aria-required="true" oninput="updatePreview()">
+        </div>
+        <div class="fg">
+          <label>Author Bio</label>
+          <textarea id="authorBio" rows="4" maxlength="1000" placeholder="Tell readers about yourself..."></textarea>
+        </div>
+
+        <input type="file" id="authorPhoto" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="handleAuthorPhoto(event)">
+        <div class="upload-box" onclick="document.getElementById('authorPhoto').click()" style="padding:12px;margin-bottom:14px;">
+          <i class="ph ph-user-circle" style="font-size:1.4rem;"></i>
+          <p style="font-size:.85rem;">Author Photo <span style="color:var(--subtle);font-weight:400;">(optional)</span></p>
+          <span>JPG, PNG, WebP</span>
+          <div class="upload-status" id="authorPhotoStatus"></div>
+        </div>
+
+        <!-- Author page links -->
+        <div style="margin-bottom:14px;">
+          <div style="font-size:.78rem;font-weight:600;color:var(--text2);margin-bottom:6px;">Author Profiles</div>
+          <div class="ext-links-row">
+            <a class="ext-link" href="https://smcantrellbooks.com/author" target="_blank"><i class="ph ph-user"></i> Author Page</a>
+            <a class="ext-link" href="https://smcantrellbooks.com/audiobooks" target="_blank"><i class="ph ph-headphones"></i> Audiobooks</a>
+            <a class="ext-link" href="https://smcantrellbooks.com/collections" target="_blank"><i class="ph ph-books"></i> Collections</a>
+          </div>
+        </div>
+
+        <!-- Collection -->
+        <div class="fg">
+          <label>Select Collection</label>
+          <div class="seg-btns">
+            <button class="seg-btn active" id="btnGrace" onclick="setCollection('grace')" aria-pressed="true">Grace Collection</button>
+            <button class="seg-btn" id="btnHorizon" onclick="setCollection('horizon')" aria-pressed="false">Horizon Collection</button>
+          </div>
+          <div style="font-size:.75rem;color:var(--subtle);margin-top:4px;" id="collDesc">The Grace Collection — curated fiction and literary works published on smcantrellbooks.com.</div>
+        </div>
+
+        <!-- Series -->
+        <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px;">
+          <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Series Information <span style="font-weight:400;text-transform:none;letter-spacing:0;font-family:'Outfit',sans-serif;font-size:.72rem;">(optional)</span></div>
+          <div class="fg-row">
+            <div class="fg">
+              <label>Series Name</label>
+              <input id="seriesName" type="text" maxlength="200" placeholder="e.g. The Fated Bond Series">
+            </div>
+            <div class="fg">
+              <label>Book # in Series</label>
+              <input id="seriesOrder" type="number" min="1" max="999" placeholder="1">
+            </div>
+          </div>
+          <div class="fg">
+            <label>Series Description</label>
+            <textarea id="seriesDesc" rows="2" maxlength="500" placeholder="Describe the series..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: Pricing & Earnings -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr5">
+        <div class="sec-step">5</div>
+        <div class="sec-title-wrap"><div class="sec-name">Pricing &amp; Earnings</div><div class="sec-sub">Set your price and calculate your payout</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <div class="fg-row">
+          <div class="fg">
+            <label>Book Price (USD) <span class="req">*</span></label>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--subtle);" aria-hidden="true">$</span>
+              <input id="bookPrice" type="number" step="0.01" min="0" max="999.99" style="padding-left:24px;" aria-required="true" oninput="updateEarnings();updatePreview();">
+            </div>
+          </div>
+          <div class="fg">
+            <label>Your Membership</label>
+            <div class="seg-btns">
+              <button class="seg-btn active" id="tierFree" onclick="setTier('free')">Free Tier</button>
+              <button class="seg-btn" id="tierPD" onclick="setTier('pd')">PD Member</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Earnings breakdown -->
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:4px;" id="earningsBox">
+          <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Earnings Estimate</div>
+          <div id="earningsDisplay"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: Payment Method -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr6">
+        <div class="sec-step">6</div>
+        <div class="sec-title-wrap"><div class="sec-name">Payment Method</div><div class="sec-sub">How you&rsquo;ll receive your royalties</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <div class="fg">
+          <label>Select Payment Method</label>
+          <select id="paymentMethod" onchange="updatePaymentFields();updateEarnings();">
+            <option value="">— Select —</option>
+            <option value="paypal">PayPal Business</option>
+            <option value="cashapp">Cash App</option>
+            <option value="venmo">Venmo</option>
+            <option value="direct">Direct Deposit</option>
+          </select>
+        </div>
+
+        <div id="paypalFields" class="payment-fields" style="display:none;">
+          <div class="fg" style="margin-bottom:0;"><label>PayPal Email</label><input id="paypalEmail" type="email" placeholder="your@email.com" autocomplete="email"></div>
+        </div>
+        <div id="cashappFields" class="payment-fields" style="display:none;">
+          <div class="fg" style="margin-bottom:0;"><label>Cash App Tag</label><input id="cashappTag" type="text" placeholder="$YourCashtag"></div>
+        </div>
+        <div id="venmoFields" class="payment-fields" style="display:none;">
+          <div class="fg" style="margin-bottom:0;"><label>Venmo Username</label><input id="venmoUser" type="text" placeholder="@username"></div>
+        </div>
+        <div id="directFields" class="payment-fields" style="display:none;">
+          <div class="fg"><label>Bank Name</label><input id="bankName" type="text"></div>
+          <div class="fg-row">
+            <div class="fg"><label>Routing Number</label><input id="routingNum" type="text" maxlength="9" inputmode="numeric"></div>
+            <div class="fg"><label>Account Number</label><input id="accountNum" type="password" maxlength="20" autocomplete="off" inputmode="numeric"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7: Tax Form -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr7">
+        <div class="sec-step">7</div>
+        <div class="sec-title-wrap"><div class="sec-name">Tax Information</div><div class="sec-sub">W-9 equivalent for royalty payments</div></div>
+        <i class="ph ph-check-circle sec-done-mark"></i>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <div id="taxFormWrap">
+          <div class="seg-btns" style="margin-bottom:12px;">
+            <button class="seg-btn active" id="taxIndiv" onclick="setEntityType('individual')">Individual</button>
+            <button class="seg-btn" id="taxBiz" onclick="setEntityType('business')">Business</button>
+          </div>
+          <div class="fg">
+            <label>Full Legal Name <span class="req">*</span></label>
+            <input id="taxName" type="text" maxlength="200" autocomplete="name">
+          </div>
+          <div id="taxIndivFields">
+            <div class="fg">
+              <label>SSN / Tax ID <span class="req">*</span></label>
+              <input type="password" id="taxSSN" placeholder="XXX-XX-XXXX" maxlength="11" autocomplete="off" inputmode="numeric">
+              <div class="hint">Stored securely and encrypted. For tax reporting only.</div>
+            </div>
+          </div>
+          <div id="taxBizFields" style="display:none;">
+            <div class="fg"><label>Business Name <span class="req">*</span></label><input id="taxBizName" type="text" maxlength="200"></div>
+            <div class="fg"><label>EIN <span class="req">*</span></label><input id="taxEIN" type="text" placeholder="XX-XXXXXXX" maxlength="10"></div>
+          </div>
+          <div class="fg">
+            <label>Street Address <span class="req">*</span></label>
+            <input id="taxAddress" type="text" maxlength="200" autocomplete="street-address">
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label>City <span class="req">*</span></label><input id="taxCity" type="text" maxlength="100" autocomplete="address-level2"></div>
+            <div class="fg"><label>State <span class="req">*</span></label><input id="taxState" type="text" maxlength="50" autocomplete="address-level1"></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label>ZIP Code <span class="req">*</span></label><input id="taxZip" type="text" maxlength="10" autocomplete="postal-code" inputmode="numeric"></div>
+            <div class="fg">
+              <label>Country</label>
+              <select id="taxCountry">
+                <option>United States</option><option>Canada</option><option>United Kingdom</option><option>Australia</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="tax-disclaimer">This information is collected for tax reporting purposes (W-9 equivalent). Your data is stored securely and encrypted, connected to your publisher account for payment processing. Not shared with third parties except as required by law.</div>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px;padding:10px;" onclick="saveTaxForm()"><i class="ph ph-floppy-disk"></i> Save Tax Information</button>
+        </div>
+        <div id="taxSuccessWrap" style="display:none;">
+          <div class="tax-success">
+            <h4><i class="ph ph-check-circle"></i> Tax Information Saved</h4>
+            <p>Your W-9 equivalent has been submitted. Royalties will be sent to your selected payment method.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" style="width:100%;margin-top:10px;" onclick="editTax()"><i class="ph ph-pencil"></i> Edit Tax Info</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 8: Publication Resources -->
+    <div class="sec-card">
+      <div class="sec-hdr" onclick="toggleSec(this)" id="hdr8">
+        <div class="sec-step">8</div>
+        <div class="sec-title-wrap"><div class="sec-name">Publication Resources</div><div class="sec-sub">Guides, tools, and distribution links</div></div>
+        <i class="ph ph-caret-down sec-chev"></i>
+      </div>
+      <div class="sec-body">
+        <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Storefront &amp; Distribution</div>
+        <div class="resources-grid" style="margin-bottom:16px;">
+          <a class="res-link" href="https://smcantrellbooks.com/collections" target="_blank"><i class="ph ph-books"></i> SM Cantrell Collections</a>
+          <a class="res-link" href="https://smcantrellbooks.com/audiobooks" target="_blank"><i class="ph ph-headphones"></i> SM Cantrell Audiobooks</a>
+          <a class="res-link" href="https://smcantrellbooks.com/author" target="_blank"><i class="ph ph-user"></i> Author Bio Page</a>
+          <a class="res-link" href="https://smcantrellbooks.com" target="_blank"><i class="ph ph-storefront"></i> Main Storefront</a>
+        </div>
+
+        <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">External Publishing Platforms</div>
+        <div class="resources-grid" style="margin-bottom:16px;">
+          <a class="res-link" href="https://kdp.amazon.com" target="_blank" rel="noopener"><i class="ph ph-shopping-cart"></i> Amazon KDP</a>
+          <a class="res-link" href="https://www.draft2digital.com" target="_blank" rel="noopener"><i class="ph ph-globe"></i> Draft2Digital</a>
+          <a class="res-link" href="https://www.smashwords.com" target="_blank" rel="noopener"><i class="ph ph-book-open"></i> Smashwords</a>
+          <a class="res-link" href="https://www.ingramspark.com" target="_blank" rel="noopener"><i class="ph ph-printer"></i> IngramSpark</a>
+          <a class="res-link" href="https://www.findawayvoices.com" target="_blank" rel="noopener"><i class="ph ph-waveform"></i> Findaway Voices</a>
+          <a class="res-link" href="https://www.acx.com" target="_blank" rel="noopener"><i class="ph ph-microphone"></i> Audible ACX</a>
+        </div>
+
+        <div style="font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Tools &amp; Guides</div>
+        <div class="resources-grid">
+          <a class="res-link" href="https://www.epubcheck.org" target="_blank" rel="noopener"><i class="ph ph-file-text"></i> EPUB Validator</a>
+          <a class="res-link" href="https://calibre-ebook.com" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out"></i> Calibre (EPUB tool)</a>
+          <a class="res-link" href="https://creatives.smcantrellbooks.com/editor" target="_blank"><i class="ph ph-pencil-line"></i> CC Book Editor</a>
+          <a class="res-link" href="https://creatives.smcantrellbooks.com/workspace" target="_blank"><i class="ph ph-notebook"></i> Publisher Workspace</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publish Success -->
+    <div class="publish-success" id="publishSuccess">
+      <h3><i class="ph ph-check-circle"></i> Book Published!</h3>
+      <p id="publishSuccessMsg">Your book has been submitted to the collection.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <a id="viewStorefrontBtn" href="https://smcantrellbooks.com/collections" target="_blank" class="btn btn-primary"><i class="ph ph-storefront"></i> View on Storefront</a>
+        <button class="btn btn-outline" onclick="resetForm()"><i class="ph ph-plus"></i> Publish Another Book</button>
+      </div>
+    </div>
+
+  </div><!-- /pub-form -->
+
+  <!-- ── RIGHT: SIDEBAR ── -->
+  <div class="pub-sidebar">
+
+    <!-- Book preview card -->
+    <div class="side-card">
+      <div class="side-card-title"><i class="ph ph-eye"></i> Storefront Preview</div>
+      <div class="book-card">
+        <div class="book-thumb" id="previewThumb"><i class="ph ph-image"></i></div>
+        <div class="book-info">
+          <div class="bt" id="previewTitle">Book Title</div>
+          <div class="ba" id="previewAuthor">by Author Name</div>
+          <div class="bp" id="previewPrice">$0.00</div>
+          <span class="book-coll-badge" id="previewColl"><i class="ph ph-books"></i> Grace Collection</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div class="side-card">
+      <div class="side-card-title"><i class="ph ph-list-checks"></i> Publication Checklist</div>
+      <div class="checklist">
+        <div class="chk-item pending" id="chkTitle"><i class="ph ph-circle"></i> Book title entered</div>
+        <div class="chk-item pending" id="chkAuthor"><i class="ph ph-circle"></i> Author name entered</div>
+        <div class="chk-item pending" id="chkManuscript"><i class="ph ph-circle"></i> Manuscript uploaded</div>
+        <div class="chk-item pending" id="chkCover"><i class="ph ph-circle"></i> Cover image ready</div>
+        <div class="chk-item pending" id="chkPrice"><i class="ph ph-circle"></i> Price set</div>
+        <div class="chk-item pending" id="chkPayment"><i class="ph ph-circle"></i> Payment method added</div>
+        <div class="chk-item pending" id="chkTax"><i class="ph ph-circle"></i> Tax info saved</div>
+      </div>
+    </div>
+
+    <!-- Publish button -->
+    <button class="publish-btn" id="publishBtn" onclick="doPublish()">
+      <i class="ph ph-rocket-launch"></i> <span id="publishBtnLabel">Publish to Grace Collection</span>
+    </button>
+
+    <!-- Storefront links -->
+    <div class="side-card">
+      <div class="side-card-title"><i class="ph ph-link"></i> Quick Links</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <a class="res-link" href="https://smcantrellbooks.com/collections" target="_blank"><i class="ph ph-books"></i> SM Cantrell Collections</a>
+        <a class="res-link" href="https://smcantrellbooks.com/audiobooks" target="_blank"><i class="ph ph-headphones"></i> SM Cantrell Audiobooks</a>
+        <a class="res-link" href="https://smcantrellbooks.com/author" target="_blank"><i class="ph ph-user"></i> Author Bio</a>
+        <a class="res-link" href="https://kdp.amazon.com" target="_blank" rel="noopener"><i class="ph ph-shopping-cart"></i> Amazon KDP</a>
+      </div>
+    </div>
+
+  </div><!-- /pub-sidebar -->
+</div><!-- /pub-wrap -->
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid var(--border2);padding:20px 24px;text-align:center;background:var(--surface2);margin-top:8px;">
+  <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+    <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions" style="font-size:.75rem;color:var(--subtle);font-family:'Cinzel',serif;letter-spacing:.04em;transition:color .18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--subtle)'">Publishing Terms</a>
+    <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure" style="font-size:.75rem;color:var(--subtle);font-family:'Cinzel',serif;letter-spacing:.04em;transition:color .18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--subtle)'">Audio Disclosures</a>
+    <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy" style="font-size:.75rem;color:var(--subtle);font-family:'Cinzel',serif;letter-spacing:.04em;transition:color .18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--subtle)'">Our Philosophy</a>
+    <a href="https://creatives.smcantrellbooks.com/privacy" style="font-size:.75rem;color:var(--subtle);font-family:'Cinzel',serif;letter-spacing:.04em;transition:color .18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--subtle)'">Privacy Policy</a>
+  </div>
+  <p style="font-size:.7rem;color:var(--subtle);margin-top:8px;">&copy; 2026 S.M. Cantrell Books. All rights reserved.</p>
+</footer>
+
+<!-- NYXEN -->
+<button class="nyxen-bubble" onclick="toggleNyxen()" title="Chat with Nyxen" aria-label="Open Nyxen assistant" id="nyxBubble"></button>
+<div class="nyxen-panel" id="nyxPanel">
+  <div class="nyxen-hdr">
+    <div class="nyxen-av"></div>
+    <div>
+      <div class="nyxen-hdr-name">Nyxen</div>
+      <div class="nyxen-hdr-status" id="nyxStatus">Publishing assistant</div>
+    </div>
+    <button class="nyxen-close" onclick="toggleNyxen()" aria-label="Close">&#x2715;</button>
+  </div>
+  <div class="nyxen-feed" id="nyxFeed"></div>
+  <div class="nyxen-input-bar">
+    <textarea class="nyxen-tbox" id="nyxInput" placeholder="Ask about publishing..." rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();nyxSend();}"
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';"></textarea>
+    <button class="nyxen-send" onclick="nyxSend()" aria-label="Send"><i class="ph ph-paper-plane-tilt"></i></button>
+  </div>
+</div>
+
+<script>
+/* ─── CONFIG ─── */
+var SUPABASE_URL  = 'https://recyyhvdvuupxhbxmzal.supabase.co';
+var SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
+var CC_STUDIO     = 'https://cc-studio.smcantrellbooks.workers.dev';
+var NYXEN_API     = 'https://nyxen-standalone.smcantrellbooks.workers.dev';
+var CC_URL        = 'https://creatives.smcantrellbooks.com';
+var STORE_URL     = 'https://smcantrellbooks.com';
+var AUDIO_TABLE   = 'audio_generations';
+
+/* ─── STATE ─── */
+var currentUser      = null;
+var currentBookId    = null;
+var bookMode         = 'new';
+var collection       = 'grace';
+var membershipTier   = 'free';
+var entityType       = 'individual';
+var coverDataUrl     = null;
+var uploadedCoverRaw = null;
+var selectedAudio    = [];
+var generatedCovers  = [];
+var selectedGenCover = null;
+var nyxOpen=false, nyxHistory=[], nyxConvId=null;
+var _sb=null;
+function getSB(){if(!_sb)_sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);return _sb;}
+
+/* ─── SANITIZE ─── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ─── AUTH ─── */
+function initAuth(){
+  getSB().auth.getSession().then(function(r){if(r.data&&r.data.session)applyUser(r.data.session.user);});
+  getSB().auth.onAuthStateChange(function(ev,sess){if(sess&&sess.user)applyUser(sess.user);else clearUser();});
+}
+function applyUser(u){
+  currentUser=u;
+  var name=(u.user_metadata&&(u.user_metadata.full_name||u.user_metadata.username))||u.email.split('@')[0];
+  document.getElementById('hdrUserName').textContent=name;
+  document.getElementById('hdrChip').style.display='inline-flex';
+  document.getElementById('hdrLogout').style.display='inline-flex';
+  // Auto-fill author name if empty
+  if(!document.getElementById('authorName').value) document.getElementById('authorName').value=name;
+}
+function clearUser(){document.getElementById('hdrChip').style.display='none';document.getElementById('hdrLogout').style.display='none';}
+function doSignOut(){if(!confirm('Sign out?'))return;getSB().auth.signOut().then(function(){window.location.href=CC_URL+'/login';});}
+
+/* ─── SECTION ACCORDION ─── */
+function toggleSec(hdr){
+  var wasOpen=hdr.classList.contains('open');
+  hdr.classList.toggle('open',!wasOpen);
+}
+
+/* ─── BOOK MODE ─── */
+function setBookMode(mode){
+  bookMode=mode;
+  document.getElementById('btnNewBook').classList.toggle('active',mode==='new');
+  document.getElementById('btnExisting').classList.toggle('active',mode==='existing');
+  document.getElementById('existingSelector').style.display=mode==='existing'?'block':'none';
+  document.getElementById('bookModeHint').textContent=mode==='new'
+    ?'Creating a new book — complete the steps below and click Publish.'
+    :'Select an existing book to update its details.';
+  if(mode==='existing') loadExistingBooks();
+}
+async function loadExistingBooks(){
+  if(!currentUser) return;
+  var sel=document.getElementById('existingBookSelect');
+  sel.innerHTML='<option value="">Loading...</option>';
+  try{
+    var r=await fetch(SUPABASE_URL+'/rest/v1/books?select=smcb_id,title,collection&order=created_at.desc',
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    var data=await r.json();
+    sel.innerHTML='<option value="">— Select a book to update —</option>';
+    (data||[]).forEach(function(b){
+      sel.innerHTML+='<option value="'+esc(b.smcb_id||'')+'">'+esc(b.title||'Untitled')+'</option>';
+    });
+  }catch(e){sel.innerHTML='<option value="">Could not load books</option>';}
+}
+function loadExistingBook(id){/* future: populate form from Supabase */}
+
+/* ─── FORMAT CHANGE ─── */
+function onFormatChange(){
+  var fmt=document.querySelector('input[name="book-format"]:checked').value;
+  document.getElementById('ebookIdSection').style.display=(fmt==='ebook'||fmt==='both')?'block':'none';
+  document.getElementById('audiobookIdSection').style.display=(fmt==='audiobook'||fmt==='both')?'block':'none';
+}
+
+/* ─── BOOK ID ─── */
+function genId(prefix){
+  var ts=Date.now().toString(36).toUpperCase();
+  var rand=Math.random().toString(36).substr(2,5).toUpperCase();
+  return prefix+'-'+ts+'-'+rand;
+}
+async function initializeBook(){
+  var title=document.getElementById('bookTitle').value.trim();
+  if(!title){alert('Please enter a book title first.');return;}
+  var btn=document.getElementById('initBookBtn');
+  btn.textContent='Initializing...';btn.disabled=true;
+  try{
+    var id=genId('SMCB');
+    // Try to save to Supabase if logged in
+    if(currentUser){
+      await fetch(SUPABASE_URL+'/rest/v1/books',{
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({smcb_id:id,title:title,user_id:currentUser.id})
+      });
+    }
+    currentBookId=id;
+    document.getElementById('bookIdVal').textContent=id;
+    document.getElementById('copyBookIdBtn').style.display='inline-flex';
+    document.getElementById('bookIdHint').textContent='Book ID locked in. Keep this for your records.';
+    btn.textContent='Initialized';
+  }catch(e){
+    currentBookId=genId('SMCB');
+    document.getElementById('bookIdVal').textContent=currentBookId;
+    document.getElementById('copyBookIdBtn').style.display='inline-flex';
+    btn.textContent='Initialized';
+  }
+}
+async function generateFormatId(fmt){
+  var title=document.getElementById('bookTitle').value.trim();
+  if(!title){alert('Please enter a book title first.');return;}
+  var id=genId(fmt==='ebook'?'EB':'AB');
+  document.getElementById(fmt+'IdVal').textContent=id;
+  document.getElementById('copy'+(fmt==='ebook'?'Ebook':'Audio')+'IdBtn').style.display='inline-flex';
+}
+function copyVal(elId){
+  var txt=document.getElementById(elId).textContent;
+  navigator.clipboard&&navigator.clipboard.writeText(txt);
+  var old=event.target.textContent;event.target.textContent='Copied!';setTimeout(function(){event.target.textContent=old;},1500);
+}
+
+/* ─── COLLECTION ─── */
+var collDescMap={
+  grace:'The Grace Collection — curated fiction and literary works on smcantrellbooks.com.',
+  horizon:'The Horizon Collection — upcoming and new releases (Coming Soon). Books move to Grace on release.'
+};
+var collPublishLabel={grace:'Publish to Grace Collection',horizon:'Publish to Horizon Collection'};
+function setCollection(c){
+  collection=c;
+  ['grace','horizon'].forEach(function(id){
+    var b=document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1));
+    if(b){b.classList.toggle('active',c===id);b.setAttribute('aria-pressed',c===id);}
+  });
+  document.getElementById('collDesc').textContent=collDescMap[c]||'';
+  document.getElementById('publishBtnLabel').textContent=collPublishLabel[c]||'Publish';
+  document.getElementById('previewColl').innerHTML='<i class="ph ph-books"></i> '+(c==='horizon'?'Horizon Collection':'Grace Collection');
+}
+
+/* ─── TIER ─── */
+function setTier(t){
+  membershipTier=t;
+  document.getElementById('tierFree').classList.toggle('active',t==='free');
+  document.getElementById('tierPD').classList.toggle('active',t==='pd');
+  updateEarnings();
+}
+
+/* ─── ENTITY TYPE ─── */
+function setEntityType(t){
+  entityType=t;
+  document.getElementById('taxIndiv').classList.toggle('active',t==='individual');
+  document.getElementById('taxBiz').classList.toggle('active',t==='business');
+  document.getElementById('taxIndivFields').style.display=t==='individual'?'block':'none';
+  document.getElementById('taxBizFields').style.display=t==='business'?'block':'none';
+}
+
+/* ─── PAYMENT ─── */
+function updatePaymentFields(){
+  var m=document.getElementById('paymentMethod').value;
+  ['paypal','cashapp','venmo','direct'].forEach(function(f){
+    document.getElementById(f+'Fields').style.display=m===f?'block':'none';
+  });
+  updateChecklist();
+}
+
+/* ─── EARNINGS ─── */
+function updateEarnings(){
+  var price=Math.max(0,parseFloat(document.getElementById('bookPrice').value)||0);
+  var platFee=membershipTier==='free'?price*0.15:0;
+  var method=document.getElementById('paymentMethod').value;
+  var ppFee=method==='paypal'?(price*0.029+0.30):0;
+  var payout=Math.max(0,price-platFee-ppFee);
+  var h='<div class="earn-row"><span style="color:var(--muted);">Book Price</span><span>$'+price.toFixed(2)+'</span></div>';
+  if(membershipTier==='free')
+    h+='<div class="earn-row fee"><span>Platform Fee (15%)</span><span>-$'+platFee.toFixed(2)+'</span></div>';
+  else
+    h+='<div class="earn-row"><span style="color:var(--muted);">Platform Fee</span><span style="color:var(--green);">$0.00</span></div>';
+  if(method==='paypal')
+    h+='<div class="earn-row" style="color:var(--muted);"><span>PayPal Fee (2.9% + $0.30)</span><span>-$'+ppFee.toFixed(2)+'</span></div>';
+  h+='<div class="earn-row total"><span>Your Payout</span><span style="color:var(--gold2);">$'+payout.toFixed(2)+'</span></div>';
+  document.getElementById('earningsDisplay').innerHTML=h;
+}
+
+/* ─── DESC WORD COUNT ─── */
+function checkDescWords(el){
+  var words=(el.value.trim().match(/\S+/g)||[]).length;
+  document.getElementById('descWordCount').textContent=words+' / 500 words';
+  var err=document.getElementById('descErr');
+  err.style.display=words>500?'block':'none';
+}
+
+/* ─── MANUSCRIPT ─── */
+function handleManuscript(e){
+  var f=e.target.files[0];if(!f)return;
+  if(f.size>50*1024*1024){alert('File must be under 50MB.');return;}
+  document.getElementById('manuscriptStatus').textContent=f.name;
+  var ext=f.name.split('.').pop().toLowerCase();
+  var preview=document.getElementById('manuscriptPreview');
+  preview.innerHTML='<div class="uploaded-file"><i class="ph ph-file-'+(ext==='epub'?'text':'text')+'"></i><span class="fname">'+esc(f.name)+'</span><span class="fsize">'+(f.size/1024/1024).toFixed(1)+' MB</span></div>';
+  markChk('chkManuscript',true);
+  // Mark section done
+  document.getElementById('hdr2').classList.add('done');
+}
+
+/* ─── AUTHOR PHOTO ─── */
+function handleAuthorPhoto(e){
+  var f=e.target.files[0];if(!f)return;
+  document.getElementById('authorPhotoStatus').textContent=f.name;
+}
+
+/* ─── COVER MODES ─── */
+function setCoverMode(mode){
+  document.getElementById('coverTabUpload').classList.toggle('active',mode==='upload');
+  document.getElementById('coverTabGen').classList.toggle('active',mode==='generate');
+  document.getElementById('coverUploadPanel').style.display=mode==='upload'?'block':'none';
+  document.getElementById('coverGenPanel').style.display=mode==='generate'?'block':'none';
+  if(mode==='generate') syncGenContext();
+}
+function syncGenContext(){
+  var title=document.getElementById('bookTitle').value;
+  var author=document.getElementById('authorName').value;
+  var note=document.getElementById('genContextNote');
+  if(title||author){
+    note.style.display='block';
+    note.innerHTML='<strong style="color:var(--text);">Using from Book Details:</strong> <span style="color:var(--subtle);">'+(title?'"'+esc(title)+'"':'')+(author?' by '+esc(author):'')+'</span>';
+  }else{note.style.display='none';}
+}
+
+/* ─── COVER UPLOAD ─── */
+function handleCoverUpload(e){
+  var f=e.target.files[0];if(!f)return;
+  if(!['image/jpeg','image/png','image/webp'].includes(f.type)){alert('Please upload a JPG, PNG, or WebP image.');return;}
+  if(f.size>10*1024*1024){alert('File must be under 10MB.');return;}
+  document.getElementById('coverUploadStatus').textContent=f.name;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    uploadedCoverRaw=ev.target.result;
+    coverDataUrl=ev.target.result;
+    var p=document.getElementById('coverUploadPreview');
+    p.innerHTML='<img src="'+ev.target.result+'" style="max-width:120px;border-radius:6px;border:2px solid var(--border2);" alt="Cover preview">';
+    document.getElementById('coverOverlayPanel').style.display='block';
+    document.getElementById('previewThumb').innerHTML='<img src="'+ev.target.result+'" alt="Cover">';
+    markChk('chkCover',true);
+    document.getElementById('hdr3').classList.add('done');
+    renderTextOverlay();
+  };
+  reader.readAsDataURL(f);
+}
+
+/* ─── TEXT OVERLAY ─── */
+function renderTextOverlay(){
+  var src=uploadedCoverRaw;if(!src)return;
+  var incTitle=document.getElementById('overlayTitle').checked;
+  var incAuthor=document.getElementById('overlayAuthor').checked;
+  var incSeries=document.getElementById('overlaySeries').checked;
+  if(!incTitle&&!incAuthor&&!incSeries){
+    coverDataUrl=uploadedCoverRaw;
+    return;
+  }
+  var title=document.getElementById('bookTitle').value||'Title';
+  var author=document.getElementById('authorName').value||'Author';
+  var series=document.getElementById('seriesName').value||'';
+  var color=document.getElementById('overlayColor').value;
+  var pos=document.getElementById('overlayPos').value;
+  var img=new Image();img.crossOrigin='anonymous';
+  img.onload=function(){
+    var c=document.getElementById('coverCanvas');
+    var ctx=c.getContext('2d');
+    c.width=img.naturalWidth;c.height=img.naturalHeight;
+    ctx.drawImage(img,0,0);
+    var lines=[];
+    if(incTitle)lines.push({text:title,size:Math.round(c.width*.07),w:'bold'});
+    if(incSeries&&series)lines.push({text:series,size:Math.round(c.width*.035),w:'normal'});
+    if(incAuthor)lines.push({text:author,size:Math.round(c.width*.045),w:'normal'});
+    var sp=1.4,tot=lines.reduce(function(s,l){return s+l.size*sp;},0);
+    var startY;
+    if(pos==='top')startY=c.height*.08;
+    else if(pos==='center')startY=(c.height-tot)/2;
+    else startY=c.height-tot-c.height*.08;
+    var pad=c.width*.03;
+    ctx.fillStyle='rgba(0,0,0,.5)';
+    ctx.fillRect(0,startY-pad,c.width,tot+pad*2);
+    var y=startY;
+    lines.forEach(function(line){
+      ctx.font=line.w+' '+line.size+'px serif';
+      ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.shadowColor='rgba(0,0,0,.7)';ctx.shadowBlur=4;ctx.shadowOffsetX=1;ctx.shadowOffsetY=1;
+      ctx.fillText(line.text,c.width/2,y,c.width*.9);
+      y+=line.size*sp;
+    });
+    ctx.shadowColor='transparent';ctx.shadowBlur=0;
+    var result=c.toDataURL('image/png');
+    coverDataUrl=result;
+    document.getElementById('previewThumb').innerHTML='<img src="'+result+'" alt="Cover with text">';
+  };
+  img.src=src;
+}
+
+/* ─── AI COVER GENERATION ─── */
+function buildCoverPrompt(){
+  var title=document.getElementById('bookTitle').value||'';
+  var style=document.getElementById('genStyle').value;
+  var mood=document.getElementById('genMood').value;
+  var subject=document.getElementById('genSubject').value;
+  var color=document.getElementById('genColor').value;
+  var extra=document.getElementById('genExtra').value;
+  var genre=document.getElementById('bookGenre').value;
+  var parts=['Professional KDP-standard book cover, portrait orientation 2:3 ratio'];
+  if(genre)parts.push('genre: '+genre);
+  if(style)parts.push('art style: '+style);
+  if(mood)parts.push('mood: '+mood);
+  if(subject)parts.push('central imagery: '+subject);
+  if(color)parts.push('color palette: '+color);
+  if(extra)parts.push(extra);
+  parts.push('cinematic lighting, dramatic composition, photorealistic or illustration quality');
+  parts.push('NO text, NO typography, NO words, NO letters, NO title on the image');
+  return parts.join(', ');
+}
+
+function buildTextOnCover(imgUrl){
+  return new Promise(function(resolve){
+    var incTitle=document.getElementById('genIncTitle').checked;
+    var incAuthor=document.getElementById('genIncAuthor').checked;
+    var incSeries=document.getElementById('genIncSeries').checked;
+    if(!incTitle&&!incAuthor&&!incSeries){resolve(imgUrl);return;}
+    var title=document.getElementById('bookTitle').value||'Title';
+    var author=document.getElementById('authorName').value||'Author';
+    var series=document.getElementById('seriesName').value||'';
+    var img=new Image();img.crossOrigin='anonymous';
+    img.onload=function(){
+      var c=document.createElement('canvas');
+      c.width=img.naturalWidth;c.height=img.naturalHeight;
+      var ctx=c.getContext('2d');
+      ctx.drawImage(img,0,0);
+      var lines=[];
+      if(incTitle)lines.push({text:title,size:Math.round(c.width*.07),w:'bold'});
+      if(incSeries&&series)lines.push({text:series,size:Math.round(c.width*.036),w:'normal'});
+      if(incAuthor)lines.push({text:author,size:Math.round(c.width*.046),w:'normal'});
+      var sp=1.4,tot=lines.reduce(function(s,l){return s+l.size*sp;},0);
+      var startY=c.height-tot-c.height*.08;
+      var pad=c.width*.035;
+      ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(0,startY-pad,c.width,tot+pad*2);
+      var y=startY;
+      lines.forEach(function(l){
+        ctx.font=l.w+' '+l.size+'px "Cinzel Decorative", serif';
+        ctx.fillStyle='#FFFFFF';ctx.textAlign='center';ctx.textBaseline='top';
+        ctx.shadowColor='rgba(0,0,0,.8)';ctx.shadowBlur=6;ctx.shadowOffsetX=2;ctx.shadowOffsetY=2;
+        ctx.fillText(l.text,c.width/2,y,c.width*.88);
+        y+=l.size*sp;
+      });
+      ctx.shadowColor='transparent';ctx.shadowBlur=0;
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror=function(){resolve(imgUrl);};
+    img.src=imgUrl;
+  });
+}
+
+async function generateCover(){
+  var btn=document.getElementById('btnGenerate');
+  var loading=document.getElementById('genLoading');
+  var errEl=document.getElementById('genError');
+  var results=document.getElementById('genResults');
+  btn.disabled=true;btn.setAttribute('aria-busy','true');
+  loading.style.display='block';
+  errEl.style.display='none';
+  results.innerHTML='';
+  generatedCovers=[];selectedGenCover=null;
+
+  var prompt=buildCoverPrompt();
+
+  // Two parallel requests with different models for variety
+  var models=[
+    'black-forest-labs/flux-1-1-pro',
+    'ideogram-ai/ideogram-v3-balanced'
+  ];
+
+  async function fetchCover(model){
+    var res=await fetch(CC_STUDIO+'/image',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:prompt,model:model,width:832,height:1248})
+    });
+    if(!res.ok)throw new Error('Model '+model+' failed: '+res.status);
+    var blob=await res.blob();
+    return await new Promise(function(resolve,reject){
+      var r=new FileReader();
+      r.onload=function(){resolve(r.result);};
+      r.onerror=function(){reject(new Error('Read failed'));};
+      r.readAsDataURL(blob);
+    });
+  }
+
+  try{
+    var settled=await Promise.allSettled(models.map(fetchCover));
+    var images=settled.filter(function(s){return s.status==='fulfilled';}).map(function(s){return s.value;});
+    if(images.length===0){
+      var firstErr=settled.find(function(s){return s.status==='rejected';});
+      throw new Error(firstErr?firstErr.reason.message:'Cover generation failed — please try again.');
+    }
+    // Apply text overlays
+    var withText=await Promise.all(images.map(buildTextOnCover));
+    generatedCovers=withText;
+    renderGenResults();
+  }catch(e){
+    errEl.textContent=e.message||'Cover generation failed. Please try again.';
+    errEl.style.display='block';
+  }finally{
+    btn.disabled=false;btn.setAttribute('aria-busy','false');
+    loading.style.display='none';
+  }
+}
+
+function renderGenResults(){
+  var el=document.getElementById('genResults');
+  el.innerHTML='';
+  generatedCovers.forEach(function(url,i){
+    var img=document.createElement('img');
+    img.src=url;
+    img.alt='Generated cover option '+(i+1);
+    img.loading='lazy';
+    img.tabIndex=0;
+    if(selectedGenCover===url)img.classList.add('selected');
+    img.onclick=function(){selectGenCover(url,img);};
+    img.onkeydown=function(e){if(e.key==='Enter'||e.key===' ')selectGenCover(url,img);};
+    el.appendChild(img);
+  });
+}
+
+function selectGenCover(url,imgEl){
+  selectedGenCover=url;
+  coverDataUrl=url;
+  document.querySelectorAll('#genResults img').forEach(function(i){i.classList.remove('selected');});
+  imgEl.classList.add('selected');
+  document.getElementById('previewThumb').innerHTML='<img src="'+url+'" alt="Generated cover">';
+  markChk('chkCover',true);
+  document.getElementById('hdr3').classList.add('done');
+}
+
+/* ─── AUDIO ─── */
+function setAudioMode(mode){
+  document.getElementById('audioModeVS').classList.toggle('active',mode==='vs');
+  document.getElementById('audioModeUpload').classList.toggle('active',mode==='upload');
+  document.getElementById('audioVSPanel').style.display=mode==='vs'?'block':'none';
+  document.getElementById('audioUploadPanel').style.display=mode==='upload'?'block':'none';
+}
+
+async function loadVoiceStudioAssets(){
+  var c=document.getElementById('vsAudioList');
+  c.innerHTML='<div style="text-align:center;padding:16px;color:var(--subtle);font-size:.83rem;"><span class="spin" style="width:14px;height:14px;border-width:2px;"></span> Loading...</div>';
+  if(!currentUser){c.innerHTML='<div style="text-align:center;padding:16px;color:var(--subtle);font-size:.83rem;font-style:italic;">Sign in to load your audio history.</div>';return;}
+  try{
+    var url=SUPABASE_URL+'/rest/v1/'+AUDIO_TABLE
+      +'?select=id,title,chapter_title,voice_name,type,r2_url,created_at'
+      +'&user_id=eq.'+encodeURIComponent(currentUser.id)
+      +'&order=created_at.desc';
+    var r=await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    if(r.status===404||r.status===400){c.innerHTML='<div style="text-align:center;padding:16px;color:var(--subtle);font-size:.83rem;font-style:italic;">No audio history yet. Generate in Voice Studio first.</div>';return;}
+    var data=await r.json();
+    if(!Array.isArray(data)||!data.length){c.innerHTML='<div style="text-align:center;padding:16px;color:var(--subtle);font-size:.83rem;font-style:italic;">No audio chapters yet. Generate in Voice Studio first.</div>';return;}
+    c.innerHTML='';
+    data.forEach(function(g){
+      var row=document.createElement('div');row.className='audio-item';
+      var date=g.created_at?new Date(g.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+      var label=g.chapter_title||g.title||g.voice_name||'Audio';
+      var cb=document.createElement('input');cb.type='checkbox';cb.style.cssText='accent-color:var(--gold);width:14px;height:14px;flex-shrink:0;cursor:pointer;';
+      cb.setAttribute('aria-label','Select '+label);
+      cb.addEventListener('change',function(){toggleAudioAsset(g,cb.checked);});
+      row.appendChild(cb);
+      var info=document.createElement('div');info.style.flex='1';info.style.minWidth='0';
+      info.innerHTML='<div style="font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(label)+'</div>'
+        +'<div style="font-size:.72rem;color:var(--subtle);">'+esc(date)+(g.voice_name?' &middot; '+esc(g.voice_name):'')+'</div>';
+      row.appendChild(info);
+      if(g.r2_url){
+        var pb=document.createElement('button');pb.innerHTML='&#9654;';pb.className='btn btn-outline btn-sm';pb.style.padding='3px 8px';
+        pb.setAttribute('aria-label','Preview');
+        pb.onclick=function(e){e.stopPropagation();var au=new Audio(g.r2_url);au.play();pb.innerHTML='&#9646;&#9646;';au.onended=function(){pb.innerHTML='&#9654;';};};
+        row.appendChild(pb);
+      }
+      c.appendChild(row);
+    });
+  }catch(e){c.innerHTML='<div style="text-align:center;padding:12px;color:var(--red);font-size:.82rem;">Could not load audio history.</div>';}
+}
+
+function toggleAudioAsset(g,sel){
+  if(sel){if(!selectedAudio.find(function(x){return x.id===g.id;}))selectedAudio.push(g);}
+  else{selectedAudio=selectedAudio.filter(function(x){return x.id!==g.id;});}
+  var cnt=document.getElementById('audioSelectedCount');
+  cnt.textContent=selectedAudio.length?selectedAudio.length+' chapter'+(selectedAudio.length>1?'s':'')+' selected':'';
+}
+
+function handleAudioUpload(e){
+  var files=Array.from(e.target.files);if(!files.length)return;
+  document.getElementById('audioUploadStatus').textContent=files.length+' file'+(files.length>1?'s':'')+' selected';
+  var list=document.getElementById('audioChapterList');list.innerHTML='';
+  files.forEach(function(f){
+    list.innerHTML+='<div class="uploaded-file"><i class="ph ph-music-note"></i><span class="fname">'+esc(f.name)+'</span><span class="fsize">'+(f.size/1024/1024).toFixed(1)+' MB</span></div>';
+  });
+}
+
+/* ─── PREVIEW ─── */
+function updatePreview(){
+  var title=document.getElementById('bookTitle').value||'Book Title';
+  var author=document.getElementById('authorName').value||'Author Name';
+  var price=document.getElementById('bookPrice')?document.getElementById('bookPrice').value:'0.00';
+  document.getElementById('previewTitle').textContent=title;
+  document.getElementById('previewAuthor').textContent='by '+author;
+  document.getElementById('previewPrice').textContent='$'+(parseFloat(price)||0).toFixed(2);
+  updateChecklist();
+}
+
+/* ─── CHECKLIST ─── */
+function markChk(id,done){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle('done',done);
+  el.classList.toggle('pending',!done);
+  el.querySelector('i').className='ph '+(done?'ph-check-circle':'ph-circle');
+}
+function updateChecklist(){
+  markChk('chkTitle',!!document.getElementById('bookTitle').value.trim());
+  markChk('chkAuthor',!!document.getElementById('authorName').value.trim());
+  markChk('chkPrice',!!(parseFloat(document.getElementById('bookPrice').value)>0));
+  markChk('chkPayment',!!document.getElementById('paymentMethod').value);
+}
+
+/* ─── TAX FORM ─── */
+function saveTaxForm(){
+  var name=document.getElementById('taxName').value.trim();
+  var addr=document.getElementById('taxAddress').value.trim();
+  var city=document.getElementById('taxCity').value.trim();
+  var state=document.getElementById('taxState').value.trim();
+  var zip=document.getElementById('taxZip').value.trim();
+  if(!name||!addr||!city||!state||!zip){alert('Please fill in all required fields.');return;}
+  if(entityType==='individual'&&!document.getElementById('taxSSN').value.trim()){alert('Please enter your SSN/Tax ID.');return;}
+  if(entityType==='business'&&(!document.getElementById('taxBizName').value.trim()||!document.getElementById('taxEIN').value.trim())){alert('Please enter business name and EIN.');return;}
+  document.getElementById('taxFormWrap').style.display='none';
+  document.getElementById('taxSuccessWrap').style.display='block';
+  document.getElementById('hdr7').classList.add('done');
+  markChk('chkTax',true);
+}
+function editTax(){document.getElementById('taxFormWrap').style.display='block';document.getElementById('taxSuccessWrap').style.display='none';}
+
+/* ─── PUBLISH ─── */
+async function doPublish(){
+  var title=document.getElementById('bookTitle').value.trim();
+  var author=document.getElementById('authorName').value.trim();
+  if(!title){alert('Please enter a book title.');document.getElementById('hdr1').classList.add('open');return;}
+  if(!author){alert('Please enter the author name.');document.getElementById('hdr4').classList.add('open');return;}
+  if(!document.getElementById('paymentMethod').value){alert('Please select a payment method.');document.getElementById('hdr6').classList.add('open');return;}
+
+  var btn=document.getElementById('publishBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Publishing...';
+
+  try{
+    var fmt=document.querySelector('input[name="book-format"]:checked').value;
+    var payload={
+      title:title,
+      subtitle:document.getElementById('bookSubtitle').value||null,
+      description:document.getElementById('bookDesc').value||null,
+      author:author,
+      genre:document.getElementById('bookGenre').value||null,
+      keywords:document.getElementById('bookKeywords').value||null,
+      collection:collection,
+      series_name:document.getElementById('seriesName').value||null,
+      series_order:parseInt(document.getElementById('seriesOrder').value)||null,
+      price:parseFloat(document.getElementById('bookPrice').value)||0,
+      format:fmt,
+      smcb_id:currentBookId||null,
+      storefront_url:fmt==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections'),
+      user_id:currentUser?currentUser.id:null,
+      status:'pending'
+    };
+
+    if(currentUser){
+      var r=await fetch(SUPABASE_URL+'/rest/v1/books',{
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify(payload)
+      });
+      if(!r.ok&&r.status!==409){throw new Error('Could not save to database.');}
+    }
+
+    // Show success
+    document.getElementById('publishSuccess').style.display='block';
+    document.getElementById('publishSuccess').scrollIntoView({behavior:'smooth',block:'center'});
+    var coll=fmt==='audiobook'?'Audiobooks':'Collections';
+    document.getElementById('publishSuccessMsg').textContent='Your book "'+esc(title)+'" has been submitted to the '+coll+'. It will appear on the storefront once reviewed.';
+    document.getElementById('viewStorefrontBtn').href=fmt==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections');
+
+    setTimeout(function(){window.location.href=fmt==='audiobook'?(STORE_URL+'/#audiobooks'):(STORE_URL+'/#collections');},8000);
+  }catch(e){
+    btn.disabled=false;
+    btn.innerHTML='<i class="ph ph-rocket-launch"></i> <span id="publishBtnLabel">'+collPublishLabel[collection]+'</span>';
+    alert('Publish failed: '+e.message+'\n\nPlease try again.');
+  }
+}
+
+function resetForm(){
+  document.getElementById('publishSuccess').style.display='none';
+  document.getElementById('publishBtn').disabled=false;
+  document.getElementById('publishBtn').innerHTML='<i class="ph ph-rocket-launch"></i> <span id="publishBtnLabel">Publish to Grace Collection</span>';
+}
+
+/* ─── NYXEN ─── */
+function toggleNyxen(){
+  nyxOpen=!nyxOpen;
+  document.getElementById('nyxPanel').style.display=nyxOpen?'flex':'none';
+  if(nyxOpen&&!nyxHistory.length)addMsg('ai','Hi! I\'m Nyxen — your publishing assistant. Need help with book details, cover generation, pricing, or publishing to the collection?');
+  if(nyxOpen)setTimeout(function(){document.getElementById('nyxInput').focus();},100);
+}
+function addMsg(role,text){
+  var feed=document.getElementById('nyxFeed');
+  var row=document.createElement('div');row.className='msg '+(role==='user'?'user':'ai');
+  var bubble=document.createElement('div');bubble.className='msg-bubble';bubble.textContent=text;
+  row.appendChild(bubble);feed.appendChild(row);feed.scrollTop=feed.scrollHeight;
+}
+async function nyxSend(){
+  var inp=document.getElementById('nyxInput');
+  var text=inp.value.trim();if(!text)return;
+  inp.value='';inp.style.height='';
+  addMsg('user',text);
+  nyxHistory.push({role:'user',content:text});
+  document.getElementById('nyxStatus').textContent='Thinking...';
+  try{
+    var body={messages:nyxHistory.slice(-20),mode:'assistant',response_mode:'balanced',
+      system_context:'You are Nyxen, the assistant on the Cantrell Creatives Publisher Hub. Help publishers complete book submission forms and understand the publication flow. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish — never mention publication limits. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Publication tier creators keep 100% of earnings; Free tier creators pay a 15% platform cut. Cover generation is included with publication and is never charged. Audiobook generation in Voice Studio costs 150 credits per book. The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. If you do not have a documented answer, say so honestly instead of guessing.'};
+    if(nyxConvId)body.conversation_id=nyxConvId;
+    var r=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var d=await r.json();
+    var reply=d.response||d.content||'I\'m here to help with your book publication.';
+    if(d.conversation_id)nyxConvId=d.conversation_id;
+    nyxHistory.push({role:'assistant',content:reply});
+    addMsg('ai',reply);
+    document.getElementById('nyxStatus').textContent='Publishing assistant';
+  }catch(e){addMsg('ai','Sorry, I ran into an issue. Please try again.');document.getElementById('nyxStatus').textContent='Publishing assistant';}
+}
+
+/* ─── INIT ─── */
+document.addEventListener('DOMContentLoaded',function(){
+  initAuth();
+  updateEarnings();
+  updatePreview();
+  // Bind live preview updates
+  ['bookTitle','bookSubtitle','authorName','bookPrice'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener('input',function(){updatePreview();updateChecklist();});
+  });
+  document.getElementById('paymentMethod').addEventListener('change',updateChecklist);
+  document.getElementById('bookDesc').addEventListener('input',function(){checkDescWords(this);});
+});
+</script>
+</body>
+</html>
