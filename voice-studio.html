@@ -284,7 +284,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <section id="voices-tab" class="tab-content active">
     <div class="section-header">
       <h1 class="section-title">Voice Library</h1>
-      <p class="section-sub">40 voice profiles &mdash; Cloudflare Workers AI &mdash; minimax/speech-2.8-turbo</p>
+      <p class="section-sub">40 voice profiles &mdash; preview before you generate</p>
     </div>
     <div id="voice-grid" class="voice-grid"></div>
   </section>
@@ -345,6 +345,10 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
     <div class="section-header">
       <h1 class="section-title">Audiobook Studio</h1>
       <p class="section-sub">Full manuscript generation &mdash; EPUB import &amp; export &mdash; multi-voice &mdash; chapter-by-chapter</p>
+      <div style="display:inline-flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+        <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--gold);background:rgba(184,148,46,.10);border:1px solid rgba(184,148,46,.35);border-radius:999px;padding:5px 12px;">150 credits per audiobook</span>
+        <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-tertiary);background:var(--surface-el);border:1px solid var(--border);border-radius:999px;padding:5px 12px;">80,000 character cap</span>
+      </div>
     </div>
     <div class="audiobook-layout">
       <div class="audiobook-input">
@@ -1205,7 +1209,7 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         messages:chatHistory,
-        system:'You are Nyxen, a support assistant on the Cantrell Creatives Voice Studio. Help users with questions about voice selection, audiobook generation, EPUB processing, and chapter narration. Be concise and helpful.'
+        system:'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: Audiobook generation costs 150 credits per book and has an 80,000-character cap per audiobook. There are 40 voice profiles available — never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 80,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.'
       })
     })
     .then(function(r){return r.json();})
