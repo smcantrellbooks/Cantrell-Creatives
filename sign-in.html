@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — Cantrell Creatives</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0E0A06;
+  --bg2:#1A1410;
+  --bg3:#241B12;
+  --panel:#211A14;
+  --border:#3A2E20;
+  --border2:#4A3A28;
+  --gold:#B8942E;
+  --gold2:#D4AA38;
+  --gold3:#E8C050;
+  --text:#E8E4DC;
+  --text2:#C4BCAE;
+  --muted:#A89880;
+  --cream:#FFF8EE;
+  --dark-sidebar:#2C1E0F;
+  --green:#52A04E;
+  --red:#D05555;
+}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Outfit',system-ui,sans-serif;font-size:16px;overflow-x:hidden;}
+
+/* ── HEADER ── */
+.hdr{height:56px;background:var(--dark-sidebar);border-bottom:1px solid rgba(184,148,46,.2);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;}
+.hdr-logo img{height:32px;border-radius:4px;}
+.hdr-right{display:flex;align-items:center;gap:8px;}
+.hdr-lnk{padding:5px 14px;border-radius:999px;border:1px solid rgba(184,148,46,.35);background:transparent;color:rgba(255,248,238,.7);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:.18s;white-space:nowrap;}
+.hdr-lnk:hover{background:rgba(184,148,46,.18);border-color:var(--gold);color:#fff;}
+
+/* ── TOOL BAR ── */
+.tool-bar{background:#1E1508;border-bottom:1px solid rgba(184,148,46,.12);display:flex;justify-content:center;gap:6px;padding:7px 20px;flex-wrap:wrap;}
+.tool-btn{padding:5px 15px;border-radius:999px;border:1px solid rgba(184,148,46,.28);background:transparent;color:rgba(255,248,238,.55);font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.tool-btn:hover{background:rgba(184,148,46,.14);border-color:var(--gold);color:rgba(255,248,238,.9);}
+.tool-btn.active{background:var(--gold);border-color:var(--gold);color:#0e0a06;}
+.tool-btn i{font-size:.85rem;}
+
+/* ── GOLD BAR ── */
+.gold-bar{width:100%;height:3px;background:linear-gradient(to right,transparent,var(--border2) 15%,var(--gold) 40%,var(--gold2) 50%,var(--gold) 60%,var(--border2) 85%,transparent);}
+
+/* ── HERO SECTION ── */
+.hero{text-align:center;padding:56px 24px 0;background:radial-gradient(ellipse at 50% 0%,rgba(184,148,46,.06) 0%,transparent 65%);}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;color:var(--cream);line-height:1.2;margin-bottom:10px;}
+.hero-title em{font-style:italic;color:var(--gold2);}
+.hero-sub{font-size:.95rem;color:var(--muted);line-height:1.6;max-width:380px;margin:0 auto 40px;}
+
+/* ── AUTH CARD ── */
+.auth-wrap{display:flex;justify-content:center;padding:0 20px 72px;}
+.auth-card{width:100%;max-width:460px;background:var(--panel);border:1px solid var(--border2);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+
+/* ── MODE TABS ── */
+.mode-tabs{display:flex;border-bottom:1px solid var(--border);}
+.mode-tab{flex:1;padding:16px;font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:none;color:var(--muted);cursor:pointer;transition:.18s;position:relative;}
+.mode-tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform .2s;}
+.mode-tab.active{color:var(--gold);}
+.mode-tab.active::after{transform:scaleX(1);}
+.mode-tab:hover:not(.active){color:var(--text2);}
+
+/* ── FORM BODY ── */
+.auth-body{padding:28px 32px 32px;}
+
+/* ── FIELD ── */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.field-label{font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);}
+.field-input{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-family:'Outfit',sans-serif;font-size:16px;color:var(--text);outline:none;transition:.18s;width:100%;}
+.field-input::placeholder{color:var(--muted);}
+.field-input:focus{border-color:var(--gold);background:var(--bg2);}
+.field-input.err{border-color:var(--red);}
+
+/* ── PASSWORD WRAPPER ── */
+.pw-wrap{position:relative;}
+.pw-wrap .field-input{padding-right:44px;}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:18px;display:flex;align-items:center;padding:0;}
+.pw-toggle:hover{color:var(--gold);}
+
+/* ── STRENGTH BAR ── */
+.pw-strength{height:4px;border-radius:999px;background:var(--border);overflow:hidden;margin-top:6px;}
+.pw-strength-fill{height:100%;border-radius:999px;transition:width .3s,background .3s;}
+
+/* ── FORGOT ── */
+.forgot-row{display:flex;justify-content:flex-end;margin-top:-8px;margin-bottom:16px;}
+.forgot-link{font-size:.82rem;color:var(--muted);text-decoration:none;transition:.15s;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;}
+.forgot-link:hover{color:var(--gold);}
+
+/* ── PRIMARY BUTTON ── */
+.btn-primary{width:100%;padding:14px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0e0a06;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px;}
+.btn-primary i{font-size:1.1rem;}
+.btn-primary:hover{background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 6px 24px rgba(184,148,46,.3);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;}
+
+/* ── DIVIDER ── */
+.or-divider{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.or-line{flex:1;height:1px;background:var(--border);}
+.or-text{font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+/* ── OAUTH BUTTONS ── */
+.oauth-col{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.oauth-btn{width:100%;padding:12px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:12px;}
+.oauth-btn:hover{border-color:var(--border2);background:var(--bg2);color:var(--text);}
+.oauth-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.oauth-btn span{flex:1;text-align:left;}
+
+/* ── MAGIC LINK ── */
+.magic-btn{width:100%;padding:12px 16px;border-radius:10px;border:1px solid rgba(184,148,46,.3);background:rgba(184,148,46,.07);color:var(--gold);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:10px;}
+.magic-btn i{font-size:1.1rem;}
+.magic-btn:hover{background:rgba(184,148,46,.14);border-color:var(--gold);}
+
+/* ── ALERT ── */
+.alert{border-radius:10px;padding:12px 16px;font-size:.9rem;line-height:1.5;margin-bottom:16px;display:none;align-items:flex-start;gap:10px;}
+.alert.show{display:flex;}
+.alert.err{background:rgba(208,85,85,.1);border:1px solid rgba(208,85,85,.3);color:#E88080;}
+.alert.ok{background:rgba(82,160,78,.1);border:1px solid rgba(82,160,78,.3);color:#82C87E;}
+.alert.info{background:rgba(184,148,46,.08);border:1px solid rgba(184,148,46,.25);color:var(--gold2);}
+.alert i{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+
+/* ── FOOTER NOTE ── */
+.auth-foot{padding:16px 32px;border-top:1px solid var(--border);background:var(--bg3);text-align:center;font-size:.82rem;color:var(--muted);}
+.auth-foot a{color:var(--gold);text-decoration:none;transition:.15s;}
+.auth-foot a:hover{color:var(--gold2);}
+
+/* ── SUCCESS STATE ── */
+.success-state{display:none;text-align:center;padding:40px 32px;}
+.success-icon{font-size:3rem;color:var(--green);margin-bottom:16px;}
+.success-title{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.success-sub{font-size:.9rem;color:var(--muted);line-height:1.6;}
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay{position:absolute;inset:0;background:rgba(14,10,6,.7);display:none;align-items:center;justify-content:center;border-radius:20px;z-index:10;backdrop-filter:blur(3px);}
+.loading-overlay.show{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── FEATURES STRIP ── */
+.features-strip{display:flex;justify-content:center;gap:32px;padding:32px 24px 48px;flex-wrap:wrap;}
+.feat-item{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.9rem;}
+.feat-item i{color:var(--gold);font-size:1.1rem;}
+
+@media(max-width:500px){
+  .auth-body{padding:22px 20px 24px;}
+  .auth-foot{padding:14px 20px;}
+  .hero-title{font-size:2rem;}
+  .features-strip{gap:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <a href="https://creatives.smcantrellbooks.com">
+    <img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives" style="height:32px;border-radius:4px;">
+  </a>
+  <div class="hdr-right">
+    <a class="hdr-lnk" href="https://creatives.smcantrellbooks.com"><i class="ph ph-house"></i> Home</a>
+    <a class="hdr-lnk" href="https://smcantrellbooks.com"><i class="ph ph-storefront"></i> Main Store</a>
+  </div>
+</header>
+
+<!-- TOOL BAR -->
+<div class="tool-bar">
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace"><i class="ph ph-pencil-line"></i> Publisher Workspace</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/studio"><i class="ph ph-film-strip"></i> Studio</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/voice-studio"><i class="ph ph-microphone"></i> Voice Studio</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/collections"><i class="ph ph-books"></i> Collections</a>
+  <a class="tool-btn active" href="https://creatives.smcantrellbooks.com/login"><i class="ph ph-sign-in"></i> Sign In</a>
+  <a class="tool-btn" href="https://smcantrellbooks.com"><i class="ph ph-storefront"></i> Main Store</a>
+</div>
+
+<div class="gold-bar"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Cantrell Creatives</div>
+  <h1 class="hero-title">Where Stories Are<br><em>Created</em></h1>
+  <p class="hero-sub">Sign in to access your Studio, Voice, and publishing tools &mdash; all in one place.</p>
+</div>
+
+<!-- AUTH CARD -->
+<div class="auth-wrap">
+  <div class="auth-card" style="position:relative;">
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- MODE TABS -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabSignIn" onclick="setMode('signin')">
+        <i class="ph ph-sign-in" style="font-size:.9rem;"></i> Sign In
+      </button>
+      <button class="mode-tab" id="tabSignUp" onclick="setMode('signup')">
+        <i class="ph ph-user-plus" style="font-size:.9rem;"></i> Create Account
+      </button>
+      <button class="mode-tab" id="tabReset" onclick="setMode('reset')" style="display:none;">
+        <i class="ph ph-key" style="font-size:.9rem;"></i> Reset Password
+      </button>
+    </div>
+
+    <!-- ALERT -->
+    <div style="padding:0 32px;padding-top:20px;">
+      <div class="alert" id="alertBox">
+        <i class="ph ph-warning-circle" id="alertIcon"></i>
+        <span id="alertText"></span>
+      </div>
+    </div>
+
+    <!-- ── SIGN IN FORM ── -->
+    <div id="formSignIn">
+      <div class="auth-body" style="padding-top:8px;">
+        <div class="field">
+          <label class="field-label" for="siEmail">Email Address</label>
+          <input class="field-input" type="email" id="siEmail" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="field-label" for="siPassword">Password</label>
+          <div class="pw-wrap">
+            <input class="field-input" type="password" id="siPassword" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')signIn()">
+            <button class="pw-toggle" type="button" onclick="togglePw('siPassword',this)" tabindex="-1"><i class="ph ph-eye"></i></button>
+          </div>
+        </div>
+        <div class="forgot-row">
+          <button class="forgot-link" onclick="setMode('reset')">Forgot password?</button>
+        </div>
+        <button class="btn-primary" id="btnSignIn" onclick="signIn()">
+          <i class="ph ph-sign-in"></i> Sign In
+        </button>
+        <div class="or-divider"><div class="or-line"></div><span class="or-text">or continue with</span><div class="or-line"></div></div>
+        <div class="oauth-col">
+          <button class="oauth-btn" onclick="oauthSignIn('google')">
+            <div class="oauth-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <span>Continue with Google</span>
+          </button>
+          <button class="oauth-btn" onclick="oauthSignIn('github')">
+            <div class="oauth-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="var(--text2)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </div>
+            <span>Continue with GitHub</span>
+          </button>
+        </div>
+        <div class="or-divider"><div class="or-line"></div><span class="or-text">or</span><div class="or-line"></div></div>
+        <button class="magic-btn" onclick="setMode('magic')">
+          <i class="ph ph-envelope-simple"></i>
+          <span>Send me a magic link</span>
+        </button>
+      </div>
+      <div class="auth-foot">
+        Don&rsquo;t have an account?
+        <a onclick="setMode('signup')" style="cursor:pointer;">Create one free &rarr;</a>
+      </div>
+    </div>
+
+    <!-- ── SIGN UP FORM ── -->
+    <div id="formSignUp" style="display:none;">
+      <div class="auth-body" style="padding-top:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="field">
+            <label class="field-label" for="suFirst">First Name</label>
+            <input class="field-input" type="text" id="suFirst" placeholder="Jane" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label class="field-label" for="suLast">Last Name</label>
+            <input class="field-input" type="text" id="suLast" placeholder="Doe" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="suEmail">Email Address</label>
+          <input class="field-input" type="email" id="suEmail" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="field-label" for="suPassword">Password</label>
+          <div class="pw-wrap">
+            <input class="field-input" type="password" id="suPassword" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkStrength(this.value)" onkeydown="if(event.key==='Enter')signUp()">
+            <button class="pw-toggle" type="button" onclick="togglePw('suPassword',this)" tabindex="-1"><i class="ph ph-eye"></i></button>
+          </div>
+          <div class="pw-strength"><div class="pw-strength-fill" id="pwStrengthFill" style="width:0%;background:var(--red);"></div></div>
+          <span id="pwStrengthLabel" style="font-size:.74rem;color:var(--muted);margin-top:3px;"></span>
+        </div>
+        <button class="btn-primary" id="btnSignUp" onclick="signUp()">
+          <i class="ph ph-user-plus"></i> Create Account
+        </button>
+        <div class="or-divider"><div class="or-line"></div><span class="or-text">or sign up with</span><div class="or-line"></div></div>
+        <div class="oauth-col">
+          <button class="oauth-btn" onclick="oauthSignIn('google')">
+            <div class="oauth-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 2.09 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            </div>
+            <span>Continue with Google</span>
+          </button>
+          <button class="oauth-btn" onclick="oauthSignIn('github')">
+            <div class="oauth-icon">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="var(--text2)"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            </div>
+            <span>Continue with GitHub</span>
+          </button>
+        </div>
+      </div>
+      <div class="auth-foot">
+        Already have an account?
+        <a onclick="setMode('signin')" style="cursor:pointer;">Sign in &rarr;</a>
+      </div>
+    </div>
+
+    <!-- ── RESET PASSWORD FORM ── -->
+    <div id="formReset" style="display:none;">
+      <div class="auth-body" style="padding-top:8px;">
+        <p style="font-size:.9rem;color:var(--muted);line-height:1.6;margin-bottom:18px;">Enter your email and we&rsquo;ll send you a link to reset your password.</p>
+        <div class="field">
+          <label class="field-label" for="resetEmail">Email Address</label>
+          <input class="field-input" type="email" id="resetEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')sendReset()">
+        </div>
+        <button class="btn-primary" id="btnReset" onclick="sendReset()">
+          <i class="ph ph-envelope-simple"></i> Send Reset Link
+        </button>
+        <button onclick="setMode('signin')" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text2);padding:11px;border-radius:10px;font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.18s;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+          <i class="ph ph-arrow-left"></i> Back to Sign In
+        </button>
+      </div>
+      <div class="auth-foot">
+        Remember your password?
+        <a onclick="setMode('signin')" style="cursor:pointer;">Sign in &rarr;</a>
+      </div>
+    </div>
+
+    <!-- ── MAGIC LINK FORM ── -->
+    <div id="formMagic" style="display:none;">
+      <div class="auth-body" style="padding-top:8px;">
+        <p style="font-size:.9rem;color:var(--muted);line-height:1.6;margin-bottom:18px;">Enter your email and we&rsquo;ll send you a one-click sign-in link &mdash; no password needed.</p>
+        <div class="field">
+          <label class="field-label" for="magicEmail">Email Address</label>
+          <input class="field-input" type="email" id="magicEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')sendMagicLink()">
+        </div>
+        <button class="btn-primary" id="btnMagic" onclick="sendMagicLink()">
+          <i class="ph ph-magic-wand"></i> Send Magic Link
+        </button>
+        <button onclick="setMode('signin')" style="width:100%;background:transparent;border:1px solid var(--border);color:var(--text2);padding:11px;border-radius:10px;font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.18s;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+          <i class="ph ph-arrow-left"></i> Back to Sign In
+        </button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS STATE ── -->
+    <div class="success-state" id="successState">
+      <div class="success-icon"><i class="ph ph-check-circle" id="successIcon"></i></div>
+      <div class="success-title" id="successTitle">Check Your Email</div>
+      <p class="success-sub" id="successText">We sent a link to your inbox. Click it to continue.</p>
+      <button onclick="setMode('signin')" style="margin-top:20px;background:transparent;border:1px solid var(--border);color:var(--text2);padding:10px 24px;border-radius:10px;font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">
+        Back to Sign In
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURES STRIP -->
+<div class="features-strip">
+  <div class="feat-item"><i class="ph ph-film-strip"></i> AI Video Studio</div>
+  <div class="feat-item"><i class="ph ph-microphone"></i> Voice Generation</div>
+  <div class="feat-item"><i class="ph ph-music-notes"></i> Music Creation</div>
+  <div class="feat-item"><i class="ph ph-image"></i> Image Generation</div>
+  <div class="feat-item"><i class="ph ph-books"></i> Book Publishing</div>
+  <div class="feat-item"><i class="ph ph-lock"></i> Secure &amp; Private</div>
+</div>
+
+<!-- PLATFORM LINKS -->
+<div style="display:flex;justify-content:center;gap:20px;padding:0 24px 16px;flex-wrap:wrap;">
+  <a href="https://smcantrellbooks.com/#collections" target="_blank" style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;color:rgba(184,148,46,.55);text-decoration:none;text-transform:uppercase;transition:.18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(184,148,46,.55)'"><i class="ph ph-books"></i> Collections</a>
+  <a href="https://smcantrellbooks.com/#audiobooks" target="_blank" style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;color:rgba(184,148,46,.55);text-decoration:none;text-transform:uppercase;transition:.18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(184,148,46,.55)'"><i class="ph ph-headphones"></i> Audiobooks</a>
+  <a href="https://smcantrellbooks.com/#founder" target="_blank" style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;color:rgba(184,148,46,.55);text-decoration:none;text-transform:uppercase;transition:.18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(184,148,46,.55)'"><i class="ph ph-user"></i> Author Bio</a>
+  <a href="https://creatives.smcantrellbooks.com/privacy" style="font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;color:rgba(184,148,46,.55);text-decoration:none;text-transform:uppercase;transition:.18s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='rgba(184,148,46,.55)'"><i class="ph ph-shield-check"></i> Privacy</a>
+</div>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid rgba(58,46,32,.6);padding:16px 24px;text-align:center;background:var(--bg2);">
+  <p style="font-size:.7rem;color:rgba(168,152,128,.5);">&copy; 2026 S.M. Cantrell Books &mdash; Cantrell Creatives. All rights reserved.</p>
+</footer>
+
+<script>
+/* ── CONFIG ── */
+var SUPABASE_URL      = 'https://recyyhvdvuupxhbxmzal.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
+var CC_URL            = 'https://creatives.smcantrellbooks.com';
+
+/* Support ?next=/collections or any CC path so any page can send users here */
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var next = params.get('next');
+  var safe = next && next.startsWith('/') && !next.startsWith('//') ? next : null;
+  window._REDIRECT_URL = safe ? (CC_URL + safe) : (CC_URL + '/myaccount');
+})();
+
+var REDIRECT_URL = window._REDIRECT_URL;
+
+/* ── SUPABASE CLIENT ── */
+var _sb = null;
+function sb(){ if(!_sb) _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); return _sb; }
+
+/* ── CHECK EXISTING SESSION ── */
+document.addEventListener('DOMContentLoaded', function(){
+  sb().auth.getSession().then(function(res){
+    if(res.data && res.data.session){
+      window.location.href = REDIRECT_URL;
+    }
+  });
+  sb().auth.onAuthStateChange(function(event, session){
+    if(session) window.location.href = REDIRECT_URL;
+  });
+  var params = new URLSearchParams(window.location.search);
+  var mode = params.get('mode');
+  if(mode === 'signup') setMode('signup');
+  if(mode === 'reset') setMode('reset');
+});
+
+/* ── MODE SWITCHING ── */
+var currentMode = 'signin';
+var FORMS = ['formSignIn','formSignUp','formReset','formMagic','successState'];
+var TABS  = ['tabSignIn','tabSignUp','tabReset'];
+
+function setMode(mode){
+  currentMode = mode;
+  clearAlert();
+  FORMS.forEach(function(f){ document.getElementById(f).style.display = 'none'; });
+  TABS.forEach(function(t){ document.getElementById(t).classList.remove('active'); });
+  document.getElementById('tabReset').style.display = 'none';
+  var formMap = {
+    signin:  'formSignIn',
+    signup:  'formSignUp',
+    reset:   'formReset',
+    magic:   'formMagic',
+    success: 'successState'
+  };
+  var tabMap = {signin:'tabSignIn', signup:'tabSignUp', reset:'tabReset'};
+  if(formMap[mode]) document.getElementById(formMap[mode]).style.display = '';
+  if(tabMap[mode]){
+    var tab = document.getElementById(tabMap[mode]);
+    tab.style.display = '';
+    tab.classList.add('active');
+    if(mode !== 'reset') tab.style.display = '';
+  } else if(mode === 'magic'){
+    document.getElementById('tabSignIn').classList.add('active');
+  }
+  if(mode === 'reset'){
+    document.getElementById('tabReset').style.display = '';
+    document.getElementById('tabReset').classList.add('active');
+    document.getElementById('tabSignIn').classList.remove('active');
+  }
+}
+
+/* ── SIGN IN ── */
+async function signIn(){
+  var email = val('siEmail');
+  var password = val('siPassword');
+  if(!email){ showAlert('err','Enter your email address.'); focus('siEmail'); return; }
+  if(!password){ showAlert('err','Enter your password.'); focus('siPassword'); return; }
+  setLoading(true,'btnSignIn');
+  try {
+    var res = await sb().auth.signInWithPassword({email: email, password: password});
+    if(res.error) throw res.error;
+    window.location.href = REDIRECT_URL;
+  } catch(err){
+    var msg = err.message || 'Sign in failed.';
+    if(msg.toLowerCase().includes('invalid')) msg = 'Incorrect email or password. Please try again.';
+    if(msg.toLowerCase().includes('email not confirmed')) msg = 'Please check your email to confirm your account first.';
+    showAlert('err', msg);
+    setLoading(false,'btnSignIn');
+  }
+}
+
+/* ── SIGN UP ── */
+async function signUp(){
+  var first    = val('suFirst');
+  var last     = val('suLast');
+  var email    = val('suEmail');
+  var password = val('suPassword');
+  if(!first){ showAlert('err','Enter your first name.'); focus('suFirst'); return; }
+  if(!email){ showAlert('err','Enter your email address.'); focus('suEmail'); return; }
+  if(!password || password.length < 8){ showAlert('err','Password must be at least 8 characters.'); focus('suPassword'); return; }
+  setLoading(true,'btnSignUp');
+  try {
+    var res = await sb().auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: { full_name: (first + (last ? ' ' + last : '')).trim() },
+        emailRedirectTo: REDIRECT_URL
+      }
+    });
+    if(res.error) throw res.error;
+    var confirmed = res.data && res.data.user && res.data.user.confirmed_at;
+    if(confirmed){
+      window.location.href = REDIRECT_URL;
+    } else {
+      showSuccess(
+        'ph ph-envelope-open',
+        'Check Your Email',
+        'We sent a confirmation link to <strong>' + escHtml(email) + '</strong>. Click it to activate your account.'
+      );
+    }
+  } catch(err){
+    var msg = err.message || 'Sign up failed.';
+    if(msg.toLowerCase().includes('already registered')) msg = 'An account with that email already exists. Try signing in instead.';
+    showAlert('err', msg);
+    setLoading(false,'btnSignUp');
+  }
+}
+
+/* ── OAUTH ── */
+async function oauthSignIn(provider){
+  setLoading(true);
+  try {
+    var res = await sb().auth.signInWithOAuth({
+      provider: provider,
+      options: { redirectTo: REDIRECT_URL }
+    });
+    if(res.error) throw res.error;
+  } catch(err){
+    showAlert('err', 'OAuth error: ' + (err.message || provider + ' sign-in failed.'));
+    setLoading(false);
+  }
+}
+
+/* ── RESET PASSWORD ── */
+async function sendReset(){
+  var email = val('resetEmail');
+  if(!email){ showAlert('err','Enter your email address.'); focus('resetEmail'); return; }
+  setLoading(true,'btnReset');
+  try {
+    var res = await sb().auth.resetPasswordForEmail(email, {redirectTo: CC_URL + '/update-password'});
+    if(res.error) throw res.error;
+    showSuccess(
+      'ph ph-envelope-simple',
+      'Reset Link Sent',
+      'If an account exists for <strong>' + escHtml(email) + '</strong>, you&rsquo;ll receive a password reset link shortly.'
+    );
+  } catch(err){
+    showAlert('err', err.message || 'Could not send reset email. Please try again.');
+    setLoading(false,'btnReset');
+  }
+}
+
+/* ── MAGIC LINK ── */
+async function sendMagicLink(){
+  var email = val('magicEmail');
+  if(!email){ showAlert('err','Enter your email address.'); focus('magicEmail'); return; }
+  setLoading(true,'btnMagic');
+  try {
+    var res = await sb().auth.signInWithOtp({email: email, options:{emailRedirectTo: REDIRECT_URL}});
+    if(res.error) throw res.error;
+    showSuccess(
+      'ph ph-magic-wand',
+      'Magic Link Sent',
+      'Check your inbox for <strong>' + escHtml(email) + '</strong> &mdash; click the link to sign in instantly.'
+    );
+  } catch(err){
+    showAlert('err', err.message || 'Could not send magic link. Please try again.');
+    setLoading(false,'btnMagic');
+  }
+}
+
+/* ── PASSWORD TOGGLE ── */
+function togglePw(inputId, btn){
+  var inp = document.getElementById(inputId);
+  var icon = btn.querySelector('i');
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    icon.className = 'ph ph-eye-slash';
+  } else {
+    inp.type = 'password';
+    icon.className = 'ph ph-eye';
+  }
+}
+
+/* ── PASSWORD STRENGTH ── */
+function checkStrength(pw){
+  var fill  = document.getElementById('pwStrengthFill');
+  var label = document.getElementById('pwStrengthLabel');
+  if(!pw){ fill.style.width='0%'; label.textContent=''; return; }
+  var score = 0;
+  if(pw.length >= 8)  score++;
+  if(pw.length >= 12) score++;
+  if(/[A-Z]/.test(pw)) score++;
+  if(/[0-9]/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  var map = [
+    {pct:'20%', color:'#D05555', text:'Very weak'},
+    {pct:'40%', color:'#E07830', text:'Weak'},
+    {pct:'60%', color:'#D4AA38', text:'Fair'},
+    {pct:'80%', color:'#82C87E', text:'Strong'},
+    {pct:'100%',color:'#52A04E', text:'Very strong'}
+  ];
+  var s = map[Math.max(0, Math.min(4, score-1))] || map[0];
+  fill.style.width  = s.pct;
+  fill.style.background = s.color;
+  label.textContent = s.text;
+  label.style.color = s.color;
+}
+
+/* ── SUCCESS STATE ── */
+function showSuccess(iconClass, title, text){
+  setLoading(false);
+  FORMS.forEach(function(f){ document.getElementById(f).style.display='none'; });
+  TABS.forEach(function(t){ document.getElementById(t).classList.remove('active'); });
+  var ss = document.getElementById('successState');
+  ss.style.display = 'block';
+  document.getElementById('successIcon').className = iconClass;
+  document.getElementById('successTitle').textContent = title;
+  document.getElementById('successText').innerHTML = text;
+}
+
+/* ── HELPERS ── */
+function val(id){ return (document.getElementById(id) || {}).value.trim() || ''; }
+function focus(id){ var el=document.getElementById(id); if(el) el.focus(); }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showAlert(type, msg){
+  var box  = document.getElementById('alertBox');
+  var icon = document.getElementById('alertIcon');
+  var text = document.getElementById('alertText');
+  box.className = 'alert ' + type + ' show';
+  icon.className = type==='err' ? 'ph ph-warning-circle' : type==='ok' ? 'ph ph-check-circle' : 'ph ph-info';
+  text.innerHTML = msg;
+}
+function clearAlert(){
+  document.getElementById('alertBox').className = 'alert';
+}
+
+function setLoading(on, btnId){
+  document.getElementById('loadingOverlay').className = 'loading-overlay' + (on ? ' show' : '');
+  if(btnId){
+    var btn = document.getElementById(btnId);
+    if(btn) btn.disabled = on;
+  }
+}
+</script>
+</body>
+</html>

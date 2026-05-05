@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Cantrell Creatives</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#FBF7F0;--bg2:#F3EBE0;--bg3:#EAE0D0;
+  --panel:#FFFCF8;--card:#FFFCF4;
+  --border:#D4C4A8;--border2:#C4B08C;
+  --gold:#B8942E;--gold2:#D4AA38;--gold3:#E8C050;
+  --cream:#FFF8EE;--muted:#8A7A64;
+  --text:#1A0F1A;--text2:#2D1F1A;
+  --dark:#1A1410;--dark2:#2D2418;
+  --green:#3a6b3a;--red:#8b2020;
+}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:17px;overflow-x:hidden;}
+
+/* ── HEADER STRIP ─────────────────────────────────────── */
+.hdr{position:sticky;top:0;z-index:200;height:56px;background:var(--dark);border-bottom:1px solid rgba(184,148,46,.25);display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:12px;}
+.hdr-logo img{height:32px;border-radius:4px;}
+.hdr-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;}
+.hdr-btn{padding:5px 14px;border-radius:999px;border:1px solid rgba(184,148,46,.35);background:transparent;color:rgba(255,248,238,.7);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.hdr-btn:hover{background:rgba(184,148,46,.18);border-color:var(--gold);color:#fff;}
+.hdr-btn.logout{border-color:rgba(139,32,32,.5);color:rgba(220,120,120,.9);}
+.hdr-btn.logout:hover{background:rgba(139,32,32,.25);}
+
+/* ── TOOL BAR ─────────────────────────────────────────── */
+.tool-bar{background:var(--dark2);border-bottom:1px solid rgba(184,148,46,.15);display:flex;justify-content:center;gap:6px;padding:8px 24px;flex-wrap:wrap;}
+.tool-btn{padding:5px 16px;border-radius:999px;border:1px solid rgba(184,148,46,.3);background:transparent;color:rgba(255,248,238,.6);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.tool-btn:hover{background:rgba(184,148,46,.15);border-color:var(--gold);color:rgba(255,248,238,.9);}
+.tool-btn i{font-size:.85rem;}
+
+/* ── GOLD RULE ────────────────────────────────────────── */
+.gold-rule{width:100%;height:3px;background:linear-gradient(to right,transparent,var(--border2) 15%,var(--gold) 40%,var(--gold2) 50%,var(--gold) 60%,var(--border2) 85%,transparent);}
+
+/* ── LAYOUT ───────────────────────────────────────────── */
+.page-wrap{max-width:1160px;margin:0 auto;padding:36px 24px 72px;}
+
+/* ── LOGIN GATE ───────────────────────────────────────── */
+#loginGate{display:none;text-align:center;padding:80px 24px;}
+.login-card{display:inline-block;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:48px 56px;box-shadow:0 8px 32px rgba(0,0,0,.1);}
+.login-card .lc-icon{font-size:2.4rem;color:var(--gold);margin-bottom:16px;}
+.login-card h2{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.login-card p{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:24px;}
+.btn-gold{display:inline-flex;align-items:center;gap:6px;padding:13px 30px;border-radius:8px;background:var(--gold);color:#0e0a06;border:none;font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .22s;}
+.btn-gold:hover{background:var(--gold2);box-shadow:0 4px 18px rgba(184,148,46,.35);}
+
+/* ── PROFILE HERO ─────────────────────────────────────── */
+#accountMain{display:none;}
+.profile-hero{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;box-shadow:0 6px 28px rgba(0,0,0,.08);margin-bottom:28px;}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3d3220,#5a4a28);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--gold);flex-shrink:0;}
+.profile-info .pname{font-family:'Cinzel',serif;font-size:1.5rem;font-weight:700;color:var(--text2);margin-bottom:3px;}
+.profile-info .pemail{font-size:.9rem;color:var(--muted);font-style:italic;margin-bottom:10px;}
+.badges{display:flex;gap:7px;flex-wrap:wrap;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:999px;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.badge.tier{background:rgba(184,148,46,.12);border:1px solid rgba(184,148,46,.4);color:#6b4a10;}
+.badge.joined{background:rgba(184,148,46,.07);border:1px solid var(--border);color:var(--muted);}
+
+/* ── CREDITS PANEL ────────────────────────────────────── */
+.credits-panel{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:22px 26px;display:flex;flex-direction:column;gap:16px;min-width:240px;}
+.cp-title{font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.credit-row{display:flex;flex-direction:column;gap:5px;}
+.credit-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--text2);}
+.credit-label span:last-child{font-family:'Cinzel',serif;font-weight:700;color:var(--gold);}
+.credit-bar{width:100%;height:7px;border-radius:999px;background:var(--bg3);overflow:hidden;}
+.credit-fill{height:100%;border-radius:999px;background:linear-gradient(to right,var(--gold),var(--gold2));transition:width .5s ease;}
+.credit-fill.danger{background:linear-gradient(to right,#c05020,#e07030);}
+.credit-totals{display:flex;gap:14px;flex-wrap:wrap;}
+.credit-stat{text-align:center;}
+.credit-stat .cv{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;color:var(--text2);}
+.credit-stat .cl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+.credits-buy{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:7px 18px;border-radius:7px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:.18s;align-self:flex-start;}
+.credits-buy:hover{background:rgba(184,148,46,.1);}
+
+/* ── STATS ROW ────────────────────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.06);}
+.stat-card .sv{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:700;color:var(--text2);line-height:1;}
+.stat-card .sl{font-size:.64rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.stat-card.alt{border-color:var(--border2);background:linear-gradient(135deg,#FBF7EE,#F2EAD8);}
+.stat-card.alt .sv{color:var(--gold);}
+
+/* ── SECTION TITLE ────────────────────────────────────── */
+.sec-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-bar h2{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:7px;}
+.sec-bar h2 i{color:var(--gold);}
+.status-msg{font-size:.8rem;padding:3px 0;min-height:16px;}
+.status-msg.ok{color:var(--green);}
+.status-msg.err{color:var(--red);}
+.status-msg.info{color:var(--muted);font-style:italic;}
+
+/* ── TABS ─────────────────────────────────────────────── */
+.tabs{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{padding:6px 18px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--text);font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:5px;}
+.tab:hover{background:rgba(184,148,46,.1);border-color:var(--border2);}
+.tab.active{background:var(--gold);color:#0e0a06;border-color:var(--gold);}
+
+/* ── ASSETS GRID ──────────────────────────────────────── */
+.assets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:32px;}
+.asset-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:11px;transition:all .2s;}
+.asset-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1);}
+.asset-hdr{display:flex;align-items:flex-start;gap:11px;}
+.asset-icon-wrap{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.asset-icon-wrap.audio{background:rgba(184,148,46,.1);border:1px solid rgba(184,148,46,.35);color:var(--gold);}
+.asset-icon-wrap.epub{background:rgba(90,110,60,.1);border:1px solid rgba(90,110,60,.3);color:#4a5a30;}
+.asset-meta{flex:1;min-width:0;}
+.asset-title{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.asset-sub{font-size:.76rem;color:var(--muted);font-style:italic;margin-top:2px;}
+.asset-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.atag{display:inline-block;padding:2px 8px;border-radius:999px;font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;}
+.atag.audio{background:rgba(184,148,46,.1);border:1px solid rgba(184,148,46,.35);color:#6b4a10;}
+.atag.epub{background:rgba(90,110,60,.1);border:1px solid rgba(90,110,60,.3);color:#3a4a20;}
+.atag.pub{background:rgba(58,107,58,.1);border:1px solid rgba(58,107,58,.3);color:#3a6b3a;}
+.asset-actions{display:flex;gap:7px;flex-wrap:wrap;}
+.btn-sm{display:inline-flex;align-items:center;gap:4px;padding:6px 13px;border-radius:7px;font-family:'Cormorant Garamond',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .18s;border:none;white-space:nowrap;}
+.btn-dl{background:var(--gold);color:#0e0a06;}
+.btn-dl:hover{background:var(--gold2);}
+.btn-pub{background:rgba(90,110,60,.12);border:1px solid rgba(90,110,60,.3);color:#3a4a20;}
+.btn-pub:hover{background:rgba(90,110,60,.3);color:#1a2a10;}
+.btn-del{background:rgba(139,32,32,.07);border:1px solid rgba(139,32,32,.25);color:var(--red);}
+.btn-del:hover{background:rgba(139,32,32,.16);}
+
+/* ── EMPTY STATE ──────────────────────────────────────── */
+.empty-state{text-align:center;padding:44px 24px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:28px;}
+.empty-state i{font-size:2.5rem;color:var(--border2);margin-bottom:14px;display:block;}
+.empty-state h3{font-family:'Cinzel',serif;font-size:1rem;color:var(--text2);margin-bottom:8px;}
+.empty-state p{font-size:.9rem;color:var(--muted);font-style:italic;}
+
+/* ── LOADING ──────────────────────────────────────────── */
+.loading{text-align:center;padding:36px;color:var(--muted);font-style:italic;}
+.spinner{display:inline-block;width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer{border-top:1px solid var(--border2);padding:20px 24px;text-align:center;background:var(--bg2);}
+footer a{font-size:.78rem;color:var(--muted);margin:0 9px;text-decoration:none;transition:color .18s;}
+footer a:hover{color:var(--gold);}
+footer p{font-size:.7rem;color:var(--border2);margin-top:10px;}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media(max-width:860px){
+  .profile-hero{grid-template-columns:auto 1fr;}.credits-panel{grid-column:1/-1;}
+}
+@media(max-width:600px){
+  .profile-hero{grid-template-columns:1fr;text-align:center;}.badges{justify-content:center;}
+  .avatar{margin:0 auto;}
+  .credits-panel{min-width:auto;}
+  .hdr-nav .hdr-btn:not(.logout){display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HEADER STRIP
+═══════════════════════════════════════════════════════ -->
+<header class="hdr">
+  <a href="https://creatives.smcantrellbooks.com">
+    <div class="hdr-logo">
+      <img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives">
+    </div>
+  </a>
+  <nav class="hdr-nav" id="hdrNav">
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com">
+      <i class="ph ph-house"></i> Home
+    </a>
+    <a class="hdr-btn" href="https://creatives.smcantrellbooks.com/studio">
+      <i class="ph ph-film-strip"></i> Studio
+    </a>
+    <button class="hdr-btn logout" id="logoutBtn" onclick="signOut()" style="display:none;">
+      <i class="ph ph-sign-out"></i> Log Out
+    </button>
+  </nav>
+</header>
+
+<!-- TOOL BAR -->
+<div class="tool-bar">
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/studio"><i class="ph ph-film-strip"></i> Studio</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace"><i class="ph ph-pencil-line"></i> Publisher Workspace</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/voice-studio"><i class="ph ph-microphone"></i> Voice Studio</a>
+  <a class="tool-btn" href="https://creatives.smcantrellbooks.com/collections"><i class="ph ph-books"></i> Collections</a>
+  <a class="tool-btn" href="https://smcantrellbooks.com"><i class="ph ph-storefront"></i> Main Store</a>
+</div>
+
+<div class="gold-rule"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     LOGIN GATE
+═══════════════════════════════════════════════════════ -->
+<div id="loginGate">
+  <div class="login-card">
+    <div class="lc-icon"><i class="ph ph-lock"></i></div>
+    <h2>Sign In Required</h2>
+    <p>Please log in to view your account and assets.</p>
+    <a class="btn-gold" href="https://creatives.smcantrellbooks.com/login">
+      <i class="ph ph-sign-in"></i> Log In
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACCOUNT MAIN
+═══════════════════════════════════════════════════════ -->
+<div id="accountMain">
+<div class="page-wrap">
+
+  <!-- PROFILE HERO -->
+  <div class="profile-hero" id="profileHero">
+    <div class="avatar" id="profileAvatar">?</div>
+    <div class="profile-info">
+      <div class="pname" id="profileName">Loading…</div>
+      <div class="pemail" id="profileEmail"></div>
+      <div class="badges">
+        <span class="badge tier" id="profileTier">Free Creator</span>
+        <span class="badge joined" id="profileJoined"></span>
+      </div>
+    </div>
+    <!-- CREDITS PANEL -->
+    <div class="credits-panel">
+      <div class="cp-title"><i class="ph ph-lightning"></i> Studio Credits</div>
+      <div class="credit-row">
+        <div class="credit-label">
+          <span>Used this period</span>
+          <span id="creditUsedLabel">— / —</span>
+        </div>
+        <div class="credit-bar"><div class="credit-fill" id="creditBar" style="width:0%"></div></div>
+      </div>
+      <div class="credit-totals">
+        <div class="credit-stat">
+          <div class="cv" id="creditTotal">—</div>
+          <div class="cl">Total</div>
+        </div>
+        <div class="credit-stat">
+          <div class="cv" id="creditUsed">—</div>
+          <div class="cl">Used</div>
+        </div>
+        <div class="credit-stat">
+          <div class="cv" id="creditRemaining">—</div>
+          <div class="cl">Remaining</div>
+        </div>
+      </div>
+      <a href="https://buy.stripe.com/00w7sK3VAcjofNp6HH2Nq02" class="credits-buy" target="_blank" rel="noopener">
+        <i class="ph ph-plus-circle"></i> Buy Credits
+      </a>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card alt">
+      <div class="sv" id="statAudiobooks">0</div>
+      <div class="sl">Audiobooks</div>
+    </div>
+    <div class="stat-card">
+      <div class="sv" id="statEpubs">0</div>
+      <div class="sl">EPUBs</div>
+    </div>
+    <div class="stat-card alt">
+      <div class="sv" id="statTotal">0</div>
+      <div class="sl">Total Assets</div>
+    </div>
+    <div class="stat-card">
+      <div class="sv" id="statPublished">0</div>
+      <div class="sl">Published</div>
+    </div>
+  </div>
+
+  <!-- ASSETS -->
+  <div class="sec-bar">
+    <h2><i class="ph ph-package"></i> My Assets</h2>
+    <div id="assetStatus" class="status-msg"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="filterAssets('all',this)">
+      <i class="ph ph-squares-four"></i> All
+    </button>
+    <button class="tab" onclick="filterAssets('audio',this)">
+      <i class="ph ph-headphones"></i> Audiobooks
+    </button>
+    <button class="tab" onclick="filterAssets('epub',this)">
+      <i class="ph ph-book-open"></i> EPUBs
+    </button>
+    <button class="tab" onclick="filterAssets('published',this)">
+      <i class="ph ph-check-circle"></i> Published
+    </button>
+  </div>
+
+  <div id="assetsContainer">
+    <div class="loading">
+      <div class="spinner"></div><br>Loading your assets…
+    </div>
+  </div>
+
+</div>
+</div><!-- /accountMain -->
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Publishing Terms</a>
+  <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure">Audio Disclosures</a>
+  <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy">Our Philosophy</a>
+  <a href="https://creatives.smcantrellbooks.com/privacy">Privacy Policy</a>
+  <p>&copy; 2026 S.M. Cantrell Books. All rights reserved.</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ── CONFIG ── */
+var CFG = {
+  SUPABASE_URL:      'https://recyyhvdvuupxhbxmzal.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM',
+  CF_WORKER:         'https://cantrell-creatives.smcantrellbooks.workers.dev',
+  R2_WORKER:         'https://nyxen-video-worker.smcantrellbooks.workers.dev',
+  CC_URL:            'https://creatives.smcantrellbooks.com',
+  TIER_LABELS: {
+    free:        'Free Creator',
+    studio:      'Studio Member',
+    publication: 'Publication Member',
+    pro:         'Pro Creator',
+    premium:     'Premium Creator',
+  },
+  TIER_CREDITS: {
+    free: 100, studio: 300, publication: 400, pro: 300, premium: 400
+  },
+  STRIPE: {
+    CREDIT_5:  'https://buy.stripe.com/00w7sK3VAcjofNp6HH2Nq02',
+    CREDIT_7:  'https://buy.stripe.com/8x28wOajYdnsbx93vv2Nq03',
+    CREDIT_10: 'https://buy.stripe.com/28E14m4ZE97c7gTaXX2Nq0i',
+  }
+};
+
+/* ── SUPABASE ── */
+var _sb = null;
+function sb(){ if(!_sb) _sb = supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY); return _sb; }
+
+/* ── STATE ── */
+var currentUser = null;
+var allAssets   = [];
+var currentFilter = 'all';
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function(){
+  sb().auth.getSession().then(function(res){
+    var session = res.data && res.data.session;
+    if(session && session.user){
+      bootAccount(session.user);
+    } else {
+      showGate();
+    }
+  });
+  sb().auth.onAuthStateChange(function(event, session){
+    if(session && session.user) bootAccount(session.user);
+    else showGate();
+  });
+});
+
+function showGate(){
+  document.getElementById('loginGate').style.display = 'block';
+  document.getElementById('accountMain').style.display = 'none';
+}
+
+function bootAccount(user){
+  currentUser = user;
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('accountMain').style.display = 'block';
+  document.getElementById('logoutBtn').style.display = 'inline-flex';
+  renderProfile(user);
+  loadProfileData(user);
+  loadAssets(user);
+}
+
+/* ── SIGN OUT ── */
+function signOut(){
+  if(!confirm('Sign out of Cantrell Creatives?')) return;
+  sb().auth.signOut().then(function(){
+    window.location.href = CFG.CC_URL + '/login';
+  });
+}
+
+/* ── PROFILE ── */
+function renderProfile(user){
+  var meta  = user.user_metadata || {};
+  var name  = meta.full_name || meta.username || meta.name || user.email.split('@')[0];
+  var email = user.email || '';
+  var joined = user.created_at ? new Date(user.created_at).toLocaleDateString('en-US',{year:'numeric',month:'long'}) : '';
+  var initial = name ? name[0].toUpperCase() : '?';
+
+  document.getElementById('profileAvatar').textContent = initial;
+  document.getElementById('profileName').textContent   = name;
+  document.getElementById('profileEmail').textContent  = email;
+  if(joined) document.getElementById('profileJoined').textContent = 'Member since ' + joined;
+}
+
+async function loadProfileData(user){
+  try {
+    /* Try to read from a 'profiles' or 'user_credits' table */
+    var res = await sb().from('profiles').select('tier,credits_total,credits_used').eq('id', user.id).single();
+    if(res.data){
+      var d = res.data;
+      var tier    = d.tier || 'free';
+      var total   = d.credits_total != null ? d.credits_total : (CFG.TIER_CREDITS[tier] || 100);
+      var used    = d.credits_used  != null ? d.credits_used  : 0;
+      var remaining = Math.max(0, total - used);
+      renderTier(tier);
+      renderCredits(total, used, remaining);
+      return;
+    }
+  } catch(e){}
+
+  /* Try user_metadata for tier */
+  var meta = user.user_metadata || {};
+  var tier = meta.tier || meta.plan || 'free';
+  var total = CFG.TIER_CREDITS[tier] || 100;
+  renderTier(tier);
+  renderCredits(total, 0, total);
+}
+
+function renderTier(tier){
+  document.getElementById('profileTier').textContent = CFG.TIER_LABELS[tier] || 'Member';
+}
+
+function renderCredits(total, used, remaining){
+  document.getElementById('creditTotal').textContent     = total;
+  document.getElementById('creditUsed').textContent      = used;
+  document.getElementById('creditRemaining').textContent = remaining;
+  document.getElementById('creditUsedLabel').textContent = used + ' / ' + total + ' used';
+  var pct = total > 0 ? Math.min(100, Math.round(used / total * 100)) : 0;
+  var bar = document.getElementById('creditBar');
+  bar.style.width = pct + '%';
+  if(pct >= 85) bar.classList.add('danger'); else bar.classList.remove('danger');
+}
+
+/* ── ASSETS ── */
+async function loadAssets(user){
+  var container = document.getElementById('assetsContainer');
+  try {
+    var resp = await fetch(CFG.CF_WORKER + '/assets?user_id=' + encodeURIComponent(user.id));
+    if(!resp.ok) throw new Error('Worker error ' + resp.status);
+    var data = await resp.json();
+    allAssets = data.assets || data || [];
+    updateStats();
+    renderAssets(allAssets);
+  } catch(err){
+    /* fallback: try R2 worker */
+    try {
+      var resp2 = await fetch(CFG.R2_WORKER + '/user-assets?uid=' + encodeURIComponent(user.id));
+      if(!resp2.ok) throw new Error('R2 error');
+      var d2 = await resp2.json();
+      allAssets = d2.assets || d2 || [];
+      updateStats();
+      renderAssets(allAssets);
+    } catch(e2){
+      allAssets = [];
+      updateStats();
+      renderAssets([]);
+      showStatus('assetStatus','info','Assets will appear here once you generate them in Voice Studio.');
+    }
+  }
+}
+
+function updateStats(){
+  var audio = allAssets.filter(function(a){ return a.type==='audio'; }).length;
+  var epub  = allAssets.filter(function(a){ return a.type==='epub'; }).length;
+  var pub   = allAssets.filter(function(a){ return a.published; }).length;
+  document.getElementById('statAudiobooks').textContent = audio;
+  document.getElementById('statEpubs').textContent      = epub;
+  document.getElementById('statTotal').textContent      = allAssets.length;
+  document.getElementById('statPublished').textContent  = pub;
+}
+
+function filterAssets(filter, btn){
+  currentFilter = filter;
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  var filtered = allAssets;
+  if(filter === 'audio')     filtered = allAssets.filter(function(a){ return a.type==='audio'; });
+  if(filter === 'epub')      filtered = allAssets.filter(function(a){ return a.type==='epub'; });
+  if(filter === 'published') filtered = allAssets.filter(function(a){ return a.published; });
+  renderAssets(filtered);
+}
+
+function renderAssets(assets){
+  var container = document.getElementById('assetsContainer');
+  if(!assets || assets.length === 0){
+    var isPublished = currentFilter === 'published';
+    container.innerHTML =
+      '<div class="empty-state">' +
+        '<i class="ph ph-' + (isPublished ? 'upload-simple' : 'headphones') + '"></i>' +
+        '<h3>' + (isPublished ? 'Nothing Published Yet' : 'No Assets Yet') + '</h3>' +
+        '<p>' + (isPublished
+          ? 'Publish your audiobooks and EPUBs from Voice Studio.'
+          : 'Generate an audiobook or EPUB in Voice Studio — your assets will appear here.') +
+        '</p>' +
+      '</div>';
+    return;
+  }
+
+  var grid = document.createElement('div');
+  grid.className = 'assets-grid';
+
+  assets.forEach(function(asset){
+    var card   = document.createElement('div');
+    card.className = 'asset-card';
+    var isAudio = asset.type === 'audio';
+    var date  = asset.created_at ? new Date(asset.created_at).toLocaleDateString() : '';
+    var authorPart = asset.author ? escHtml(asset.author) + ' &middot; ' : '';
+
+    card.innerHTML =
+      '<div class="asset-hdr">' +
+        '<div class="asset-icon-wrap ' + asset.type + '">' +
+          '<i class="ph ph-' + (isAudio ? 'headphones' : 'book-open') + '"></i>' +
+        '</div>' +
+        '<div class="asset-meta">' +
+          '<div class="asset-title">' + escHtml(asset.title || 'Untitled') + '</div>' +
+          '<div class="asset-sub">' + authorPart + date + '</div>' +
+          '<div class="asset-tags">' +
+            '<span class="atag ' + asset.type + '">' + (isAudio ? 'Audiobook' : 'EPUB') + '</span>' +
+            (asset.published ? '<span class="atag pub">Published</span>' : '') +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="asset-actions">' +
+        '<button class="btn-sm btn-dl" onclick="downloadAsset(\'' + asset.id + '\',\'' + escAttr(asset.title||'file') + '\',\'' + asset.type + '\')">' +
+          '<i class="ph ph-download-simple"></i> Download' +
+        '</button>' +
+        (!asset.published
+          ? '<button class="btn-sm btn-pub" onclick="publishAsset(\'' + asset.id + '\')">' +
+              '<i class="ph ph-rocket-launch"></i> Publish' +
+            '</button>'
+          : '') +
+        '<button class="btn-sm btn-del" onclick="deleteAsset(\'' + asset.id + '\')">' +
+          '<i class="ph ph-x"></i> Delete' +
+        '</button>' +
+      '</div>';
+
+    grid.appendChild(card);
+  });
+
+  container.innerHTML = '';
+  container.appendChild(grid);
+}
+
+/* ── DOWNLOAD ── */
+async function downloadAsset(id, title, type){
+  var asset = allAssets.find(function(a){ return a.id === id; });
+  if(!asset) return;
+  showStatus('assetStatus','info','Preparing download…');
+  try {
+    var url = asset.url || (CFG.CF_WORKER + '/asset/' + id);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = sanitizeFilename(title) + '.' + (type === 'audio' ? 'mp3' : 'epub');
+    a.target = '_blank';
+    a.click();
+    showStatus('assetStatus','ok','Download started.');
+  } catch(err){ showStatus('assetStatus','err','Download error: ' + err.message); }
+}
+
+/* ── PUBLISH ── */
+async function publishAsset(id){
+  if(!confirm('Publish this asset to Collections?')) return;
+  showStatus('assetStatus','info','Publishing…');
+  try {
+    var resp = await fetch(CFG.CF_WORKER + '/publish', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({asset_id: id, user_id: currentUser.id})
+    });
+    if(!resp.ok) throw new Error('Publish failed: ' + resp.status);
+    var asset = allAssets.find(function(a){ return a.id === id; });
+    if(asset) asset.published = true;
+    updateStats();
+    filterAssets(currentFilter, null);
+    showStatus('assetStatus','ok','Published to Collections.');
+  } catch(err){ showStatus('assetStatus','err','Publish error: ' + err.message); }
+}
+
+/* ── DELETE ── */
+async function deleteAsset(id){
+  if(!confirm('Delete this asset? This cannot be undone.')) return;
+  showStatus('assetStatus','info','Deleting…');
+  try {
+    await fetch(CFG.CF_WORKER + '/asset/' + id, {
+      method: 'DELETE',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({user_id: currentUser.id})
+    });
+    allAssets = allAssets.filter(function(a){ return a.id !== id; });
+    updateStats();
+    filterAssets(currentFilter, null);
+    showStatus('assetStatus','ok','Asset deleted.');
+  } catch(err){ showStatus('assetStatus','err','Delete error: ' + err.message); }
+}
+
+/* ── UTILS ── */
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s){ return escHtml(s).replace(/'/g,'&#39;'); }
+function sanitizeFilename(s){ return String(s).replace(/[^a-zA-Z0-9 ]/g,'').replace(/\s+/g,'_').substring(0,80) || 'asset'; }
+function showStatus(id,type,text){ var el=document.getElementById(id); if(!el) return; el.className='status-msg '+type; el.textContent=text; }
+</script>
+</body>
+</html>
