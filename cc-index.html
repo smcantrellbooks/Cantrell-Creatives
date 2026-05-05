@@ -3,7 +3,631 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cantrell Creatives — Studio Creations &amp; Publishing Platform</title>
+<meta name="description" content="Your all-in-one platform for studio creation, publishing, and distribution. Create stunning media, publish audiobooks, and share your stories with the world.">
+<meta property="og:title" content="Cantrell Creatives — Studio Creations &amp; Publishing Platform">
+<meta property="og:description" content="Your all-in-one platform for studio creation, publishing, and distribution.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://creatives.smcantrellbooks.com">
+<link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png" sizes="16x16">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#FBF7F0;
+  --bg2:#F3EBE0;
+  --bg3:#EAE0D0;
+  --panel:#FFFCF8;
+  --border:#D4C4A8;
+  --border2:#C4B08C;
+  --gold:#B8942E;
+  --gold2:#D4AA38;
+  --gold3:#E8C050;
+  --cream:#FFF8EE;
+  --cream2:#E8D9BE;
+  --muted:#8A7A64;
+  --text:#1A0F1A;
+  --text2:#2D1F1A;
+  --dark:#1A1410;
+  --dark2:#2D2418;
+}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:18px;overflow-x:hidden;}
+
+/* ── HERO ─────────────────────────────────────────────── */
+.hero{position:relative;width:100%;min-height:72vh;display:flex;flex-direction:column;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:url("https://cdn1.site-media.eu/images/0/24827913/ccblanklogo-PsdmTlM8B3S52Z7lUdrGWA.png") center/cover no-repeat;z-index:0;}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,248,230,.5) 0%,rgba(240,220,160,.22) 40%,rgba(255,248,230,.62) 100%);}
+
+/* ── NAV ──────────────────────────────────────────────── */
+.hero-nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;}
+.hero-logo img{height:44px;border-radius:6px;}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.hl-btn{padding:6px 18px;border-radius:999px;border:1px solid rgba(184,148,46,.55);background:rgba(255,248,230,.72);color:#5a3d10;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.hl-btn:hover{background:rgba(184,148,46,.22);border-color:var(--gold);}
+.hl-btn.login-btn{background:var(--gold);border-color:var(--gold);color:#0e0a06;font-weight:800;}
+.hl-btn.login-btn:hover{background:var(--gold2);}
+.hl-btn.logout-btn{background:rgba(160,50,50,.6);border-color:rgba(192,60,60,.7);color:#fff;font-weight:800;}
+.hl-btn.logout-btn:hover{background:rgba(192,60,60,.75);}
+#userChip{display:none;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;background:rgba(255,248,230,.8);border:1px solid var(--border2);backdrop-filter:blur(6px);}
+#userChip .user-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+#userChip .user-name{font-family:'Cinzel',serif;font-size:.56rem;font-weight:700;letter-spacing:.08em;color:var(--text2);}
+
+/* ── HERO CENTER ──────────────────────────────────────── */
+.hero-center{position:relative;z-index:10;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;}
+.hero-title{font-family:'Cinzel',serif;font-size:3rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;line-height:1.1;background:linear-gradient(180deg,#5a3a08 0%,#8B6914 40%,#B8942E 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 8px rgba(255,248,220,.8));}
+.hero-sub{font-family:'Pinyon Script',cursive;font-size:2.1rem;color:#8B6914;letter-spacing:.06em;margin-top:6px;text-shadow:0 1px 8px rgba(255,248,220,.9);}
+.hero-tagline{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(80,50,10,.72);font-style:italic;margin-top:14px;max-width:540px;line-height:1.75;}
+.hero-cta{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap;justify-content:center;}
+.cta-btn{padding:14px 34px;border-radius:8px;font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.cta-gold{background:var(--gold);color:#0e0a06;border:none;}
+.cta-gold:hover{background:var(--gold2);box-shadow:0 6px 24px rgba(184,148,46,.4);transform:translateY(-2px);}
+.cta-outline{background:rgba(255,248,230,.72);color:#5a3d10;border:1px solid rgba(184,148,46,.5);}
+.cta-outline:hover{border-color:var(--gold);color:#3a2606;transform:translateY(-2px);}
+
+/* ── TOOL STRIP ───────────────────────────────────────── */
+.tool-strip{position:relative;z-index:10;display:flex;justify-content:center;gap:8px;padding:20px 24px 28px;flex-wrap:wrap;}
+.tool-btn{padding:7px 20px;border-radius:999px;border:1px solid rgba(184,148,46,.45);background:rgba(255,248,230,.65);color:#5a3d10;font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px);transition:.2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.tool-btn:hover{background:rgba(184,148,46,.2);border-color:var(--gold);}
+.tool-btn i{font-size:.9rem;}
+
+/* ── DIVIDER ──────────────────────────────────────────── */
+.gold-rule{width:100%;height:3px;background:linear-gradient(to right,transparent,var(--border2) 15%,var(--gold) 40%,var(--gold2) 50%,var(--gold) 60%,var(--border2) 85%,transparent);}
+
+/* ── SECTION HEADER ───────────────────────────────────── */
+.sec-label{font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.sec-title{font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:var(--text);letter-spacing:.08em;}
+.sec-rule{width:60px;height:2px;background:var(--gold);margin:14px auto 0;border-radius:999px;}
+.sec-head{text-align:center;margin-bottom:48px;}
+
+/* ── SERVICES GRID ────────────────────────────────────── */
+#services{max-width:1200px;margin:0 auto;padding:64px 24px;}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.svc-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:30px 26px;text-align:center;transition:transform .22s,box-shadow .22s;}
+.svc-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(184,148,46,.14);}
+.svc-icon{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,rgba(184,148,46,.1),rgba(212,170,56,.06));border:1px solid rgba(184,148,46,.25);margin-bottom:14px;color:var(--gold);font-size:1.55rem;}
+.svc-name{font-family:'Cinzel',serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text);margin-bottom:10px;}
+.svc-desc{font-size:.93rem;color:var(--muted);line-height:1.72;}
+.svc-link{display:inline-flex;align-items:center;gap:4px;margin-top:14px;font-family:'Cinzel',serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:color .2s;}
+.svc-link:hover{color:var(--gold2);}
+
+/* ── FEATURE BANNER ───────────────────────────────────── */
+.feat-banner{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:64px 24px;text-align:center;}
+.feat-banner .feat-inner{max-width:720px;margin:0 auto;}
+.feat-eyebrow{font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;}
+.feat-heading{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:300;color:#fff;line-height:1.45;margin-bottom:10px;}
+.feat-heading em{color:var(--gold2);font-style:italic;}
+.feat-sub{font-size:1rem;color:rgba(255,248,238,.5);font-style:italic;margin-bottom:30px;}
+
+/* ── MEMBERSHIP ───────────────────────────────────────── */
+#membership{max-width:1100px;margin:0 auto;padding:64px 24px;}
+.mem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.mem-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px;display:flex;flex-direction:column;}
+.mem-card.featured{border:2px solid var(--gold);position:relative;}
+.mem-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:#0e0a06;font-family:'Cinzel',serif;font-size:.52rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:4px 18px;border-radius:999px;}
+.mem-plan{font-family:'Cinzel',serif;font-size:.9rem;font-weight:700;letter-spacing:.1em;color:var(--text);margin-bottom:4px;}
+.mem-price{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;color:var(--gold);margin-bottom:16px;}
+.mem-price span{font-size:.85rem;color:var(--muted);font-weight:400;}
+.mem-features{flex:1;display:flex;flex-direction:column;gap:9px;font-size:.9rem;color:var(--text2);line-height:1.6;}
+.mem-feat-item{display:flex;align-items:center;gap:7px;}
+.mem-feat-item i{color:var(--gold);font-size:.9rem;flex-shrink:0;}
+.mem-note{color:var(--muted);font-size:.8rem;font-style:italic;margin-top:8px;}
+.mem-cta{display:block;text-align:center;margin-top:22px;padding:13px;border-radius:8px;font-family:'Cinzel',serif;font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:all .22s;}
+.mem-cta.plain{border:1px solid var(--border);color:var(--text);background:transparent;}
+.mem-cta.plain:hover{border-color:var(--gold);color:var(--gold);}
+.mem-cta.outline-gold{border:1px solid var(--gold);color:var(--gold);background:transparent;}
+.mem-cta.outline-gold:hover{background:rgba(184,148,46,.1);}
+.mem-cta.solid-gold{background:var(--gold);color:#0e0a06;border:none;}
+.mem-cta.solid-gold:hover{background:var(--gold2);box-shadow:0 4px 18px rgba(184,148,46,.35);}
+.mem-apb{text-align:center;font-size:.85rem;color:var(--muted);font-style:italic;margin-top:18px;}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer{background:var(--dark);border-top:1px solid var(--border2);padding:44px 24px 28px;}
+.foot-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px;}
+.foot-brand p{font-size:.88rem;color:rgba(255,248,238,.42);line-height:1.75;margin-top:10px;}
+.foot-col-title{font-family:'Cinzel',serif;font-size:.58rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.foot-links{display:flex;flex-direction:column;gap:7px;}
+.foot-links a,.foot-links span{font-size:.88rem;color:rgba(255,248,238,.58);text-decoration:none;transition:color .18s;}
+.foot-links a:hover{color:rgba(255,248,238,.85);}
+.foot-bottom{max-width:1100px;margin:24px auto 0;padding-top:16px;border-top:1px solid rgba(184,148,46,.14);display:flex;justify-content:center;gap:22px;flex-wrap:wrap;}
+.foot-bottom a{font-size:.76rem;color:rgba(255,248,238,.38);text-decoration:none;}
+.foot-bottom a:hover{color:rgba(255,248,238,.65);}
+.foot-copy{text-align:center;font-size:.72rem;color:rgba(255,248,238,.22);margin-top:16px;}
+
+/* ── NYXEN ────────────────────────────────────────────── */
+.nyx-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.nyx-btn{width:56px;height:56px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:2px solid var(--gold);cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:transform .2s;flex-shrink:0;display:block;}
+.nyx-btn:hover{transform:scale(1.08);}
+.nyx-panel{width:340px;height:480px;border-radius:16px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.6);border:1px solid var(--border2);display:none;flex-direction:column;background:var(--bg2);}
+.nyx-panel.open{display:flex;}
+.nyx-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;background:linear-gradient(90deg,rgba(184,148,46,.12),transparent);border-bottom:1px solid var(--border);flex-shrink:0;}
+.nyx-av{width:32px;height:32px;border-radius:50%;background:url("https://cdn1.site-media.eu/images/0/24185616/nyxen-hucYBsyp6NvKtsJFls-OUg.jpg") center/cover no-repeat;border:1.5px solid var(--gold);flex-shrink:0;}
+.nyx-hdr-name{font-family:'Cinzel',serif;font-size:.73rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
+.nyx-hdr-status{font-size:.67rem;color:var(--muted);font-style:italic;}
+.nyx-close{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;margin-left:auto;padding:0;line-height:1;}
+.nyx-feed{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;}
+.nyx-msg{padding:8px 12px;border-radius:10px;font-size:.85rem;line-height:1.55;max-width:86%;}
+.nyx-msg.ai{background:var(--panel);border:1px solid var(--border);color:var(--text);align-self:flex-start;}
+.nyx-msg.user{background:var(--gold);color:#0e0a06;align-self:flex-end;}
+.nyx-input{display:flex;align-items:center;gap:6px;padding:10px 12px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.nyx-tbox{flex:1;min-height:36px;padding:7px 11px;border-radius:8px;border:1px solid var(--border);font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--text);background:var(--panel);outline:none;resize:none;}
+.nyx-tbox:focus{border-color:var(--gold);}
+.nyx-send{width:32px;height:32px;border-radius:7px;background:var(--gold);border:none;color:#0e0a06;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nyx-send i{font-size:.9rem;}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media(max-width:960px){
+  .svc-grid{grid-template-columns:repeat(2,1fr);}
+  .mem-grid{grid-template-columns:repeat(2,1fr);}
+  .mem-grid .mem-card:last-child{grid-column:1/-1;max-width:420px;margin:0 auto;width:100%;}
+}
+@media(max-width:900px){
+  .hero-title{font-size:2.3rem!important;letter-spacing:.12em!important;}
+  .hero-sub{font-size:1.65rem!important;}
+  .foot-inner{grid-template-columns:1fr 1fr;}
+  .foot-brand{grid-column:1/-1;}
+}
+@media(max-width:640px){
+  .svc-grid{grid-template-columns:1fr;}
+  .mem-grid{grid-template-columns:1fr;}
+  .mem-grid .mem-card:last-child{grid-column:auto;max-width:none;}
+  .hero-title{font-size:1.7rem!important;letter-spacing:.08em!important;}
+  .hero-sub{font-size:1.25rem!important;}
+  .hero-nav{padding:14px 16px!important;}
+  .hero-nav .hero-logo img{height:34px;}
+  .foot-inner{grid-template-columns:1fr;}
+  .foot-brand{grid-column:auto;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <nav class="hero-nav">
+    <div class="hero-logo">
+      <a href="https://creatives.smcantrellbooks.com">
+        <img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives">
+      </a>
+    </div>
+    <div class="nav-right" id="navRight">
+      <a class="hl-btn login-btn" href="https://creatives.smcantrellbooks.com/login" id="loginBtn">
+        <i class="ph ph-sign-in"></i> Login
+      </a>
+    </div>
+  </nav>
+
+  <div class="hero-center">
+    <div class="hero-title">Cantrell Creatives</div>
+    <div class="hero-sub">Dare to Bring Your Creations to Life</div>
+    <div class="hero-tagline">Your all-in-one platform for studio creation, publishing, and distribution. Create stunning media, publish audiobooks, and share your stories with the world.</div>
+    <div class="hero-cta">
+      <a class="cta-btn cta-gold" href="https://creatives.smcantrellbooks.com/login" id="heroGetStarted">
+        <i class="ph ph-rocket-launch"></i> Get Started
+      </a>
+      <a class="cta-btn cta-outline" href="#services">
+        <i class="ph ph-compass"></i> Explore Tools
+      </a>
+    </div>
+  </div>
+
+  <div class="tool-strip">
+    <a class="tool-btn" href="https://creatives.smcantrellbooks.com/studio">
+      <i class="ph ph-film-strip"></i> Studio
+    </a>
+    <a class="tool-btn" href="https://creatives.smcantrellbooks.com/publisher-workspace">
+      <i class="ph ph-pencil-line"></i> Publisher Workspace
+    </a>
+    <a class="tool-btn" href="https://creatives.smcantrellbooks.com/voice-studio">
+      <i class="ph ph-microphone"></i> Voice Studio
+    </a>
+    <a class="tool-btn" href="https://creatives.smcantrellbooks.com/collections">
+      <i class="ph ph-books"></i> Collections
+    </a>
+    <a class="tool-btn" href="https://smcantrellbooks.com">
+      <i class="ph ph-storefront"></i> Main Store
+    </a>
+  </div>
+</section>
+
+<div class="gold-rule"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SERVICES
+═══════════════════════════════════════════════════════ -->
+<section id="services">
+  <div class="sec-head">
+    <div class="sec-label">What We Offer</div>
+    <div class="sec-title">Our Studio Services</div>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="svc-grid">
+
+    <div class="svc-card">
+      <div class="svc-icon"><i class="ph ph-film-strip"></i></div>
+      <div class="svc-name">Studio Creation</div>
+      <p class="svc-desc">Generate images, videos, and promotional media with AI-powered tools directly in the Studio.</p>
+      <a class="svc-link" href="https://creatives.smcantrellbooks.com/studio">Open Studio <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><i class="ph ph-pencil-line"></i></div>
+      <div class="svc-name">Manuscript Development</div>
+      <p class="svc-desc">Organize, draft, and revise your manuscripts with our intuitive Publisher's Workspace.</p>
+      <a class="svc-link" href="https://creatives.smcantrellbooks.com/publisher-workspace">Open Publisher <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><i class="ph ph-headphones"></i></div>
+      <div class="svc-name">Audiobook Generation</div>
+      <p class="svc-desc">Transform your manuscripts into captivating audiobooks with AI voice cloning and narration.</p>
+      <a class="svc-link" href="https://creatives.smcantrellbooks.com/voice-studio">Open Voice Studio <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><i class="ph ph-book-open-text"></i></div>
+      <div class="svc-name">Publication Preparation</div>
+      <p class="svc-desc">Format, convert, and prepare your work for publishing with EPUB conversion and editing tools.</p>
+      <a class="svc-link" href="https://creatives.smcantrellbooks.com/editor">Open Editor <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><i class="ph ph-books"></i></div>
+      <div class="svc-name">Collections</div>
+      <p class="svc-desc">Showcase your complete works and upcoming projects with our streamlined collections system.</p>
+      <a class="svc-link" href="https://creatives.smcantrellbooks.com/collections">Browse Collections <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><i class="ph ph-music-notes"></i></div>
+      <div class="svc-name">Music Generation</div>
+      <p class="svc-desc">Create original soundtracks and background music for your projects with AI-powered composition.</p>
+      <a class="svc-link" href="https://creatives.smcantrellbooks.com/studio">Open Studio <i class="ph ph-arrow-right"></i></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SHOWCASE
+═══════════════════════════════════════════════════════ -->
+<section style="background:var(--bg2);padding:64px 24px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="sec-head">
+      <div class="sec-label">See It In Action</div>
+      <div class="sec-title">Created with Cantrell Creatives</div>
+      <div class="sec-rule"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 6px 24px rgba(0,0,0,.1);display:flex;flex-direction:column;background:var(--panel);">
+        <div style="overflow:hidden;height:220px;">
+          <img src="https://cdn1.site-media.eu/images/0/25313770/STUDIOSINGLECREATOR-jGy4QDQveTDwDBzN2yKx7w.png" alt="Studio Creation" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        </div>
+        <div style="padding:20px 22px;">
+          <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;">Studio</div>
+          <div style="font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--text2);margin-bottom:8px;">AI-Powered Creation</div>
+          <p style="font-size:.9rem;color:var(--muted);line-height:1.68;">Generate stunning images, video, music, and promotional assets tailored to your story world.</p>
+        </div>
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 6px 24px rgba(0,0,0,.1);display:flex;flex-direction:column;background:var(--panel);">
+        <div style="overflow:hidden;height:220px;">
+          <img src="https://cdn1.site-media.eu/images/0/25313781/PUBLISHER-hTuizSU-dumf45jboBPerg.png" alt="Publishing Tools" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        </div>
+        <div style="padding:20px 22px;">
+          <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;">Publishing Pipeline</div>
+          <div style="font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--text2);margin-bottom:8px;">From Draft to Published</div>
+          <p style="font-size:.9rem;color:var(--muted);line-height:1.68;">Write, edit, voice-narrate, and publish — all inside one connected creative platform.</p>
+        </div>
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 6px 24px rgba(0,0,0,.1);display:flex;flex-direction:column;background:var(--panel);">
+        <div style="overflow:hidden;height:220px;">
+          <img src="https://cdn1.site-media.eu/images/0/25313767/VOICESTUDIONARRATER-AHfQkS2NVfgybAY3ZERfhA.png" alt="Voice Studio Narration" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        </div>
+        <div style="padding:20px 22px;">
+          <div style="font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;">Voice Studio</div>
+          <div style="font-family:'Cinzel',serif;font-size:.95rem;font-weight:700;color:var(--text2);margin-bottom:8px;">Bring Stories to Life</div>
+          <p style="font-size:.9rem;color:var(--muted);line-height:1.68;">Narrate your books with realistic AI voices. Generate audiobooks, previews, and character voices — all inside one studio.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="gold-rule"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FEATURE BANNER
+═══════════════════════════════════════════════════════ -->
+<section class="feat-banner">
+  <div class="feat-inner">
+    <div class="feat-eyebrow">Start Creating Today</div>
+    <div class="feat-heading">Transform your ideas into <em>published works</em></div>
+    <p class="feat-sub">Free access includes 100 Studio credits and full publication tools.</p>
+    <a href="https://creatives.smcantrellbooks.com/login" class="cta-btn cta-gold" id="bannerGetStarted">
+      <i class="ph ph-rocket-launch"></i> Join Cantrell Creatives
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     MEMBERSHIP TIERS
+═══════════════════════════════════════════════════════ -->
+<section id="membership">
+  <div class="sec-head">
+    <div class="sec-label">Membership</div>
+    <div class="sec-title">Choose Your Plan</div>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="mem-grid">
+
+    <!-- FREE -->
+    <div class="mem-card">
+      <div class="mem-plan">Free Access</div>
+      <div class="mem-price">$0 <span>/forever</span></div>
+      <div class="mem-features">
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> 100 Studio credits</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Full publication tools</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Studio creation</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Voice Studio access</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Publisher Workspace</div>
+      </div>
+      <a href="https://buy.stripe.com/bJe28qeAe5V00Sv9TT2Nq00" class="mem-cta plain">Get Started Free</a>
+    </div>
+
+    <!-- STUDIO -->
+    <div class="mem-card">
+      <div class="mem-plan">Studio Membership</div>
+      <div class="mem-price">$15 <span>/month</span></div>
+      <div class="mem-features">
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> 300 Studio credits / month</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> All Studio tools</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Voice Studio access</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Publisher Workspace</div>
+        <div class="mem-note">$144/year annual (3,600 credits)</div>
+      </div>
+      <a href="https://buy.stripe.com/00w8wO63IgzEfNpgih2Nq0m" class="mem-cta outline-gold">Subscribe Monthly</a>
+    </div>
+
+    <!-- PUBLICATION -->
+    <div class="mem-card featured">
+      <div class="mem-badge">Popular</div>
+      <div class="mem-plan">Publication Membership</div>
+      <div class="mem-price">$25 <span>/month</span></div>
+      <div class="mem-features">
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> 400 Studio credits / month</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> All Studio tools</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Voice Studio access</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Full Publisher Workspace</div>
+        <div class="mem-feat-item"><i class="ph ph-check-circle"></i> Publication &amp; distribution</div>
+        <div class="mem-note">$240/year annual (4,800 credits)</div>
+      </div>
+      <a href="https://buy.stripe.com/dRm8wOdwa838gRt0jj2Nq0j" class="mem-cta solid-gold">Subscribe Monthly</a>
+    </div>
+
+  </div>
+
+  <p class="mem-apb">Need more credits? Purchase à la carte: &nbsp;50 credits = $5 &nbsp;·&nbsp; 80 credits = $7 &nbsp;·&nbsp; 150 credits = $10</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <img src="https://cdn1.site-media.eu/images/0/25308736/cantrellcreativesbanner-_YiQ8-4OU4aUlRxUexy2iQ.png" alt="Cantrell Creatives" style="height:34px;border-radius:4px;">
+      <p>Empowering creators with tools to write, produce, and publish their stories.</p>
+    </div>
+    <div>
+      <div class="foot-col-title">Quick Links</div>
+      <div class="foot-links">
+        <a href="https://creatives.smcantrellbooks.com/studio">Studio</a>
+        <a href="https://creatives.smcantrellbooks.com/publisher-workspace">Publisher Workspace</a>
+        <a href="https://creatives.smcantrellbooks.com/voice-studio">Voice Studio</a>
+        <a href="https://creatives.smcantrellbooks.com/collections">Collections</a>
+        <a href="https://smcantrellbooks.com">Main Store</a>
+      </div>
+    </div>
+    <div>
+      <div class="foot-col-title">Contact</div>
+      <div class="foot-links">
+        <span>S.M. Cantrell Books</span>
+        <a href="mailto:info@smcantrellbooks.com">info@smcantrellbooks.com</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <a href="https://creatives.smcantrellbooks.com/privacy#terms-conditions">Publishing Terms</a>
+    <a href="https://creatives.smcantrellbooks.com/privacy#audio-disclosure">Audio Disclosures</a>
+    <a href="https://creatives.smcantrellbooks.com/privacy#our-philosophy">Our Philosophy</a>
+    <a href="https://creatives.smcantrellbooks.com/privacy">Privacy Policy</a>
+  </div>
+  <p class="foot-copy">&copy; 2026 S.M. Cantrell Books. All rights reserved.</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     NYXEN AI ASSISTANT
+═══════════════════════════════════════════════════════ -->
+<div class="nyx-wrap">
+  <div class="nyx-panel" id="nyxPanel">
+    <div class="nyx-hdr">
+      <div class="nyx-av"></div>
+      <div>
+        <div class="nyx-hdr-name">Nyxen</div>
+        <div class="nyx-hdr-status" id="nyxStatus">Your creative assistant</div>
+      </div>
+      <button class="nyx-close" onclick="toggleNyx()" aria-label="Close">&#x2715;</button>
+    </div>
+    <div class="nyx-feed" id="nyxFeed"></div>
+    <div class="nyx-input">
+      <textarea class="nyx-tbox" id="nyxInput" placeholder="Ask Nyxen anything…" rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendNyx();}"></textarea>
+      <button class="nyx-send" onclick="sendNyx()" aria-label="Send">
+        <i class="ph ph-paper-plane-tilt"></i>
+      </button>
+    </div>
+  </div>
+  <button class="nyx-btn" onclick="toggleNyx()" title="Chat with Nyxen" aria-label="Open Nyxen chat"></button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ── CONFIG ── */
+var CC_CFG = {
+  SUPABASE_URL: 'https://recyyhvdvuupxhbxmzal.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM',
+  NYX_API: 'https://nyxen-standalone.smcantrellbooks.workers.dev/chat',
+  CC_URL: 'https://creatives.smcantrellbooks.com',
+};
+
+/* ── SUPABASE AUTH STATE ── */
+var _sbClient = null;
+function getSB(){
+  if(!_sbClient) _sbClient = supabase.createClient(CC_CFG.SUPABASE_URL, CC_CFG.SUPABASE_ANON_KEY);
+  return _sbClient;
+}
+
+function initAuth(){
+  getSB().auth.getSession().then(function(res){
+    var session = res.data && res.data.session;
+    if(session && session.user){
+      setLoggedIn(session.user);
+    }
+  });
+  getSB().auth.onAuthStateChange(function(event, session){
+    if(session && session.user) setLoggedIn(session.user);
+    else setLoggedOut();
+  });
+}
+
+function setLoggedIn(user){
+  var name = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.username))
+    || user.email.split('@')[0];
+  var navRight = document.getElementById('navRight');
+  navRight.innerHTML = '';
+
+  var chip = document.createElement('div');
+  chip.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;background:rgba(255,248,230,.8);border:1px solid #C4B08C;backdrop-filter:blur(6px);';
+  chip.innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#B8942E;flex-shrink:0;display:inline-block;"></span>'
+    + '<span style="font-family:\'Cinzel\',serif;font-size:.56rem;font-weight:700;letter-spacing:.08em;color:#2D1F1A;">'+escHtml(name)+'</span>';
+  navRight.appendChild(chip);
+
+  var accBtn = document.createElement('a');
+  accBtn.href = CC_CFG.CC_URL + '/myaccount';
+  accBtn.className = 'hl-btn';
+  accBtn.innerHTML = '<i class="ph ph-user-circle"></i> My Account';
+  navRight.appendChild(accBtn);
+
+  var outBtn = document.createElement('button');
+  outBtn.className = 'hl-btn logout-btn';
+  outBtn.innerHTML = '<i class="ph ph-sign-out"></i> Logout';
+  outBtn.onclick = function(){ getSB().auth.signOut(); };
+  navRight.appendChild(outBtn);
+
+  var gs = document.getElementById('heroGetStarted');
+  if(gs){ gs.href = CC_CFG.CC_URL + '/studio'; gs.innerHTML='<i class="ph ph-film-strip"></i> Go to Studio'; }
+  var bg = document.getElementById('bannerGetStarted');
+  if(bg){ bg.href = CC_CFG.CC_URL + '/studio'; bg.innerHTML='<i class="ph ph-film-strip"></i> Open Studio'; }
+}
+
+function setLoggedOut(){
+  var navRight = document.getElementById('navRight');
+  navRight.innerHTML = '<a class="hl-btn login-btn" href="'+CC_CFG.CC_URL+'/login" id="loginBtn"><i class="ph ph-sign-in"></i> Login</a>';
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── NYXEN ── */
+var nyxOpen=false, nyxHistory=[], nyxConvId=null;
+
+function toggleNyx(){
+  nyxOpen = !nyxOpen;
+  document.getElementById('nyxPanel').classList.toggle('open', nyxOpen);
+  if(nyxOpen && document.getElementById('nyxFeed').children.length === 0){
+    addNyxMsg("Hi! I'm Nyxen — your creative assistant for Cantrell Creatives. How can I help you today?", 'ai');
+  }
+  if(nyxOpen) setTimeout(function(){ document.getElementById('nyxInput').focus(); }, 100);
+}
+
+function addNyxMsg(text, role){
+  var feed = document.getElementById('nyxFeed');
+  var d = document.createElement('div');
+  d.className = 'nyx-msg ' + role;
+  d.textContent = text;
+  feed.appendChild(d);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function sendNyx(){
+  var inp = document.getElementById('nyxInput');
+  var msg = inp.value.trim();
+  if(!msg) return;
+  addNyxMsg(msg, 'user');
+  inp.value = '';
+  inp.style.height = '';
+  nyxHistory.push({role:'user', content:msg});
+  document.getElementById('nyxStatus').textContent = 'Thinking…';
+
+  var body = {
+    messages: nyxHistory.slice(-20),
+    mode: 'assistant',
+    response_mode: 'balanced',
+    system_context: 'You are Nyxen, the assistant on the Cantrell Creatives homepage. Help visitors understand the platform and how to get started. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: Cantrell Creatives is the creator workspace at creatives.smcantrellbooks.com. Tools include Studio (image, video, music, ads), Voice Studio (TTS and audiobooks), Publisher Workspace (manuscript planning), Book Editor (focused writing), and Collections (publication intake). The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish — never mention publication limits. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month and full publication tools. Studio is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Free and Studio tier creators pay a 15% platform cut on sales; Publication tier keeps 100%. Cover generation is included with publication and is never charged. Audiobook generation in Voice Studio costs 150 credits per book. The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. Sign-up happens on the storefront at smcantrellbooks.com. If you do not have a documented answer, say so honestly instead of guessing.'
+  };
+  if(nyxConvId) body.conversation_id = nyxConvId;
+
+  fetch(CC_CFG.NYX_API, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    var reply = d.response || d.content || "I'm here! How can I help?";
+    if(d.conversation_id) nyxConvId = d.conversation_id;
+    nyxHistory.push({role:'assistant', content:reply});
+    addNyxMsg(reply, 'ai');
+    document.getElementById('nyxStatus').textContent = 'Your creative assistant';
+  })
+  .catch(function(){
+    addNyxMsg("Something went wrong. Please try again.", 'ai');
+    document.getElementById('nyxStatus').textContent = 'Your creative assistant';
+  });
+}
+
+/* ── AUTO-RESIZE TEXTAREA ── */
+document.addEventListener('DOMContentLoaded', function(){
+  var tbox = document.getElementById('nyxInput');
+  if(tbox){
+    tbox.addEventListener('input', function(){
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+  }
+  initAuth();
+});
+</script>
+</body>
+</html>antrell Creatives — Studio Creations &amp; Publishing Platform</title>
 <meta name="description" content="Your all-in-one platform for studio creation, publishing, and distribution. Create stunning media, publish audiobooks, and share your stories with the world.">
 <meta property="og:title" content="Cantrell Creatives — Studio Creations &amp; Publishing Platform">
 <meta property="og:description" content="Your all-in-one platform for studio creation, publishing, and distribution.">
