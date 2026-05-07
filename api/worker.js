@@ -57,7 +57,7 @@ export default {
       const speaker = voice_file.replace(/\.mp3$/i, '');
 
       // Uses Cloudflare's GPU engine
-      const audioResponse = await env.AI.run('@cf/myshell/melotts', {
+      const audioResponse = await env.AI.run('@cf/myshell/melo-tts', {
         text: text,
         speaker: speaker // Clean name without .mp3 extension
       });
