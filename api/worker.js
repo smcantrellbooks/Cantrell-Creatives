@@ -1,19 +1,27 @@
+// ── CANTRELL CREATIVES VOICE ENGINE (V2.4) ──
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
 export default {
   async fetch(request, env) {
-    const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    };
-
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: corsHeaders });
+    }
 
     const url = new URL(request.url);
 
-    // ── 1. DYNAMIC VOICE LIST (No IDs needed) ──
-    if (url.pathname === '/voices') {
+    // 1. HEALTH CHECK
+    if (request.method === 'GET' && url.pathname === '/') {
+      return new Response('Cantrell Creatives Platform Engine Active', { headers: corsHeaders });
+    }
+
+    // 2. DYNAMIC VOICE LIST
+    if (request.method === 'GET' && url.pathname === '/voices') {
       const list = await env.VOICE_SAMPLES.list();
-      const voices = list.objects.map(obj => ({
+      const voices = list.objects.filter(obj => obj.key.endsWith('.mp3')).map(obj => ({
         name: obj.key.replace('.mp3', ''),
         file: obj.key
       }));
@@ -22,51 +30,44 @@ export default {
       });
     }
 
-    // ── 2. SAMPLE PLAYBACK (Streams MP3 from R2) ──
-    if (url.pathname === '/sample' && request.method === 'GET') {
+    // 3. SAMPLE PREVIEW
+    if (request.method === 'GET' && url.pathname === '/sample') {
       const voiceId = url.searchParams.get('voice_id');
-      if (!voiceId) {
-        return new Response(JSON.stringify({ error: 'Missing voice_id parameter' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        });
-      }
-      const object = await env.VOICE_SAMPLES.get(voiceId);
-      if (!object) {
-        return new Response(JSON.stringify({ error: 'Voice sample not found', voice_id: voiceId }), {
-          status: 404,
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
-        });
-      }
-      return new Response(object.body, {
-        headers: {
-          'Content-Type': 'audio/mpeg',
-          'Content-Length': object.size,
-          'Cache-Control': 'public, max-age=86400',
-          ...corsHeaders
-        }
-      });
+      if (!voiceId) return new Response('voice_id required', { status: 400, headers: corsHeaders });
+      const file = await env.VOICE_SAMPLES.get(voiceId);
+      if (!file) return new Response('File not found', { status: 404, headers: corsHeaders });
+      return new Response(file.body, { headers: { 'Content-Type': 'audio/mpeg', ...corsHeaders } });
     }
 
-    // ── 3. THE ENGINE (MeloTTS + Your R2 Voice) ──
+    // 4. GENERATION ENGINE
     if (request.method === 'POST') {
-      const body = await request.json();
-      const text = body.text;
-      const voice_file = body.voice_file || body.voice_id || ''; // Accept both for backward compatibility
-      // Strip .mp3 extension - MeloTTS rejects filenames with extensions
-      const speaker = voice_file.replace(/\.mp3$/i, '');
+      try {
+        const body = await request.json();
+        const text = body.text;
+        // This accepts both 'voice_file' and 'voice_id' to prevent 400 errors
+        const rawVoice = body.voice_file || body.voice_id;
 
-      // Uses Cloudflare's GPU engine
-      const audioResponse = await env.AI.run('@cf/myshell-ai/melotts', {
-        text: text,
-        speaker: speaker // Clean name without .mp3 extension
-      });
+        if (!text || !rawVoice) {
+          return new Response('Missing text or voice', { status: 400, headers: corsHeaders });
+        }
 
-      return new Response(audioResponse, {
-        headers: { 'Content-Type': 'audio/mpeg', ...corsHeaders }
-      });
+        // IMPORTANT: MeloTTS crashes if .mp3 is in the name
+        const cleanSpeaker = rawVoice.replace(/\.mp3$/i, '');
+
+        // Use the exact model ID and variable name 'cleanSpeaker'
+        const audioResponse = await env.AI.run('@cf/myshell-ai/melotts', {
+          text: text,
+          speaker: cleanSpeaker
+        });
+
+        return new Response(audioResponse, {
+          headers: { 'Content-Type': 'audio/mpeg', ...corsHeaders }
+        });
+      } catch (err) {
+        return new Response(err.message, { status: 500, headers: corsHeaders });
+      }
     }
 
-    return new Response('Cantrell Creatives Platform Engine Active', { headers: corsHeaders });
+    return new Response('Not Found', { status: 404, headers: corsHeaders });
   }
 };
