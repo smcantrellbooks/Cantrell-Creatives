@@ -52,12 +52,14 @@ export default {
     if (request.method === 'POST') {
       const body = await request.json();
       const text = body.text;
-      const voice_file = body.voice_file || body.voice_id; // Accept both for backward compatibility
+      const voice_file = body.voice_file || body.voice_id || ''; // Accept both for backward compatibility
+      // Strip .mp3 extension - MeloTTS rejects filenames with extensions
+      const speaker = voice_file.replace(/\.mp3$/i, '');
 
       // Uses Cloudflare's GPU engine
       const audioResponse = await env.AI.run('@cf/myshell/melotts', {
         text: text,
-        speaker: voice_file // Uses the actual file from your R2 as the reference
+        speaker: speaker // Clean name without .mp3 extension
       });
 
       return new Response(audioResponse, {
