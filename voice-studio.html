@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Voice Studio — Cantrell Creatives</title>
-<meta name="description" content="Professional text-to-speech and audiobook generation. 40 voice profiles, EPUB import, chapter-by-chapter narration.">
+<meta name="description" content="Professional text-to-speech and audiobook generation. 25 voice profiles with MP3 samples, EPUB import, chapter-by-chapter narration.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
@@ -284,7 +284,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <section id="voices-tab" class="tab-content active">
     <div class="section-header">
       <h1 class="section-title">Voice Library</h1>
-      <p class="section-sub">40 voice profiles &mdash; preview before you generate</p>
+      <p class="section-sub">25 voice profiles &mdash; preview before you generate</p>
     </div>
     <div id="voice-grid" class="voice-grid"></div>
   </section>
@@ -538,48 +538,34 @@ function clearUser(){
   setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice'; }, 1500);
 }
 
-// ── VOICE PROFILES (40) ──
+// ── VOICE PROFILES (25) ──
+var VOICE_CDN = 'https://cantrell-creatives.smcantrellbooks.workers.dev/';
 var VOICES = [
-  {id:'amalthea', name:'Amalthea', gender:'female', style:'Warm',        accent:'English', description:'Warm and expressive female voice. Great for storytelling and narration.'},
-  {id:'andromeda',name:'Andromeda',gender:'female', style:'Confident',   accent:'English', description:'Clear and confident female voice. Ideal for presentations and guides.'},
-  {id:'apollo',   name:'Apollo',   gender:'male',   style:'Authoritative',accent:'English', description:'Strong and authoritative male voice. Built for leadership content.'},
-  {id:'arcas',    name:'Arcas',    gender:'male',   style:'Deep',        accent:'English', description:'Deep and steady male voice. Perfect for documentary narration.'},
-  {id:'aries',    name:'Aries',    gender:'male',   style:'Energetic',   accent:'English', description:'Bold and energetic male voice. Great for motivational content.'},
-  {id:'asteria',  name:'Asteria',  gender:'female', style:'Bright',      accent:'English', description:'Bright and articulate female voice. Excellent for explainers.'},
-  {id:'athena',   name:'Athena',   gender:'female', style:'Wise',        accent:'English', description:'Wise and measured female voice. Perfect for educational content.'},
-  {id:'atlas',    name:'Atlas',    gender:'male',   style:'Powerful',    accent:'English', description:'Powerful and commanding male voice. Built for epic narration.'},
-  {id:'aurora',   name:'Aurora',   gender:'female', style:'Gentle',      accent:'English', description:'Gentle and soothing female voice. Ideal for wellness and meditation.'},
-  {id:'callista', name:'Callista', gender:'female', style:'Elegant',     accent:'English', description:'Elegant and refined female voice. Perfect for corporate material.'},
-  {id:'cora',     name:'Cora',     gender:'female', style:'Friendly',    accent:'English', description:'Friendly and conversational female voice. Great for casual content.'},
-  {id:'cordelia', name:'Cordelia', gender:'female', style:'Intimate',    accent:'English', description:'Soft and intimate female voice. Ideal for poetry and ASMR.'},
-  {id:'delia',    name:'Delia',    gender:'female', style:'Calm',        accent:'English', description:'Calm and reassuring female voice. Perfect for guided content.'},
-  {id:'draco',    name:'Draco',    gender:'male',   style:'Dramatic',    accent:'English', description:'Deep and dramatic male voice. Made for fantasy audiobooks.'},
-  {id:'electra',  name:'Electra',  gender:'female', style:'Dynamic',     accent:'English', description:'Dynamic and engaging female voice. Great for hosting.'},
-  {id:'harmonia', name:'Harmonia', gender:'female', style:'Balanced',    accent:'English', description:'Balanced and natural female voice. Versatile across content types.'},
-  {id:'helena',   name:'Helena',   gender:'female', style:'Professional',accent:'English', description:'Smooth and professional female voice. Ideal for corporate use.'},
-  {id:'hera',     name:'Hera',     gender:'female', style:'Commanding',  accent:'English', description:'Commanding and authoritative female voice. Built for leadership.'},
-  {id:'hermes',   name:'Hermes',   gender:'male',   style:'Versatile',   accent:'English', description:'Quick and versatile male voice. Works across all content types.'},
-  {id:'hyperion', name:'Hyperion', gender:'male',   style:'Resonant',    accent:'English', description:'Rich and resonant male voice. Powerful for dramatic narration.'},
-  {id:'iris',     name:'Iris',     gender:'female', style:'Cheerful',    accent:'English', description:'Cheerful and warm female voice. Great for creative content.'},
-  {id:'janus',    name:'Janus',    gender:'male',   style:'Steady',      accent:'English', description:'Steady and reliable male voice. Great for news and information.'},
-  {id:'juno',     name:'Juno',     gender:'female', style:'Confident',   accent:'English', description:'Confident and professional female voice. Ideal for presentations.'},
-  {id:'jupiter',  name:'Jupiter',  gender:'male',   style:'Deep',        accent:'English', description:'Deep and powerful male voice. Commanding for any format.'},
-  {id:'luna',     name:'Luna',     gender:'female', style:'Expressive',  accent:'English', description:'Soft and expressive female voice. Excellent for fiction.'},
-  {id:'mars',     name:'Mars',     gender:'male',   style:'Direct',      accent:'English', description:'Strong and direct male voice. Perfect for action content.'},
-  {id:'minerva',  name:'Minerva',  gender:'female', style:'Precise',     accent:'English', description:'Intelligent and precise female voice. Ideal for educational material.'},
-  {id:'neptune',  name:'Neptune',  gender:'male',   style:'Smooth',      accent:'English', description:'Smooth and flowing male voice. Perfect for podcasts and meditation.'},
-  {id:'odysseus', name:'Odysseus', gender:'male',   style:'Storyteller', accent:'English', description:'Storytelling and expressive male voice. Born for audiobooks.'},
-  {id:'ophelia',  name:'Ophelia',  gender:'female', style:'Poetic',      accent:'English', description:'Gentle and poetic female voice. Ideal for poetry and prose.'},
-  {id:'orion',    name:'Orion',    gender:'male',   style:'Clear',       accent:'English', description:'Clear and confident male voice. Versatile for any content.'},
-  {id:'orpheus',  name:'Orpheus',  gender:'male',   style:'Musical',     accent:'English', description:'Musical and expressive male voice. Great for creative narration.'},
-  {id:'pandora',  name:'Pandora',  gender:'female', style:'Curious',     accent:'English', description:'Curious and engaging female voice. Perfect for exploratory content.'},
-  {id:'phoebe',   name:'Phoebe',   gender:'female', style:'Lively',      accent:'English', description:'Bright and lively female voice. Great for dynamic content.'},
-  {id:'pluto',    name:'Pluto',    gender:'male',   style:'Mysterious',  accent:'English', description:'Deep and mysterious male voice. Ideal for thriller and suspense.'},
-  {id:'saturn',   name:'Saturn',   gender:'male',   style:'Thoughtful',  accent:'English', description:'Measured and thoughtful male voice. Perfect for documentary.'},
-  {id:'thalia',   name:'Thalia',   gender:'female', style:'Theatrical',  accent:'English', description:'Warm and theatrical female voice. Great for dramatic readings.'},
-  {id:'theia',    name:'Theia',    gender:'female', style:'Radiant',     accent:'English', description:'Radiant and expressive female voice. Excellent for inspirational content.'},
-  {id:'vesta',    name:'Vesta',    gender:'female', style:'Nurturing',   accent:'English', description:'Steady and nurturing female voice. Ideal for wellness content.'},
-  {id:'zeus',     name:'Zeus',     gender:'male',   style:'Commanding',  accent:'English', description:'Commanding and powerful male voice. Built for epic narration.'},
+  {id:'adam',          name:'Adam',          gender:'male',   accent:'English - British',           sample:'Adam - English - British.mp3',           description:'British male voice with warm, refined tone. Perfect for narration and storytelling.'},
+  {id:'andrew',       name:'Andrew',        gender:'male',   accent:'English - US',                sample:'Andrew - English-US.mp3',                description:'American male voice with clear, professional delivery. Great for presentations.'},
+  {id:'b-giffen',     name:'B. Giffen',     gender:'male',   accent:'English - US',                sample:'B. Giffen - English-US.mp3',             description:'American male voice with confident, steady tone. Ideal for audiobooks.'},
+  {id:'carlton-cwell',name:'Carlton C-Well',gender:'male',   accent:'English - US',                sample:'Carlton C-Well - English-US.mp3',        description:'American male voice with rich, engaging delivery. Built for storytelling.'},
+  {id:'chioma',       name:'Chioma',        gender:'female', accent:'English - Nigeria',            sample:'Chioma English - Nigeria.mp3',           description:'Nigerian English female voice with vibrant, expressive tone. Excellent for diverse narration.'},
+  {id:'cylynt-e',     name:'Cylynt E',      gender:'male',   accent:'English - US',                sample:'Cylynt E - English-US.mp3',              description:'American male voice with smooth, modern delivery. Versatile across content types.'},
+  {id:'darren',       name:'Darren',        gender:'male',   accent:'English - US',                sample:'Darren - English-US.mp3',                description:'American male voice with natural, conversational style. Great for casual content.'},
+  {id:'david',        name:'David',         gender:'male',   accent:'English - Irish',             sample:'David - English-Irish.mp3',              description:'Irish English male voice with warm, lyrical tone. Perfect for fiction and poetry.'},
+  {id:'drew',         name:'Drew',          gender:'male',   accent:'English - US',                sample:'Drew - English-US.mp3',                  description:'American male voice with direct, energetic delivery. Ideal for motivational content.'},
+  {id:'edith',        name:'Edith',         gender:'female', accent:'English - US',                sample:'Edith English - US.mp3',                 description:'American female voice with gentle, nurturing tone. Great for guided and wellness content.'},
+  {id:'edwin',        name:'Edwin',         gender:'male',   accent:'English - US',                sample:'Edwin - English-US.mp3',                 description:'American male voice with articulate, professional tone. Excellent for educational material.'},
+  {id:'enzo',         name:'Enzo',          gender:'male',   accent:'English - Portuguese',        sample:'Enzo - English-Portuguese.mp3',          description:'Portuguese-accented English male voice. Brings unique character to narration.'},
+  {id:'eve',          name:'Eve',           gender:'female', accent:'English - US',                sample:'Eve - English-US.mp3',                   description:'American female voice with clear, confident delivery. Versatile for any format.'},
+  {id:'harry',        name:'Harry',         gender:'male',   accent:'English - US',                sample:'Harry - English-US.mp3',                 description:'American male voice with warm, approachable style. Perfect for podcasts and narration.'},
+  {id:'hugh',         name:'Hugh',          gender:'male',   accent:'English - Scottish',          sample:'Hugh English-Scottish.mp3',              description:'Scottish English male voice with rich, resonant tone. Ideal for dramatic readings.'},
+  {id:'jae-hyun',     name:'Jae Hyun',      gender:'male',   accent:'English - Korean',            sample:'Jae Hyun - English-Korean.mp3',          description:'Korean-accented English male voice. Distinctive and engaging for diverse content.'},
+  {id:'javier',       name:'Javier',        gender:'male',   accent:'English - Spanish',           sample:'Javier - English-Spanish.mp3',           description:'Spanish-accented English male voice. Warm and expressive for multilingual projects.'},
+  {id:'jessica-anne', name:'Jessica Anne',  gender:'female', accent:'English - US',                sample:'Jessica Anne English-US.mp3',            description:'American female voice with bright, professional tone. Ideal for corporate and creative use.'},
+  {id:'john-d',       name:'John D',        gender:'male',   accent:'English - US',                sample:'John D - English-US.mp3',                description:'American male voice with steady, authoritative delivery. Built for documentary narration.'},
+  {id:'kelli-lashae', name:'Kelli LaShae',  gender:'female', accent:'English - African American',  sample:'Kelli LaShae - English-African American.mp3', description:'African American female voice with dynamic, soulful tone. Perfect for expressive narration.'},
+  {id:'kendis',       name:'Kendis',        gender:'male',   accent:'English - US',                sample:'Kendis - English-US.mp3',                description:'American male voice with polished, broadcast-quality delivery. Great for news and presentations.'},
+  {id:'kiara',        name:'Kiara',         gender:'female', accent:'English - African American',  sample:'Kiara - English-African American.mp3',   description:'African American female voice with warm, engaging style. Excellent for storytelling.'},
+  {id:'kyroto',       name:'Kyroto',        gender:'male',   accent:'English - Japanese',          sample:'Kyroto - English-Japanese.mp3',          description:'Japanese-accented English male voice. Unique and compelling for diverse narration.'},
+  {id:'lewis',        name:'Lewis',         gender:'male',   accent:'English - US',                sample:'Lewis - English-US.mp3',                 description:'American male voice with deep, commanding tone. Perfect for epic and action content.'},
+  {id:'linda',        name:'Linda',         gender:'female', accent:'English - US',                sample:'Linda - English-US.mp3',                 description:'American female voice with calm, reassuring delivery. Ideal for wellness and educational content.'},
 ];
 
 // ── STATE ──
@@ -697,7 +683,7 @@ function renderVoices(){
     groupVoices.forEach(function(voice,idx){
       var card=document.createElement('div');card.className='voice-card fade-in';card.style.animationDelay=(idx*20)+'ms';
       var initials=voice.name.substring(0,2).toUpperCase();
-      card.innerHTML='<div class="voice-card-header"><div class="voice-avatar">'+initials+'</div><div class="voice-card-info"><div class="voice-name">'+voice.name+'</div><div class="voice-id">'+voice.accent+' &middot; '+voice.style+'</div></div></div>'
+      card.innerHTML='<div class="voice-card-header"><div class="voice-avatar">'+initials+'</div><div class="voice-card-info"><div class="voice-name">'+voice.name+'</div><div class="voice-id">'+voice.accent+'</div></div></div>'
         +'<div class="voice-desc">'+voice.description+'</div>'
         +'<div class="voice-card-actions"><button class="btn-play"><i class="ph ph-play"></i> Play Sample</button><button class="btn-select"><i class="ph ph-arrow-right"></i> Use Voice</button></div>';
       (function(vid,vname,c){
@@ -720,16 +706,12 @@ function previewVoice(voiceId,voiceName,btn){
   if(currentPlayingCard===btn){currentPlayingCard=null;return;}
   btn.classList.add('playing');btn.innerHTML='<i class="ph ph-spinner"></i> Loading';
   var voice=VOICES.find(function(v){return v.id===voiceId;})||VOICES[0];
-  fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:voice.name+' — '+voice.style+' voice, ready for narration.',voice_id:voiceId,format:'mp3'})})
-  .then(function(r){if(!r.ok)throw new Error('Worker error');return r.blob();})
-  .then(function(blob){
-    var url=URL.createObjectURL(blob);
-    var audio=new Audio(url);currentAudio=audio;currentPlayingCard=btn;
-    audio.addEventListener('canplay',function(){btn.innerHTML='<i class="ph ph-stop"></i> Stop';audio.play();});
-    audio.addEventListener('ended',function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-play"></i> Play Sample';currentAudio=null;currentPlayingCard=null;URL.revokeObjectURL(url);});
-    audio.addEventListener('error',function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-play"></i> Play Sample';currentAudio=null;currentPlayingCard=null;});
-  })
-  .catch(function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-warning"></i> Error';setTimeout(function(){btn.innerHTML='<i class="ph ph-play"></i> Play Sample';},2000);});
+  var sampleUrl=VOICE_CDN+encodeURIComponent(voice.sample);
+  var audio=new Audio(sampleUrl);audio.crossOrigin='anonymous';currentAudio=audio;currentPlayingCard=btn;
+  audio.addEventListener('canplaythrough',function(){btn.innerHTML='<i class="ph ph-stop"></i> Stop';audio.play();});
+  audio.addEventListener('ended',function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-play"></i> Play Sample';currentAudio=null;currentPlayingCard=null;});
+  audio.addEventListener('error',function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-warning"></i> Error';setTimeout(function(){btn.innerHTML='<i class="ph ph-play"></i> Play Sample';},2000);currentAudio=null;currentPlayingCard=null;});
+  audio.load();
 }
 
 function selectVoiceForTTS(voiceId){
@@ -742,15 +724,16 @@ function populateVoiceSelects(){
   ['tts-voice-select','narrator-voice-select','narrator2-voice-select'].forEach(function(id){
     var sel=document.getElementById(id);if(!sel)return;
     sel.innerHTML='';
-    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' — '+v.style+' ('+v.accent+')';sel.appendChild(opt);});
+    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' ('+v.accent+')';sel.appendChild(opt);});
   });
   var sel2=document.getElementById('tts-voice2-select');
   if(sel2){
-    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' — '+v.style+' ('+v.accent+')';sel2.appendChild(opt);});
+    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' ('+v.accent+')';sel2.appendChild(opt);});
     sel2.addEventListener('change',function(){ var wrap=document.getElementById('tts-char2-wrap');if(wrap)wrap.style.display=sel2.value?'block':'none'; });
   }
   var compC=document.getElementById('compare-voices-list');
   if(compC){compC.innerHTML='';VOICES.forEach(function(v){var l=document.createElement('label');l.className='compare-voice-option';l.innerHTML='<input type="checkbox" value="'+v.id+'"><span>'+v.name+' <span style="color:var(--text-tertiary);font-size:11px;">('+v.accent+')</span></span>';l.querySelector('input').addEventListener('change',updateCompareCount);compC.appendChild(l);});}
+
 }
 
 // ── TTS FORM ──
@@ -1128,7 +1111,7 @@ function generateComparison(){
     .then(function(r){if(!r.ok)throw new Error('Worker error');return r.blob();})
     .then(function(blob){
       var url=URL.createObjectURL(blob);
-      card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">'+voice.accent+' / '+voice.style+'</div></div></div><audio controls src="'+url+'"></audio><button class="btn-download"><i class="ph ph-download-simple"></i> Download</button>';
+      card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">'+voice.accent+'</div></div></div><audio controls src="'+url+'"></audio><button class="btn-download"><i class="ph ph-download-simple"></i> Download</button>';
       card.querySelector('.btn-download').onclick=function(){var a=document.createElement('a');a.href=url;a.download='compare-'+voice.name+'.mp3';a.click();};
     })
     .catch(function(e){card.querySelector('.card-meta').textContent='Failed: '+e.message;card.querySelector('.card-meta').style.color='var(--error)';});
@@ -1209,7 +1192,7 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         messages:chatHistory,
-        system:'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: Audiobook generation costs 150 credits per book and has an 80,000-character cap per audiobook. There are 40 voice profiles available — never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 80,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.'
+        system:'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: Audiobook generation costs 150 credits per book and has an 80,000-character cap per audiobook. There are 25 voice profiles available — never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 80,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.'
       })
     })
     .then(function(r){return r.json();})
