@@ -56,7 +56,7 @@ export default {
 
         // Use the exact model ID and variable name 'cleanSpeaker'
         const audioResponse = await env.AI.run('@cf/myshell-ai/melotts', {
-          text: text,
+          prompt: text,
           speaker: cleanSpeaker
         });
 
