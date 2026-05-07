@@ -773,16 +773,25 @@ function generateTTS(){
   var cleanVoice=voiceId.replace(/\.mp3$/i,'');
   var payload={text:text,voice_file:cleanVoice,voice_id:voiceId,format:format};
   fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
-  .then(function(r){if(!r.ok)throw new Error('Worker returned '+r.status);return r.blob();})
-  .then(function(blob){
+  .then(function(r){
+    if(!r.ok)throw new Error('Worker returned '+r.status);
+    var ct=r.headers.get('content-type')||'audio/wav';
+    return r.arrayBuffer().then(function(buf){return{buf:buf,ct:ct};});
+  })
+  .then(function(data){
+    var blob=new Blob([data.buf],{type:data.ct});
     var url=URL.createObjectURL(blob);
     result.classList.add('visible');
     setTimeout(function(){ttsWaveform.drawIdle&&ttsWaveform.drawIdle();},50);
-    var audioEl=result.querySelector('audio');audioEl.src=url;audioEl.load();audioEl.play().catch(function(){});
+    var audioEl=result.querySelector('audio');
+    audioEl.src=url;
+    audioEl.load();
+    audioEl.onerror=function(){console.error('Audio decode error',audioEl.error);};
+    audioEl.oncanplay=function(){audioEl.play().catch(function(){});};
     var info=result.querySelector('.audio-result-info span');
-    if(info)info.textContent=(voice.name||voiceId)+' — '+format.toUpperCase()+' — '+(blob.size/1024).toFixed(1)+' KB';
+    if(info)info.textContent=(voice.name||voiceId)+' — WAV — '+(blob.size/1024).toFixed(1)+' KB';
     var dl=result.querySelector('.btn-download');
-    if(dl)dl.onclick=function(){var a=document.createElement('a');a.href=url;a.download='vs-tts-'+(voice.name||voiceId).replace(/\s+/g,'_').toLowerCase()+'.'+format;a.click();};
+    if(dl)dl.onclick=function(){var a=document.createElement('a');a.href=url;a.download='vs-tts-'+(voice.name||voiceId).replace(/\s+/g,'_').toLowerCase()+'.wav';a.click();};
     saveHistory({type:'tts',voice_name:voice.name||voiceId,text:text,audio_url:url,created_at:new Date().toISOString()});
   })
   .catch(function(e){alert('TTS Error: '+e.message);})
