@@ -52,12 +52,17 @@ export default {
         }
 
         // IMPORTANT: MeloTTS crashes if .mp3 is in the name
-        const cleanSpeaker = rawVoice.replace(/\.mp3$/i, '');
+        // Map voice accent to MeloTTS supported speaker presets
+        // MeloTTS supports: EN-US, EN-BR (British), EN-AU (Australian), EN-Default
+        const voiceLower = rawVoice.toLowerCase();
+        let speaker = 'EN-US';
+        if (voiceLower.includes('british')) speaker = 'EN-BR';
+        else if (voiceLower.includes('irish') || voiceLower.includes('scottish')) speaker = 'EN-BR';
+        else if (voiceLower.includes('australian')) speaker = 'EN-AU';
 
-        // Use the exact model ID and variable name 'cleanSpeaker'
         const result = await env.AI.run('@cf/myshell-ai/melotts', {
           prompt: text,
-          speaker: cleanSpeaker
+          speaker: speaker
         });
 
         // Debug: inspect what MeloTTS actually returns
