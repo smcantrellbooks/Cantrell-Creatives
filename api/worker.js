@@ -50,7 +50,9 @@ export default {
 
     // ── 3. THE ENGINE (MeloTTS + Your R2 Voice) ──
     if (request.method === 'POST') {
-      const { text, voice_file } = await request.json();
+      const body = await request.json();
+      const text = body.text;
+      const voice_file = body.voice_file || body.voice_id; // Accept both for backward compatibility
 
       // Uses Cloudflare's GPU engine
       const audioResponse = await env.AI.run('@cf/myshell/melotts', {
