@@ -286,7 +286,8 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
       <h1 class="section-title">Voice Library</h1>
       <p class="section-sub">25 voice profiles &mdash; preview before you generate</p>
     </div>
-    <div id="voice-grid" class="voice-grid"></div>
+    <div id="voice-library-container" class="voice-grid"></div>
+    <audio id="vs-sample-player" style="display:none;"></audio>
   </section>
 
   <!-- ── TTS STUDIO TAB ─────────────────────────────── -->
@@ -538,35 +539,43 @@ function clearUser(){
   setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice'; }, 1500);
 }
 
-// ── VOICE PROFILES (25) ──
-var VOICE_CDN = 'https://cantrell-creatives.smcantrellbooks.workers.dev/';
-var VOICES = [
-  {id:'adam',          name:'Adam',          gender:'male',   accent:'English - British',           sample:'Adam - English - British.mp3',           description:'British male voice with warm, refined tone. Perfect for narration and storytelling.'},
-  {id:'andrew',       name:'Andrew',        gender:'male',   accent:'English - US',                sample:'Andrew - English-US.mp3',                description:'American male voice with clear, professional delivery. Great for presentations.'},
-  {id:'b-giffen',     name:'B. Giffen',     gender:'male',   accent:'English - US',                sample:'B. Giffen - English-US.mp3',             description:'American male voice with confident, steady tone. Ideal for audiobooks.'},
-  {id:'carlton-cwell',name:'Carlton C-Well',gender:'male',   accent:'English - US',                sample:'Carlton C-Well - English-US.mp3',        description:'American male voice with rich, engaging delivery. Built for storytelling.'},
-  {id:'chioma',       name:'Chioma',        gender:'female', accent:'English - Nigeria',            sample:'Chioma English - Nigeria.mp3',           description:'Nigerian English female voice with vibrant, expressive tone. Excellent for diverse narration.'},
-  {id:'cylynt-e',     name:'Cylynt E',      gender:'male',   accent:'English - US',                sample:'Cylynt E - English-US.mp3',              description:'American male voice with smooth, modern delivery. Versatile across content types.'},
-  {id:'darren',       name:'Darren',        gender:'male',   accent:'English - US',                sample:'Darren - English-US.mp3',                description:'American male voice with natural, conversational style. Great for casual content.'},
-  {id:'david',        name:'David',         gender:'male',   accent:'English - Irish',             sample:'David - English-Irish.mp3',              description:'Irish English male voice with warm, lyrical tone. Perfect for fiction and poetry.'},
-  {id:'drew',         name:'Drew',          gender:'male',   accent:'English - US',                sample:'Drew - English-US.mp3',                  description:'American male voice with direct, energetic delivery. Ideal for motivational content.'},
-  {id:'edith',        name:'Edith',         gender:'female', accent:'English - US',                sample:'Edith English - US.mp3',                 description:'American female voice with gentle, nurturing tone. Great for guided and wellness content.'},
-  {id:'edwin',        name:'Edwin',         gender:'male',   accent:'English - US',                sample:'Edwin - English-US.mp3',                 description:'American male voice with articulate, professional tone. Excellent for educational material.'},
-  {id:'enzo',         name:'Enzo',          gender:'male',   accent:'English - Portuguese',        sample:'Enzo - English-Portuguese.mp3',          description:'Portuguese-accented English male voice. Brings unique character to narration.'},
-  {id:'eve',          name:'Eve',           gender:'female', accent:'English - US',                sample:'Eve - English-US.mp3',                   description:'American female voice with clear, confident delivery. Versatile for any format.'},
-  {id:'harry',        name:'Harry',         gender:'male',   accent:'English - US',                sample:'Harry - English-US.mp3',                 description:'American male voice with warm, approachable style. Perfect for podcasts and narration.'},
-  {id:'hugh',         name:'Hugh',          gender:'male',   accent:'English - Scottish',          sample:'Hugh English-Scottish.mp3',              description:'Scottish English male voice with rich, resonant tone. Ideal for dramatic readings.'},
-  {id:'jae-hyun',     name:'Jae Hyun',      gender:'male',   accent:'English - Korean',            sample:'Jae Hyun - English-Korean.mp3',          description:'Korean-accented English male voice. Distinctive and engaging for diverse content.'},
-  {id:'javier',       name:'Javier',        gender:'male',   accent:'English - Spanish',           sample:'Javier - English-Spanish.mp3',           description:'Spanish-accented English male voice. Warm and expressive for multilingual projects.'},
-  {id:'jessica-anne', name:'Jessica Anne',  gender:'female', accent:'English - US',                sample:'Jessica Anne English-US.mp3',            description:'American female voice with bright, professional tone. Ideal for corporate and creative use.'},
-  {id:'john-d',       name:'John D',        gender:'male',   accent:'English - US',                sample:'John D - English-US.mp3',                description:'American male voice with steady, authoritative delivery. Built for documentary narration.'},
-  {id:'kelli-lashae', name:'Kelli LaShae',  gender:'female', accent:'English - African American',  sample:'Kelli LaShae - English-African American.mp3', description:'African American female voice with dynamic, soulful tone. Perfect for expressive narration.'},
-  {id:'kendis',       name:'Kendis',        gender:'male',   accent:'English - US',                sample:'Kendis - English-US.mp3',                description:'American male voice with polished, broadcast-quality delivery. Great for news and presentations.'},
-  {id:'kiara',        name:'Kiara',         gender:'female', accent:'English - African American',  sample:'Kiara - English-African American.mp3',   description:'African American female voice with warm, engaging style. Excellent for storytelling.'},
-  {id:'kyroto',       name:'Kyroto',        gender:'male',   accent:'English - Japanese',          sample:'Kyroto - English-Japanese.mp3',          description:'Japanese-accented English male voice. Unique and compelling for diverse narration.'},
-  {id:'lewis',        name:'Lewis',         gender:'male',   accent:'English - US',                sample:'Lewis - English-US.mp3',                 description:'American male voice with deep, commanding tone. Perfect for epic and action content.'},
-  {id:'linda',        name:'Linda',         gender:'female', accent:'English - US',                sample:'Linda - English-US.mp3',                 description:'American female voice with calm, reassuring delivery. Ideal for wellness and educational content.'},
-];
+// ── VOICE ENGINE (dynamic from R2 worker) ──
+var VOICES = [];
+
+// Parse an R2 filename into a display-friendly object
+function parseVoiceFilename(filename){
+  // e.g. "Jae Hyun - English-Korean.mp3" => { name: "Jae Hyun", accent: "English - Korean", voice_id: "Jae Hyun - English-Korean.mp3" }
+  var base = filename.replace(/\.mp3$/i,'');
+  var parts = base.split(/\s*[-\u2013]\s*/);
+  var name = parts[0] || base;
+  var rawAccent = parts.slice(1).join(' - ').trim();
+  // Prettify accent: "English US" => "English - US", "EnglishUS" => "English - US"
+  var accent = rawAccent.replace(/^English\s*/i,'English - ').replace(/English - $/,'English').replace(/English - -/,'English -').trim();
+  if(!accent) accent = 'English';
+  return { voice_id: filename, name: name.trim(), accent: accent };
+}
+
+// Fetch voice list from R2 worker and populate VOICES array
+function loadVoicesFromWorker(){
+  var container = document.getElementById('voice-library-container');
+  if(container) container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-tertiary);font-family:Cinzel,serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase;"><i class="ph ph-spinner" style="font-size:24px;display:block;margin-bottom:8px;opacity:.5;"></i>Loading voices...</div>';
+  return fetch(WORKER + '/voices')
+    .then(function(r){ if(!r.ok) throw new Error('Failed to load voices'); return r.json(); })
+    .then(function(files){
+      VOICES = files.map(function(filename){
+        var parsed = parseVoiceFilename(filename);
+        return { voice_id: parsed.voice_id, name: parsed.name, accent: parsed.accent };
+      }).sort(function(a,b){ return a.name.localeCompare(b.name); });
+      renderVoices();
+      populateVoiceSelects();
+      var sub = document.querySelector('.section-sub');
+      if(sub) sub.innerHTML = VOICES.length + ' voice profiles &mdash; preview before you generate';
+    })
+    .catch(function(err){
+      console.error('Voice load error:', err);
+      if(container) container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--error);font-family:Cinzel,serif;font-size:12px;letter-spacing:.05em;">Failed to load voices. Please refresh the page.</div>';
+    });
+}
 
 // ── STATE ──
 var activeTab = 'voices';
@@ -641,8 +650,7 @@ function init(){
   var incoming=localStorage.getItem('vs_incoming');
   if(incoming){try{var data=JSON.parse(incoming);localStorage.removeItem('vs_incoming');setTimeout(function(){var ta=document.getElementById('audiobook-text');if(ta&&data.content){ta.value=data.content;bookChapters=parseChapters(data.content);renderChapterList(bookChapters);}var info=document.getElementById('upload-info');if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}},800);}catch(e){}}
   setupTabs();
-  renderVoices();
-  populateVoiceSelects();
+  loadVoicesFromWorker();
   setupTTSForm();
   setupAudiobookForm();
   setupCompareForm();
@@ -666,7 +674,7 @@ function switchTab(tab){
 
 // ── RENDER VOICES ──
 function renderVoices(){
-  var grid=document.getElementById('voice-grid');if(!grid)return;
+  var grid=document.getElementById('voice-library-container');if(!grid)return;
   var groups={};
   VOICES.forEach(function(v){ var a=v.accent;if(!groups[a])groups[a]=[];groups[a].push(v); });
   grid.innerHTML='';
@@ -684,12 +692,11 @@ function renderVoices(){
       var card=document.createElement('div');card.className='voice-card fade-in';card.style.animationDelay=(idx*20)+'ms';
       var initials=voice.name.substring(0,2).toUpperCase();
       card.innerHTML='<div class="voice-card-header"><div class="voice-avatar">'+initials+'</div><div class="voice-card-info"><div class="voice-name">'+voice.name+'</div><div class="voice-id">'+voice.accent+'</div></div></div>'
-        +'<div class="voice-desc">'+voice.description+'</div>'
         +'<div class="voice-card-actions"><button class="btn-play"><i class="ph ph-play"></i> Play Sample</button><button class="btn-select"><i class="ph ph-arrow-right"></i> Use Voice</button></div>';
       (function(vid,vname,c){
         c.querySelector('.btn-play').addEventListener('click',function(e){e.stopPropagation();previewVoice(vid,vname,c.querySelector('.btn-play'));});
         c.querySelector('.btn-select').addEventListener('click',function(e){e.stopPropagation();selectVoiceForTTS(vid);});
-      })(voice.id,voice.name,card);
+      })(voice.voice_id,voice.name,card);
       voiceGrid.appendChild(card);
     });
     header.addEventListener('click',function(){
@@ -705,12 +712,17 @@ function previewVoice(voiceId,voiceName,btn){
   if(currentAudio){currentAudio.pause();currentAudio=null;if(currentPlayingCard){currentPlayingCard.classList.remove('playing');currentPlayingCard.innerHTML='<i class="ph ph-play"></i> Play Sample';}}
   if(currentPlayingCard===btn){currentPlayingCard=null;return;}
   btn.classList.add('playing');btn.innerHTML='<i class="ph ph-spinner"></i> Loading';
-  var voice=VOICES.find(function(v){return v.id===voiceId;})||VOICES[0];
-  var sampleUrl=VOICE_CDN+encodeURIComponent(voice.sample);
-  var audio=new Audio(sampleUrl);audio.crossOrigin='anonymous';currentAudio=audio;currentPlayingCard=btn;
-  audio.addEventListener('canplaythrough',function(){btn.innerHTML='<i class="ph ph-stop"></i> Stop';audio.play();});
-  audio.addEventListener('ended',function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-play"></i> Play Sample';currentAudio=null;currentPlayingCard=null;});
-  audio.addEventListener('error',function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-warning"></i> Error';setTimeout(function(){btn.innerHTML='<i class="ph ph-play"></i> Play Sample';},2000);currentAudio=null;currentPlayingCard=null;});
+  var sampleUrl=WORKER+'/sample?voice_id='+encodeURIComponent(voiceId);
+  var audio=document.getElementById('vs-sample-player');
+  audio.src=sampleUrl;
+  currentAudio=audio;currentPlayingCard=btn;
+  var onCanPlay=function(){btn.innerHTML='<i class="ph ph-stop"></i> Stop';audio.play();};
+  var onEnded=function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-play"></i> Play Sample';currentAudio=null;currentPlayingCard=null;cleanup();};
+  var onError=function(){btn.classList.remove('playing');btn.innerHTML='<i class="ph ph-warning"></i> Error';setTimeout(function(){btn.innerHTML='<i class="ph ph-play"></i> Play Sample';},2000);currentAudio=null;currentPlayingCard=null;cleanup();};
+  function cleanup(){audio.removeEventListener('canplaythrough',onCanPlay);audio.removeEventListener('ended',onEnded);audio.removeEventListener('error',onError);}
+  audio.addEventListener('canplaythrough',onCanPlay);
+  audio.addEventListener('ended',onEnded);
+  audio.addEventListener('error',onError);
   audio.load();
 }
 
@@ -724,16 +736,16 @@ function populateVoiceSelects(){
   ['tts-voice-select','narrator-voice-select','narrator2-voice-select'].forEach(function(id){
     var sel=document.getElementById(id);if(!sel)return;
     sel.innerHTML='';
-    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' ('+v.accent+')';sel.appendChild(opt);});
+    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.voice_id;opt.textContent=v.name+' ('+v.accent+')';sel.appendChild(opt);});
   });
   var sel2=document.getElementById('tts-voice2-select');
   if(sel2){
-    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.id;opt.textContent=v.name+' ('+v.accent+')';sel2.appendChild(opt);});
+    sel2.innerHTML='<option value="">— None (single voice) —</option>';
+    VOICES.forEach(function(v){var opt=document.createElement('option');opt.value=v.voice_id;opt.textContent=v.name+' ('+v.accent+')';sel2.appendChild(opt);});
     sel2.addEventListener('change',function(){ var wrap=document.getElementById('tts-char2-wrap');if(wrap)wrap.style.display=sel2.value?'block':'none'; });
   }
   var compC=document.getElementById('compare-voices-list');
-  if(compC){compC.innerHTML='';VOICES.forEach(function(v){var l=document.createElement('label');l.className='compare-voice-option';l.innerHTML='<input type="checkbox" value="'+v.id+'"><span>'+v.name+' <span style="color:var(--text-tertiary);font-size:11px;">('+v.accent+')</span></span>';l.querySelector('input').addEventListener('change',updateCompareCount);compC.appendChild(l);});}
-
+  if(compC){compC.innerHTML='';VOICES.forEach(function(v){var l=document.createElement('label');l.className='compare-voice-option';l.innerHTML='<input type="checkbox" value="'+escapeHtml(v.voice_id)+'"><span>'+escapeHtml(v.name)+' <span style="color:var(--text-tertiary);font-size:11px;">('+escapeHtml(v.accent)+')</span></span>';l.querySelector('input').addEventListener('change',updateCompareCount);compC.appendChild(l);});}
 }
 
 // ── TTS FORM ──
@@ -754,7 +766,7 @@ function generateTTS(){
   var btn=document.getElementById('tts-generate-btn'),result=document.getElementById('tts-result');
   if(!text)return;
   btn.disabled=true;btn.textContent='GENERATING...';
-  var voice=VOICES.find(function(v){return v.id===voiceId;})||{};
+  var voice=VOICES.find(function(v){return v.voice_id===voiceId;})||{};
   var payload={text:text,voice_id:voiceId,format:format};
   fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){if(!r.ok)throw new Error('Worker returned '+r.status);return r.blob();})
@@ -1103,7 +1115,7 @@ function generateComparison(){
   btn.disabled=true;btn.textContent='GENERATING...';rd.style.display='none';grid.innerHTML='';
   rd.style.display='block';
   var promises=vids.map(function(vid){
-    var voice=VOICES.find(function(v){return v.id===vid;})||{name:vid,style:'',accent:''};
+    var voice=VOICES.find(function(v){return v.voice_id===vid;})||{name:parseVoiceFilename(vid).name,accent:parseVoiceFilename(vid).accent,voice_id:vid};
     var card=document.createElement('div');card.className='compare-result-card fade-in';
     card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">Generating...</div></div></div>';
     grid.appendChild(card);
