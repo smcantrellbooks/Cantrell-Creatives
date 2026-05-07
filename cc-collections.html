@@ -341,17 +341,6 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
           </div>
         </div>
 
-        <!-- Book ID -->
-        <div class="fg">
-          <label style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);">Book ID</label>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <div class="id-chip" style="flex:1;"><span class="id-val" id="bookIdVal">Not assigned</span></div>
-            <button class="btn btn-primary btn-sm" id="initBookBtn" onclick="initializeBook()"><i class="ph ph-key"></i> Initialize</button>
-            <button class="btn btn-outline btn-sm" id="copyBookIdBtn" onclick="copyVal('bookIdVal')" style="display:none;">Copy</button>
-          </div>
-          <div class="hint" id="bookIdHint">Initialize first to lock in your SMCB Book ID.</div>
-        </div>
-
         <div id="ebookIdSection" class="fg">
           <label style="font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);">Ebook ID</label>
           <div style="display:flex;gap:8px;align-items:center;">
@@ -951,10 +940,11 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
 <script>
 /* ─── CONFIG ─── */
 var SUPABASE_URL  = 'https://recyyhvdvuupxhbxmzal.supabase.co';
-var SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
+var SUPABASE_KEY  = 'eyJhbGci...3AM';
 var CC_STUDIO     = 'https://cc-studio.smcantrellbooks.workers.dev';
 var NYXEN_API     = 'https://nyxen-standalone.smcantrellbooks.workers.dev';
 var R2_WORKER     = 'https://nyxen-video-worker.smcantrellbooks.workers.dev';
+var D1_REGISTER   = R2_WORKER + '/register-book'; 
 var CC_URL        = 'https://creatives.smcantrellbooks.com';
 var STORE_URL     = 'https://smcantrellbooks.com';
 var AUDIO_TABLE   = 'audio_generations';
@@ -1035,45 +1025,19 @@ function onFormatChange(){
   document.getElementById('audiobookIdSection').style.display=(fmt==='audiobook'||fmt==='both')?'block':'none';
 }
 
-/* ─── BOOK ID ─── */
+/* ─── ID GENERATION ─── */
 function genId(prefix){
   var ts=Date.now().toString(36).toUpperCase();
   var rand=Math.random().toString(36).substr(2,5).toUpperCase();
   return prefix+'-'+ts+'-'+rand;
 }
-async function initializeBook(){
-  var title=document.getElementById('bookTitle').value.trim();
-  if(!title){alert('Please enter a book title first.');return;}
-  var btn=document.getElementById('initBookBtn');
-  btn.textContent='Initializing...';btn.disabled=true;
-  try{
-    var id=genId('SMCB');
-    // Try to save to Supabase if logged in
-    if(currentUser){
-      await fetch(SUPABASE_URL+'/rest/v1/books',{
-        method:'POST',
-        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify({smcb_id:id,title:title,user_id:currentUser.id})
-      });
-    }
-    currentBookId=id;
-    document.getElementById('bookIdVal').textContent=id;
-    document.getElementById('copyBookIdBtn').style.display='inline-flex';
-    document.getElementById('bookIdHint').textContent='Book ID locked in. Keep this for your records.';
-    btn.textContent='Initialized';
-  }catch(e){
-    currentBookId=genId('SMCB');
-    document.getElementById('bookIdVal').textContent=currentBookId;
-    document.getElementById('copyBookIdBtn').style.display='inline-flex';
-    btn.textContent='Initialized';
-  }
-}
 async function generateFormatId(fmt){
   var title=document.getElementById('bookTitle').value.trim();
   if(!title){alert('Please enter a book title first.');return;}
-  var id=genId(fmt==='ebook'?'EB':'AB');
+  var id=genId(fmt==='ebook'?'SMCB-EB':'SMCB-AB');
   document.getElementById(fmt+'IdVal').textContent=id;
   document.getElementById('copy'+(fmt==='ebook'?'Ebook':'Audio')+'IdBtn').style.display='inline-flex';
+  currentBookId=id;
 }
 function copyVal(elId){
   var txt=document.getElementById(elId).textContent;
@@ -1515,48 +1479,63 @@ async function doPublish(){
   btn.disabled=true;
   btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Publishing...';
 
-  try{
+  try {
     // ── Step 1: Upload manuscript file to R2 (if provided) ──
-    var fileUrl=null;
-    var manuscriptFile=document.getElementById('manuscriptFile').files[0];
-    if(manuscriptFile){
-      btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Uploading manuscript...';
-      var fd=new FormData();
-      fd.append('file',manuscriptFile);
-      fd.append('folder','manuscripts');
-      var upRes=await fetch(R2_WORKER+'/upload',{method:'POST',body:fd});
-      if(!upRes.ok)throw new Error('Manuscript upload failed.');
-      var upData=await upRes.json();
-      if(!upData.success||!upData.url)throw new Error('Manuscript upload returned no URL.');
-      fileUrl=upData.url;
+    var fileUrl = null;
+    var manuscriptFile = document.getElementById('manuscriptFile').files[0];
+    if (manuscriptFile) {
+      btn.innerHTML = '<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Uploading manuscript...';
+      var fd = new FormData();
+      fd.append('file', manuscriptFile);
+      fd.append('folder', 'manuscripts');
+      var upRes = await fetch(R2_WORKER + '/upload', { method: 'POST', body: fd });
+      if (!upRes.ok) throw new Error('Manuscript upload failed.');
+      var upData = await upRes.json();
+      if (!upData.success || !upData.url) throw new Error('Manuscript upload returned no URL.');
+      fileUrl = upData.url;
     }
 
-    // ── Step 2: Build payload — only columns that exist on books table ──
-    btn.innerHTML='<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Saving record...';
-    var fmt=document.querySelector('input[name="book-format"]:checked').value;
-    var payload={
-      title:title,
-      description:document.getElementById('bookDesc').value||null,
-      author:author,
-      collection:collection,
-      price:parseFloat(document.getElementById('bookPrice').value)||0,
-      format:fmt,
-      smcb_id:currentBookId||null,
-      file_url:fileUrl,
-      creator_id:currentUser?currentUser.id:null,
-      status:'pending'
+    // ── Step 2: Build payload ──
+    btn.innerHTML = '<span class="spin" style="border-color:rgba(0,0,0,.2);border-top-color:#0e0a00;width:16px;height:16px;border-width:2px;"></span> Saving record...';
+    var fmt = document.querySelector('input[name="book-format"]:checked').value;
+    var payload = {
+      title: title,
+      description: document.getElementById('bookDesc').value || null,
+      author: author,
+      collection: collection,
+      price: parseFloat(document.getElementById('bookPrice').value) || 0,
+      format: fmt,
+      smcb_id: currentBookId || null,
+      file_url: fileUrl,
+      creator_id: currentUser ? currentUser.id : null,
+      status: 'pending'
     };
 
-    if(currentUser){
-      var r=await fetch(SUPABASE_URL+'/rest/v1/books',{
-        method:'POST',
-        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-        body:JSON.stringify(payload)
+    // REGISTER TO CLOUDFLARE D1 (Storefront)
+    await fetch(R2_WORKER + '/register-book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: payload.smcb_id || 'SMCB-' + Date.now(),
+        title: payload.title,
+        author_id: payload.creator_id || 'anonymous',
+        description: payload.description,
+        cover_image_url: coverDataUrl || null,
+        asset_path: payload.file_url,
+        file_type: payload.format,
+        is_published: 1
+      })
+    });
+
+    // SAVE TO SUPABASE (Archive)
+    if (currentUser) {
+      var r = await fetch(SUPABASE_URL + '/rest/v1/books', {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(payload)
       });
-      if(!r.ok&&r.status!==409){
-        var errText=await r.text();
-        console.error('Supabase insert failed:',r.status,errText);
-        throw new Error('Could not save to database.');
+      if (!r.ok && r.status !== 409) {
+        throw new Error('Could not save to Supabase.');
       }
     }
 
