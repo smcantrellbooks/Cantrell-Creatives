@@ -55,13 +55,34 @@ export default {
         const cleanSpeaker = rawVoice.replace(/\.mp3$/i, '');
 
         // Use the exact model ID and variable name 'cleanSpeaker'
-        const audioResponse = await env.AI.run('@cf/myshell-ai/melotts', {
+        const result = await env.AI.run('@cf/myshell-ai/melotts', {
           prompt: text,
           speaker: cleanSpeaker
         });
 
-        return new Response(audioResponse, {
-          headers: { 'Content-Type': 'audio/mpeg', ...corsHeaders }
+        // AI.run returns an object - extract the audio data
+        // MeloTTS returns { audio: ArrayBuffer/Uint8Array } or a ReadableStream
+        let audioData;
+        if (result instanceof ReadableStream) {
+          audioData = result;
+        } else if (result instanceof ArrayBuffer || result instanceof Uint8Array) {
+          audioData = result;
+        } else if (result && result.audio) {
+          audioData = result.audio;
+        } else if (result && result.data) {
+          audioData = result.data;
+        } else {
+          // Try to return the raw result - may be a Response-like object
+          audioData = new Uint8Array(0);
+          // Debug: return what we actually got
+          return new Response(JSON.stringify({ error: 'Unexpected AI response type', keys: Object.keys(result || {}), type: typeof result }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          });
+        }
+
+        return new Response(audioData, {
+          headers: { 'Content-Type': 'audio/wav', ...corsHeaders }
         });
       } catch (err) {
         return new Response(err.message, { status: 500, headers: corsHeaders });
