@@ -48,7 +48,7 @@ async def generate_speech(text: str, voice_id: str, speed: float = 1.0, response
     import httpx
     payload = {
         "text": text,
-        "voice_id": voice_id,
+        "voice_file": voice_id,
         "format": response_format,
         "speed": speed
     }

@@ -770,7 +770,7 @@ function generateTTS(){
   if(!text)return;
   btn.disabled=true;btn.textContent='GENERATING...';
   var voice=VOICES.find(function(v){return v.voice_id===voiceId;})||{};
-  var payload={text:text,voice_id:voiceId,format:format};
+  var payload={text:text,voice_file:voiceId,format:format};
   fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){if(!r.ok)throw new Error('Worker returned '+r.status);return r.blob();})
   .then(function(blob){
@@ -1010,7 +1010,7 @@ function generateAudiobook(){
     while(content.length>0){chunks.push(content.substring(0,3800));content=content.substring(3800);}
     setChapterStatus(i,'Generating ('+chunks.length+' part'+(chunks.length>1?'s':'')+')...',null);
     return Promise.all(chunks.map(function(chunk){
-      return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chunk,voice_id:narratorId,format:'mp3'})}).then(function(r){if(!r.ok)throw new Error('Worker error '+r.status);return r.blob();});
+      return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chunk,voice_file:narratorId,format:'mp3'})}).then(function(r){if(!r.ok)throw new Error('Worker error '+r.status);return r.blob();});
     })).then(function(blobs){
       var combined=new Blob(blobs,{type:'audio/mpeg'});
       var url=URL.createObjectURL(combined);
@@ -1122,7 +1122,7 @@ function generateComparison(){
     var card=document.createElement('div');card.className='compare-result-card fade-in';
     card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">Generating...</div></div></div>';
     grid.appendChild(card);
-    return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_id:vid,format:'mp3'})})
+    return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_file:vid,format:'mp3'})})
     .then(function(r){if(!r.ok)throw new Error('Worker error');return r.blob();})
     .then(function(blob){
       var url=URL.createObjectURL(blob);
