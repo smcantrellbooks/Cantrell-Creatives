@@ -60,29 +60,49 @@ export default {
           speaker: cleanSpeaker
         });
 
-        // AI.run returns an object - extract the audio data
-        // MeloTTS returns { audio: ArrayBuffer/Uint8Array } or a ReadableStream
-        let audioData;
-        if (result instanceof ReadableStream) {
+        // Debug: inspect what MeloTTS actually returns
+        const resultType = typeof result;
+        const isArrayBuffer = result instanceof ArrayBuffer;
+        const isUint8Array = result instanceof Uint8Array;
+        const isReadableStream = result instanceof ReadableStream;
+        const resultKeys = (result && typeof result === 'object' && !isArrayBuffer && !isUint8Array) ? Object.keys(result) : [];
+
+        // Extract audio from the response
+        let audioData = null;
+        let contentType = 'audio/wav';
+
+        if (isReadableStream) {
           audioData = result;
-        } else if (result instanceof ArrayBuffer || result instanceof Uint8Array) {
+        } else if (isArrayBuffer) {
           audioData = result;
-        } else if (result && result.audio) {
-          audioData = result.audio;
-        } else if (result && result.data) {
-          audioData = result.data;
-        } else {
-          // Try to return the raw result - may be a Response-like object
-          audioData = new Uint8Array(0);
-          // Debug: return what we actually got
-          return new Response(JSON.stringify({ error: 'Unexpected AI response type', keys: Object.keys(result || {}), type: typeof result }), {
+        } else if (isUint8Array) {
+          audioData = result.buffer;
+        } else if (result && typeof result === 'object') {
+          // Try known property names from Cloudflare AI models
+          audioData = result.audio || result.data || result.wav || result.response || result.output || null;
+          if (!audioData) {
+            // Return debug info so we know the structure
+            return new Response(JSON.stringify({
+              error: 'Cannot extract audio from AI response',
+              type: resultType,
+              keys: resultKeys,
+              preview: JSON.stringify(result).substring(0, 500)
+            }), {
+              status: 500,
+              headers: { 'Content-Type': 'application/json', ...corsHeaders }
+            });
+          }
+        }
+
+        if (!audioData) {
+          return new Response(JSON.stringify({ error: 'AI returned null/empty', type: resultType }), {
             status: 500,
             headers: { 'Content-Type': 'application/json', ...corsHeaders }
           });
         }
 
         return new Response(audioData, {
-          headers: { 'Content-Type': 'audio/wav', ...corsHeaders }
+          headers: { 'Content-Type': contentType, ...corsHeaders }
         });
       } catch (err) {
         return new Response(err.message, { status: 500, headers: corsHeaders });
