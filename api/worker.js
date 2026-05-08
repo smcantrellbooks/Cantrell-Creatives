@@ -15,13 +15,60 @@ function arrayBufferToBase64(buffer) {
   return btoa(binary);
 }
 
-// Core XTTS generation — fetches reference audio from R2, calls the
-// external XTTS/Qwen3 backend, and returns raw audio bytes + content-type.
+// Build a multipart/form-data body from parts array inside a Worker.
+// Each part: { name, value, filename?, contentType? }
+// Returns { body: Uint8Array, contentType: string }
+function buildMultipart(parts) {
+  const boundary = '----CFWorkerBoundary' + Date.now().toString(36);
+  const encoder = new TextEncoder();
+  const chunks = [];
+
+  for (const part of parts) {
+    let header = '--' + boundary + '\r\n';
+    if (part.filename) {
+      header += 'Content-Disposition: form-data; name="' + part.name + '"; filename="' + part.filename + '"\r\n';
+      header += 'Content-Type: ' + (part.contentType || 'application/octet-stream') + '\r\n';
+    } else {
+      header += 'Content-Disposition: form-data; name="' + part.name + '"\r\n';
+    }
+    header += '\r\n';
+    chunks.push(encoder.encode(header));
+
+    if (part.value instanceof ArrayBuffer || part.value instanceof Uint8Array) {
+      chunks.push(part.value instanceof Uint8Array ? part.value : new Uint8Array(part.value));
+    } else {
+      chunks.push(encoder.encode(String(part.value)));
+    }
+    chunks.push(encoder.encode('\r\n'));
+  }
+  chunks.push(encoder.encode('--' + boundary + '--\r\n'));
+
+  let totalLen = 0;
+  for (const c of chunks) totalLen += c.byteLength;
+  const body = new Uint8Array(totalLen);
+  let offset = 0;
+  for (const c of chunks) { body.set(c, offset); offset += c.byteLength; }
+
+  return { body, contentType: 'multipart/form-data; boundary=' + boundary };
+}
+
+// Core generation — fetches reference audio from R2, calls the external
+// Qwen3-TTS / XTTS backend, and returns raw audio bytes + content-type.
+//
+// Env vars used:
+//   XTTS_BACKEND_URL  — base URL of the TTS backend (required)
+//   XTTS_ENDPOINT     — path appended to the base URL (default: /tts_to_audio)
+//   XTTS_MODE         — "multipart" (default) or "json"
+//                        multipart: sends speaker_wav as file upload
+//                        json: sends speaker_wav_base64 in JSON body
 async function generateWithXTTS(env, text, voiceKey, language) {
   const backendUrl = env.XTTS_BACKEND_URL;
   if (!backendUrl) {
     throw new Error('XTTS_BACKEND_URL not configured');
   }
+
+  const endpointPath = env.XTTS_ENDPOINT || '/tts_to_audio';
+  const mode = (env.XTTS_MODE || 'multipart').toLowerCase();
 
   // 1. Resolve the R2 key — callers may omit the .mp3 extension
   let r2Key = voiceKey;
@@ -40,37 +87,48 @@ async function generateWithXTTS(env, text, voiceKey, language) {
     var refBuffer = await refObj.arrayBuffer();
   }
 
-  const refBase64 = arrayBufferToBase64(refBuffer);
+  const url = backendUrl.replace(/\/+$/, '') + endpointPath;
+  let resp;
 
-  // 3. Build the XTTS/Qwen3 request payload
-  //    The payload shape follows the coqui-ai/xtts-streaming-server
-  //    and common Qwen3-TTS conventions.  The backend is expected to
-  //    accept JSON with base64-encoded reference audio and return raw
-  //    audio bytes (wav preferred, mp3 accepted).
-  const payload = {
-    text: text.substring(0, 4000),
-    speaker_wav_base64: refBase64,
-    language: language || 'en',
-  };
-
-  // 4. POST to the XTTS backend
-  const resp = await fetch(backendUrl + '/tts_to_audio', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  if (mode === 'json') {
+    // JSON mode — base64-encoded reference audio (XTTS-streaming-server style)
+    const refBase64 = arrayBufferToBase64(refBuffer);
+    const payload = {
+      text: text.substring(0, 4000),
+      speaker_wav_base64: refBase64,
+      language: language || 'en',
+    };
+    resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } else {
+    // Multipart mode (default) — Qwen3-TTS / generic TTS server style
+    // Sends the reference audio as a file upload field "speaker_wav"
+    const { body, contentType } = buildMultipart([
+      { name: 'text', value: text.substring(0, 4000) },
+      { name: 'language', value: language || 'en' },
+      { name: 'speaker_wav', value: refBuffer, filename: r2Key, contentType: 'audio/mpeg' },
+    ]);
+    resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': contentType },
+      body: body,
+    });
+  }
 
   if (!resp.ok) {
     const detail = await resp.text().catch(() => '');
     throw new Error(
-      'XTTS backend error ' + resp.status + ': ' + detail.substring(0, 300)
+      'TTS backend error ' + resp.status + ': ' + detail.substring(0, 300)
     );
   }
 
-  // 5. Read the audio bytes and detect content-type
+  // Read the audio bytes and detect content-type
   const audioBuffer = await resp.arrayBuffer();
   if (!audioBuffer || audioBuffer.byteLength === 0) {
-    throw new Error('XTTS backend returned empty audio');
+    throw new Error('TTS backend returned empty audio');
   }
 
   // Use the backend-reported content-type; fall back to wav
