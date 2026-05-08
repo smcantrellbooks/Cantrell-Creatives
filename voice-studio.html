@@ -770,21 +770,27 @@ function generateTTS(){
   if(!text)return;
   btn.disabled=true;btn.textContent='GENERATING...';
   var voice=VOICES.find(function(v){return v.voice_id===voiceId;})||{};
-  // Map accent to MeloTTS speaker preset for display
-  var vl=voiceId.toLowerCase();
-  var meloPre='EN-US';
-  if(vl.includes('british'))meloPre='EN-BR';
-  else if(vl.includes('irish')||vl.includes('scottish'))meloPre='EN-BR';
-  else if(vl.includes('australian'))meloPre='EN-AU';
-  var payload={text:text,voice_file:voiceId,format:format};
-  fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+
+  // Use the dedicated /tts-preview endpoint (XTTS/Qwen3 pipeline)
+  var payload={text:text,voice_file:voiceId,voice_id:voiceId,language:'en'};
+  fetch(WORKER+'/tts-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){
-    if(!r.ok)throw new Error('Worker returned '+r.status);
-    var ct=r.headers.get('content-type')||'audio/wav';
-    return r.arrayBuffer().then(function(buf){return{buf:buf,ct:ct};});
+    var ct=r.headers.get('content-type')||'';
+    // If the worker returned JSON it is an error envelope
+    if(ct.indexOf('application/json')!==-1){
+      return r.json().then(function(j){throw new Error(j.error||'Unknown error');});
+    }
+    if(!r.ok) throw new Error('Worker returned '+r.status);
+    return r.arrayBuffer().then(function(buf){return{buf:buf,ct:ct||'audio/wav'};});
   })
   .then(function(data){
-    var blob=new Blob([data.buf],{type:data.ct});
+    if(!data.buf||data.buf.byteLength===0) throw new Error('Empty audio response');
+    // Determine MIME — prefer what the backend told us
+    var mime=data.ct;
+    if(mime.indexOf('audio')===-1) mime='audio/wav';
+    var isWav=mime.indexOf('wav')!==-1;
+    var ext=isWav?'wav':'mp3';
+    var blob=new Blob([data.buf],{type:mime});
     var url=URL.createObjectURL(blob);
     result.classList.add('visible');
     setTimeout(function(){ttsWaveform.drawIdle&&ttsWaveform.drawIdle();},50);
@@ -794,9 +800,9 @@ function generateTTS(){
     audioEl.onerror=function(){console.error('Audio decode error',audioEl.error);};
     audioEl.oncanplay=function(){audioEl.play().catch(function(){});};
     var info=result.querySelector('.audio-result-info span');
-    if(info)info.textContent=(voice.name||voiceId)+' ('+meloPre+') — WAV — '+(blob.size/1024).toFixed(1)+' KB';
+    if(info)info.textContent=(voice.name||voiceId)+' — '+ext.toUpperCase()+' — '+(blob.size/1024).toFixed(1)+' KB';
     var dl=result.querySelector('.btn-download');
-    if(dl)dl.onclick=function(){var a=document.createElement('a');a.href=url;a.download='vs-tts-'+(voice.name||voiceId).replace(/\s+/g,'_').toLowerCase()+'.wav';a.click();};
+    if(dl)dl.onclick=function(){var a=document.createElement('a');a.href=url;a.download='vs-tts-'+(voice.name||voiceId).replace(/\s+/g,'_').toLowerCase()+'.'+ext;a.click();};
     saveHistory({type:'tts',voice_name:voice.name||voiceId,text:text,audio_url:url,created_at:new Date().toISOString()});
   })
   .catch(function(e){alert('TTS Error: '+e.message);})
@@ -1025,8 +1031,11 @@ function generateAudiobook(){
     while(content.length>0){chunks.push(content.substring(0,3800));content=content.substring(3800);}
     setChapterStatus(i,'Generating ('+chunks.length+' part'+(chunks.length>1?'s':'')+')...',null);
     return Promise.all(chunks.map(function(chunk){
-      var cleanNarrator=narratorId.replace(/\.mp3$/i,'');
-      return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chunk,voice_file:cleanNarrator,voice_id:narratorId,format:'mp3'})}).then(function(r){if(!r.ok)throw new Error('Worker error '+r.status);return r.blob();});
+      return fetch(WORKER+'/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chunk,voice_file:narratorId,voice_id:narratorId,language:'en'})}).then(function(r){
+        var ct=r.headers.get('content-type')||'';
+        if(ct.indexOf('application/json')!==-1) return r.json().then(function(j){throw new Error(j.error||'Generation failed');});
+        if(!r.ok)throw new Error('Worker error '+r.status);return r.blob();
+      });
     })).then(function(blobs){
       var combined=new Blob(blobs,{type:'audio/mpeg'});
       var url=URL.createObjectURL(combined);
@@ -1138,9 +1147,12 @@ function generateComparison(){
     var card=document.createElement('div');card.className='compare-result-card fade-in';
     card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">Generating...</div></div></div>';
     grid.appendChild(card);
-    var cleanVid=vid.replace(/\.mp3$/i,'');
-    return fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_file:cleanVid,voice_id:vid,format:'mp3'})})
-    .then(function(r){if(!r.ok)throw new Error('Worker error');return r.blob();})
+    return fetch(WORKER+'/tts-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_file:vid,voice_id:vid,language:'en'})})
+    .then(function(r){
+      var ct=r.headers.get('content-type')||'';
+      if(ct.indexOf('application/json')!==-1) return r.json().then(function(j){throw new Error(j.error||'Compare failed');});
+      if(!r.ok)throw new Error('Worker error');return r.blob();
+    })
     .then(function(blob){
       var url=URL.createObjectURL(blob);
       card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">'+voice.accent+'</div></div></div><audio controls src="'+url+'"></audio><button class="btn-download"><i class="ph ph-download-simple"></i> Download</button>';

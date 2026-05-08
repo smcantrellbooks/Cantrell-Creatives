@@ -43,24 +43,29 @@ logger = logging.getLogger(__name__)
 audiobook_jobs = {}
 
 
-# ── CORE TTS via Cloudflare Worker ──
+# ── CORE TTS via Cloudflare Worker (XTTS/Qwen3 pipeline) ──
 async def generate_speech(text: str, voice_id: str, speed: float = 1.0, response_format: str = "mp3") -> bytes:
     import httpx
     payload = {
         "text": text,
         "voice_file": voice_id,
-        "format": response_format,
-        "speed": speed
+        "voice_id": voice_id,
+        "language": "en",
     }
+    # Use the /generate endpoint which mirrors the root POST but is explicit
+    endpoint = CLOUDFLARE_WORKER.rstrip("/") + "/generate"
     async with httpx.AsyncClient(timeout=120) as client:
         resp = await client.post(
-            CLOUDFLARE_WORKER,
+            endpoint,
             json=payload,
             headers={"Content-Type": "application/json"}
         )
-        if resp.status_code == 200:
+        ct = resp.headers.get("content-type", "")
+        if resp.status_code == 200 and "audio" in ct:
             return resp.content
-        raise Exception(f"Cloudflare Worker TTS failed: {resp.status_code} {resp.text[:200]}")
+        # Try to extract a useful error message from JSON responses
+        detail = resp.text[:300] if resp.text else "empty response"
+        raise Exception(f"Cloudflare Worker TTS failed: {resp.status_code} {detail}")
 
 
 async def init_db():
@@ -312,7 +317,7 @@ async def health():
         "version": "3.0.0",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "voices_count": len(VOICE_PROFILES),
-        "tts_engine": "Cloudflare Workers AI — minimax/speech-2.8-turbo",
+        "tts_engine": "XTTS/Qwen3 via Cloudflare Worker",
         "worker_url": CLOUDFLARE_WORKER,
     }
 
