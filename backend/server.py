@@ -19,7 +19,7 @@ import aiosqlite
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-from voices import VOICE_PROFILES, get_voice_by_id
+from voices import VOICE_PROFILES, get_voice_by_id, ensure_voices_loaded
 
 GENERATIONS_DIR = ROOT_DIR / "generations"
 UPLOADS_DIR = ROOT_DIR / "uploads"
@@ -138,6 +138,7 @@ def get_voice_by_name(name: str):
 
 
 def resolve_voice(identifier: str):
+    ensure_voices_loaded()
     if not identifier:
         return VOICE_PROFILES[0] if VOICE_PROFILES else None
     voice = get_voice_by_id(identifier)
@@ -146,6 +147,9 @@ def resolve_voice(identifier: str):
     voice = get_voice_by_name(identifier)
     if voice:
         return voice
+    # If the identifier looks like a filename, build a minimal profile on the fly
+    if identifier.endswith('.mp3') or '-' in identifier:
+        return {"id": identifier, "name": identifier.replace('.mp3', ''), "accent": "English", "description": identifier}
     return VOICE_PROFILES[0] if VOICE_PROFILES else None
 
 
@@ -324,11 +328,12 @@ async def health():
 
 @api_router.get("/voices")
 async def get_voices():
+    ensure_voices_loaded()
     public_voices = []
     for v in VOICE_PROFILES:
         pv = {k: val for k, val in v.items() if k not in ("sample_file", "openai_voice")}
         public_voices.append(pv)
-    return {"voices": public_voices}
+    return {"voices": public_voices, "count": len(public_voices)}
 
 
 @api_router.get("/voice-sample/{voice_id}")
