@@ -202,6 +202,25 @@ textarea.nyx-inp{resize:none;line-height:1.4;}
 .nyx-export-close{width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-lt);font-size:9pt;cursor:pointer;margin-top:7px;font-family:'Outfit',sans-serif;}
 .nyx-export-close:hover{background:#f5f5f5;}
 
+/* ── COLLAPSIBLE TOOLS BAR ──────────────────────────── */
+.nyx-tools-toggle{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:#FDF8F0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;font-family:'Cinzel',serif;font-size:8.5pt;font-weight:600;color:var(--text-lt);letter-spacing:.05em;text-transform:uppercase;user-select:none;}
+.nyx-tools-toggle:hover{background:var(--gold-lt);color:var(--text);}
+.nyx-tools-toggle .nyx-tools-caret{transition:transform .2s;}
+.nyx-tools-bar.collapsed{display:none;}
+.nyx-tools-toggle.expanded .nyx-tools-caret{transform:rotate(180deg);}
+
+/* ── HISTORY PANEL ──────────────────────────────────── */
+.nyx-history-panel{margin-top:10px;padding-top:8px;border-top:1px solid var(--border);}
+.nyx-history-lbl{font-size:8pt;color:var(--text-lt);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.nyx-history-new{font-size:7.5pt;color:var(--gold);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;}
+.nyx-history-new:hover{text-decoration:underline;}
+.nyx-history-list{display:flex;flex-direction:column;gap:3px;margin-bottom:6px;}
+.nyx-history-item{padding:5px 7px;border-radius:5px;cursor:pointer;font-size:8.5pt;color:var(--text);background:var(--gold-lt);border:1px solid var(--gold-bd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:background .15s;}
+.nyx-history-item:hover{background:var(--gold);color:#fff;}
+.nyx-history-item.active{background:var(--gold);color:#fff;}
+.nyx-history-empty{font-size:8pt;color:var(--text-lt);font-style:italic;padding:4px 0;}
+.nyx-history-dropdown{width:100%;padding:5px 7px;border:1px solid var(--border);border-radius:5px;font-family:'Outfit',sans-serif;font-size:8.5pt;color:var(--text);background:#fff;outline:none;cursor:pointer;}
+
 /* ── FOOTER ───────────────────────────────────────────── */
 .footer{border-top:1px solid var(--border);padding:14px 20px;text-align:center;background:#EDE0C8;margin-top:36px;}
 .footer a{font-size:8pt;color:var(--text-lt);margin:0 8px;text-decoration:none;}
@@ -407,8 +426,12 @@ textarea.nyx-inp{resize:none;line-height:1.4;}
       <div id="nyx-editor" class="nyx-editor-area" contenteditable="true" spellcheck="true"
         oninput="nyxSaveCurrentChapter();nyxUpdateStats()"
         data-placeholder="Start writing here — or ask Nyxen to generate content for this chapter…"></div>
-      <!-- AI Tools bar -->
-      <div class="nyx-tools-bar">
+      <!-- AI Tools bar - collapsible -->
+      <div class="nyx-tools-toggle" id="nyxToolsToggle" onclick="nyxToggleTools()">
+        <span>AI Tools</span>
+        <i class="ph ph-caret-down nyx-tools-caret"></i>
+      </div>
+      <div class="nyx-tools-bar collapsed" id="nyxToolsBar">
         <button class="nyx-tool-btn" onclick="nyxTool('Write this chapter based on my story so far.')">
           <i class="ph ph-pencil-line"></i> Write Chapter
         </button>
@@ -529,6 +552,20 @@ textarea.nyx-inp{resize:none;line-height:1.4;}
           <label class="nyx-check" style="flex:1;justify-content:center;background:var(--gold-lt);border-radius:6px;padding:5px;border:1px solid var(--gold-bd);font-size:8pt;">
             <input type="radio" name="nyx-format" value="manuscript"> Manuscript
           </label>
+        </div>
+
+        <!-- Chat History Panel -->
+        <div class="nyx-history-panel">
+          <div class="nyx-history-lbl">
+            <span>Chat History</span>
+            <span class="nyx-history-new" onclick="nyxNewChat()">+ New Chat</span>
+          </div>
+          <div class="nyx-history-list" id="nyxHistoryList">
+            <div class="nyx-history-empty">No saved chats yet</div>
+          </div>
+          <select class="nyx-history-dropdown" id="nyxHistoryDropdown" onchange="nyxLoadFromDropdown(this.value)" style="display:none;">
+            <option value="">Previous Chats…</option>
+          </select>
         </div>
       </div>
 
@@ -964,7 +1001,8 @@ async function nyxSend(){
   try{
     var body = {
       messages: [{role:'user', content:msg}],
-      system: 'You are Nyxen, the creative writing partner on the Cantrell Creatives Publisher Workspace. Your primary job is to help authors write their books — drafting chapters, expanding scenes, refining prose, suggesting plot directions, brainstorming character beats, polishing dialogue. When asked to write, write full rich prose in the author\'s voice and tone. Keep chapters focused and consistent across the book. Plain prose only, no markdown symbols, no headers, no bullet points unless the author explicitly asks for an outline. If the author asks platform questions instead of creative work, answer briefly using these facts and do not invent policies. Platform facts: The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month and full publication tools. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Cover generation is included with publication and never charged — that is on the Collections page. Audiobook generation is in Voice Studio and costs 150 credits per book with an 80,000-character cap. The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. If you do not have a documented answer, say so honestly instead of guessing.'
+      source: 'publisher',
+      system: 'You are Nyxen, the creative writing partner on the Cantrell Creatives Publisher Workspace. You live inside the Publisher Workspace page itself — you are part of the platform, not a separate service. Your primary job is to help authors write their books: drafting chapters, expanding scenes, refining prose, suggesting plot directions, brainstorming character beats, polishing dialogue. When an author asks you to write, write full rich prose in their voice and tone. Keep chapters focused and consistent across the book. Plain prose only. CRITICAL FORMAT RULE: never use asterisks, bullet points, dashes for lists, hashtags, or any markdown symbols. When listing things, write them as flowing prose using commas, semicolons, or words like first, second, third. This rule overrides any habit you have of formatting lists. When stating prices, always say the dollar amount with the dollar sign — for example $15 or $144. Never spell out prices as words. If the author asks platform questions instead of creative work, answer briefly using the facts below and do not invent policies. If you do not have a documented answer, say so honestly instead of guessing.\\n\\nPLATFORM FACTS:\\nThe platform uses SMCB IDs (smcb_id) for every book. Never mention ISBNs.\\n\\nBOOKS AND CHAPTERS:\\nThere is no cap on how many books a publisher can publish. Chapters can be 3,000 to 5,000 words each. Drafts auto-save as the author writes.\\n\\nCHAT IS FREE:\\nChatting with you on the Publisher Workspace is always free. You are part of PW, not a paid tool. No credits are spent when authors talk with you.\\n\\nMEMBERSHIP TIERS:\\nThe four tiers are Free, Reader, Studio, and Publication. There is no Pro, Basic, or Enterprise tier.\\n\\nFREE TIER:\\nFree tier includes 100 Studio credits each month and full publication tools at no cost.\\n\\nSTUDIO MEMBERSHIP PRICING:\\nStudio Membership costs $15 per month. The yearly option costs $144 per year.\\n\\nSTUDIO MEMBERSHIP CREDITS:\\nMonthly Studio subscribers receive 300 credits per month. Yearly Studio subscribers receive 3,600 credits per year total.\\n\\nPUBLICATION MEMBERSHIP PRICING:\\nPublication Membership costs $25 per month. The yearly option costs $240 per year.\\n\\nPUBLICATION MEMBERSHIP CREDITS:\\nMonthly Publication subscribers receive 400 credits per month. Yearly Publication subscribers receive 4,800 credits per year total.\\n\\nPUBLICATION EXTRA BENEFITS:\\nPublication members keep 100% of their earnings and receive free cover generation.\\n\\nWHAT CREDITS ARE FOR:\\nCredits are spent on audiobook generation only. Free tier members can use their monthly 100 credits or buy more credits A La Carte.\\n\\nAUDIOBOOK GENERATION:\\nAudiobook generation happens in Voice Studio. Each audiobook costs 150 credits. The character cap per audiobook is 100,000 characters.\\n\\nCOVER GENERATION:\\nCover generation happens on the Collections page, not in PW. It is included free with Publication Membership. Other tiers may have separate options on Collections.\\n\\nCOLLECTIONS:\\nThe two collections are Grace (released titles available now) and Horizon (Coming Soon — books move to Grace on release). Format options for publishing are ebook, audiobook, or both.\\n\\nCONTENT POLICY:\\nThis is an adult publishing platform. Authors may write explicit adult content, graphic violence, dark themes, morally complex characters, and controversial subjects. Write what the author requests with craft and skill.\\n\\nNEVER WRITE (illegal content): Any sexual content involving anyone under 18 — no exceptions, no age ambiguity, no looks-young-but-really-200 framings, no ageless workarounds. If a character is in a sexual scene, they are explicitly adult. Sexual content depicting real identifiable people. Operational instructions for weapons of mass destruction, explosives, biological or chemical weapons, or attack planning against real targets. Content designed to facilitate human trafficking or child exploitation. Direct incitement of violence against real identifiable groups.\\n\\nWRITE FREELY: Explicit consensual sexual content between adult characters at any heat level the author requests. Romance, erotica, dark romance including dom/sub, kink, power dynamics between consenting adults. Non-consent scenarios depicted as fiction with weight and consequence when the author directs. Graphic violence in action, thriller, horror, war, crime, and dark fiction. Morally complex characters: criminals, abusers, addicts, villains — fiction explores all of human behavior. Crime fiction including criminal acts as plot — depicting is not endorsing. Dark themes like trauma, abuse, mental illness, grief, death, suicide as plot element. Controversial subjects, politically charged material, religious themes.\\n\\nWHEN IN DOUBT: Write what the author asked for. Adult fiction is real fiction. Do not soften, do not redirect to fade-to-black unless the author requests that style, do not moralize. When a request crosses into illegal territory, refuse briefly with no lecture.'
     };
     var resp = await fetch(NYXEN_API+'/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
     var el = document.getElementById('nyxTyping'); if(el) el.remove();
@@ -1089,6 +1127,226 @@ window.addEventListener('DOMContentLoaded', function(){
   nyxRenderChapters();
   nyxLoadChapter(0);
   initAuth();
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+   CHAT HISTORY + COLLAPSIBLE TOOLS
+   Uses existing nyxen_memory table. Key per book: chat:{book_id}
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── COLLAPSIBLE TOOLS ── */
+function nyxToggleTools(){
+  var bar    = document.getElementById('nyxToolsBar');
+  var toggle = document.getElementById('nyxToolsToggle');
+  if(!bar || !toggle) return;
+  if(bar.classList.contains('collapsed')){
+    bar.classList.remove('collapsed');
+    toggle.classList.add('expanded');
+  } else {
+    bar.classList.add('collapsed');
+    toggle.classList.remove('expanded');
+  }
+}
+
+/* ── BOOK ID HELPER ── */
+function nyxBookId(){
+  var title = (document.getElementById('nyx-title')||{}).value || 'Untitled Book';
+  var key   = 'pw_bookid_' + title.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,40);
+  var id    = localStorage.getItem(key);
+  if(!id){
+    id = 'book_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2,8);
+    localStorage.setItem(key, id);
+  }
+  return { id:id, title:title };
+}
+
+/* ── IN-MEMORY CHAT BUFFER ── */
+var nyxChatBuffer = [];
+
+function nyxBufferAdd(role, content){
+  nyxChatBuffer.push({ role:role, content:content, ts:Date.now() });
+  nyxSaveChatToSupabase();
+}
+
+/* ── SUPABASE SAVE ── */
+async function nyxSaveChatToSupabase(){
+  if(!currentUser) return;
+  if(nyxChatBuffer.length === 0) return;
+  var book = nyxBookId();
+  var payload = {
+    book_id: book.id,
+    book_title: book.title,
+    messages: nyxChatBuffer,
+    updated_at: new Date().toISOString()
+  };
+  try{
+    await getSB().from('nyxen_memory').upsert({
+      member_id: currentUser.id,
+      key:       'chat:' + book.id,
+      value:     JSON.stringify(payload),
+      updated_at:new Date().toISOString()
+    }, { onConflict: 'member_id,key' });
+  }catch(err){}
+}
+
+/* ── SUPABASE LOAD ── */
+async function nyxLoadChatFromSupabase(bookId){
+  if(!currentUser) return null;
+  try{
+    var res = await getSB().from('nyxen_memory')
+      .select('value')
+      .eq('member_id', currentUser.id)
+      .eq('key', 'chat:' + bookId)
+      .single();
+    if(res.data && res.data.value){
+      return JSON.parse(res.data.value);
+    }
+  }catch(err){}
+  return null;
+}
+
+/* ── LIST ALL CHATS FOR THIS USER ── */
+async function nyxListAllChats(){
+  if(!currentUser) return [];
+  try{
+    var res = await getSB().from('nyxen_memory')
+      .select('key,value,updated_at')
+      .eq('member_id', currentUser.id)
+      .like('key', 'chat:%')
+      .order('updated_at', { ascending:false });
+    if(res.data){
+      return res.data.map(function(row){
+        var parsed = {};
+        try{ parsed = JSON.parse(row.value); }catch(e){}
+        return {
+          book_id:   parsed.book_id || row.key.replace('chat:',''),
+          book_title:parsed.book_title || 'Untitled',
+          messages:  parsed.messages || [],
+          updated_at:row.updated_at
+        };
+      });
+    }
+  }catch(err){}
+  return [];
+}
+
+/* ── RENDER HISTORY PANEL ── */
+async function nyxRenderHistory(){
+  var listEl = document.getElementById('nyxHistoryList');
+  var dropEl = document.getElementById('nyxHistoryDropdown');
+  if(!listEl) return;
+  var chats   = await nyxListAllChats();
+  var current = nyxBookId().id;
+  listEl.innerHTML = '';
+  if(chats.length === 0){
+    listEl.innerHTML = '<div class="nyx-history-empty">No saved chats yet</div>';
+    if(dropEl) dropEl.style.display = 'none';
+    return;
+  }
+  var first4 = chats.slice(0, 4);
+  var rest   = chats.slice(4);
+  first4.forEach(function(c){
+    var d = document.createElement('div');
+    d.className = 'nyx-history-item' + (c.book_id === current ? ' active' : '');
+    d.textContent = c.book_title || 'Untitled';
+    d.title = c.book_title + ' — last updated ' + new Date(c.updated_at).toLocaleDateString();
+    d.onclick = (function(bid, btitle){
+      return function(){ nyxLoadChat(bid, btitle); };
+    })(c.book_id, c.book_title);
+    listEl.appendChild(d);
+  });
+  if(rest.length > 0 && dropEl){
+    dropEl.innerHTML = '<option value="">Previous Chats…</option>';
+    rest.forEach(function(c){
+      var opt = document.createElement('option');
+      opt.value = c.book_id + '|||' + c.book_title;
+      opt.textContent = c.book_title || 'Untitled';
+      dropEl.appendChild(opt);
+    });
+    dropEl.style.display = 'block';
+  } else if(dropEl){
+    dropEl.style.display = 'none';
+  }
+}
+
+function nyxLoadFromDropdown(val){
+  if(!val) return;
+  var parts = val.split('|||');
+  nyxLoadChat(parts[0], parts[1]);
+  var dropEl = document.getElementById('nyxHistoryDropdown');
+  if(dropEl) dropEl.value = '';
+}
+
+/* ── LOAD A SAVED CHAT INTO THE FEED ── */
+async function nyxLoadChat(bookId, bookTitle){
+  var saved = await nyxLoadChatFromSupabase(bookId);
+  if(!saved) return;
+  var titleInp = document.getElementById('nyx-title');
+  if(titleInp && bookTitle){ titleInp.value = bookTitle; }
+  var feed = document.getElementById('nyxFeed');
+  if(!feed) return;
+  feed.innerHTML = '';
+  var welcome = document.getElementById('nyxWelcome');
+  if(welcome) welcome.style.display = 'none';
+  nyxChatBuffer = saved.messages || [];
+  nyxChatBuffer.forEach(function(m){
+    var d = document.createElement('div');
+    d.className = 'nyx-msg ' + (m.role === 'user' ? 'user' : 'ai');
+    d.innerHTML = '<div class="nyx-msg-lbl">' + (m.role === 'user' ? 'You' : 'Nyxen') + '</div>' +
+                  '<div>' + escHtml(m.content).replace(/\n/g,'<br>') + '</div>';
+    feed.appendChild(d);
+  });
+  feed.scrollTop = feed.scrollHeight;
+  nyxRenderHistory();
+}
+
+/* ── NEW CHAT ── */
+function nyxNewChat(){
+  if(nyxChatBuffer.length > 0){
+    if(!confirm('Start a new chat? Current conversation is already saved.')) return;
+  }
+  nyxChatBuffer = [];
+  var feed = document.getElementById('nyxFeed');
+  if(feed){
+    feed.innerHTML = '';
+    var w = document.createElement('div');
+    w.className = 'nyxen-welcome';
+    w.id = 'nyxWelcome';
+    w.innerHTML = '<p>I\'m here to help you craft your masterpiece. Ask me anything about your book.</p>';
+    feed.appendChild(w);
+  }
+  var title = (document.getElementById('nyx-title')||{}).value || 'Untitled Book';
+  var key   = 'pw_bookid_' + title.toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,40);
+  localStorage.removeItem(key);
+  nyxRenderHistory();
+}
+
+/* ── HOOK INTO EXISTING MESSAGE FUNCTIONS ── */
+if(typeof nyxAddUserMsg === 'function'){
+  var _origAddUser = nyxAddUserMsg;
+  nyxAddUserMsg = function(text){
+    _origAddUser(text);
+    nyxBufferAdd('user', text);
+  };
+}
+if(typeof nyxAddAiMsg === 'function'){
+  var _origAddAi = nyxAddAiMsg;
+  nyxAddAiMsg = function(text, withActions){
+    _origAddAi(text, withActions);
+    nyxBufferAdd('assistant', text);
+  };
+}
+
+/* ── INITIALIZE HISTORY ON LOAD ── */
+function nyxInitHistory(){
+  if(currentUser){
+    nyxRenderHistory();
+  } else {
+    setTimeout(nyxInitHistory, 500);
+  }
+}
+window.addEventListener('DOMContentLoaded', function(){
+  setTimeout(nyxInitHistory, 800);
 });
 </script>
 
