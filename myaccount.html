@@ -329,11 +329,10 @@ var CFG = {
     free:        'Free Creator',
     studio:      'Studio Member',
     publication: 'Publication Member',
-    pro:         'Pro Creator',
-    premium:     'Premium Creator',
+    founder:     'Founder',
   },
   TIER_CREDITS: {
-    free: 100, studio: 300, publication: 400, pro: 300, premium: 400
+    free: 100, studio: 300, publication: 400, founder: 999999
   },
   STRIPE: {
     CREDIT_5:  'https://buy.stripe.com/00w7sK3VAcjofNp6HH2Nq02',
@@ -406,21 +405,27 @@ function renderProfile(user){
 
 async function loadProfileData(user){
   try {
-    /* Try to read from a 'profiles' or 'user_credits' table */
-    var res = await sb().from('profiles').select('tier,credits_total,credits_used').eq('id', user.id).single();
+    /* Read from creative_members — the source of truth for creator tier and credits */
+    var res = await sb()
+      .from('creative_members')
+      .select('tier_name,studio_credits,voice_studio_access,creative_portal_access,is_vip,billing,earnings_retention_pct')
+      .eq('id', user.id)
+      .single();
+
     if(res.data){
       var d = res.data;
-      var tier    = d.tier || 'free';
-      var total   = d.credits_total != null ? d.credits_total : (CFG.TIER_CREDITS[tier] || 100);
-      var used    = d.credits_used  != null ? d.credits_used  : 0;
-      var remaining = Math.max(0, total - used);
-      renderTier(tier);
+      var tier   = (d.tier_name || 'FREE').toLowerCase();
+      var total  = d.studio_credits != null ? d.studio_credits : (CFG.TIER_CREDITS[tier] || 100);
+      /* studio_credits is a balance, not a usage tracker — show full balance */
+      var used   = 0;
+      var remaining = total;
+      renderTier(d.tier_name || 'FREE');
       renderCredits(total, used, remaining);
       return;
     }
   } catch(e){}
 
-  /* Try user_metadata for tier */
+  /* Fallback: tier from user_metadata if creative_members read fails */
   var meta = user.user_metadata || {};
   var tier = meta.tier || meta.plan || 'free';
   var total = CFG.TIER_CREDITS[tier] || 100;
@@ -443,31 +448,89 @@ function renderCredits(total, used, remaining){
   if(pct >= 85) bar.classList.add('danger'); else bar.classList.remove('danger');
 }
 
-/* ── ASSETS ── */
+/* ── ASSETS ──
+   Drafts live in Supabase (manuscripts, audiobooks tables).
+   Published books live in R2+D1 (queried via /catalog?author_id=).
+   Once published, the Supabase draft row is removed by the publish flow,
+   so there's no overlap between the two sources. */
 async function loadAssets(user){
-  var container = document.getElementById('assetsContainer');
+  var assets = [];
+
+  /* DRAFTS — Supabase manuscripts + audiobooks */
   try {
-    var resp = await fetch(CFG.CF_WORKER + '/assets?user_id=' + encodeURIComponent(user.id));
-    if(!resp.ok) throw new Error('Worker error ' + resp.status);
-    var data = await resp.json();
-    allAssets = data.assets || data || [];
-    updateStats();
-    renderAssets(allAssets);
-  } catch(err){
-    /* fallback: try R2 worker */
-    try {
-      var resp2 = await fetch(CFG.R2_WORKER + '/user-assets?uid=' + encodeURIComponent(user.id));
-      if(!resp2.ok) throw new Error('R2 error');
-      var d2 = await resp2.json();
-      allAssets = d2.assets || d2 || [];
-      updateStats();
-      renderAssets(allAssets);
-    } catch(e2){
-      allAssets = [];
-      updateStats();
-      renderAssets([]);
-      showStatus('assetStatus','info','Assets will appear here once you generate them in Voice Studio.');
+    var [manuscriptsRes, audiobooksRes] = await Promise.all([
+      sb().from('manuscripts')
+        .select('id, book_id, status, last_saved, word_count')
+        .eq('member_id', user.id)
+        .order('last_saved', { ascending: false }),
+      sb().from('audiobooks')
+        .select('id, book_id, format, duration_seconds, voice_count, created_at')
+        .eq('member_id', user.id)
+        .order('created_at', { ascending: false })
+    ]);
+
+    if(manuscriptsRes.data){
+      manuscriptsRes.data.forEach(function(m){
+        assets.push({
+          id: m.id,
+          book_id: m.book_id,
+          type: 'epub',
+          title: m.book_id || 'Untitled Manuscript',
+          status: m.status || 'draft',
+          published: false,
+          updated_at: m.last_saved
+        });
+      });
     }
+
+    if(audiobooksRes.data){
+      audiobooksRes.data.forEach(function(a){
+        assets.push({
+          id: a.id,
+          book_id: a.book_id,
+          type: 'audio',
+          title: a.book_id || 'Untitled Audiobook',
+          duration: a.duration_seconds,
+          format: a.format,
+          published: false,
+          updated_at: a.created_at
+        });
+      });
+    }
+  } catch(err){
+    /* Supabase query failed — drafts won't show but published may still work */
+  }
+
+  /* PUBLISHED — D1 books filtered by this user */
+  try {
+    var resp = await fetch(CFG.R2_WORKER + '/catalog?author_id=' + encodeURIComponent(user.id));
+    if(resp.ok){
+      var published = await resp.json();
+      if(Array.isArray(published)){
+        published.forEach(function(b){
+          assets.push({
+            id: b.id,
+            type: b.file_type === 'audio' ? 'audio' : 'epub',
+            title: b.title,
+            description: b.description,
+            cover_image_url: b.cover_image_url,
+            asset_path: b.asset_path,
+            published: true,
+            updated_at: b.created_at
+          });
+        });
+      }
+    }
+  } catch(err){
+    /* D1 query failed — published won't show but drafts may still work */
+  }
+
+  allAssets = assets;
+  updateStats();
+  renderAssets(allAssets);
+
+  if(assets.length === 0){
+    showStatus('assetStatus', 'info', 'Assets will appear here once you save manuscripts in Publisher Workspace, generate audiobooks in Voice Studio, or publish to Collections.');
   }
 }
 
