@@ -698,23 +698,22 @@ select{appearance:none;-webkit-appearance:none;}
   <div style="font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">Studio Showcase</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;">
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
-      <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24212931/Kieran-W4gp-WDKI2Li7dh8f8Njiw.mp4" type="video/mp4"></video>
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24212931/Kieran-W4gp-WDKI2Li7dh8f8Njiw.mp4" type="video/mp4"></video>
     </div>
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
-      <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24771216/manrunning-hXnQg19SLSG2KZu9paE93w.mp4" type="video/mp4"></video>
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24771216/manrunning-hXnQg19SLSG2KZu9paE93w.mp4" type="video/mp4"></video>
     </div>
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
-      <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24761681/actionpack-Nbml9D2BiSeWZag6PWozyA.mp4" type="video/mp4"></video>
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24761681/actionpack-Nbml9D2BiSeWZag6PWozyA.mp4" type="video/mp4"></video>
     </div>
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:16/9;background:var(--panel2);">
-      <video autoplay muted loop playsinline controls style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24761678/blueshelby-BgsJJCL3jSspvsK6vcanpw.mp4" type="video/mp4"></video>
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"><source src="https://cdn1.site-media.eu/images/0/24761678/blueshelby-BgsJJCL3jSspvsK6vcanpw.mp4" type="video/mp4"></video>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:960px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:720px;margin:0 auto;">
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24210896/studioplacement2-q1Ic9LYH5khAHOjM9nMpjw.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Studio Sample"></div>
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24211014/SNOCHAMP-lr--9uCDS1IC0CV9_N3ugQ.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Studio Sample"></div>
     <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24771222/fieldofpurpleroses-d6VVFWKib4EaOzsipUbVUQ.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Field of Purple Roses"></div>
-    <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border);aspect-ratio:1/1;"><img src="https://cdn1.site-media.eu/images/0/24771291/moonlightpreditor-SYPnv7GDNZAciW7ImkmnQA.png" style="width:100%;height:100%;display:block;object-fit:cover;" alt="Moonlight Predator"></div>
   </div>
 </div>
 
@@ -994,21 +993,29 @@ function applyTextOverlay(){
 function clearTextOverlay(){var el=document.getElementById('textOverlayEl');if(el)el.remove();textOverlayActive=false;}
 
 /* ═══ NYXEN ═══ */
-var nyxHistory=[];
 async function nyxSend(){
   var inp=document.getElementById('nyxInput');
   var text=inp.value.trim();if(!text)return;
   inp.value='';
   addNyxMsg('user',text);
-  nyxHistory.push({role:'user',content:text});
+  var feed=document.getElementById('nyxMsgs');
+  var typing=document.createElement('div');
+  typing.className='nyx-msg ai';
+  typing.id='nyxTyping';
+  typing.innerHTML='<span style="display:inline-flex;gap:3px;align-items:center;"><span style="width:5px;height:5px;border-radius:50%;background:#888;animation:nyxDot 1.2s ease-in-out infinite;display:inline-block;"></span><span style="width:5px;height:5px;border-radius:50%;background:#888;animation:nyxDot 1.2s ease-in-out infinite .2s;display:inline-block;"></span><span style="width:5px;height:5px;border-radius:50%;background:#888;animation:nyxDot 1.2s ease-in-out infinite .4s;display:inline-block;"></span></span>';
+  feed.appendChild(typing);feed.scrollTop=feed.scrollHeight;
   try {
-    var res=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:nyxHistory.slice(-16),mode:'assistant',response_mode:'balanced',system_context:'You are Nyxen, the assistant on the Cantrell Creatives Studio page. Help creators use the Studio tools — image generation, video generation, music generation, face swap, asset management. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: The Studio is for creating ads, promotional images, videos, and music. Studio credit costs: Image generation = 5 credits. Music generation = 5 credits. 10-second I2V or T2V video = 15 credits. 10-second V2V = 20 credits. 10-second A2V = 25 credits. Audiobook generation lives in Voice Studio (not Studio) and costs 150 credits per book. Cover generation for publication is included with publication and is never charged — that is on the Collections page. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Studio assets are temporary by design — retention varies by tier and creators are responsible for downloading their work. If you do not have a documented answer, say so honestly instead of guessing.'})});
+    var res=await fetch(NYXEN_API+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:text}],mode:'assistant',response_mode:'balanced',system_context:'You are Nyxen, the assistant on the Cantrell Creatives Studio page. Help creators use the Studio tools — image generation, video generation, music generation, face swap, asset management. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: The Studio is for creating ads, promotional images, videos, and music. Studio credit costs: Image generation = 5 credits. Music generation = 5 credits. 10-second I2V or T2V video = 15 credits. 10-second V2V = 20 credits. 10-second A2V = 25 credits. Audiobook generation lives in Voice Studio (not Studio) and costs 150 credits per book. Cover generation for publication is included with publication and is never charged — that is on the Collections page. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Studio assets are temporary by design — retention varies by tier and creators are responsible for downloading their work. If you do not have a documented answer, say so honestly instead of guessing.'})});
     var data=await res.json();
+    var t=document.getElementById('nyxTyping');if(t)t.remove();
     var reply=data.response||data.content||'Could not get a response.';
-    nyxHistory.push({role:'assistant',content:reply});
     addNyxMsg('ai',reply);
-  } catch(e){addNyxMsg('ai','Error: '+e.message);}
+  } catch(e){
+    var t=document.getElementById('nyxTyping');if(t)t.remove();
+    addNyxMsg('ai','Error: '+e.message);
+  }
 }
+(function(){var s=document.createElement('style');s.textContent='@keyframes nyxDot{0%,80%,100%{opacity:.35;transform:translateY(0);}40%{opacity:1;transform:translateY(-4px);}}';document.head.appendChild(s);})();
 function addNyxMsg(role,text){
   var feed=document.getElementById('nyxMsgs');
   var div=document.createElement('div');div.className='nyx-msg '+role;div.textContent=text;
