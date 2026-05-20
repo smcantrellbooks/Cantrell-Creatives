@@ -27,17 +27,17 @@ html,body{width:100%;min-height:100vh;font-family:'Outfit',sans-serif;font-size:
 .hdr{position:sticky;top:0;z-index:200;height:56px;background:var(--sidebar);border-bottom:1px solid rgba(201,160,64,.2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;flex-shrink:0;}
 .hdr-logo img{height:32px;border-radius:4px;}
 .hdr-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;}
-.hdr-btn{padding:5px 13px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:rgba(232,201,122,.75);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.hdr-btn{padding:6px 14px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:rgba(232,201,122,.75);font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
 .hdr-btn:hover{background:rgba(201,160,64,.18);border-color:var(--gold);color:rgba(232,201,122,1);}
 .hdr-btn.logout{border-color:rgba(180,60,60,.4);color:rgba(220,120,120,.85);}
 .hdr-btn.logout:hover{background:rgba(140,32,32,.22);}
 .hdr-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;background:rgba(201,160,64,.1);border:1px solid rgba(201,160,64,.25);}
 .hdr-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-.hdr-chip-name{font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.07em;color:rgba(232,201,122,.85);}
+.hdr-chip-name{font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.07em;color:rgba(232,201,122,.85);}
 
 /* ── TOOL BAR ─────────────────────────────────────────── */
 .tool-bar{background:var(--sidebar2);border-bottom:1px solid rgba(201,160,64,.12);display:flex;justify-content:center;gap:6px;padding:7px 20px;flex-wrap:wrap;}
-.tool-btn{padding:5px 15px;border-radius:999px;border:1px solid rgba(201,160,64,.28);background:transparent;color:rgba(232,201,122,.6);font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.tool-btn{padding:6px 16px;border-radius:999px;border:1px solid rgba(201,160,64,.28);background:transparent;color:rgba(232,201,122,.6);font-family:'Cinzel',serif;font-size:8pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
 .tool-btn:hover{background:rgba(201,160,64,.14);border-color:var(--gold);color:rgba(232,201,122,.9);}
 .tool-btn.active{background:var(--gold);border-color:var(--gold);color:#1a0a00;}
 .tool-btn i{font-size:.85rem;}
@@ -215,7 +215,10 @@ textarea.nyx-inp{resize:none;line-height:1.4;}
 .nyx-history-new{font-size:7.5pt;color:var(--gold);cursor:pointer;font-weight:600;text-transform:none;letter-spacing:0;}
 .nyx-history-new:hover{text-decoration:underline;}
 .nyx-history-list{display:flex;flex-direction:column;gap:3px;margin-bottom:6px;}
-.nyx-history-item{padding:5px 7px;border-radius:5px;cursor:pointer;font-size:8.5pt;color:var(--text);background:var(--gold-lt);border:1px solid var(--gold-bd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:background .15s;}
+.nyx-history-item{padding:5px 7px;border-radius:5px;cursor:pointer;font-size:8.5pt;color:var(--text);background:var(--gold-lt);border:1px solid var(--gold-bd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:background .15s;display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.nyx-history-item .nyx-hi-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.nyx-history-item .nyx-hi-del{flex-shrink:0;font-size:10pt;line-height:1;color:var(--text-lt);cursor:pointer;padding:0 2px;border-radius:3px;}
+.nyx-history-item .nyx-hi-del:hover{color:#c0392b;background:rgba(192,57,43,.12);}
 .nyx-history-item:hover{background:var(--gold);color:#fff;}
 .nyx-history-item.active{background:var(--gold);color:#fff;}
 .nyx-history-empty{font-size:8pt;color:var(--text-lt);font-style:italic;padding:4px 0;}
@@ -1002,7 +1005,7 @@ async function nyxSend(){
     var body = {
       messages: [{role:'user', content:msg}],
       source: 'publisher',
-      system: 'You are Nyxen, the creative writing partner on the Cantrell Creatives Publisher Workspace. You live inside the Publisher Workspace page itself — you are part of the platform, not a separate service. Your primary job is to help authors write their books: drafting chapters, expanding scenes, refining prose, suggesting plot directions, brainstorming character beats, polishing dialogue. When an author asks you to write, write full rich prose in their voice and tone. Keep chapters focused and consistent across the book. Plain prose only. CRITICAL FORMAT RULE: never use asterisks, bullet points, dashes for lists, hashtags, or any markdown symbols. When listing things, write them as flowing prose using commas, semicolons, or words like first, second, third. This rule overrides any habit you have of formatting lists. When stating prices, always say the dollar amount with the dollar sign — for example $15 or $144. Never spell out prices as words. If the author asks platform questions instead of creative work, answer briefly using the facts below and do not invent policies. If you do not have a documented answer, say so honestly instead of guessing.\\n\\nPLATFORM FACTS:\\nThe platform uses SMCB IDs (smcb_id) for every book. Never mention ISBNs.\\n\\nBOOKS AND CHAPTERS:\\nThere is no cap on how many books a publisher can publish. Chapters can be 3,000 to 5,000 words each. Drafts auto-save as the author writes.\\n\\nCHAT IS FREE:\\nChatting with you on the Publisher Workspace is always free. You are part of PW, not a paid tool. No credits are spent when authors talk with you.\\n\\nMEMBERSHIP TIERS:\\nThe four tiers are Free, Reader, Studio, and Publication. There is no Pro, Basic, or Enterprise tier.\\n\\nFREE TIER:\\nFree tier includes 100 Studio credits each month and full publication tools at no cost.\\n\\nSTUDIO MEMBERSHIP PRICING:\\nStudio Membership costs $15 per month. The yearly option costs $144 per year.\\n\\nSTUDIO MEMBERSHIP CREDITS:\\nMonthly Studio subscribers receive 300 credits per month. Yearly Studio subscribers receive 3,600 credits per year total.\\n\\nPUBLICATION MEMBERSHIP PRICING:\\nPublication Membership costs $25 per month. The yearly option costs $240 per year.\\n\\nPUBLICATION MEMBERSHIP CREDITS:\\nMonthly Publication subscribers receive 400 credits per month. Yearly Publication subscribers receive 4,800 credits per year total.\\n\\nPUBLICATION EXTRA BENEFITS:\\nPublication members keep 100% of their earnings and receive free cover generation.\\n\\nWHAT CREDITS ARE FOR:\\nCredits are spent on audiobook generation only. Free tier members can use their monthly 100 credits or buy more credits A La Carte.\\n\\nAUDIOBOOK GENERATION:\\nAudiobook generation happens in Voice Studio. Each audiobook costs 150 credits. The character cap per audiobook is 100,000 characters.\\n\\nCOVER GENERATION:\\nCover generation happens on the Collections page, not in PW. It is included free with Publication Membership. Other tiers may have separate options on Collections.\\n\\nCOLLECTIONS:\\nThe two collections are Grace (released titles available now) and Horizon (Coming Soon — books move to Grace on release). Format options for publishing are ebook, audiobook, or both.\\n\\nCONTENT POLICY:\\nThis is an adult publishing platform. Authors may write explicit adult content, graphic violence, dark themes, morally complex characters, and controversial subjects. Write what the author requests with craft and skill.\\n\\nNEVER WRITE (illegal content): Any sexual content involving anyone under 18 — no exceptions, no age ambiguity, no looks-young-but-really-200 framings, no ageless workarounds. If a character is in a sexual scene, they are explicitly adult. Sexual content depicting real identifiable people. Operational instructions for weapons of mass destruction, explosives, biological or chemical weapons, or attack planning against real targets. Content designed to facilitate human trafficking or child exploitation. Direct incitement of violence against real identifiable groups.\\n\\nWRITE FREELY: Explicit consensual sexual content between adult characters at any heat level the author requests. Romance, erotica, dark romance including dom/sub, kink, power dynamics between consenting adults. Non-consent scenarios depicted as fiction with weight and consequence when the author directs. Graphic violence in action, thriller, horror, war, crime, and dark fiction. Morally complex characters: criminals, abusers, addicts, villains — fiction explores all of human behavior. Crime fiction including criminal acts as plot — depicting is not endorsing. Dark themes like trauma, abuse, mental illness, grief, death, suicide as plot element. Controversial subjects, politically charged material, religious themes.\\n\\nWHEN IN DOUBT: Write what the author asked for. Adult fiction is real fiction. Do not soften, do not redirect to fade-to-black unless the author requests that style, do not moralize. When a request crosses into illegal territory, refuse briefly with no lecture.'
+      system: 'You are Nyxen, the creative writing partner on the Cantrell Creatives Publisher Workspace. You live inside the Publisher Workspace page itself — you are part of the platform, not a separate service. Your primary job is to help authors write their books: drafting chapters, expanding scenes, refining prose, suggesting plot directions, brainstorming character beats, polishing dialogue. CONVERSATION VERSUS WRITING: Distinguish between talking and writing. When the author greets you, asks a question, gives a short instruction, or makes small talk, respond naturally and briefly like a creative partner having a conversation. Only produce story prose, scenes, or chapters when the author actually asks you to write or continue creative content. Never answer a greeting or a simple question with a story or descriptive prose. If the author says hi, greet them back warmly and ask what they want to work on. When an author asks you to write, write full rich prose in their voice and tone. Keep chapters focused and consistent across the book. Plain prose only. CRITICAL FORMAT RULE: never use asterisks, bullet points, dashes for lists, hashtags, or any markdown symbols. When listing things, write them as flowing prose using commas, semicolons, or words like first, second, third. This rule overrides any habit you have of formatting lists. When stating prices, always say the dollar amount with the dollar sign — for example $15 or $144. Never spell out prices as words. If the author asks platform questions instead of creative work, answer briefly using the facts below and do not invent policies. If you do not have a documented answer, say so honestly instead of guessing.\\n\\nPLATFORM FACTS:\\nThe platform uses SMCB IDs (smcb_id) for every book. Never mention ISBNs.\\n\\nBOOKS AND CHAPTERS:\\nThere is no cap on how many books a publisher can publish. Chapters can be 3,000 to 5,000 words each. Drafts auto-save as the author writes.\\n\\nCHAT IS FREE:\\nChatting with you on the Publisher Workspace is always free. You are part of PW, not a paid tool. No credits are spent when authors talk with you.\\n\\nMEMBERSHIP TIERS:\\nThe four tiers are Free, Reader, Studio, and Publication. There is no Pro, Basic, or Enterprise tier.\\n\\nFREE TIER:\\nFree tier includes 100 Studio credits each month and full publication tools at no cost.\\n\\nSTUDIO MEMBERSHIP PRICING:\\nStudio Membership costs $15 per month. The yearly option costs $144 per year.\\n\\nSTUDIO MEMBERSHIP CREDITS:\\nMonthly Studio subscribers receive 300 credits per month. Yearly Studio subscribers receive 3,600 credits per year total.\\n\\nPUBLICATION MEMBERSHIP PRICING:\\nPublication Membership costs $25 per month. The yearly option costs $240 per year.\\n\\nPUBLICATION MEMBERSHIP CREDITS:\\nMonthly Publication subscribers receive 400 credits per month. Yearly Publication subscribers receive 4,800 credits per year total.\\n\\nPUBLICATION EXTRA BENEFITS:\\nPublication members keep 100% of their earnings and receive free cover generation.\\n\\nWHAT CREDITS ARE FOR:\\nCredits are spent on audiobook generation only. Free tier members can use their monthly 100 credits or buy more credits A La Carte.\\n\\nAUDIOBOOK GENERATION:\\nAudiobook generation happens in Voice Studio. Each audiobook costs 150 credits. The character cap per audiobook is 100,000 characters.\\n\\nCOVER GENERATION:\\nCover generation happens on the Collections page, not in PW. It is included free with Publication Membership. Other tiers may have separate options on Collections.\\n\\nCOLLECTIONS:\\nThe two collections are Grace (released titles available now) and Horizon (Coming Soon — books move to Grace on release). Format options for publishing are ebook, audiobook, or both.\\n\\nCONTENT POLICY:\\nThis is an adult publishing platform. Authors may write explicit adult content, graphic violence, dark themes, morally complex characters, and controversial subjects. Write what the author requests with craft and skill.\\n\\nNEVER WRITE (illegal content): Any sexual content involving anyone under 18 — no exceptions, no age ambiguity, no looks-young-but-really-200 framings, no ageless workarounds. If a character is in a sexual scene, they are explicitly adult. Sexual content depicting real identifiable people. Operational instructions for weapons of mass destruction, explosives, biological or chemical weapons, or attack planning against real targets. Content designed to facilitate human trafficking or child exploitation. Direct incitement of violence against real identifiable groups.\\n\\nWRITE FREELY: Explicit consensual sexual content between adult characters at any heat level the author requests. Romance, erotica, dark romance including dom/sub, kink, power dynamics between consenting adults. Non-consent scenarios depicted as fiction with weight and consequence when the author directs. Graphic violence in action, thriller, horror, war, crime, and dark fiction. Morally complex characters: criminals, abusers, addicts, villains — fiction explores all of human behavior. Crime fiction including criminal acts as plot — depicting is not endorsing. Dark themes like trauma, abuse, mental illness, grief, death, suicide as plot element. Controversial subjects, politically charged material, religious themes.\\n\\nWHEN IN DOUBT: Write what the author asked for. Adult fiction is real fiction. Do not soften, do not redirect to fade-to-black unless the author requests that style, do not moralize. When a request crosses into illegal territory, refuse briefly with no lecture.'
     };
     var resp = await fetch(NYXEN_API+'/chat', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
     var el = document.getElementById('nyxTyping'); if(el) el.remove();
@@ -1189,6 +1192,39 @@ async function nyxSaveChatToSupabase(){
   }catch(err){}
 }
 
+/* ── SUPABASE DELETE ── */
+async function nyxDeleteChatFromSupabase(bookId){
+  if(!currentUser) return false;
+  try{
+    await getSB().from('nyxen_memory')
+      .delete()
+      .eq('member_id', currentUser.id)
+      .eq('key', 'chat:' + bookId);
+    return true;
+  }catch(err){
+    return false;
+  }
+}
+
+/* ── DELETE A SAVED CHAT (with confirm) ── */
+async function nyxDeleteChat(bookId, bookTitle){
+  if(!confirm('Delete the saved chat for "' + (bookTitle || 'Untitled') + '"? This cannot be undone.')) return;
+  var ok = await nyxDeleteChatFromSupabase(bookId);
+  if(!ok){
+    alert('Could not delete the chat. Please try again.');
+    return;
+  }
+  // If the deleted chat is the one currently open, clear the feed
+  if(bookId === nyxBookId().id){
+    var feed = document.getElementById('nyxFeed');
+    if(feed) feed.innerHTML = '';
+    nyxChatBuffer = [];
+    var welcome = document.getElementById('nyxWelcome');
+    if(welcome) welcome.style.display = '';
+  }
+  nyxRenderHistory();
+}
+
 /* ── SUPABASE LOAD ── */
 async function nyxLoadChatFromSupabase(bookId){
   if(!currentUser) return null;
@@ -1248,11 +1284,25 @@ async function nyxRenderHistory(){
   first4.forEach(function(c){
     var d = document.createElement('div');
     d.className = 'nyx-history-item' + (c.book_id === current ? ' active' : '');
-    d.textContent = c.book_title || 'Untitled';
     d.title = c.book_title + ' — last updated ' + new Date(c.updated_at).toLocaleDateString();
-    d.onclick = (function(bid, btitle){
+
+    var titleSpan = document.createElement('span');
+    titleSpan.className = 'nyx-hi-title';
+    titleSpan.textContent = c.book_title || 'Untitled';
+    titleSpan.onclick = (function(bid, btitle){
       return function(){ nyxLoadChat(bid, btitle); };
     })(c.book_id, c.book_title);
+
+    var del = document.createElement('span');
+    del.className = 'nyx-hi-del';
+    del.textContent = '×';
+    del.title = 'Delete this chat';
+    del.onclick = (function(bid, btitle){
+      return function(ev){ ev.stopPropagation(); nyxDeleteChat(bid, btitle); };
+    })(c.book_id, c.book_title);
+
+    d.appendChild(titleSpan);
+    d.appendChild(del);
     listEl.appendChild(d);
   });
   if(rest.length > 0 && dropEl){
