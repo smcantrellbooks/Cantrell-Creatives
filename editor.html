@@ -29,13 +29,13 @@ html,body{width:100%;max-width:100%;min-height:100vh;background:#F5ECD8;font-fam
 .hdr{position:sticky;top:0;z-index:200;height:56px;background:var(--sidebar);border-bottom:1px solid rgba(201,160,64,.2);display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;flex-shrink:0;}
 .hdr-logo img{height:32px;border-radius:4px;}
 .hdr-nav{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;}
-.hdr-btn{padding:5px 13px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:rgba(232,201,122,.75);font-family:'Cinzel',serif;font-size:.55rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
+.hdr-btn{padding:5px 13px;border-radius:999px;border:1px solid rgba(201,160,64,.35);background:transparent;color:rgba(232,201,122,.75);font-family:'Cinzel',serif;font-size:10.7px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;transition:.18s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
 .hdr-btn:hover{background:rgba(201,160,64,.18);border-color:var(--gold);color:rgba(232,201,122,1);}
 .hdr-btn.logout{border-color:rgba(180,60,60,.4);color:rgba(220,120,120,.85);}
 .hdr-btn.logout:hover{background:rgba(140,32,32,.22);}
 .hdr-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;background:rgba(201,160,64,.1);border:1px solid rgba(201,160,64,.25);}
 .hdr-chip-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-.hdr-chip-name{font-family:'Cinzel',serif;font-size:.54rem;font-weight:700;letter-spacing:.07em;color:rgba(232,201,122,.85);}
+.hdr-chip-name{font-family:'Cinzel',serif;font-size:10.7px;font-weight:700;letter-spacing:.07em;color:rgba(232,201,122,.85);}
 
 /* ── TOOL BAR ─────────────────────────────────────────── */
 .tool-bar{background:var(--sidebar2);border-bottom:1px solid rgba(201,160,64,.12);display:flex;justify-content:center;gap:6px;padding:7px 20px;flex-wrap:wrap;}
@@ -503,16 +503,14 @@ textarea.inp{resize:vertical;line-height:1.85;}
       <button class="cls" onclick="toggleNyx()"><i class="ph ph-x"></i></button>
     </div>
     <div class="nyx-qrow">
-      <button class="nyx-q" onclick="nyxQ('Continue writing the next scene.')"><i class="ph ph-pencil-simple"></i> Continue</button>
-      <button class="nyx-q" onclick="nyxQ('Review my writing and suggest improvements.')"><i class="ph ph-magnifying-glass"></i> Review</button>
-      <button class="nyx-q" onclick="nyxQ('Suggest a plot twist.')"><i class="ph ph-lightning"></i> Twist</button>
-      <button class="nyx-q" onclick="nyxQ('Write dialogue for this scene.')"><i class="ph ph-chat-text"></i> Dialogue</button>
-      <button class="nyx-q" onclick="nyxQ('Help me develop my main character.')"><i class="ph ph-user"></i> Character</button>
+      <button class="nyx-q" onclick="nyxQ('How do I use the book editor?')"><i class="ph ph-question"></i> Help</button>
+      <button class="nyx-q" onclick="nyxQ('How do I export my manuscript?')"><i class="ph ph-download-simple"></i> Export</button>
+      <button class="nyx-q" onclick="nyxQ('How do I import a file?')"><i class="ph ph-upload-simple"></i> Import</button>
     </div>
     <div class="nyx-fd" id="nyxFd">
       <div class="nyx-m ai">
         <div class="nyx-lbl">Nyxen</div>
-        <div>Hey! I'm Nyxen. Ask me to continue your story, review your writing, or create anything new.</div>
+        <div>Hi! I'm here to help you with the book editor. Ask me anything about using the editor, formatting, or exporting your manuscript.</div>
       </div>
     </div>
     <div class="nyx-inp">
@@ -1387,7 +1385,7 @@ async function nyxSend() {
   try {
     var resp = await fetch(NYXEN_API + '/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({messages:[{role:'user',content:msg}], system:'You are Nyxen, the writing assistant on the Cantrell Creatives Book Editor. The author already has a manuscript open in the editor. Your primary job is to help with revisions — tightening prose, smoothing transitions, polishing dialogue, fixing pacing, suggesting word choices, catching repetition, refining a line, or rephrasing a passage. Match the author\'s established voice and tone. Be precise and surgical, not wholesale rewrites unless asked. When the author asks for new prose, write in their voice. Plain prose only, no markdown symbols, no headers, no bullet points unless the author explicitly asks for an outline. Keep responses focused on the request — do not over-explain. If the author asks platform questions instead of editing work, answer briefly using these facts and do not invent policies. Platform facts: The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month and full publication tools. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Cover generation is included with publication and is never charged — that is on the Collections page. Audiobook generation is in Voice Studio and costs 150 credits per book with an 80,000-character cap. Drafting full chapters from scratch is on the Publisher Workspace page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. If you do not have a documented answer, say so honestly instead of guessing.'})
+      body: JSON.stringify({messages:[{role:'user',content:msg}], system:'You are an assistant that helps authors use the Cantrell Creatives Book Editor. You can answer questions about the editor\'s features, help with formatting, exporting, importing, and provide basic guidance on using the platform. If you don\'t have a documented answer, say so honestly.'})
     });
     if (td) td.remove();
     var data  = await resp.json();
