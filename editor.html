@@ -259,15 +259,6 @@ textarea.inp{resize:vertical;line-height:1.85;}
 
       <!-- CHAPTER LIST (shown only when chapters exist) -->
       <div id="sidebarChapters" style="border-bottom:1px solid var(--gold-bd);padding-bottom:12px;margin-bottom:12px;display:none;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div class="panel-title" style="margin:0;padding:0;border:none;">
-            <span class="panel-icon"><i class="ph ph-bookmark-simple"></i></span> Chapters
-          </div>
-          <div style="display:flex;gap:6px;">
-            <button class="btn-add-ch" onclick="addChapter()" style="font-size:.9rem;padding:4px 10px;display:inline-flex;align-items:center;gap:3px;"><i class="ph ph-plus"></i> Add</button>
-            <button class="btn-add-ch" onclick="deleteChapter()" style="font-size:.9rem;padding:4px 10px;color:#c03c3c;border-color:rgba(192,60,60,.4);display:inline-flex;align-items:center;gap:3px;"><i class="ph ph-trash"></i></button>
-          </div>
-        </div>
         <div class="chapter-tabs" id="chapterTabs" style="display:flex;flex-direction:column;gap:4px;"></div>
       </div>
 
@@ -275,6 +266,7 @@ textarea.inp{resize:vertical;line-height:1.85;}
         <span class="panel-icon"><i class="ph ph-books"></i></span> Saved Manuscripts
       </div>
       <div class="project-list" id="projectList"></div>
+      <div style="font-size:8pt;color:var(--text-lt);font-style:italic;padding:6px 8px;line-height:1.5;">Saved manuscripts are kept for 30 days unless published. Publishing makes your work permanent.</div>
 
       <div style="border-top:1px solid var(--gold-bd);padding-top:12px;">
         <label class="lbl" style="margin-bottom:8px;">Details</label>
@@ -299,6 +291,10 @@ textarea.inp{resize:vertical;line-height:1.85;}
           <div>
             <label class="lbl" style="font-size:1rem;">Series</label>
             <input class="inp" type="text" id="projectSeries" placeholder="Series name (optional)" style="font-size:1.05rem;padding:7px 10px;">
+          </div>
+          <div>
+            <label class="lbl" style="font-size:1rem;">Series #</label>
+            <input class="inp" type="number" id="projectSeriesNumber" min="1" placeholder="Book # (e.g. 1)" style="font-size:1.05rem;padding:7px 10px;">
           </div>
           <div>
             <label class="lbl" style="font-size:1rem;">Target Word Count</label>
@@ -439,10 +435,12 @@ textarea.inp{resize:vertical;line-height:1.85;}
               <textarea class="inp" id="epubDescription" placeholder="Book description for metadata..." rows="2" style="font-size:1rem;padding:6px 9px;"></textarea>
             </div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <label class="lbl" style="font-size:.95rem;margin-bottom:0;">Include Title Page</label>
-              <input type="checkbox" id="epubTitlePage" checked style="accent-color:#C9A040;width:16px;height:16px;">
+              <label class="lbl" style="font-size:.95rem;margin-bottom:0;">Include Book Title</label>
+              <input type="checkbox" id="epubBookTitle" checked style="accent-color:#C9A040;width:16px;height:16px;">
               <label class="lbl" style="font-size:.95rem;margin-bottom:0;margin-left:12px;">Include TOC</label>
               <input type="checkbox" id="epubTOC" checked style="accent-color:#C9A040;width:16px;height:16px;">
+              <label class="lbl" style="font-size:.95rem;margin-bottom:0;margin-left:12px;">Include Series</label>
+              <input type="checkbox" id="epubSeries" checked style="accent-color:#C9A040;width:16px;height:16px;">
             </div>
             <div class="epub-note">Generates a valid EPUB 3.0 file with proper navigation, chapter structure, and metadata.</div>
           </div>
@@ -605,7 +603,13 @@ function init() {
           if (s.toc)        chaps.push({id: Date.now()+4, title:'Table of Contents',   content:'<p><em>Table of contents will be generated on export.</em></p>'});
         }
         if (s.prologue) chaps.push({id: Date.now()+5, title:'Prologue', content: incoming.nyxenContent || ''});
-        chaps.push({id: Date.now()+6, title:'Chapter 1', content: (!s.prologue && incoming.nyxenContent) ? incoming.nyxenContent : ''});
+        if (Array.isArray(incoming.chapters) && incoming.chapters.length) {
+          incoming.chapters.forEach(function(ic, ci){
+            chaps.push({id: Date.now()+60+ci, title: ic.title || ('Chapter '+(ci+1)), content: ic.content || ''});
+          });
+        } else {
+          chaps.push({id: Date.now()+6, title:'Chapter 1', content: (!s.prologue && incoming.nyxenContent) ? incoming.nyxenContent : ''});
+        }
         if (s.epilogue)    chaps.push({id: Date.now()+7,  title:'Epilogue',           content:''});
         if (isEpub) {
           if (s.toc)        chaps.push({id: Date.now()+8,  title:'Table of Contents',  content:'<p><em>Table of contents will be generated on export.</em></p>'});
@@ -710,10 +714,24 @@ function saveProject() {
   activeProject.author = document.getElementById('authorName').value;
   activeProject.genre  = document.getElementById('projectGenre').value;
   activeProject.series = document.getElementById('projectSeries').value;
+  activeProject.seriesNumber = document.getElementById('projectSeriesNumber').value;
   activeProject.targetWords = parseInt(document.getElementById('targetWords').value) || 80000;
   if (chapters[activeChapter]) {
-    chapters[activeChapter].title   = document.getElementById('chapterTitle').value;
-    chapters[activeChapter].content = getEditorHTML();
+    // Only adopt the editor pane's content if the editor is ready.
+    // Never overwrite real saved content with an empty editor (e.g. right
+    // after import, before the section's content has loaded into the pane).
+    if (editorInstance) {
+      var paneHTML = getEditorHTML();
+      var paneEmpty = !paneHTML || !paneHTML.replace(/<[^>]+>/g,'').trim();
+      var hadContent = chapters[activeChapter].content &&
+                       chapters[activeChapter].content.replace(/<[^>]+>/g,'').trim();
+      if (!(paneEmpty && hadContent)) {
+        chapters[activeChapter].content = paneHTML;
+      }
+    }
+    var ctVal = document.getElementById('chapterTitle').value;
+    // Don't clobber a section's real title with an empty/placeholder field.
+    if (ctVal && ctVal.trim()) chapters[activeChapter].title = ctVal;
   }
   activeProject.chapters = chapters;
   activeProject.name = activeProject.title || 'Untitled Book';
@@ -729,6 +747,7 @@ function loadProject(project) {
   document.getElementById('authorName').value  = project.author || '';
   document.getElementById('projectGenre').value  = project.genre  || 'Urban Fantasy';
   document.getElementById('projectSeries').value = project.series || '';
+  document.getElementById('projectSeriesNumber').value = project.seriesNumber || '';
   document.getElementById('targetWords').value   = project.targetWords || 80000;
   loadChapter(0);
   renderChapterTabs();
@@ -794,6 +813,7 @@ function resetEditor() {
   document.getElementById('authorName').value = '';
   document.getElementById('projectGenre').value  = 'Urban Fantasy';
   document.getElementById('projectSeries').value = '';
+  document.getElementById('projectSeriesNumber').value = '';
   document.getElementById('targetWords').value   = 80000;
   document.getElementById('chapterTitle').value  = 'Chapter 1';
   if (editorInstance) editorInstance.setData('');
@@ -809,15 +829,47 @@ function renderChapterTabs() {
   if (!chapters || chapters.length === 0) { if (sidebar) sidebar.style.display = 'none'; return; }
   if (sidebar) sidebar.style.display = 'block';
 
-  var hasFront = chapters.some(function(ch){ return ch.isFrontMatter; });
+  var hasTitle = chapters.some(function(ch){ return ch.isTitlePage; });
+  var hasDed   = chapters.some(function(ch){ return ch.isDedication; });
+  var hasFront = chapters.some(function(ch){ return ch.isFrontMatter && !ch.isTitlePage && !ch.isDedication; });
   var hasTOC   = chapters.some(function(ch){ return ch.isTOC; });
   var hasBack  = chapters.some(function(ch){ return ch.isBackMatter; });
-  var hasMain  = chapters.some(function(ch){ return !ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter; });
+  var hasMain  = chapters.some(function(ch){ return !ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter && !ch.isTitlePage && !ch.isDedication; });
 
-  function addDivider(label) {
-    var d = document.createElement('span');
-    d.className = 'ch-divider'; d.textContent = label;
-    tabs.appendChild(d);
+  function addDivider(label, withButtons) {
+    if (withButtons) {
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+      var d = document.createElement('span');
+      d.className = 'ch-divider'; d.textContent = label;
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;gap:6px;';
+      var addB = document.createElement('button');
+      addB.className = 'btn-add-ch';
+      addB.style.cssText = 'font-size:.8rem;padding:3px 8px;display:inline-flex;align-items:center;gap:3px;';
+      addB.innerHTML = '<i class="ph ph-plus"></i> Add';
+      addB.onclick = addChapter;
+      if (!chapters.some(function(ch){ return ch.isDedication; })) {
+        var dedB = document.createElement('button');
+        dedB.className = 'btn-add-ch';
+        dedB.style.cssText = 'font-size:.8rem;padding:3px 8px;display:inline-flex;align-items:center;gap:3px;';
+        dedB.innerHTML = '<i class="ph ph-heart"></i> Dedication';
+        dedB.onclick = addDedication;
+        btns.appendChild(dedB);
+      }
+      var delB = document.createElement('button');
+      delB.className = 'btn-add-ch';
+      delB.style.cssText = 'font-size:.8rem;padding:3px 8px;color:#c03c3c;border-color:rgba(192,60,60,.4);display:inline-flex;align-items:center;';
+      delB.innerHTML = '<i class="ph ph-trash"></i>';
+      delB.onclick = deleteChapter;
+      btns.appendChild(addB); btns.appendChild(delB);
+      row.appendChild(d); row.appendChild(btns);
+      tabs.appendChild(row);
+    } else {
+      var d2 = document.createElement('span');
+      d2.className = 'ch-divider'; d2.textContent = label;
+      tabs.appendChild(d2);
+    }
   }
   function addTab(ch, i) {
     var btn = document.createElement('button');
@@ -826,20 +878,23 @@ function renderChapterTabs() {
     else if (ch.isTOC)    btn.className += ' ch-tab-toc';
     else if (ch.isBackMatter) btn.className += ' ch-tab-back';
     btn.textContent = ch.title || ('Chapter ' + (i+1));
-    btn.onclick = (function(idx){ return function(){ saveCurrentChapter(); loadChapter(idx); }; })(i);
+    btn.onclick = (function(idx){ return function(){ loadChapter(idx); }; })(i);
     tabs.appendChild(btn);
   }
 
-  if (hasFront) { addDivider('Front Matter'); chapters.forEach(function(ch,i){ if (ch.isFrontMatter) addTab(ch,i); }); }
+  if (hasTitle) { addDivider('Title Page'); chapters.forEach(function(ch,i){ if (ch.isTitlePage) addTab(ch,i); }); }
+  if (hasDed)   { addDivider('Dedication'); chapters.forEach(function(ch,i){ if (ch.isDedication) addTab(ch,i); }); }
+  if (hasFront) { addDivider('Copyright'); chapters.forEach(function(ch,i){ if (ch.isFrontMatter && !ch.isTitlePage && !ch.isDedication) addTab(ch,i); }); }
   if (hasTOC)   { addDivider('Table of Contents'); chapters.forEach(function(ch,i){ if (ch.isTOC) addTab(ch,i); }); }
-  if (hasMain)  { addDivider('Chapters'); chapters.forEach(function(ch,i){ if (!ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter) addTab(ch,i); }); }
+  if (hasMain)  { addDivider('Chapters', true); chapters.forEach(function(ch,i){ if (!ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter && !ch.isTitlePage && !ch.isDedication) addTab(ch,i); }); }
   if (hasBack)  { addDivider('Back Matter'); chapters.forEach(function(ch,i){ if (ch.isBackMatter) addTab(ch,i); }); }
-  if (!hasFront && !hasTOC && !hasBack && !hasMain) { chapters.forEach(function(ch,i){ addTab(ch,i); }); }
+  if (!hasTitle && !hasDed && !hasFront && !hasTOC && !hasBack && !hasMain) { chapters.forEach(function(ch,i){ addTab(ch,i); }); }
 }
 
 function getChapterTitleLabel(ch) {
   if (!ch) return 'Chapter Title';
-  if (ch.isFrontMatter) return 'Front Matter';
+  if (ch.isTitlePage) return 'Title Page';
+  if (ch.isFrontMatter) return 'Copyright';
   if (ch.isTOC) return 'Table of Contents';
   if (ch.isBackMatter) return 'Section Title';
   return 'Chapter Title';
@@ -850,7 +905,8 @@ function updateChapterTitleLabel() {
   var inp = document.getElementById('chapterTitle');
   if (lbl) lbl.textContent = getChapterTitleLabel(ch);
   if (inp) {
-    if (ch && ch.isFrontMatter)  inp.placeholder = 'Front Matter';
+    if (ch && ch.isTitlePage)    inp.placeholder = 'Title Page';
+    else if (ch && ch.isFrontMatter)  inp.placeholder = 'Copyright';
     else if (ch && ch.isTOC)     inp.placeholder = 'Table of Contents';
     else if (ch && ch.isBackMatter) inp.placeholder = 'Section title...';
     else                         inp.placeholder = 'Chapter 1: The Beginning';
@@ -858,9 +914,17 @@ function updateChapterTitleLabel() {
 }
 
 function loadChapter(idx) {
+  // Save the section we're leaving BEFORE switching — prevents the
+  // outgoing section's title being overwritten with the new one's.
+  if (idx !== activeChapter && chapters[activeChapter]) {
+    chapters[activeChapter].title   = document.getElementById('chapterTitle').value;
+    chapters[activeChapter].content = getEditorHTML();
+  }
   activeChapter = idx;
   var ch = chapters[idx];
   if (ch) {
+    var ctRow = document.getElementById('chapterTitleRow');
+    if (ctRow) ctRow.style.display = '';
     document.getElementById('chapterTitle').value = ch.title || '';
     updateChapterTitleLabel();
     if (editorInstance) {
@@ -888,6 +952,23 @@ function addChapter() {
   loadChapter(chapters.length - 1);
   saveProject();
   showToast('Chapter added');
+}
+
+function addDedication() {
+  saveCurrentChapter();
+  if (chapters.some(function(ch){ return ch.isDedication; })) {
+    showToast('A dedication already exists');
+    var di = chapters.findIndex(function(ch){ return ch.isDedication; });
+    if (di > -1) loadChapter(di);
+    return;
+  }
+  // Dedication goes at the front, after a title page if present.
+  var insertAt = 0;
+  if (chapters[0] && chapters[0].isTitlePage) insertAt = 1;
+  chapters.splice(insertAt, 0, {id: Date.now(), title:'Dedication', content:'', isDedication:true});
+  loadChapter(insertAt);
+  saveProject();
+  showToast('Dedication added');
 }
 
 function deleteChapter() {
@@ -987,40 +1068,113 @@ function finishImportHTML(html, titleFound, filename, status) {
   fullImportedHTML = html;
   var docTitle = titleFound || filename.replace(/\.[^.]+$/,'');
   var BACK_MATTER_PATTERNS  = /^(about the author|acknowledg(e)?ments|also by|other (books|works)|author('s)? note|epilogue note|afterword|appendix|glossary|bibliography|dedication\s*$)/i;
-  var FRONT_MATTER_PATTERNS = /^(dedication|foreword|preface|introduction|copyright|table of contents|toc)\b/i;
+  var FRONT_MATTER_PATTERNS = /(^|\b)(dedication|foreword|preface|introduction|copyright|table of contents|toc)\b/i;
   var newChapters = [];
+  var parsedMeta = { title:'', author:'', series:'', seriesNumber:'' };
   var headingRegex = /<h1[^>]*>([\s\S]*?)<\/h1>/gi;
   var matches = []; var m;
   while ((m = headingRegex.exec(html)) !== null) { matches.push({index:m.index, fullMatch:m[0], titleHtml:m[1], end:m.index+m[0].length}); }
   if (matches.length === 0) {
     newChapters.push({id:Date.now(), title:docTitle, content:html});
   } else {
-    var frontHTML = html.substring(0, matches[0].index).trim();
-    if (frontHTML && frontHTML.replace(/<[^>]+>/g,'').trim().length > 20) {
-      newChapters.push({id:Date.now(), title:'Front Matter', content:frontHTML, isFrontMatter:true});
+    // A real chapter/section heading matches these. Anything else among the
+    // LEADING headings is title-page material (handles docs that style the
+    // title page as headings, e.g. KIERAN).
+    var CHAPTER_HEADING = /^(chapter\b|prologue\b|epilogue\b|part\s+\w|introduction\b|foreword\b|preface\b|afterword\b|appendix\b|acknowledg)/i;
+    var firstChapterIdx = 0;
+    while (firstChapterIdx < matches.length) {
+      var ht = matches[firstChapterIdx].titleHtml.replace(/<[^>]+>/g,'').trim();
+      if (CHAPTER_HEADING.test(ht)) break;
+      firstChapterIdx++;
     }
-    for (var i = 0; i < matches.length; i++) {
+    // If every heading looked non-chapter, treat them all as chapters (fail safe).
+    if (firstChapterIdx >= matches.length) firstChapterIdx = 0;
+
+    // Title-page block = pre-heading content + any leading non-chapter headings.
+    var titleBlockEnd = (firstChapterIdx > 0) ? matches[firstChapterIdx].index : matches[0].index;
+    var frontHTML = html.substring(0, titleBlockEnd).trim();
+    if (frontHTML && frontHTML.replace(/<[^>]+>/g,'').trim().length > 5) {
+      // Split the title-page block into Title Page / Front Matter (copyright) / TOC.
+      var paras = frontHTML.match(/<(p|h[1-6])[^>]*>[\s\S]*?<\/\1>/gi) || [frontHTML];
+      var titleParas = [], copyParas = [], tocParas = [], bucket = 'title';
+      paras.forEach(function(p){
+        var txt = p.replace(/<[^>]+>/g,'').trim();
+        var low = txt.toLowerCase();
+        if (/table of contents/.test(low)) { bucket = 'toc'; }
+        else if (bucket === 'title' && (/\u2022/.test(txt) || /^©|copyright|all rights reserved/.test(low))) { bucket = 'copy'; }
+        if (bucket === 'title') titleParas.push(p);
+        else if (bucket === 'copy') copyParas.push(p);
+        else tocParas.push(p);
+      });
+      var fid = Date.now();
+      if (titleParas.length && titleParas.join('').replace(/<[^>]+>/g,'').trim().length > 0) {
+        // Title page is auto-generated from the Book Title/Author/Series fields,
+        // so do NOT create a Title Page section. Just parse those lines to
+        // populate the fields.
+        var tpLines = titleParas.map(function(p){ return p.replace(/<[^>]+>/g,'').trim(); }).filter(Boolean);
+        if (tpLines.length) {
+          parsedMeta.title = tpLines[0];
+          for (var t = 1; t < tpLines.length; t++) {
+            var ln = tpLines[t], lo = ln.toLowerCase();
+            var bookM = lo.match(/^book\s+([0-9]+|one|two|three|four|five|six|seven|eight|nine|ten)\b/);
+            if (/\bseries\b/.test(lo) && !parsedMeta.series) {
+              parsedMeta.series = ln.replace(/\s*series\s*$/i,'').trim();
+            } else if (bookM) {
+              var words={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10};
+              parsedMeta.seriesNumber = words[bookM[1]] || bookM[1];
+            } else if (!parsedMeta.author && !/^©|copyright|all rights/.test(lo) && !/\.com$/.test(lo) && !/books$/.test(lo)) {
+              parsedMeta.author = ln;
+            }
+          }
+        }
+      }
+      if (copyParas.length && copyParas.join('').replace(/<[^>]+>/g,'').trim().length > 0) {
+        newChapters.push({id:fid+1, title:'Copyright', content:copyParas.join(''), isFrontMatter:true});
+      }
+      if (tocParas.length && tocParas.join('').replace(/<[^>]+>/g,'').trim().length > 0) {
+        newChapters.push({id:fid+2, title:'Table of Contents', content:tocParas.join(''), isTOC:true});
+      }
+    }
+    for (var i = firstChapterIdx; i < matches.length; i++) {
       var titleText    = matches[i].titleHtml.replace(/<[^>]+>/g,'').trim();
       var contentStart = matches[i].end;
       var contentEnd   = (i+1 < matches.length) ? matches[i+1].index : html.length;
       var chapterContent = html.substring(contentStart, contentEnd).trim();
       var fullChapterHTML = '<h1>' + matches[i].titleHtml + '</h1>' + chapterContent;
       var isBack  = BACK_MATTER_PATTERNS.test(titleText);
-      var isFront = FRONT_MATTER_PATTERNS.test(titleText);
-      newChapters.push({id:Date.now()+i+1, title:titleText||('Chapter '+(i+1)), content:fullChapterHTML, isFrontMatter:isFront||undefined, isBackMatter:isBack||undefined});
+      var isDedication = /(^|\b)dedication\b/i.test(titleText);
+      var isFront = !isDedication && FRONT_MATTER_PATTERNS.test(titleText);
+      newChapters.push({id:Date.now()+i+1, title:titleText||('Chapter '+(i+1)), content:fullChapterHTML, isFrontMatter:isFront||undefined, isBackMatter:isBack||undefined, isDedication:isDedication||undefined});
     }
   }
   chapters = newChapters; activeChapter = 0;
-  if (titleFound) { document.getElementById('bookTitle').value = titleFound; if (activeProject) { activeProject.title = titleFound; activeProject.name = titleFound; } }
+  // Prefer metadata parsed from the title page; fall back to titleFound.
+  var finalTitle = parsedMeta.title || titleFound;
+  if (finalTitle) { document.getElementById('bookTitle').value = finalTitle; if (activeProject) { activeProject.title = finalTitle; activeProject.name = finalTitle; } }
+  if (parsedMeta.author) { document.getElementById('authorName').value = parsedMeta.author; if (activeProject) activeProject.author = parsedMeta.author; }
+  if (parsedMeta.series && document.getElementById('projectSeries')) { document.getElementById('projectSeries').value = parsedMeta.series; if (activeProject) activeProject.series = parsedMeta.series; }
+  if (parsedMeta.seriesNumber && document.getElementById('projectSeriesNumber')) { document.getElementById('projectSeriesNumber').value = parsedMeta.seriesNumber; if (activeProject) activeProject.seriesNumber = parsedMeta.seriesNumber; }
   if (activeProject) activeProject.chapters = chapters;
   var sidebar = document.getElementById('sidebarChapters'); if (sidebar) sidebar.style.display = '';
   var chRow   = document.getElementById('chapterTitleRow');  if (chRow)   chRow.style.display = '';
-  if (typeof renderChapterTabs === 'function') renderChapterTabs();
-  updateStats(); saveProject();
+  // Load section 0 into the editor and title field BEFORE saving — otherwise
+  // saveProject() grabs an empty editor pane and blanks the first section.
+  document.getElementById('chapterTitle').value = chapters[0] ? (chapters[0].title || '') : '';
   if (editorInstance) {
-    editorInstance.setData(chapters[0].content || '');
+    editorInstance.setData(chapters[0] ? (chapters[0].content || '') : '');
+    if (typeof renderChapterTabs === 'function') renderChapterTabs();
+    if (typeof updateChapterTitleLabel === 'function') updateChapterTitleLabel();
+    updateStats(); saveProject();
   } else {
-    var check = setInterval(function(){ if (editorInstance){ clearInterval(check); editorInstance.setData(chapters[0].content||''); } }, 100);
+    var check = setInterval(function(){
+      if (editorInstance){
+        clearInterval(check);
+        editorInstance.setData(chapters[0] ? (chapters[0].content||'') : '');
+        if (typeof renderChapterTabs === 'function') renderChapterTabs();
+        if (typeof updateChapterTitleLabel === 'function') updateChapterTitleLabel();
+        updateStats(); saveProject();
+      }
+    }, 100);
   }
   var chapterCount = chapters.filter(function(c){ return !c.isFrontMatter && !c.isBackMatter; }).length;
   status.innerHTML = '&#10003; ' + filename + ' imported &mdash; ' + chapterCount + ' chapter' + (chapterCount !== 1 ? 's' : '') + ' detected';
@@ -1092,31 +1246,57 @@ function exportManuscript() {
 
   } else if (dest === 'voicestudio') {
     status.textContent = 'Preparing for Voice Studio...';
-    var narratable = chapters.filter(function(ch){ return !ch.isFrontMatter && !ch.isBackMatter; });
+    var narratable = chapters.filter(function(ch){ return !ch.isTOC; });
     if (narratable.length === 0) narratable = chapters;
     var vsChapters = narratable.map(function(ch) {
       var html2  = ch.content || '';
       var stripped = html2.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/i,'');
       var plainText = stripped.replace(/<\/(p|div|h[1-6]|li)>/gi,'\n\n').replace(/<br\s*\/?>(\s*)/gi,'\n').replace(/<[^>]+>/g,'').replace(/\n{3,}/g,'\n\n').replace(/[ \t]+/g,' ').trim();
-      return {title: ch.title||'', html: stripped, text: plainText, content: plainText};
+      return {title: ch.title||'', html: stripped, text: plainText, content: plainText,
+              isFrontMatter: !!ch.isFrontMatter, isBackMatter: !!ch.isBackMatter, isTOC: !!ch.isTOC, isDedication: !!ch.isDedication};
     });
-    var fullText = vsChapters.map(function(c){ return c.title + '\n\n' + c.text; }).join('\n\n\n');
+    var vsSeries = document.getElementById('projectSeries') ? document.getElementById('projectSeries').value.trim() : '';
+    var vsSeriesNum = document.getElementById('projectSeriesNumber') ? document.getElementById('projectSeriesNumber').value.trim() : '';
+    // Audiobook intro line: "Title, Series series, book N, by Author."
+    var vsIntro = (title || 'Untitled');
+    if (vsSeries) {
+      vsIntro += ', ' + vsSeries + ' series';
+      if (vsSeriesNum) vsIntro += ', book ' + vsSeriesNum;
+    }
+    if (author) vsIntro += ', by ' + author;
+    vsIntro += '.';
+    var fullText = vsIntro + '\n\n\n' + vsChapters.map(function(c){ return c.title + '\n\n' + c.text; }).join('\n\n\n');
     generateEPUB3(title, author, narratable).then(function(blob) {
       var reader = new FileReader();
       reader.onload = function(e) {
-        try { localStorage.setItem('vs_epub_b64', e.target.result); } catch(err) {}
-        localStorage.setItem('vs_epub_name', (title||'book') + '.epub');
-        localStorage.setItem('vs_incoming', JSON.stringify({title:title, author:author, content:fullText, chapters:vsChapters, epubB64Key:'vs_epub_b64', epubName:(title||'book')+'.epub', fromEditor:true}));
+        var epubStored = false;
+        try { localStorage.setItem('vs_epub_b64', e.target.result); epubStored = true; }
+        catch(err) { try { localStorage.removeItem('vs_epub_b64'); } catch(e2){} }
+        try { localStorage.setItem('vs_epub_name', (title||'book') + '.epub'); } catch(err) {}
+        // Keep vs_incoming SMALL — metadata + pointer only. The book content
+        // lives in the EPUB (vs_epub_b64); do NOT duplicate full text here,
+        // it overflows the ~5MB localStorage quota.
+        var incoming = { title:title, author:author, fromEditor:true, intro:vsIntro, sections:vsChapters };
+        if (epubStored) { incoming.epubB64Key = 'vs_epub_b64'; incoming.epubName = (title||'book')+'.epub'; }
+        else { incoming.content = fullText; }  // fallback only if EPUB didn't fit
+        try {
+          localStorage.setItem('vs_incoming', JSON.stringify(incoming));
+        } catch(err) {
+          // structured sections too big — keep intro + sections, drop EPUB pointer
+          try { localStorage.setItem('vs_incoming', JSON.stringify({title:title, author:author, fromEditor:true, intro:vsIntro, sections:vsChapters})); } catch(e3){
+            try { localStorage.setItem('vs_incoming', JSON.stringify({title:title, author:author, fromEditor:true, intro:vsIntro, content:fullText})); } catch(e4){}
+          }
+        }
         status.innerHTML = '&#10003; Sending to Voice Studio...'; showToast('Sending to Voice Studio');
         fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
-        setTimeout(function(){ location.href = CC_URL + '/voice'; }, 1000);
+        setTimeout(function(){ location.href = CC_URL + '/voice-studio'; }, 1000);
       };
       reader.readAsDataURL(blob);
     }).catch(function(err) {
-      localStorage.setItem('vs_incoming', JSON.stringify({title:title, author:author, content:fullText, chapters:vsChapters, fromEditor:true}));
+      try { localStorage.setItem('vs_incoming', JSON.stringify({title:title, author:author, content:fullText, fromEditor:true})); } catch(e){}
       status.innerHTML = '&#10003; Sending to Voice Studio...'; showToast('Sending to Voice Studio');
       fetch('https://cantrell-creatives-e3q2.onrender.com/api/health').catch(function(){});
-      setTimeout(function(){ location.href = CC_URL + '/voice'; }, 1000);
+      setTimeout(function(){ location.href = CC_URL + '/voice-studio'; }, 1000);
     });
 
   } else if (dest === 'collections') {
@@ -1170,15 +1350,18 @@ async function generateEPUB3(title, author, chapterList) {
   var lang = (document.getElementById('epubLang')||{}).value || 'en';
   var publisher = (document.getElementById('epubPublisher')||{}).value || '';
   var description = (document.getElementById('epubDescription')||{}).value || '';
-  var includeTitlePage = document.getElementById('epubTitlePage') ? document.getElementById('epubTitlePage').checked : true;
+  var includeBookTitle = document.getElementById('epubBookTitle') ? document.getElementById('epubBookTitle').checked : true;
   var includeTOC = document.getElementById('epubTOC') ? document.getElementById('epubTOC').checked : true;
+  var includeSeries = document.getElementById('epubSeries') ? document.getElementById('epubSeries').checked : false;
+  var seriesName = (document.getElementById('projectSeries')||{}).value || '';
+  var seriesNum = (document.getElementById('projectSeriesNumber')||{}).value || '';
   var bookId = 'urn:uuid:' + crypto.randomUUID();
   var now = new Date().toISOString().replace(/\.\d+Z$/,'Z');
 
   zip.file('mimetype','application/epub+zip',{compression:'STORE'});
   zip.file('META-INF/container.xml','<?xml version="1.0" encoding="UTF-8"?>\n<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">\n  <rootfiles>\n    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>\n  </rootfiles>\n</container>');
 
-  var bookCSS = 'body{font-family:"Georgia","Times New Roman",serif;line-height:1.8;color:#1a1a1a;margin:1em 1.5em;}\nh1{font-size:1.8em;text-align:center;margin:2em 0 1em;page-break-before:always;font-weight:700;}\nh2{font-size:1.3em;margin:1.5em 0 0.8em;font-weight:600;}\nh3{font-size:1.1em;margin:1.2em 0 0.6em;font-weight:600;}\np{margin:0 0 0.4em;text-indent:1.5em;}\np.first,p.no-indent{text-indent:0;}\np.scene-break{text-align:center;margin:1.5em 0;text-indent:0;font-size:1.2em;letter-spacing:0.3em;}\nblockquote{border-left:3px solid #999;padding:0.5em 1em;margin:1em 0;font-style:italic;color:#555;}\n.title-page{text-align:center;margin-top:30%;}\n.title-page h1{font-size:2.2em;margin-bottom:0.3em;page-break-before:auto;}\n.title-page .author{font-size:1.4em;margin-top:2em;}\n.title-page .publisher{font-size:0.9em;color:#777;margin-top:3em;}\n.copyright{font-size:0.85em;color:#555;margin-top:20%;}\n.copyright p{text-indent:0;margin-bottom:0.3em;}\nhr{border:none;border-top:1px solid #ccc;margin:2em auto;width:40%;}\n';
+  var bookCSS = 'body{font-family:"Georgia","Times New Roman",serif;line-height:1.8;color:#1a1a1a;margin:1em 1.5em;}\nh1{font-size:1.8em;text-align:center;margin:2em 0 1em;page-break-before:always;font-weight:700;}\nh2{font-size:1.3em;margin:1.5em 0 0.8em;font-weight:600;}\nh3{font-size:1.1em;margin:1.2em 0 0.6em;font-weight:600;}\np{margin:0 0 0.4em;text-indent:1.5em;}\np.first,p.no-indent{text-indent:0;}\np.scene-break{text-align:center;margin:1.5em 0;text-indent:0;font-size:1.2em;letter-spacing:0.3em;}\nblockquote{border-left:3px solid #999;padding:0.5em 1em;margin:1em 0;font-style:italic;color:#555;}\n.title-page{text-align:center;margin-top:30%;}\n.title-page h1{font-size:2.2em;margin-bottom:0.3em;page-break-before:auto;}\n.title-page .series{font-size:1.1em;font-style:italic;color:#555;margin-top:0.5em;}\n.title-page .series-num{font-size:1em;color:#555;margin-top:0.1em;}\n.title-page .author{font-size:1.4em;margin-top:2em;}\n.title-page .publisher{font-size:0.9em;color:#777;margin-top:3em;}\n.copyright{font-size:0.85em;color:#555;margin-top:20%;}\n.copyright p{text-indent:0;margin-bottom:0.3em;}\nhr{border:none;border-top:1px solid #ccc;margin:2em auto;width:40%;}\n';
   zip.file('OEBPS/style.css', bookCSS);
 
   var manifestItems = []; var spineItems = []; var tocEntries = [];
@@ -1188,8 +1371,13 @@ async function generateEPUB3(title, author, chapterList) {
   }
   function escXml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  if (includeTitlePage) {
-    var titleBody = '<div class="title-page">\n  <h1>' + escXml(title) + '</h1>\n' + (author ? '  <p class="author">' + escXml(author) + '</p>\n' : '') + (publisher ? '  <p class="publisher">' + escXml(publisher) + '</p>\n' : '') + '</div>';
+  if (includeBookTitle) {
+    var seriesLine = '';
+    if (includeSeries && seriesName) {
+      seriesLine = '  <p class="series">' + escXml(seriesName) + ' series</p>\n' +
+                   (seriesNum ? '  <p class="series-num">Book ' + escXml(seriesNum) + '</p>\n' : '');
+    }
+    var titleBody = '<div class="title-page">\n  <h1>' + escXml(title) + '</h1>\n' + seriesLine + (author ? '  <p class="author">' + escXml(author) + '</p>\n' : '') + (publisher ? '  <p class="publisher">' + escXml(publisher) + '</p>\n' : '') + '</div>';
     zip.file('OEBPS/title.xhtml', makeXHTML(titleBody, title));
     manifestItems.push({id:'title',href:'title.xhtml',type:'application/xhtml+xml'}); spineItems.push('title');
     var copyrightBody = '<div class="copyright">\n  <p>' + escXml(title) + '</p>\n' + (author ? '  <p>Copyright \u00A9 ' + new Date().getFullYear() + ' ' + escXml(author) + '. All rights reserved.</p>\n' : '') + (publisher ? '  <p>Published by ' + escXml(publisher) + '</p>\n' : '') + '  <p>No part of this publication may be reproduced without the prior written permission of the author.</p>\n</div>';
@@ -1201,13 +1389,14 @@ async function generateEPUB3(title, author, chapterList) {
   var frontMatterChs = chapterList.filter(function(ch){ return ch.isFrontMatter; });
   var mainChs = chapterList.filter(function(ch){ return !ch.isFrontMatter && !ch.isTOC && !ch.isBackMatter; });
   var backMatterChs  = chapterList.filter(function(ch){ return ch.isBackMatter; });
-  epubChapters = frontMatterChs.concat(mainChs).concat(backMatterChs);
+  epubChapters = mainChs.concat(backMatterChs).concat(frontMatterChs);
   if (epubChapters.length === 0) epubChapters = chapterList;
 
   epubChapters.forEach(function(ch, idx) {
     var chId = 'chapter' + (idx+1); var chFile = chId + '.xhtml';
     var chTitle = ch.title || ('Chapter ' + (idx+1));
-    var chBody  = '<h1>' + escXml(chTitle) + '</h1>\n' + (ch.content ? convertToEpubXHTML(ch.content) : '');
+    var showHeading = !ch.isFrontMatter && !ch.isBackMatter;
+    var chBody  = (showHeading ? '<h1>' + escXml(chTitle) + '</h1>\n' : '') + (ch.content ? convertToEpubXHTML(ch.content) : '');
     zip.file('OEBPS/' + chFile, makeXHTML(chBody, chTitle));
     manifestItems.push({id:chId,href:chFile,type:'application/xhtml+xml'}); spineItems.push(chId);
     tocEntries.push({id:chId, href:chFile, title:chTitle});
@@ -1248,7 +1437,7 @@ async function generateEPUB3(title, author, chapterList) {
     navBody += '  </ol>\n</nav>';
     zip.file('OEBPS/nav.xhtml', makeXHTML(navBody,'Table of Contents'));
     manifestItems.push({id:'nav',href:'nav.xhtml',type:'application/xhtml+xml',properties:'nav'});
-    spineItems.splice(includeTitlePage ? 2 : 0, 0, 'nav');
+    spineItems.splice(includeBookTitle ? 2 : 0, 0, 'nav');
   }
 
   var ncx = '<?xml version="1.0" encoding="UTF-8"?>\n<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">\n<head>\n  <meta name="dtb:uid" content="' + escXml(bookId) + '"/>\n  <meta name="dtb:depth" content="1"/>\n  <meta name="dtb:totalPageCount" content="0"/>\n  <meta name="dtb:maxPageNumber" content="0"/>\n</head>\n<docTitle><text>' + escXml(title) + '</text></docTitle>\n<navMap>\n';
@@ -1435,11 +1624,7 @@ window.addEventListener('DOMContentLoaded', function() {
   initAuth();
 });
 
-/* click on drop zone opens file input */
-document.addEventListener('DOMContentLoaded', function() {
-  var dz = document.getElementById('dropZone');
-  if (dz) dz.addEventListener('click', function(){ document.getElementById('importFile').click(); });
-});
+/* drop zone opens file input via the label's native for="importFile" — no JS click handler needed (a JS handler here double-triggered the picker) */
 </script>
 </body>
 </html>
