@@ -457,6 +457,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
       <div>
         <h1 class="section-title">Generation History</h1>
         <p class="section-sub">All generated audio &mdash; playback and download</p>
+        <p class="section-sub" style="font-size:8pt;font-style:italic;margin-top:4px;">Generated audio is kept for 30 days. Download a copy to keep it permanently.</p>
       </div>
       <div style="display:flex;gap:8px;margin-top:8px;">
         <button id="clear-history-btn" class="btn-download" style="padding:8px 14px;"><i class="ph ph-trash"></i> Clear</button>
@@ -509,7 +510,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
 <script>
 // ── CONFIG ──
 // Voice library served directly from HF Voice Engine Space
-var VOICE_LIBRARY = 'https://smcantrell-cantrell-voice-engine.hf.space';
+var VOICE_LIBRARY = 'https://cantrell-creatives.smcantrellbooks.workers.dev';
 // TTS engine (Chatterbox cloning + generation) served from HF Space
 var ENGINE = 'https://smcantrell-cantrell-voice-engine.hf.space';
 var SB_URL = 'https://recyyhvdvuupxhbxmzal.supabase.co';
@@ -539,7 +540,7 @@ function clearUser(){
   document.getElementById('hdrUserChip').style.display = 'none';
   document.getElementById('hdrLogoutBtn').style.display = 'none';
   document.getElementById('authGate').classList.remove('hidden');
-  setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice'; }, 1500);
+  setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice-studio'; }, 1500);
 }
 
 // ── TEXT NORMALIZATION ──
@@ -618,6 +619,7 @@ var chatSessionId = null;
 var currentAudio = null;
 var currentPlayingCard = null;
 var bookChapters = [];
+var bookIntro = '';
 var generationHistory = JSON.parse(localStorage.getItem('vs_history')||'[]');
 
 // ── WAVEFORM ──
@@ -683,7 +685,78 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function init(){
   var incoming=localStorage.getItem('vs_incoming');
-  if(incoming){try{var data=JSON.parse(incoming);localStorage.removeItem('vs_incoming');setTimeout(function(){var ta=document.getElementById('audiobook-text');if(ta&&data.content){ta.value=data.content;bookChapters=parseChapters(data.content);renderChapterList(bookChapters);}var info=document.getElementById('upload-info');if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}},800);}catch(e){}}
+  if(incoming){
+    try{
+      var data=JSON.parse(incoming);
+      localStorage.removeItem('vs_incoming');
+      // A handoff from the Editor means the user is here to make an audiobook.
+      setTimeout(function(){ try{ switchTab('audiobook'); }catch(e){} }, 50);
+      setTimeout(function(){
+        var info=document.getElementById('upload-info');
+        // PRIMARY: structured sections from the Editor — carry real
+        // front/back-matter flags, so no guessing, no mis-parsing.
+        if(data.sections && data.sections.length){
+          bookIntro = data.intro || '';
+          // Clean front matter: keep only from the real copyright line onward,
+          // dropping any leading title/series header text that would otherwise
+          // be narrated (e.g. "Copyright KIERAN Copyright ©...").
+          function cleanFrontMatter(txt){
+            if(!txt) return txt;
+            // Cut everything before the actual copyright notice. Match the ©
+            // character (or "(c) <year>") wherever it appears, even mid-line,
+            // and keep from there — strips leading "Copyright Kieran Copyright".
+            var m=txt.match(/©|\(c\)\s*\d{4}/i);
+            if(m){ return txt.slice(txt.indexOf(m[0])).trim(); }
+            return txt.trim();
+          }
+          var rawSecs = data.sections.map(function(s){
+            var content=s.content||s.text||'';
+            if(s.isFrontMatter) content=cleanFrontMatter(content);
+            return { title:s.title||'', content:content,
+                     isFrontMatter:!!s.isFrontMatter, isBackMatter:!!s.isBackMatter, isTOC:!!s.isTOC, isDedication:!!s.isDedication };
+          });
+          // Order: chapters, then back matter, then front matter LAST.
+          var mainS=[],backS=[],frontS=[];
+          rawSecs.forEach(function(s){
+            if(s.isTOC) return; // TOC is not narrated
+            if(s.isFrontMatter) frontS.push(s);
+            else if(s.isBackMatter) backS.push(s);
+            else mainS.push(s);
+          });
+          bookChapters = mainS.concat(backS).concat(frontS);
+          var ta0=document.getElementById('audiobook-text');
+          if(ta0) ta0.value = bookChapters.map(function(c){
+            // Front/back matter narrate content only — never the section title.
+            if(c.isFrontMatter||c.isBackMatter) return c.content;
+            return (c.title?c.title+'\n\n':'')+c.content;
+          }).join('\n\n\n');
+          renderChapterList(bookChapters);
+          try{ if(data.epubB64Key) localStorage.removeItem(data.epubB64Key); }catch(e2){}
+          if(info&&data.title){info.textContent='"'+data.title+'" received from Book Editor — ready to generate';info.style.display='block';}
+          return;
+        }
+        // SECONDARY: EPUB file (if no structured sections came through).
+        var epubB64 = data.epubB64Key ? localStorage.getItem(data.epubB64Key) : null;
+        if(epubB64){
+          try{
+            var comma=epubB64.indexOf(',');
+            var bytesStr=atob(comma>-1?epubB64.slice(comma+1):epubB64);
+            var bytes=new Uint8Array(bytesStr.length);
+            for(var j=0;j<bytesStr.length;j++) bytes[j]=bytesStr.charCodeAt(j);
+            var epubFile=new File([bytes], data.epubName||((data.title||'book')+'.epub'), {type:'application/epub+zip'});
+            loadEPUB(epubFile);
+            try{ localStorage.removeItem(data.epubB64Key); }catch(e2){}
+            if(info&&data.title){info.textContent='"'+data.title+'" received from Book Editor — ready to generate';info.style.display='block';}
+            return;
+          }catch(epubErr){ /* fall through to text */ }
+        }
+        // FALLBACK: plain text.
+        var ta=document.getElementById('audiobook-text');
+        if(ta&&data.content){ta.value=data.content;bookChapters=parseChapters(data.content);renderChapterList(bookChapters);}
+        if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}
+      },800);
+    }catch(e){}
+  }
   setupTabs();
   loadVoicesFromWorker();
   setupTTSForm();
@@ -792,7 +865,7 @@ function setupTTSForm(){
 }
 
 function generateTTS(){
-  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice'; return; }
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice-studio'; return; }
   var text=document.getElementById('tts-text').value.trim();
   var voiceId=document.getElementById('tts-voice-select').value;
   var voice2Id=document.getElementById('tts-voice2-select').value;
@@ -887,9 +960,46 @@ function loadEPUB(file){
   var r=new FileReader();
   r.onload=function(ev){
     JSZip.loadAsync(ev.target.result).then(function(zip){
-      var ef=Object.keys(zip.files).filter(function(f){
-        return(f.endsWith('.html')||f.endsWith('.xhtml'))&&!f.toLowerCase().includes('toc')&&!f.toLowerCase().includes('nav');
-      }).sort();
+      // Determine correct chapter order. EPUB reading order lives in the
+      // spine of content.opf — use it. Fall back to a natural numeric sort
+      // (so chapter2 comes before chapter10, not after it).
+      var opfKey=Object.keys(zip.files).filter(function(f){return f.toLowerCase().endsWith('.opf');})[0];
+      var isContent=function(f){
+        var l=f.toLowerCase();
+        return(l.endsWith('.html')||l.endsWith('.xhtml'))&&!l.includes('toc')&&!l.includes('nav')&&!l.includes('title')&&!l.includes('cover');
+      };
+      function naturalSort(a,b){
+        var ax=[],bx=[];
+        a.replace(/(\d+)|(\D+)/g,function(_,n,s){ax.push([n||Infinity,s||'']);});
+        b.replace(/(\d+)|(\D+)/g,function(_,n,s){bx.push([n||Infinity,s||'']);});
+        while(ax.length&&bx.length){
+          var an=ax.shift(),bn=bx.shift();
+          var c=(an[0]-bn[0])||an[1].localeCompare(bn[1]);
+          if(c)return c;
+        }
+        return ax.length-bx.length;
+      }
+      if(opfKey){
+        return zip.files[opfKey].async('text').then(function(opf){
+          var base=opfKey.indexOf('/')>-1?opfKey.slice(0,opfKey.lastIndexOf('/')+1):'';
+          // manifest: id -> href
+          var idHref={};
+          (opf.match(/<item\b[^>]*>/gi)||[]).forEach(function(it){
+            var id=(it.match(/id\s*=\s*["']([^"']+)["']/i)||[])[1];
+            var hr=(it.match(/href\s*=\s*["']([^"']+)["']/i)||[])[1];
+            if(id&&hr)idHref[id]=base+hr;
+          });
+          // spine: ordered idrefs
+          var spine=[];
+          (opf.match(/<itemref\b[^>]*>/gi)||[]).forEach(function(ir){
+            var idref=(ir.match(/idref\s*=\s*["']([^"']+)["']/i)||[])[1];
+            if(idref&&idHref[idref]&&isContent(idHref[idref])&&zip.files[idHref[idref]]) spine.push(idHref[idref]);
+          });
+          var ef=spine.length?spine:Object.keys(zip.files).filter(isContent).sort(naturalSort);
+          return Promise.all(ef.map(function(fn){return zip.files[fn].async('text');}));
+        });
+      }
+      var ef=Object.keys(zip.files).filter(isContent).sort(naturalSort);
       return Promise.all(ef.map(function(fn){return zip.files[fn].async('text');}));
     }).then(function(arr){
       var text=arr.map(function(h){
@@ -949,7 +1059,18 @@ function parseChapters(text){
   var seen={};
   var result=withContent.filter(function(s){var key=s.title.toLowerCase().trim();if(seen[key])return false;seen[key]=true;return true;});
   var frontMatterText=frontMatterLines.join('\n').trim();
-  if(frontMatterText.length>20){result.push({title:'Copyright & Credits',content:frontMatterText,isFrontMatter:true});}
+  // Strip the title-page lines (book title, series, "Book N", author) from the
+  // front matter — they belong to the title page, not the copyright segment,
+  // and leaving them here causes the title to be narrated twice.
+  if(frontMatterText.length>20){
+    var fmLines=frontMatterText.split('\n');
+    var copyStart=-1;
+    for(var fi=0;fi<fmLines.length;fi++){
+      if(/copyright|all rights reserved|©/i.test(fmLines[fi])){copyStart=fi;break;}
+    }
+    var cleanFM=(copyStart>-1?fmLines.slice(copyStart):fmLines).join('\n').trim();
+    if(cleanFM.length>20){result.push({title:'Copyright & Credits',content:cleanFM,isFrontMatter:true});}
+  }
   if(result.length===0){return[{title:'Full Manuscript',content:text}];}
   return result;
 }
@@ -958,7 +1079,13 @@ function renderChapterList(chapters){
   var nav=document.getElementById('chapter-nav'),list=document.getElementById('chapter-list');
   if(!nav||!list)return;
   nav.style.display='block';list.innerHTML='';
-  chapters.forEach(function(ch,i){
+  function addDivider(label){
+    var d=document.createElement('div');
+    d.style.cssText='padding:8px 12px;font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:.08em;color:var(--text-tertiary);background:var(--surface-el);border-bottom:1px solid var(--border);';
+    d.textContent=label;
+    list.appendChild(d);
+  }
+  function addRow(ch,i){
     var row=document.createElement('div');
     row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 150ms;';
     row.onmouseover=function(){this.style.background='var(--surface-el)';};row.onmouseout=function(){this.style.background='';};
@@ -968,7 +1095,21 @@ function renderChapterList(chapters){
     row.querySelector('input').addEventListener('click',function(e){e.stopPropagation();});
     row.addEventListener('click',function(){showChapterPreview(ch);});
     list.appendChild(row);
+  }
+  var mainCh=[],backCh=[],frontCh=[],tocCh=[],dedCh=[];
+  chapters.forEach(function(ch,i){
+    if(ch.isTOC) tocCh.push([ch,i]);
+    else if(ch.isDedication) dedCh.push([ch,i]);
+    else if(ch.isFrontMatter) frontCh.push([ch,i]);
+    else if(ch.isBackMatter) backCh.push([ch,i]);
+    else mainCh.push([ch,i]);
   });
+  if(dedCh.length){ addDivider('DEDICATION'); dedCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(mainCh.length){ addDivider('CHAPTERS'); mainCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(backCh.length){ addDivider('BACK MATTER'); backCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(tocCh.length){ addDivider('TABLE OF CONTENTS'); tocCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(frontCh.length){ addDivider('COPYRIGHT'); frontCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(!mainCh.length&&!backCh.length&&!frontCh.length&&!tocCh.length&&!dedCh.length){ chapters.forEach(addRow); }
 }
 
 function showChapterPreview(ch){
@@ -978,8 +1119,37 @@ function showChapterPreview(ch){
   pv.style.display='block';
 }
 
+// Shared narration-text builder — used by BOTH preview and generation,
+// so what you preview is exactly what gets generated.
+function buildNarrationText(){
+  if(!(bookChapters && bookChapters.length)){
+    return document.getElementById('audiobook-text').value.trim();
+  }
+  function cleanFM(txt){
+    if(!txt) return txt;
+    var m=txt.match(/©|\(c\)\s*\d{4}/i);
+    return m ? txt.slice(txt.indexOf(m[0])).trim() : txt.trim();
+  }
+  var mainP=[],backP=[],dedP=[],copyP=[];
+  bookChapters.forEach(function(ch){
+    if(ch.isTOC) return;
+    // Dedication is its own type — goes to the front (with the intro).
+    if(ch.isDedication||/(^|\b)dedication\b/i.test(ch.title||'')) dedP.push(ch.content||'');
+    else if(ch.isFrontMatter) copyP.push(cleanFM(ch.content||''));
+    else if(ch.isBackMatter) backP.push(ch.content||'');
+    else mainP.push((ch.title?ch.title+'\n\n':'')+(ch.content||''));
+  });
+  // Order: intro line, dedication, chapters, back matter, copyright LAST.
+  var ordered=[];
+  if(bookIntro) ordered.push(bookIntro);
+  ordered=ordered.concat(dedP).concat(mainP).concat(backP).concat(copyP);
+  return ordered.join('\n\n\n').trim();
+}
+
 function previewSegments(){
-  var text=document.getElementById('audiobook-text').value.trim(),c=document.getElementById('segments-preview');if(!text||!c)return;
+  var c=document.getElementById('segments-preview');if(!c)return;
+  var text=buildNarrationText();
+  if(!text)return;
   var parts=text.split(/(\u201c[^\u201d]*\u201d|"[^"]*"|'[^']*')/);c.innerHTML='';
   parts.forEach(function(p){p=p.trim();if(!p)return;
     var isDlg=(p.startsWith('"')&&p.endsWith('"'))||(p.startsWith("'")&&p.endsWith("'"))||(p.startsWith('\u201c')&&p.endsWith('\u201d'));
@@ -991,7 +1161,7 @@ function previewSegments(){
 }
 
 function generateAudiobook(){
-  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice'; return; }
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice-studio'; return; }
   // Resolve narrator voice — use selected, or fall back to first available real voice
   var narratorId=document.getElementById('narrator-voice-select').value;
   if(!narratorId && VOICES.length>0) narratorId=VOICES[0].voice_id;
@@ -1006,6 +1176,17 @@ function generateAudiobook(){
   if(list&&bookChapters.length>0){
     list.querySelectorAll('input[type=checkbox]').forEach(function(cb){if(cb.checked)selectedChapters.push(bookChapters[parseInt(cb.dataset.idx)]);});
   }
+  // Order must MATCH the preview: dedication first, chapters, back matter,
+  // copyright LAST.
+  var genMain=[],genBack=[],genDed=[],genCopy=[];
+  selectedChapters.forEach(function(ch){
+    if(ch&&ch.isTOC) return;
+    if(ch&&(ch.isDedication||/(^|\b)dedication\b/i.test(ch.title||''))) genDed.push(ch);
+    else if(ch&&ch.isFrontMatter) genCopy.push(ch);
+    else if(ch&&ch.isBackMatter) genBack.push(ch);
+    else genMain.push(ch);
+  });
+  selectedChapters=genDed.concat(genMain).concat(genBack).concat(genCopy);
   if(selectedChapters.length===0){
     var fallback=document.getElementById('audiobook-text').value.trim();
     if(!fallback){alert('Please upload a manuscript first.');return;}
@@ -1255,15 +1436,19 @@ function loadHistory(){
 }
 function playHistoryItem(audioUrl,voiceName,type){
   var p=document.getElementById('history-player'),a=p.querySelector('audio'),info=document.getElementById('history-player-info'),dl=p.querySelector('.btn-download');
-  // If same source already loaded, just rewind and play
-  if(a.src===audioUrl){
+  if(!audioUrl){ return; }
+  // Always reset cleanly and reload — fixes "won't replay after first listen"
+  try{ a.pause(); }catch(e){}
+  a.oncanplay=null;
+  a.currentTime=0;
+  a.src=audioUrl;
+  a.load();
+  a.oncanplay=function(){
+    a.oncanplay=null;
     a.currentTime=0;
-    a.play();
-  } else {
-    a.src=audioUrl;
-    a.load();
-    a.oncanplay=function(){a.currentTime=0;a.play();a.oncanplay=null;};
-  }
+    var pr=a.play();
+    if(pr&&pr.catch){ pr.catch(function(){}); }
+  };
   p.classList.add('visible');
   setTimeout(function(){historyWaveform.drawIdle&&historyWaveform.drawIdle();},50);
   info.textContent=(type||'TTS').toUpperCase()+' | Voice: '+voiceName;
@@ -1300,7 +1485,7 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
         return v.name + ' (' + (v.accent || 'Unknown accent') + ')';
       }).join(', ');
     }
-    return 'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. VOICE LIBRARY: The platform offers a diverse selection of 46 voice profiles, each with an MP3 sample. Members preview voices directly in the library before choosing one. If asked for voice recommendations, do not name specific voices. Instead, direct members to browse the library and preview samples since voice fit is personal. You can suggest categories to look for (warm, deep, bright, accented, dramatic, soothing) but never invent voice names. PLATFORM FACTS: Audiobook generation costs 150 credits per book and has an 100,000-character cap per audiobook. Never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership costs $15 per month or $144 per year (300 credits monthly or 3,600 credits yearly). Publication Membership costs $25 per month or $240 per year (400 credits monthly or 4,800 credits yearly, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 100,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.';
+    return 'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. VOICE LIBRARY: The platform offers a diverse selection of 49 voice profiles, each with an MP3 sample. Members preview voices directly in the library before choosing one. If asked for voice recommendations, do not name specific voices. Instead, direct members to browse the library and preview samples since voice fit is personal. You can suggest categories to look for (warm, deep, bright, accented, dramatic, soothing) but never invent voice names. PLATFORM FACTS: Audiobook generation costs 150 credits per book and has an 100,000-character cap per audiobook. Never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership costs $15 per month or $144 per year (300 credits monthly or 3,600 credits yearly). Publication Membership costs $25 per month or $240 per year (400 credits monthly or 4,800 credits yearly, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 100,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.';
   }
   function sendMsg(){
     var text=input.value.trim();if(!text)return;
@@ -1335,7 +1520,7 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
     <div class="gate-icon"><i class="ph ph-lock"></i></div>
     <h2>Sign In Required</h2>
     <p>Please sign in to access CC Voice Studio and generate audio.</p>
-    <a class="gate-btn" href="https://creatives.smcantrellbooks.com/login?next=/voice"><i class="ph ph-sign-in"></i> Sign In</a>
+    <a class="gate-btn" href="https://creatives.smcantrellbooks.com/login?next=/voice-studio"><i class="ph ph-sign-in"></i> Sign In</a>
   </div>
 </div>
 
