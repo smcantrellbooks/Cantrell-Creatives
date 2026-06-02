@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Voice Studio — Cantrell Creatives</title>
-<meta name="description" content="Professional text-to-speech and audiobook generation. 46 voice profiles with MP3 samples, EPUB import, chapter-by-chapter narration.">
+<meta name="description" content="Professional text-to-speech and audiobook generation. 52 voice profiles with MP3 samples, EPUB import, chapter-by-chapter narration.">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="https://cdn1.site-media.eu/images/0/24164291/favion-w8a9xZjhjS1lHLuYJ8TRxA-9VQTYNp85g1pNqACuxlvyw.png">
 <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
@@ -63,6 +63,9 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
 .nav-status{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:10px;color:var(--text-tertiary);letter-spacing:.05em;text-transform:uppercase;}
 .status-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse-glow 2s infinite;}
 @keyframes pulse-glow{0%,100%{opacity:1;}50%{opacity:.4;}}
+/* Spinner animation — applied to any ph-spinner inside progress/loading contexts */
+@keyframes ph-spin-anim{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.ph-spinner{display:inline-block;animation:ph-spin-anim 0.9s linear infinite;}
 
 /* ── MAIN ─────────────────────────────────────────────── */
 .main{min-height:calc(100vh - 200px);}
@@ -180,6 +183,23 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
 @media(max-width:640px){.nav-tab{padding:10px 10px;font-size:10px;}.section-title{font-size:1.5rem;}.tab-content{padding:20px 12px;}}
 @media(max-width:600px){.hdr-nav .hdr-btn:not(.logout){display:none;}.hdr-chip-name{display:none;}}
 
+/* ── BOOK META HEADER (audiobook sidebar, sticky) ─────── */
+.book-meta-header{position:sticky;top:113px;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;margin:-1px 0 0;box-shadow:0 2px 8px rgba(44,24,16,.07);}
+.book-meta-title{font-family:'Cinzel',serif;font-weight:700;font-size:14px;color:var(--text-primary);letter-spacing:.04em;line-height:1.3;margin-bottom:2px;}
+.book-meta-series{font-family:'EB Garamond',serif;font-size:13px;color:var(--gold);font-style:italic;letter-spacing:.03em;margin-bottom:1px;}
+.book-meta-author{font-family:'Cinzel',serif;font-size:10px;color:var(--text-tertiary);letter-spacing:.08em;text-transform:uppercase;}
+/* ── TWO-PASS PREVIEW HEADERS ─────────────────────────── */
+.preview-pass-hdr{padding:6px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.10em;text-transform:uppercase;color:var(--gold);background:var(--burg-lt);border-bottom:1px solid var(--burg-bd);border-top:1px solid var(--burg-bd);}
+.preview-ch-divider{padding:5px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.06em;color:var(--text-tertiary);background:var(--surface-el);border-bottom:1px solid var(--border);}
+/* ── MASTER MP3 ACTIONS ────────────────────────────────── */
+.ab-action-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:8px;font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all 150ms;text-decoration:none;border:none;}
+.ab-action-btn.primary{background:var(--burg);color:#fff;}
+.ab-action-btn.primary:hover{background:var(--burg2);}
+.ab-action-btn.secondary{border:1px solid var(--gold);background:transparent;color:var(--gold);}
+.ab-action-btn.secondary:hover{background:var(--gold-lt);}
+.ab-action-btn.tertiary{border:1px solid var(--border);background:transparent;color:var(--text-tertiary);}
+.ab-action-btn.tertiary:hover{background:var(--surface-el);}
+
 /* ── NYXEN BUBBLE ─────────────────────────────────────── */
 #nyxen-bubble{position:fixed;bottom:28px;right:28px;z-index:9999;}
 #nyxen-toggle{width:56px;height:56px;border-radius:50%;background:var(--burg);border:3px solid var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(122,38,56,.4);transition:transform .2s;overflow:hidden;padding:0;}
@@ -284,7 +304,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <section id="voices-tab" class="tab-content active">
     <div class="section-header">
       <h1 class="section-title">Voice Library</h1>
-      <p class="section-sub">25 voice profiles &mdash; preview before you generate</p>
+      <p class="section-sub">50 voice profiles &mdash; preview before you generate</p>
     </div>
     <div id="voice-library-container" class="voice-grid"></div>
     <audio id="vs-sample-player" style="display:none;"></audio>
@@ -294,12 +314,12 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <section id="tts-tab" class="tab-content">
     <div class="section-header">
       <h1 class="section-title">TTS Studio</h1>
-      <p class="section-sub">Text-to-speech generation &mdash; single or dual-voice &mdash; MP3 &amp; WAV output</p>
+      <p class="section-sub">Text-to-speech generation &mdash; single or dual-voice &mdash; MP3 & WAV output</p>
     </div>
     <div class="tts-layout">
       <div class="tts-editor">
-        <textarea id="tts-text" class="tts-textarea" placeholder="Enter your text here. Up to 4,000 characters supported..." maxlength="4000"></textarea>
-        <div class="tts-editor-footer"><span id="tts-char-count" class="char-count">0 / 4000</span></div>
+        <textarea id="tts-text" class="tts-textarea" placeholder="Enter your text here. Preview is capped at 300 characters — use the Audiobook tab for full manuscripts." maxlength="300"></textarea>
+        <div class="tts-editor-footer"><span id="tts-char-count" class="char-count">0 / 300</span></div>
       </div>
       <div class="tts-controls">
         <div class="control-group">
@@ -315,10 +335,10 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
             <input type="text" id="tts-char2-name" placeholder="Character name (e.g. James)" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Cormorant Garamond',serif;font-size:15px;outline:none;background:#fff;color:var(--text-primary);">
           </div>
         </div>
-        <div class="control-group" style="display:none;">
-          <label class="control-label">Speed</label>
-          <input type="range" id="tts-speed" class="speed-slider" min="0.7" max="1.3" step="0.05" value="1.0">
-          <div id="tts-speed-value" class="speed-value">1.00x</div>
+        <div class="control-group">
+          <label class="control-label">Narration Speed</label>
+          <input type="range" id="tts-speed" class="speed-slider" min="0.75" max="1.5" step="0.05" value="1.0">
+          <div id="tts-speed-value" class="speed-value">1.00×</div>
         </div>
         <div class="control-group">
           <label class="control-label">Format</label>
@@ -345,10 +365,10 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
   <section id="audiobook-tab" class="tab-content">
     <div class="section-header">
       <h1 class="section-title">Audiobook Studio</h1>
-      <p class="section-sub">Full manuscript generation &mdash; EPUB import &amp; export &mdash; multi-voice &mdash; chapter-by-chapter</p>
+      <p class="section-sub">Full manuscript generation &mdash; EPUB import & export &mdash; multi-voice &mdash; chapter-by-chapter</p>
       <div style="display:inline-flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
         <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--gold);background:rgba(184,148,46,.10);border:1px solid rgba(184,148,46,.35);border-radius:999px;padding:5px 12px;">150 credits per audiobook</span>
-        <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-tertiary);background:var(--surface-el);border:1px solid var(--border);border-radius:999px;padding:5px 12px;">80,000 character cap</span>
+        <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-tertiary);background:var(--surface-el);border:1px solid var(--border);border-radius:999px;padding:5px 12px;">100,000 character cap</span>
       </div>
     </div>
     <div class="audiobook-layout">
@@ -416,8 +436,32 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
             <select id="narrator2-voice-select" class="control-select"></select>
           </div>
         </div>
+        <div class="control-group" style="margin-top:4px;">
+          <label class="control-label">Narration Speed</label>
+          <input type="range" id="ab-speed" class="speed-slider" min="0.75" max="1.5" step="0.05" value="1.0">
+          <div id="ab-speed-value" class="speed-value">1.00×</div>
+        </div>
+
+        <!-- ── PRONUNCIATION GUIDE (collapsible) ── -->
+        <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+          <div id="pron-toggle" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;cursor:pointer;background:var(--surface-el);user-select:none;">
+            <span style="font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-tertiary);"><i class="ph ph-bookmark-simple" style="margin-right:4px;"></i> Pronunciation Guide</span>
+            <span id="pron-count" style="font-family:'Cinzel',serif;font-size:9px;color:var(--gold);">0</span>
+          </div>
+          <div id="pron-panel" style="display:none;padding:10px;background:var(--surface);border-top:1px solid var(--border);">
+            <div id="pron-list" style="max-height:160px;overflow-y:auto;margin-bottom:8px;"></div>
+            <div style="display:flex;gap:6px;">
+              <input type="text" id="pron-word" placeholder="Word (e.g. Aeos)" style="flex:1;padding:7px 8px;border:1px solid var(--border);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:13px;outline:none;background:#fff;color:var(--text-primary);">
+              <input type="text" id="pron-replace" placeholder="Say as (e.g. Ay-oss)" style="flex:1;padding:7px 8px;border:1px solid var(--border);border-radius:6px;font-family:'Cormorant Garamond',serif;font-size:13px;outline:none;background:#fff;color:var(--text-primary);">
+              <button id="pron-add-btn" style="padding:7px 12px;background:var(--burg);border:none;color:#fff;font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:6px;white-space:nowrap;">Add</button>
+            </div>
+          </div>
+        </div>
+        <!-- ── END PRONUNCIATION GUIDE ── -->
+
         <div style="flex:1;"></div>
         <button id="audiobook-generate-btn" class="btn-generate">Generate Audiobook</button>
+        <button id="audiobook-cancel-btn" class="btn-generate" style="display:none;background:var(--burg);border-color:var(--burg);" onclick="abortAudiobookGeneration()">Cancel</button>
       </div>
     </div>
     <div id="audiobook-result" class="audio-result">
@@ -457,8 +501,10 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
       <div>
         <h1 class="section-title">Generation History</h1>
         <p class="section-sub">All generated audio &mdash; playback and download</p>
+        <p class="section-sub" style="font-size:8pt;font-style:italic;margin-top:4px;">Generated audio is kept for 30 days. Download a copy to keep it permanently.</p>
       </div>
-      <div style="display:flex;gap:8px;margin-top:8px;">
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+        <a href="https://creatives.smcantrellbooks.com/myaccount" class="btn-download" style="padding:8px 14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;"><i class="ph ph-user-circle"></i> My Account</a>
         <button id="clear-history-btn" class="btn-download" style="padding:8px 14px;"><i class="ph ph-trash"></i> Clear</button>
       </div>
     </div>
@@ -491,7 +537,7 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
       <div><div id="nyxen-head-name">Nyxen</div><div id="nyxen-head-sub">Your Publishing AI</div></div>
     </div>
     <div id="nyxen-msgs">
-      <div class="nm assistant">Hi! I'm Nyxen, your publishing assistant. Ask me anything about your book, voice studio, or publishing journey.</div>
+      <div class="nm assistant">Hi, I'm Nyxen. I'm here to help you navigate Voice Studio, answer audiobook generation questions, general platform questions and assist you in exploring voice preview options for your project.</div>
     </div>
     <div id="nyxen-foot">
       <input id="nyxen-input" type="text" placeholder="Ask Nyxen..." autocomplete="off">
@@ -508,7 +554,12 @@ body{background:var(--bg);color:var(--text-primary);font-family:'Cormorant Garam
 ═══════════════════════════════════════════════════════ -->
 <script>
 // ── CONFIG ──
-var WORKER = 'https://cantrell-creatives.smcantrellbooks.workers.dev';
+// Voice library served directly from HF Voice Engine Space
+var VOICE_LIBRARY = 'https://cantrell-creatives.smcantrellbooks.workers.dev';
+// TTS engine (Chatterbox cloning + generation) served from HF Space
+var ENGINE = 'https://smcantrell-cantrell-voice-engine.hf.space';
+// Nyxen Archive Worker — handles GCS audio storage + Supabase metadata
+var NYXEN_ARCHIVE = 'https://nyxen-video-worker.smcantrellbooks.workers.dev';
 var SB_URL = 'https://recyyhvdvuupxhbxmzal.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlY3l5aHZkdnV1cHhoYnhtemFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMjc0MDAsImV4cCI6MjA4OTcwMzQwMH0.kO4niR2v4hgPFi2iQ8R8I1Id_COcRH_z4SsXc6W93AM';
 var CC_URL = 'https://creatives.smcantrellbooks.com';
@@ -536,10 +587,46 @@ function clearUser(){
   document.getElementById('hdrUserChip').style.display = 'none';
   document.getElementById('hdrLogoutBtn').style.display = 'none';
   document.getElementById('authGate').classList.remove('hidden');
-  setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice'; }, 1500);
+  setTimeout(function(){ if(!currentUser) window.location.href = CC_URL + '/login?next=/voice-studio'; }, 1500);
 }
 
-// ── VOICE ENGINE (dynamic from R2 worker) ──
+// ── TEXT NORMALIZATION ──
+// Preprocesses text before sending to TTS engine.
+// Fixes time formatting, proper noun pronunciations, common abbreviations,
+// and ensures the model receives clean, naturally-punctuated text.
+var PRONUNCIATIONS = {
+  // Cleared — Chatterbox reads hyphenated respellings literally.
+  // Add entries back ONLY after a listening pass confirms a word
+  // needs help, using plain letters with no hyphens.
+};
+
+function normalizeText(text) {
+  if (!text) return text;
+  var out = text;
+
+  // Times: "11:47 PM" -> "11 47 PM", "3:30am" -> "3 30 am"
+  out = out.replace(/\b(\d{1,2}):(\d{2})\s*(a\.?m\.?|p\.?m\.?)?/gi, function(m, h, min, ampm) {
+    var result = h + ' ' + min;
+    if (ampm) result += ' ' + ampm.replace(/\./g, '');
+    return result;
+  });
+
+  // Proper noun pronunciations (case-insensitive, whole-word match)
+  Object.keys(PRONUNCIATIONS).forEach(function(word) {
+    var regex = new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+    out = out.replace(regex, PRONUNCIATIONS[word]);
+  });
+
+  // Paragraph breaks: insert a period before \n\n when the preceding character
+  // is not already sentence-ending punctuation. This gives the TTS engine a
+  // clear stop cue so it pauses naturally between paragraphs rather than
+  // running them together.
+  out = out.replace(/([^.!?\n])\n\n/g, '$1.\n\n');
+
+  return out;
+}
+
+// ── VOICE ENGINE (dynamic from HF Space backend) ──
 var VOICES = [];
 
 // Parse an R2 filename into a display-friendly object
@@ -555,11 +642,11 @@ function parseVoiceFilename(filename){
   return { voice_id: filename, name: name.trim(), accent: accent };
 }
 
-// Fetch voice list from R2 worker and populate VOICES array
+// Fetch voice list from HF Space backend and populate VOICES array
 function loadVoicesFromWorker(){
   var container = document.getElementById('voice-library-container');
   if(container) container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-tertiary);font-family:Cinzel,serif;font-size:12px;letter-spacing:.05em;text-transform:uppercase;"><i class="ph ph-spinner" style="font-size:24px;display:block;margin-bottom:8px;opacity:.5;"></i>Loading voices...</div>';
-  return fetch(WORKER + '/voices')
+  return fetch(VOICE_LIBRARY + '/voices')
     .then(function(r){ if(!r.ok) throw new Error('Failed to load voices'); return r.json(); })
     .then(function(data){
       var list = data.voices || data;
@@ -586,7 +673,76 @@ var chatSessionId = null;
 var currentAudio = null;
 var currentPlayingCard = null;
 var bookChapters = [];
+var bookIntro = '';
+var bookMetadata = null; // { title, author, series, seriesNumber } — populated on Editor handoff
 var generationHistory = JSON.parse(localStorage.getItem('vs_history')||'[]');
+// Per-book pronunciation rules — keyed by book title slug, persisted in localStorage
+var pronunciationRules = [];
+function getPronKey(){ return 'vs_pron_' + ((bookMetadata&&bookMetadata.title) ? bookMetadata.title.replace(/[^a-zA-Z0-9]+/g,'_').toLowerCase() : '_default'); }
+function savePronRules(){ try{ localStorage.setItem(getPronKey(), JSON.stringify(pronunciationRules)); }catch(e){} }
+function loadPronRules(){ 
+  try{ var d=JSON.parse(localStorage.getItem(getPronKey())||'[]'); pronunciationRules=Array.isArray(d)?d:[]; }catch(e){ pronunciationRules=[]; }
+  renderPronList();
+}
+// ── PRONUNCIATION GUIDE UI ──
+function renderPronList(){
+  var list=document.getElementById('pron-list'),count=document.getElementById('pron-count');
+  if(!list)return;
+  list.innerHTML='';
+  pronunciationRules.forEach(function(r,i){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 4px;border-bottom:1px solid var(--border);font-size:13px;';
+    row.innerHTML='<span style="flex:1;color:var(--text-primary);font-weight:600;">'+escapeHtml(r.word)+'</span>'
+      +'<span style="color:var(--gold);font-style:italic;">→ '+escapeHtml(r.replace)+'</span>'
+      +'<button data-idx="'+i+'" style="background:none;border:none;color:var(--error);cursor:pointer;font-size:12px;padding:2px 4px;" title="Remove">✕</button>';
+    row.querySelector('button').addEventListener('click',function(e){e.stopPropagation();removePronRule(parseInt(this.dataset.idx));});
+    list.appendChild(row);
+  });
+  if(count)count.textContent=pronunciationRules.length;
+}
+function addPronRule(){
+  var wordEl=document.getElementById('pron-word'),repEl=document.getElementById('pron-replace');
+  var word=(wordEl.value||'').trim(),rep=(repEl.value||'').trim();
+  if(!word||!rep){return;}
+  // Check for duplicate
+  var dup=pronunciationRules.some(function(r){return r.word.toLowerCase()===word.toLowerCase();});
+  if(dup){wordEl.value='';repEl.value='';wordEl.focus();return;}
+  pronunciationRules.push({word:word,replace:rep});
+  wordEl.value='';repEl.value='';wordEl.focus();
+  savePronRules();renderPronList();
+}
+function removePronRule(idx){
+  if(idx<0||idx>=pronunciationRules.length)return;
+  pronunciationRules.splice(idx,1);
+  savePronRules();renderPronList();
+}
+// Apply user-defined pronunciation rules to text (called inside normalizeText pipeline)
+function applyUserPronunciations(text){
+  if(!text||!pronunciationRules.length)return text;
+  var out=text;
+  pronunciationRules.forEach(function(r){
+    var regex=new RegExp('\\b'+r.word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','gi');
+    out=out.replace(regex,r.replace);
+  });
+  return out;
+}
+// Override normalizeText to include user pronunciation rules
+var _origNormalize = normalizeText;
+normalizeText = function(text){
+  if(!text)return text;
+  // Apply user pronunciation rules BEFORE the built-in transformations
+  return _origNormalize(applyUserPronunciations(text));
+};
+function setupPronGuide(){
+  var toggle=document.getElementById('pron-toggle'),panel=document.getElementById('pron-panel'),addBtn=document.getElementById('pron-add-btn');
+  if(toggle) toggle.addEventListener('click',function(){var p=document.getElementById('pron-panel');if(p)p.style.display=p.style.display==='none'?'block':'none';});
+  if(addBtn) addBtn.addEventListener('click',addPronRule);
+  // Enter key support in both input fields
+  var wEl=document.getElementById('pron-word'),rEl=document.getElementById('pron-replace');
+  if(wEl) wEl.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addPronRule();}});
+  if(rEl) rEl.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addPronRule();}});
+  loadPronRules();
+}
 
 // ── WAVEFORM ──
 function WaveformViz(canvasId){
@@ -651,7 +807,101 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function init(){
   var incoming=localStorage.getItem('vs_incoming');
-  if(incoming){try{var data=JSON.parse(incoming);localStorage.removeItem('vs_incoming');setTimeout(function(){var ta=document.getElementById('audiobook-text');if(ta&&data.content){ta.value=data.content;bookChapters=parseChapters(data.content);renderChapterList(bookChapters);}var info=document.getElementById('upload-info');if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}},800);}catch(e){}}
+  if(incoming){
+    try{
+      var data=JSON.parse(incoming);
+      localStorage.removeItem('vs_incoming');
+      // A handoff from the Editor means the user is here to make an audiobook.
+      setTimeout(function(){ try{ switchTab('audiobook'); }catch(e){} }, 50);
+      setTimeout(function(){
+        var info=document.getElementById('upload-info');
+        // PRIMARY: structured sections from the Editor — carry real
+        // front/back-matter flags, so no guessing, no mis-parsing.
+        if(data.sections && data.sections.length){
+          bookIntro = data.intro || '';
+          // If the Editor didn't supply an intro line, build one from
+          // title + author so the preview/narration always opens correctly.
+          if(!bookIntro && data.title){
+            bookIntro = data.title + (data.author ? ', by ' + data.author + '.' : '.');
+          }
+          // Store metadata for the sidebar header block.
+          bookMetadata = { title: data.title||'', author: data.author||'',
+                           series: data.series||'', seriesNumber: data.seriesNumber||'' };
+          // --- DEBUG READOUT (temporary) ---
+          try {
+            var dedCount = data.sections.filter(function(s){ return s.isDedication; }).length;
+            var dbg = 'HANDOFF DEBUG  |  intro: "' + (data.intro||'(empty)') +
+                      '"  |  title: "' + (data.title||'(empty)') +
+                      '"  |  sections: ' + data.sections.length +
+                      '  |  dedication sections: ' + dedCount +
+                      '  |  bookIntro now: "' + (bookIntro||'(empty)') + '"';
+            var db = document.createElement('div');
+            db.style.cssText = 'background:#2b1a00;color:#ffd479;padding:10px;font:12px monospace;white-space:pre-wrap;border:1px solid #ffd479;margin:8px;border-radius:6px;';
+            db.textContent = dbg;
+            document.body.insertBefore(db, document.body.firstChild);
+          } catch(dErr){}
+          // --- END DEBUG ---
+          // Clean front matter: keep only from the real copyright line onward,
+          // dropping any leading title/series header text that would otherwise
+          // be narrated (e.g. "Copyright KIERAN Copyright ©...").
+          function cleanFrontMatter(txt){
+            if(!txt) return txt;
+            // Cut everything before the actual copyright notice. Match the ©
+            // character (or "(c) <year>") wherever it appears, even mid-line,
+            // and keep from there — strips leading "Copyright Kieran Copyright".
+            var m=txt.match(/©|\(c\)\s*\d{4}/i);
+            if(m){ return txt.slice(txt.indexOf(m[0])).trim(); }
+            return txt.trim();
+          }
+          var rawSecs = data.sections.map(function(s){
+            var content=s.content||s.text||'';
+            if(s.isFrontMatter) content=cleanFrontMatter(content);
+            return { title:s.title||'', content:content,
+                     isFrontMatter:!!s.isFrontMatter, isBackMatter:!!s.isBackMatter, isTOC:!!s.isTOC, isDedication:!!s.isDedication };
+          });
+          // Order: dedication first, then chapters, back matter, copyright LAST.
+          var mainS=[],backS=[],frontS=[],dedS=[];
+          rawSecs.forEach(function(s){
+            if(s.isTOC) return; // TOC is not narrated
+            if(s.isDedication||/(^|\b)dedication\b/i.test(s.title||'')) dedS.push(s);
+            else if(s.isFrontMatter) frontS.push(s);
+            else if(s.isBackMatter) backS.push(s);
+            else mainS.push(s);
+          });
+          bookChapters = dedS.concat(mainS).concat(backS).concat(frontS);
+          var ta0=document.getElementById('audiobook-text');
+          if(ta0) ta0.value = bookChapters.map(function(c){
+            // Front/back matter narrate content only — never the section title.
+            if(c.isFrontMatter||c.isBackMatter) return c.content;
+            return (c.title?c.title+'\n\n':'')+c.content;
+          }).join('\n\n\n');
+          renderChapterList(bookChapters);
+          try{ if(data.epubB64Key) localStorage.removeItem(data.epubB64Key); }catch(e2){}
+          if(info&&data.title){info.textContent='"'+data.title+'" received from Book Editor — ready to generate';info.style.display='block';}
+          return;
+        }
+        // SECONDARY: EPUB file (if no structured sections came through).
+        var epubB64 = data.epubB64Key ? localStorage.getItem(data.epubB64Key) : null;
+        if(epubB64){
+          try{
+            var comma=epubB64.indexOf(',');
+            var bytesStr=atob(comma>-1?epubB64.slice(comma+1):epubB64);
+            var bytes=new Uint8Array(bytesStr.length);
+            for(var j=0;j<bytesStr.length;j++) bytes[j]=bytesStr.charCodeAt(j);
+            var epubFile=new File([bytes], data.epubName||((data.title||'book')+'.epub'), {type:'application/epub+zip'});
+            loadEPUB(epubFile);
+            try{ localStorage.removeItem(data.epubB64Key); }catch(e2){}
+            if(info&&data.title){info.textContent='"'+data.title+'" received from Book Editor — ready to generate';info.style.display='block';}
+            return;
+          }catch(epubErr){ /* fall through to text */ }
+        }
+        // FALLBACK: plain text.
+        var ta=document.getElementById('audiobook-text');
+        if(ta&&data.content){ta.value=data.content;bookChapters=parseChapters(data.content);renderChapterList(bookChapters);}
+        if(info&&data.title){info.textContent='"'+data.title+'" received — ready to generate';info.style.display='block';}
+      },800);
+    }catch(e){}
+  }
   setupTabs();
   loadVoicesFromWorker();
   setupTTSForm();
@@ -659,6 +909,7 @@ function init(){
   setupCompareForm();
   setupHistoryTab();
   setupWaveforms();
+  setupPronGuide();
 }
 
 // ── TABS ──
@@ -715,7 +966,7 @@ function previewVoice(voiceId,voiceName,btn){
   if(currentAudio){currentAudio.pause();currentAudio=null;if(currentPlayingCard){currentPlayingCard.classList.remove('playing');currentPlayingCard.innerHTML='<i class="ph ph-play"></i> Play Sample';}}
   if(currentPlayingCard===btn){currentPlayingCard=null;return;}
   btn.classList.add('playing');btn.innerHTML='<i class="ph ph-spinner"></i> Loading';
-  var sampleUrl=WORKER+'/sample?voice_id='+encodeURIComponent(voiceId);
+  var sampleUrl=VOICE_LIBRARY+'/sample?voice_id='+encodeURIComponent(voiceId);
   var audio=document.getElementById('vs-sample-player');
   audio.src=sampleUrl;
   currentAudio=audio;currentPlayingCard=btn;
@@ -754,13 +1005,20 @@ function populateVoiceSelects(){
 // ── TTS FORM ──
 function setupTTSForm(){
   var ta=document.getElementById('tts-text'),cc=document.getElementById('tts-char-count'),ss=document.getElementById('tts-speed'),sv=document.getElementById('tts-speed-value'),gb=document.getElementById('tts-generate-btn');
-  if(ta&&cc)ta.addEventListener('input',function(){cc.textContent=ta.value.length+' / 4000';});
-  if(ss&&sv)ss.addEventListener('input',function(){sv.textContent=parseFloat(ss.value).toFixed(2)+'x';});
+  if(ta&&cc)ta.addEventListener('input',function(){
+    var len=ta.value.length;
+    cc.textContent=len+' / 300';
+    cc.style.color=len>300?'var(--error)':'';
+  });
+  if(ss&&sv)ss.addEventListener('input',function(){sv.textContent=parseFloat(ss.value).toFixed(2)+'×';});
+  /* Audiobook speed slider */
+  var abSp=document.getElementById('ab-speed'),abSpV=document.getElementById('ab-speed-value');
+  if(abSp&&abSpV)abSp.addEventListener('input',function(){abSpV.textContent=parseFloat(abSp.value).toFixed(2)+'×';});
   if(gb)gb.addEventListener('click',generateTTS);
 }
 
 function generateTTS(){
-  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice'; return; }
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice-studio'; return; }
   var text=document.getElementById('tts-text').value.trim();
   var voiceId=document.getElementById('tts-voice-select').value;
   var voice2Id=document.getElementById('tts-voice2-select').value;
@@ -768,28 +1026,29 @@ function generateTTS(){
   var format=document.getElementById('tts-format').value||'mp3';
   var btn=document.getElementById('tts-generate-btn'),result=document.getElementById('tts-result');
   if(!text)return;
+  if(text.length>300){alert('TTS preview is capped at 300 characters.\nUse the Audiobook tab for longer passages.');btn.disabled=false;btn.textContent='GENERATE';return;}
   btn.disabled=true;btn.textContent='GENERATING...';
   var voice=VOICES.find(function(v){return v.voice_id===voiceId;})||{};
 
-  // Use the dedicated /tts-preview endpoint (XTTS/Qwen3 pipeline)
-  var payload={text:text,voice_file:voiceId,voice_id:voiceId,language:'en'};
-  fetch(WORKER+'/tts-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  // Generate cloned audio via /tts-preview endpoint
+  var payload={text:normalizeText(text),voice_file:voiceId,voice_id:voiceId,language:'en',speed:speed};
+  fetch(ENGINE+'/tts-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
   .then(function(r){
     var ct=r.headers.get('content-type')||'';
-    // If the worker returned JSON it is an error envelope
+    // If the backend returned JSON it is an error envelope
     if(ct.indexOf('application/json')!==-1){
       return r.json().then(function(j){throw new Error(j.error||'Unknown error');});
     }
     if(!r.ok) throw new Error('Worker returned '+r.status);
-    return r.arrayBuffer().then(function(buf){return{buf:buf,ct:ct||'audio/wav'};});
+    return r.arrayBuffer().then(function(buf){return{buf:buf,ct:ct||'audio/mpeg'};});
   })
   .then(function(data){
     if(!data.buf||data.buf.byteLength===0) throw new Error('Empty audio response');
     // Determine MIME — prefer what the backend told us
     var mime=data.ct;
-    if(mime.indexOf('audio')===-1) mime='audio/wav';
-    var isWav=mime.indexOf('wav')!==-1;
-    var ext=isWav?'wav':'mp3';
+    if(mime.indexOf('audio')===-1) mime='audio/mpeg';
+    var isMpeg=mime.indexOf('mpeg')!==-1||mime.indexOf('mp3')!==-1;
+    var ext=isMpeg?'mp3':'wav';
     var blob=new Blob([data.buf],{type:mime});
     var url=URL.createObjectURL(blob);
     result.classList.add('visible');
@@ -800,10 +1059,10 @@ function generateTTS(){
     audioEl.onerror=function(){console.error('Audio decode error',audioEl.error);};
     audioEl.oncanplay=function(){audioEl.play().catch(function(){});};
     var info=result.querySelector('.audio-result-info span');
-    if(info)info.textContent=(voice.name||voiceId)+' — '+ext.toUpperCase()+' — '+(blob.size/1024).toFixed(1)+' KB';
+    if(info)info.textContent=(voice.name||voiceId)+' — MP3 — '+(blob.size/1024).toFixed(1)+' KB';
     var dl=result.querySelector('.btn-download');
     if(dl)dl.onclick=function(){var a=document.createElement('a');a.href=url;a.download='vs-tts-'+(voice.name||voiceId).replace(/\s+/g,'_').toLowerCase()+'.'+ext;a.click();};
-    saveHistory({type:'tts',voice_name:voice.name||voiceId,text:text,audio_url:url,created_at:new Date().toISOString()});
+    saveHistory({type:'tts',voice_name:voice.name||voiceId,text:text,audio_url:bufferToDataUrl(data.buf,mime),created_at:new Date().toISOString()});
   })
   .catch(function(e){alert('TTS Error: '+e.message);})
   .finally(function(){btn.disabled=false;btn.textContent='Generate Speech';});
@@ -855,9 +1114,46 @@ function loadEPUB(file){
   var r=new FileReader();
   r.onload=function(ev){
     JSZip.loadAsync(ev.target.result).then(function(zip){
-      var ef=Object.keys(zip.files).filter(function(f){
-        return(f.endsWith('.html')||f.endsWith('.xhtml'))&&!f.toLowerCase().includes('toc')&&!f.toLowerCase().includes('nav');
-      }).sort();
+      // Determine correct chapter order. EPUB reading order lives in the
+      // spine of content.opf — use it. Fall back to a natural numeric sort
+      // (so chapter2 comes before chapter10, not after it).
+      var opfKey=Object.keys(zip.files).filter(function(f){return f.toLowerCase().endsWith('.opf');})[0];
+      var isContent=function(f){
+        var l=f.toLowerCase();
+        return(l.endsWith('.html')||l.endsWith('.xhtml'))&&!l.includes('toc')&&!l.includes('nav')&&!l.includes('title')&&!l.includes('cover');
+      };
+      function naturalSort(a,b){
+        var ax=[],bx=[];
+        a.replace(/(\d+)|(\D+)/g,function(_,n,s){ax.push([n||Infinity,s||'']);});
+        b.replace(/(\d+)|(\D+)/g,function(_,n,s){bx.push([n||Infinity,s||'']);});
+        while(ax.length&&bx.length){
+          var an=ax.shift(),bn=bx.shift();
+          var c=(an[0]-bn[0])||an[1].localeCompare(bn[1]);
+          if(c)return c;
+        }
+        return ax.length-bx.length;
+      }
+      if(opfKey){
+        return zip.files[opfKey].async('text').then(function(opf){
+          var base=opfKey.indexOf('/')>-1?opfKey.slice(0,opfKey.lastIndexOf('/')+1):'';
+          // manifest: id -> href
+          var idHref={};
+          (opf.match(/<item\b[^>]*>/gi)||[]).forEach(function(it){
+            var id=(it.match(/id\s*=\s*["']([^"']+)["']/i)||[])[1];
+            var hr=(it.match(/href\s*=\s*["']([^"']+)["']/i)||[])[1];
+            if(id&&hr)idHref[id]=base+hr;
+          });
+          // spine: ordered idrefs
+          var spine=[];
+          (opf.match(/<itemref\b[^>]*>/gi)||[]).forEach(function(ir){
+            var idref=(ir.match(/idref\s*=\s*["']([^"']+)["']/i)||[])[1];
+            if(idref&&idHref[idref]&&isContent(idHref[idref])&&zip.files[idHref[idref]]) spine.push(idHref[idref]);
+          });
+          var ef=spine.length?spine:Object.keys(zip.files).filter(isContent).sort(naturalSort);
+          return Promise.all(ef.map(function(fn){return zip.files[fn].async('text');}));
+        });
+      }
+      var ef=Object.keys(zip.files).filter(isContent).sort(naturalSort);
       return Promise.all(ef.map(function(fn){return zip.files[fn].async('text');}));
     }).then(function(arr){
       var text=arr.map(function(h){
@@ -917,7 +1213,18 @@ function parseChapters(text){
   var seen={};
   var result=withContent.filter(function(s){var key=s.title.toLowerCase().trim();if(seen[key])return false;seen[key]=true;return true;});
   var frontMatterText=frontMatterLines.join('\n').trim();
-  if(frontMatterText.length>20){result.push({title:'Copyright & Credits',content:frontMatterText,isFrontMatter:true});}
+  // Strip the title-page lines (book title, series, "Book N", author) from the
+  // front matter — they belong to the title page, not the copyright segment,
+  // and leaving them here causes the title to be narrated twice.
+  if(frontMatterText.length>20){
+    var fmLines=frontMatterText.split('\n');
+    var copyStart=-1;
+    for(var fi=0;fi<fmLines.length;fi++){
+      if(/copyright|all rights reserved|©/i.test(fmLines[fi])){copyStart=fi;break;}
+    }
+    var cleanFM=(copyStart>-1?fmLines.slice(copyStart):fmLines).join('\n').trim();
+    if(cleanFM.length>20){result.push({title:'Copyright & Credits',content:cleanFM,isFrontMatter:true});}
+  }
   if(result.length===0){return[{title:'Full Manuscript',content:text}];}
   return result;
 }
@@ -926,7 +1233,29 @@ function renderChapterList(chapters){
   var nav=document.getElementById('chapter-nav'),list=document.getElementById('chapter-list');
   if(!nav||!list)return;
   nav.style.display='block';list.innerHTML='';
-  chapters.forEach(function(ch,i){
+
+  // ── Phase 2: Sticky book metadata header (Title → Series → Author) ─────
+  var existingMeta=nav.querySelector('.book-meta-header');
+  if(existingMeta) existingMeta.remove();
+  if(bookMetadata && (bookMetadata.title || bookMetadata.author)){
+    var metaBlock=document.createElement('div');
+    metaBlock.className='book-meta-header';
+    var seriesLine=bookMetadata.series
+      ? escapeHtml(bookMetadata.series)+(bookMetadata.seriesNumber?' · Book '+escapeHtml(bookMetadata.seriesNumber):'')
+      : '';
+    metaBlock.innerHTML=
+      '<div class="book-meta-title">'+escapeHtml(bookMetadata.title||'Untitled')+'</div>'
+      +(seriesLine?'<div class="book-meta-series">'+seriesLine+'</div>':'')
+      +(bookMetadata.author?'<div class="book-meta-author">By '+escapeHtml(bookMetadata.author)+'</div>':'');
+    nav.insertBefore(metaBlock, nav.firstChild);
+  }
+  function addDivider(label){
+    var d=document.createElement('div');
+    d.style.cssText='padding:8px 12px;font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:.08em;color:var(--text-tertiary);background:var(--surface-el);border-bottom:1px solid var(--border);';
+    d.textContent=label;
+    list.appendChild(d);
+  }
+  function addRow(ch,i){
     var row=document.createElement('div');
     row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 150ms;';
     row.onmouseover=function(){this.style.background='var(--surface-el)';};row.onmouseout=function(){this.style.background='';};
@@ -936,7 +1265,21 @@ function renderChapterList(chapters){
     row.querySelector('input').addEventListener('click',function(e){e.stopPropagation();});
     row.addEventListener('click',function(){showChapterPreview(ch);});
     list.appendChild(row);
+  }
+  var mainCh=[],backCh=[],frontCh=[],tocCh=[],dedCh=[];
+  chapters.forEach(function(ch,i){
+    if(ch.isTOC) tocCh.push([ch,i]);
+    else if(ch.isDedication) dedCh.push([ch,i]);
+    else if(ch.isFrontMatter) frontCh.push([ch,i]);
+    else if(ch.isBackMatter) backCh.push([ch,i]);
+    else mainCh.push([ch,i]);
   });
+  if(dedCh.length){ addDivider('DEDICATION'); dedCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(mainCh.length){ addDivider('CHAPTERS'); mainCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(backCh.length){ addDivider('BACK MATTER'); backCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(tocCh.length){ addDivider('TABLE OF CONTENTS'); tocCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(frontCh.length){ addDivider('COPYRIGHT'); frontCh.forEach(function(p){addRow(p[0],p[1]);}); }
+  if(!mainCh.length&&!backCh.length&&!frontCh.length&&!tocCh.length&&!dedCh.length){ chapters.forEach(addRow); }
 }
 
 function showChapterPreview(ch){
@@ -946,24 +1289,99 @@ function showChapterPreview(ch){
   pv.style.display='block';
 }
 
-function previewSegments(){
-  var text=document.getElementById('audiobook-text').value.trim(),c=document.getElementById('segments-preview');if(!text||!c)return;
-  var parts=text.split(/(\u201c[^\u201d]*\u201d|"[^"]*"|'[^']*')/);c.innerHTML='';
-  parts.forEach(function(p){p=p.trim();if(!p)return;
-    var isDlg=(p.startsWith('"')&&p.endsWith('"'))||(p.startsWith("'")&&p.endsWith("'"))||(p.startsWith('\u201c')&&p.endsWith('\u201d'));
-    var d=document.createElement('div');d.className='segment-item';
-    d.innerHTML='<span class="segment-badge '+(isDlg?'dialogue':'narration')+'">'+(isDlg?'DLG':'NAR')+'</span><span class="segment-text">'+escapeHtml(p.substring(0,120))+(p.length>120?'...':'')+'</span>';
-    c.appendChild(d);
+// Shared narration-text builder — used by BOTH preview and generation,
+// so what you preview is exactly what gets generated.
+function buildNarrationText(){
+  if(!(bookChapters && bookChapters.length)){
+    return document.getElementById('audiobook-text').value.trim();
+  }
+  function cleanFM(txt){
+    if(!txt) return txt;
+    var m=txt.match(/©|\(c\)\s*\d{4}/i);
+    return m ? txt.slice(txt.indexOf(m[0])).trim() : txt.trim();
+  }
+  var mainP=[],backP=[],dedP=[],copyP=[];
+  bookChapters.forEach(function(ch){
+    if(ch.isTOC) return;
+    // Dedication is its own type — goes to the front (with the intro).
+    if(ch.isDedication||/(^|\b)dedication\b/i.test(ch.title||'')) dedP.push(ch.content||'');
+    else if(ch.isFrontMatter) copyP.push(cleanFM(ch.content||''));
+    else if(ch.isBackMatter) backP.push(ch.content||'');
+    else mainP.push((ch.title?ch.title+'\n\n':'')+(ch.content||''));
   });
-  c.style.display='block';
+  // Order: intro line, dedication, chapters, back matter, copyright LAST.
+  var ordered=[];
+  if(bookIntro) ordered.push(bookIntro);
+  ordered=ordered.concat(dedP).concat(mainP).concat(backP).concat(copyP);
+  return ordered.join('\n\n\n').trim();
+}
+
+function previewSegments(){
+  var c=document.getElementById('segments-preview');if(!c)return;
+  c.innerHTML='';c.style.display='block';
+
+  // \u2500\u2500 Phase 3: Two-pass rendering \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // Pass 1: intro line + dedication + chapters + back matter (in narration order)
+  // Pass 2: front matter (copyright) appended last \u2014 never narrated before chapters
+  function renderSegmentLines(text){
+    var parts=text.split(/(\u201c[^\u201d]*\u201d|"[^"]*"|'[^']*')/);
+    parts.forEach(function(p){p=p.trim();if(!p)return;
+      var isDlg=(p.startsWith('"')&&p.endsWith('"'))||(p.startsWith("'")&&p.endsWith("'"))||(p.startsWith('\u201c')&&p.endsWith('\u201d'));
+      var d=document.createElement('div');d.className='segment-item';
+      d.innerHTML='<span class="segment-badge '+(isDlg?'dialogue':'narration')+'">'+(isDlg?'DLG':'NAR')+'</span>'
+        +'<span class="segment-text">'+escapeHtml(p.substring(0,120))+(p.length>120?'...':'')+'</span>';
+      c.appendChild(d);
+    });
+  }
+  function cleanFM(txt){ if(!txt)return txt; var m=txt.match(/\u00a9|\(c\)\s*\d{4}/i); return m?txt.slice(txt.indexOf(m[0])).trim():txt.trim(); }
+  function addPassHeader(label){ var h=document.createElement('div');h.className='preview-pass-hdr';h.textContent=label;c.appendChild(h); }
+  function addChapterDivider(title){ var d=document.createElement('div');d.className='preview-ch-divider';d.textContent=title;c.appendChild(d); }
+
+  if(bookChapters && bookChapters.length){
+    var mainPass=[],copyPass=[];
+    bookChapters.forEach(function(ch){ if(ch.isTOC)return; if(ch.isFrontMatter)copyPass.push(ch); else mainPass.push(ch); });
+
+    // PASS 1 \u2014 Introduction & Chapters
+    addPassHeader('\u25b6  PASS 1 \u2014 INTRODUCTION & CHAPTERS');
+    if(bookIntro){ addChapterDivider('Introduction'); renderSegmentLines(bookIntro); }
+    mainPass.forEach(function(ch){
+      if(ch.title&&!ch.isBackMatter) addChapterDivider(ch.title);
+      renderSegmentLines(ch.content||'');
+    });
+
+    // PASS 2 \u2014 Copyright (appended after all chapters complete)
+    if(copyPass.length){
+      addPassHeader('\u25b6  PASS 2 \u2014 COPYRIGHT (narrated last)');
+      copyPass.forEach(function(ch){ renderSegmentLines(cleanFM(ch.content||'')); });
+    }
+  } else {
+    // Fallback: plain text mode (no structured chapters)
+    var text=buildNarrationText();
+    if(!text)return;
+    renderSegmentLines(text);
+  }
+}
+
+// ── Generation abort flag ────────────────────────────────────────────────────
+// Set to true by Cancel button; processBatch and processPart check it before
+// each chapter so generation stops cleanly after the current chapter finishes.
+var _abGenAbort = false;
+function abortAudiobookGeneration(){
+  _abGenAbort = true;
+  var cancelBtn = document.getElementById('audiobook-cancel-btn');
+  if(cancelBtn){ cancelBtn.disabled=true; cancelBtn.textContent='Cancelling\u2026'; }
 }
 
 function generateAudiobook(){
-  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice'; return; }
-  var narratorId=document.getElementById('narrator-voice-select').value||'voice_01';
+  if(!currentUser){ window.location.href = CC_URL + '/login?next=/voice-studio'; return; }
+  // Resolve narrator voice — use selected, or fall back to first available real voice
+  var narratorId=document.getElementById('narrator-voice-select').value;
+  if(!narratorId && VOICES.length>0) narratorId=VOICES[0].voice_id;
+  if(!narratorId){alert('Voices have not loaded yet. Please wait a moment and try again.');return;}
   var modeEl=document.querySelector('input[name="voice-mode"]:checked');
   var mode=modeEl?modeEl.value:'single';
   var char2Id=mode==='multi'?(document.getElementById('narrator2-voice-select').value||null):null;
+  var abSpeed=parseFloat((document.getElementById('ab-speed')||{}).value)||1.0;
   var btn=document.getElementById('audiobook-generate-btn');
   var result=document.getElementById('audiobook-result');
   var selectedChapters=[];
@@ -971,13 +1389,49 @@ function generateAudiobook(){
   if(list&&bookChapters.length>0){
     list.querySelectorAll('input[type=checkbox]').forEach(function(cb){if(cb.checked)selectedChapters.push(bookChapters[parseInt(cb.dataset.idx)]);});
   }
+  // Order must MATCH the preview: dedication first, chapters, back matter,
+  // copyright LAST.
+  var genMain=[],genBack=[],genDed=[],genCopy=[];
+  selectedChapters.forEach(function(ch){
+    if(ch&&ch.isTOC) return;
+    if(ch&&(ch.isDedication||/(^|\b)dedication\b/i.test(ch.title||''))) genDed.push(ch);
+    else if(ch&&ch.isFrontMatter) genCopy.push(ch);
+    else if(ch&&ch.isBackMatter) genBack.push(ch);
+    else genMain.push(ch);
+  });
+  selectedChapters=genDed.concat(genMain).concat(genBack).concat(genCopy);
+  // Prepend book intro as a synthetic first entry so it is always narrated
+  // before Chapter 1. bookIntro is set from the Editor handoff (title + author).
+  // isSynthetic=true prevents the title from being double-narrated.
+  if(bookIntro) selectedChapters.unshift({title:'Book Introduction',content:bookIntro,isSynthetic:true});
   if(selectedChapters.length===0){
     var fallback=document.getElementById('audiobook-text').value.trim();
     if(!fallback){alert('Please upload a manuscript first.');return;}
     selectedChapters=[{title:'Full Manuscript',content:fallback}];
   }
   btn.disabled=true;
+  _abGenAbort=false;  // reset abort flag for this run
+  var cancelBtn=document.getElementById('audiobook-cancel-btn');
+  if(cancelBtn){cancelBtn.style.display='';cancelBtn.disabled=false;cancelBtn.textContent='Cancel';}
   var total=selectedChapters.length;var completedUrls=[];var completedCount=0;
+  // Max characters per chunk sent to the engine.
+  // Chunks that are too small force mid-sentence splits, causing the
+  // TTS model to trail off or stop abruptly at the truncation point.
+  // 300 characters allows 2-3 complete sentences per chunk so each
+  // one can conclude naturally. The splitter also ensures it only
+  // breaks at sentence boundaries (period, exclamation, question mark).
+  var CHUNK_SIZE=300;
+  var CHUNK_HALF=Math.floor(CHUNK_SIZE/2);
+  // Progress is tracked in CHUNKS across the whole project, not chapters,
+  // so the bar moves steadily during long chapters instead of jumping.
+  // Estimate includes the prepended title so it stays close to the real count.
+  var totalProjectChunks=selectedChapters.reduce(function(n,ch){
+    var rawC=(ch.title&&!ch.isBackMatter&&!ch.isFrontMatter&&!ch.isSynthetic
+      ? ch.title+'\n\n' : '')+(ch.content||'');
+    var c=rawC.trim();
+    return n + (c ? Math.ceil(c.length/CHUNK_SIZE) : 0);
+  },0)||1;
+  var doneChunks=0;
   var pb=document.getElementById('audiobook-progress');
   if(!pb){pb=document.createElement('div');pb.id='audiobook-progress';result.parentNode.insertBefore(pb,result);}
   pb.style.cssText='margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);display:block;';
@@ -988,8 +1442,8 @@ function generateAudiobook(){
   var chapterListEl=document.getElementById('ab-chapter-list');
   selectedChapters.forEach(function(ch,i){
     var row=document.createElement('div');row.id='ab-ch-'+i;
-    row.style.cssText='display:flex;flex-direction:column;gap:4px;padding:6px 0;border-bottom:1px solid var(--border);';
-    row.innerHTML='<div style="display:flex;align-items:center;gap:8px;font-family:\'Cinzel\',serif;font-size:10px;color:var(--text-tertiary);">'
+    row.style.cssText='display:flex;flex-direction:column;gap:4px;padding:8px 10px;background:var(--surface-el);border:1px solid var(--border);border-radius:4px;';
+    row.innerHTML='<div style="display:flex;align-items:center;gap:8px;font-family:\'Cinzel\',serif;font-size:10px;color:var(--text-secondary);">'
       +'<span id="ab-ch-icon-'+i+'" style="flex-shrink:0;"><i class="ph ph-square"></i></span>'
       +'<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escapeHtml(ch.title)+'</span>'
       +'<span id="ab-ch-status-'+i+'">Waiting</span>'
@@ -997,8 +1451,11 @@ function generateAudiobook(){
     chapterListEl.appendChild(row);
   });
 
-  function updateProgress(done){
-    var pct=Math.round((done/total)*100);
+  function updateProgress(){
+    // Cap at 99 — the bar is hidden by finishAudiobook() when done, so 100%
+    // should never appear mid-generation (totalProjectChunks is an estimate and
+    // can be less than the real split count, pushing the ratio above 1.0).
+    var pct=Math.min(99,Math.round((doneChunks/totalProjectChunks)*100));
     var bar=document.getElementById('ab-bar'),pctEl=document.getElementById('ab-pct');
     if(bar)bar.style.width=pct+'%';if(pctEl)pctEl.textContent=pct+'%';
   }
@@ -1024,34 +1481,209 @@ function generateAudiobook(){
 
   function processPart(i){
     var ch=selectedChapters[i];
-    if(!ch.content||!ch.content.trim()){setChapterStatus(i,'Skipped',null);completedCount++;updateProgress(completedCount);return Promise.resolve(null);}
-    var content=cleanText(ch.content);
-    if(!content){setChapterStatus(i,'No readable content',null);completedCount++;updateProgress(completedCount);return Promise.resolve(null);}
-    var chunks=[];
-    while(content.length>0){chunks.push(content.substring(0,3800));content=content.substring(3800);}
-    setChapterStatus(i,'Generating ('+chunks.length+' part'+(chunks.length>1?'s':'')+')...',null);
-    return Promise.all(chunks.map(function(chunk){
-      return fetch(WORKER+'/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:chunk,voice_file:narratorId,voice_id:narratorId,language:'en'})}).then(function(r){
-        var ct=r.headers.get('content-type')||'';
-        if(ct.indexOf('application/json')!==-1) return r.json().then(function(j){throw new Error(j.error||'Generation failed');});
-        if(!r.ok)throw new Error('Worker error '+r.status);return r.blob();
+    if(!ch.content||!ch.content.trim()){setChapterStatus(i,'Skipped',null);completedCount++;updateProgress();return Promise.resolve(null);}
+    // Build the raw text sent to the TTS engine for this chapter.
+    // Skip title for: front matter (copyright), back matter, synthetic entries (book intro).
+    //
+    // TITLE TRANSFORMATION
+    //   " - " / " — " separators in the title become ". " so the engine pauses between
+    //   each part: "Chapter Two - The Parting Game" → "Chapter Two. The Parting Game."
+    //   A terminal period is added if the title doesn't already end with punctuation,
+    //   then \n\n gives a definite heading pause before the body text begins.
+    //
+    // BODY TRANSFORMATION
+    //   Lines matching "Part N" / "Part One" / "Part I" etc. are part headings nested
+    //   inside the chapter. They get the same heading treatment as the chapter title:
+    //   terminal period + \n\n pause so the engine announces them as headings rather
+    //   than running them directly into the first sentence of the body.
+    //   Desired result: "Chapter Two. The Parting Game." [pause] "Part One." [pause] [body]
+    var titleText='';
+    if(ch.title&&!ch.isBackMatter&&!ch.isFrontMatter&&!ch.isSynthetic){
+      // Split on " - " / " — " / " – " (title separators, not word-hyphens)
+      titleText=ch.title.replace(/\s+[-–—]\s+/g,'. ');
+      if(!titleText.match(/[.!?]$/)) titleText+='.';
+      // ' ...' after the period gives the TTS engine an explicit extended-pause
+      // signal (ellipsis = deliberate hesitation), longer than a plain sentence stop.
+      titleText+=' ...\n\n';
+    }
+    // Detect "Part N" lines in the body and give them a heading pause.
+    // The pattern is deliberately loose (1-50 chars after "Part ") so it catches
+    // "Part One", "Part 1", "Part I", "Part Two: The Storm", etc.
+    // Only short lines are treated as headings — body sentences won't match.
+    var bodyText=(ch.content||'').replace(
+      /^(Part\s+\S[^\n]{0,48})(\n|$)/gim,
+      function(m,heading){
+        var h=heading.trim();
+        if(!h.match(/[.!?]$/)) h+='.';
+        // Same extended-pause cue as the chapter title above.
+        return h+' ...\n\n';
+      }
+    );
+    var rawContent=titleText+bodyText;
+    var content=cleanText(rawContent);
+    if(!content){setChapterStatus(i,'No readable content',null);completedCount++;doneChunks+=Math.ceil(ch.content.trim().length/CHUNK_SIZE);updateProgress();return Promise.resolve(null);}
+
+    // ── 2-Voice split ────────────────────────────────────────────────────
+    // cleanText already converts smart-quotes → straight ", so we split on "..."
+    // Narration segments  → narratorId (voice 1)
+    // Dialogue segments   → char2Id    (voice 2)
+    // Single-voice mode: skip the split entirely, everything goes to narratorId.
+    var pieces; // [{text, isDialogue}]
+    if(mode==='multi' && char2Id){
+      pieces=[];
+      content.split(/("[^"]+")/).forEach(function(p){
+        var isQuoted=p.charAt(0)==='"' && p.charAt(p.length-1)==='"';
+        if(!p.trim()){
+          // Whitespace-only bridge between two dialogue lines — insert a pause cue
+          // so the TTS doesn't run consecutive quoted lines together with no gap.
+          if(pieces.length && pieces[pieces.length-1].isDialogue){
+            pieces.push({text:'. ', isDialogue:false});
+          }
+          return;
+        }
+        pieces.push({text:p, isDialogue:isQuoted});
       });
-    })).then(function(blobs){
-      var combined=new Blob(blobs,{type:'audio/mpeg'});
-      var url=URL.createObjectURL(combined);
-      completedUrls.push({title:ch.title,url:url,index:i});
-      setChapterStatus(i,'Complete',true,url);
-      completedCount++;updateProgress(completedCount);
-      return url;
+      if(!pieces.length) pieces=[{text:content,isDialogue:false}];
+    } else {
+      pieces=[{text:content,isDialogue:false}];
+    }
+
+    // ── Pre-split ALL pieces into final chunks NOW (exact count, avoids >100%) ──
+    // Estimate-based totalChunks can disagree with actual splits (sentence-boundary
+    // cuts produce shorter chunks than CHUNK_SIZE, raising the real count above
+    // the ceil estimate → chapterDone > totalChunks → "116% completed" bug).
+    // Fix: run the exact same split algorithm here first, count the results, THEN
+    // send them. The flat allChunks array carries the voiceId for each chunk so
+    // the one-pass sender below can handle multi-voice without a separate reduce loop.
+    // Split text into chunks that always end at a complete sentence.
+    // First tries sentence boundaries (. ! ?), then paragraph breaks,
+    // then commas and semicolons as fallback, then word boundaries.
+    // This prevents the TTS model from trailing off mid-thought.
+    function splitText(text){
+      var out=[];var t=text;
+      while(t.length>0){
+        if(t.length<=CHUNK_SIZE){out.push(t);break;}
+        var sl=t.substring(0,CHUNK_SIZE);
+        // 1) Try sentence boundaries first (preferred — gives natural stops)
+        var cut=Math.max(sl.lastIndexOf('. '),sl.lastIndexOf('! '),sl.lastIndexOf('? '),sl.lastIndexOf('.\n'),sl.lastIndexOf('!\n'),sl.lastIndexOf('?\n'));
+        // 2) Fall back to paragraph breaks if no sentence boundary found
+        if(cut<CHUNK_HALF) cut=Math.max(sl.lastIndexOf('\n\n'),sl.lastIndexOf('\n'));
+        // 3) Fall back to mid-sentence punctuation (comma, semicolon, colon)
+        if(cut<CHUNK_HALF) cut=Math.max(sl.lastIndexOf(', '),sl.lastIndexOf('; '),sl.lastIndexOf(': '));
+        // 4) Last resort: word boundary — use ANY space to avoid splitting mid-word.
+        // Only hard-cut if the slice has truly no space at all (extremely rare in prose).
+        if(cut<CHUNK_HALF){
+          cut=sl.lastIndexOf(' ');
+          if(cut<=0) cut=CHUNK_SIZE;  // no usable space anywhere: must hard-cut (very rare)
+        }
+        // Advance past the delimiter so the next chunk starts clean.
+        if(cut<CHUNK_SIZE){cut=cut+1;}
+        out.push(t.substring(0,cut).trim());
+        t=t.substring(cut);
+      }
+      return out;
+    }
+    var allChunks=[]; // [{text, voiceId}]
+    pieces.forEach(function(piece){
+      var vid=piece.isDialogue?char2Id:narratorId;
+      splitText(piece.text).forEach(function(txt){ allChunks.push({text:txt,voiceId:vid}); });
+    });
+    var totalChunks=allChunks.length||1;
+    var chapterDone=0;
+    setChapterStatus(i,'Generating ('+totalChunks+' chunk'+(totalChunks!==1?'s':'')+')...',null);
+
+    function sendChunk(text,voiceId){
+      var MAX_TRIES=3;
+      function attempt(tryNum){
+        return fetch(ENGINE+'/generate',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({text:normalizeText(text),voice_file:voiceId,voice_id:voiceId,language:'en',speed:abSpeed})
+        }).then(function(r){
+          var ct=r.headers.get('content-type')||'';
+          if(ct.indexOf('application/json')!==-1) return r.json().then(function(j){throw new Error(j.error||'Generation failed');});
+          if(!r.ok) throw new Error('Worker error '+r.status);
+          return r.blob();
+        }).catch(function(err){
+          // Transient failures (timeout / Failed to fetch) — retry with backoff.
+          if(tryNum<MAX_TRIES){
+            var wait=2000*tryNum; // 2s, then 4s
+            return new Promise(function(res){setTimeout(res,wait);}).then(function(){return attempt(tryNum+1);});
+          }
+          throw err;
+        });
+      }
+      return attempt(1);
+    }
+
+    // Send allChunks in parallel GROUPS of CHUNK_CONCURRENCY at a time.
+    // Each chunk carries its own voiceId — handles multi-voice correctly.
+    // Results are slotted by index so audio order is preserved regardless
+    // of which chunk finishes first within a group.
+    var CHUNK_CONCURRENCY=3;
+    var out=new Array(allChunks.length);
+    var groupChain=Promise.resolve();
+    for(var g=0;g<allChunks.length;g+=CHUNK_CONCURRENCY){
+      (function(start){
+        groupChain=groupChain.then(function(){
+          var slice=[];
+          for(var k=start;k<Math.min(start+CHUNK_CONCURRENCY,allChunks.length);k++){
+            (function(idx){
+              var ck=allChunks[idx];
+              slice.push(sendChunk(ck.text,ck.voiceId).then(function(b){
+                out[idx]=b;
+                doneChunks++;updateProgress();
+                chapterDone++;
+                var _pct=Math.round((chapterDone/totalChunks)*100);
+                var _st=document.getElementById('ab-ch-status-'+i);
+                if(_st)_st.textContent=chapterDone+' / '+totalChunks+' ('+_pct+'%)';
+              }));
+            })(k);
+          }
+          return Promise.all(slice);
+        });
+      })(g);
+    }
+    return groupChain.then(function(){ return out; }).then(function(allBlobs){
+      var clean=allBlobs.filter(function(b){return b;});
+      // Yield to the UI thread for one paint frame before the CPU-heavy stitch
+      // so the browser can update progress indicators and stay responsive.
+      return new Promise(function(res){ setTimeout(function(){ res(stitchWavBlobs(clean)); }, 50); })
+      .then(function(stitched){
+        // Release individual chunk blobs — no longer needed after stitching.
+        for(var _k=0;_k<out.length;_k++){ out[_k]=null; }
+        // Synthetic intro chapter: skip lamejs — very short audio can produce
+        // white noise through the encoder. Keep as WAV for in-browser playback.
+        // All other chapters: convert WAV → MP3 (128 kbps) for compact GCS storage.
+        if(ch.isSynthetic) return stitched;
+        return wavToMp3Blob(stitched, 128);
+      })
+      .then(function(combined){
+        var url=URL.createObjectURL(combined);
+        completedUrls.push({title:ch.title,url:url,index:i,isSynthetic:!!ch.isSynthetic});
+        setChapterStatus(i,'Complete',true,url);
+        completedCount++;updateProgress();
+        // Auto-save chapter MP3 to Cloudflare worker + GCS immediately.
+        autoSaveChapterToWorker(i, ch.title, combined, bookMetadata, currentUser, narratorId);
+        return url;
+      });
     }).catch(function(e){
       setChapterStatus(i,'Error: '+e.message,false);
-      completedCount++;updateProgress(completedCount);
+      // Release the remaining un-sent chunks so the global bar can reach 100%.
+      var remaining=totalChunks-chapterDone;
+      if(remaining>0) doneChunks+=remaining;
+      completedCount++;updateProgress();
       return null;
     });
   }
 
-  var BATCH=3;
+  var BATCH=1;
   function processBatch(start){
+    if(_abGenAbort){
+      // User cancelled — wrap up cleanly with whatever chapters are done.
+      var msg=document.getElementById('ab-msg');
+      if(msg)msg.textContent='Generation cancelled after '+(completedCount)+' chapter'+(completedCount!==1?'s':'')+'.';
+      finishAudiobook();
+      return;
+    }
     if(start>=total){finishAudiobook();return;}
     var end=Math.min(start+BATCH,total);
     var msg=document.getElementById('ab-msg');if(msg)msg.textContent='Processing '+(start+1)+'–'+end+' of '+total;
@@ -1059,31 +1691,137 @@ function generateAudiobook(){
     Promise.all(batch).then(function(){setTimeout(function(){processBatch(end);},400);});
   }
 
+  // ── Phase 4: Unified MP3, Download & Collections export ───────────────
   function finishAudiobook(){
+    var cancelBtn=document.getElementById('audiobook-cancel-btn');
+    if(cancelBtn){cancelBtn.style.display='none';}
     pb.style.display='none';btn.disabled=false;btn.textContent='Generate Audiobook';
     if(completedUrls.length===0){alert('No segments completed.');return;}
     completedUrls.sort(function(a,b){return(a.index||0)-(b.index||0);});
-    var lastUrl=completedUrls[completedUrls.length-1].url;
+
+    // ── Durable record: write to Supabase + local history NOW, before stitching ──
+    // If stitching fails or the page closes, the per-chapter uploads in Supabase
+    // storage and this table row are already safe. My Account reads from this row.
+    saveAudiobookRecord(currentUser, bookMetadata, completedUrls.length, narratorId);
+    saveHistory({
+      type:          'audiobook',
+      voice_name:    narratorId,
+      text:          (bookMetadata&&bookMetadata.title)||'Audiobook',
+      audio_url:     completedUrls[completedUrls.length-1].url,  // last chapter as preview
+      chapter_count: completedUrls.length,
+      created_at:    new Date().toISOString()
+    });
+
+    // Show last chapter in player while stitching runs in background
     result.classList.add('visible');
     setTimeout(function(){audiobookWaveform.drawIdle&&audiobookWaveform.drawIdle();},50);
-    var audioEl=result.querySelector('audio');audioEl.src=lastUrl;audioEl.load();audioEl.play().catch(function(){});
+    var audioEl=result.querySelector('audio');
+    audioEl.src=completedUrls[completedUrls.length-1].url;audioEl.load();audioEl.play().catch(function(){});
     var info=result.querySelector('.audio-result-info span');
-    if(info)info.textContent=completedUrls.length+' of '+total+' segments generated';
+    if(info)info.textContent=completedUrls.length+' of '+total+' segments — assembling master MP3…';
+
+    // Remove any previous output block
     var existing=document.getElementById('ab-chapter-downloads');if(existing)existing.remove();
+
+    // Build the output panel
     var dlBlock=document.createElement('div');dlBlock.id='ab-chapter-downloads';
     dlBlock.style.cssText='margin-top:16px;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--surface);';
-    dlBlock.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="control-label" style="margin:0;">Chapter Downloads</div>'
-      +'<button id="zip-all-btn" class="btn-generate" style="width:auto;padding:8px 16px;font-size:10px;"><i class="ph ph-file-zip"></i> Download All ZIP</button></div>'
-      +'<div id="chapter-dl-list"></div>';
+    dlBlock.innerHTML='<div class="control-label" style="margin-bottom:12px;">Audiobook Output</div>'
+      // Stitching status indicator
+      +'<div id="ab-stitch-status" style="font-family:\'Cinzel\',serif;font-size:11px;color:var(--text-tertiary);letter-spacing:.04em;margin-bottom:12px;">'
+      +'<i class="ph ph-spinner" style="margin-right:6px;"></i>Assembling master MP3…</div>'
+      // Master action row (hidden while stitching)
+      +'<div id="ab-master-actions" style="display:none;flex-direction:column;gap:10px;margin-bottom:16px;"></div>'
+      // Individual chapter downloads
+      +'<div style="border-top:1px solid var(--border);padding-top:12px;margin-top:4px;">'
+      +'<div class="control-label" style="margin-bottom:8px;font-size:10px;">Individual Chapter Downloads</div>'
+      +'<div id="chapter-dl-list"></div></div>';
     result.parentNode.insertBefore(dlBlock,result.nextSibling);
-    document.getElementById('zip-all-btn').onclick=function(){downloadZip(completedUrls);};
+
+    // Individual chapter links (available immediately)
     var dlList=document.getElementById('chapter-dl-list');
     completedUrls.forEach(function(ch){
       var row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);';
+      var safeDL=ch.title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/ /g,'_').substring(0,50)||'chapter';
       row.innerHTML='<span style="flex:1;font-size:14px;color:var(--text-secondary);">'+escapeHtml(ch.title)+'</span>'
-        +'<a href="'+ch.url+'" download style="font-family:\'Cinzel\',serif;font-size:10px;color:var(--gold);text-decoration:none;border:1px solid var(--gold);padding:4px 10px;border-radius:4px;">Download</a>';
+      +'<a href="'+ch.url+'" download="'+safeDL+'.mp3" class="ab-action-btn tertiary" style="padding:4px 10px;font-size:10px;">Download</a>';
       dlList.appendChild(row);
     });
+
+    // Memory guard: browser-side WAV stitching concatenates all chapter blobs
+    // into one ArrayBuffer. For long books this saturates RAM and freezes the tab.
+    // If the completed chapter count exceeds this limit, skip the stitch and
+    // go straight to ZIP + individual downloads (all chapters are already saved
+    // to GCS by autoSaveChapterToWorker, so nothing is lost).
+    var STITCH_CHAPTER_MAX=5;
+    var bookTitle=(bookMetadata&&bookMetadata.title)||'audiobook';
+    var safeName=bookTitle.replace(/[^a-zA-Z0-9\s\-]/g,'').replace(/\s+/g,'_').toLowerCase()||'audiobook';
+
+    function showZipFallback(stitchStatus,actionsEl){
+      if(stitchStatus)stitchStatus.textContent='Book too long for in-browser stitch — download chapters individually or as ZIP.';
+      if(actionsEl){
+        actionsEl.style.display='flex';
+        var zipBtn=document.createElement('button');
+        zipBtn.className='ab-action-btn tertiary';
+        zipBtn.innerHTML='<i class="ph ph-file-zip"></i> Download All Chapters (ZIP)';
+        zipBtn.onclick=function(){downloadZip(completedUrls);};
+        actionsEl.appendChild(zipBtn);
+      }
+    }
+
+    if(completedUrls.length > STITCH_CHAPTER_MAX){
+      // Skip stitch — show ZIP fallback immediately without touching the heap
+      if(info)info.textContent=completedUrls.length+' chapters complete — chapters saved & available below.';
+      var stitchStatus=document.getElementById('ab-stitch-status');
+      var actionsEl=document.getElementById('ab-master-actions');
+      showZipFallback(stitchStatus, actionsEl);
+    } else {
+      // Short book — concatenate chapter MP3s into one master MP3.
+      // MP3 frames are self-describing so simple byte concatenation is valid.
+      // Exclude synthetic intro (WAV) so the master is pure MP3.
+      var masterChs=completedUrls.filter(function(c){ return !c.isSynthetic; });
+      if(!masterChs.length) masterChs=completedUrls;
+      Promise.all(masterChs.map(function(ch){ return fetch(ch.url).then(function(r){return r.blob();}); }))
+      .then(function(blobs){ return new Blob(blobs, {type:'audio/mpeg'}); })
+      .then(function(masterBlob){
+        var masterUrl=URL.createObjectURL(masterBlob);
+        // Update player to master file
+        audioEl.src=masterUrl;audioEl.load();
+        var mbMB=(masterBlob.size/1024/1024);
+        if(info)info.textContent=completedUrls.length+' segments — master MP3 ready ('+mbMB.toFixed(1)+' MB)';
+        // Hide spinner
+        var stitchStatus=document.getElementById('ab-stitch-status');
+        if(stitchStatus)stitchStatus.style.display='none';
+        // Show action buttons
+        var actionsEl=document.getElementById('ab-master-actions');
+        if(!actionsEl)return;
+        actionsEl.style.display='flex';
+        // 1. Download Master MP3
+        var dlBtn=document.createElement('a');
+      dlBtn.href=masterUrl; dlBtn.download=safeName+'_master.mp3';
+        dlBtn.className='ab-action-btn primary';
+        dlBtn.innerHTML='<i class="ph ph-download-simple"></i> Download Master MP3';
+        actionsEl.appendChild(dlBtn);
+        // 2. Export to Collections
+        var colBtn=document.createElement('button');
+        colBtn.className='ab-action-btn secondary';
+        colBtn.innerHTML='<i class="ph ph-books"></i> Export to Collections';
+        colBtn.onclick=function(){ exportAudiobookToCollections(masterBlob,bookTitle,safeName,completedUrls.length); };
+        actionsEl.appendChild(colBtn);
+        // 3. ZIP all chapters
+        var zipBtn=document.createElement('button');
+        zipBtn.className='ab-action-btn tertiary';
+        zipBtn.innerHTML='<i class="ph ph-file-zip"></i> Download All Chapters (ZIP)';
+        zipBtn.onclick=function(){downloadZip(completedUrls);};
+        actionsEl.appendChild(zipBtn);
+      })
+      .catch(function(){
+        // Stitching failed — surface individual downloads + ZIP as fallback
+        var stitchStatus=document.getElementById('ab-stitch-status');
+        var actionsEl=document.getElementById('ab-master-actions');
+        showZipFallback(stitchStatus, actionsEl);
+      });
+    }
   }
   processBatch(0);
 }
@@ -1096,11 +1834,53 @@ function downloadZip(chapters){
       zip.file(String(i+1).padStart(2,'0')+'_'+ch.title.replace(/[^a-zA-Z0-9 ]/g,'').replace(/ /g,'_').substring(0,40)+'.mp3',blob);
     });
   });
-  Promise.all(fetches).then(function(){
-    zip.generateAsync({type:'blob'}).then(function(content){
-      var a=document.createElement('a');a.href=URL.createObjectURL(content);a.download='audiobook_chapters.zip';a.click();
+  Promise.all(fetches)
+    .then(function(){ return zip.generateAsync({type:'blob'}); })
+    .then(function(content){
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(content);
+      a.download='audiobook_chapters.zip';
+      document.body.appendChild(a);a.click();
+      setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},1500);
+    })
+    .catch(function(e){
+      alert('ZIP download failed: '+(e&&e.message?e.message:'unknown error')
+        +'\n\nUse the individual Download buttons next to each chapter instead.');
     });
-  });
+}
+
+// ── Phase 4: Export completed audiobook to Collections ─────────────────
+function exportAudiobookToCollections(masterBlob, bookTitle, safeName, chapterCount){
+  // Disable button while processing
+  var colBtns=document.querySelectorAll('#ab-master-actions .ab-action-btn.secondary');
+  colBtns.forEach(function(b){b.disabled=true;b.innerHTML='<i class="ph ph-spinner"></i> Preparing\u2026';});
+  var meta=bookMetadata||{};
+  var incoming={
+    type:'audiobook', fromVoiceStudio:true,
+    title:meta.title||bookTitle,
+    author:meta.author||'',
+    series:meta.series||'',
+    seriesNumber:meta.seriesNumber||'',
+    chapterCount:chapterCount,
+    audioName:safeName+'_master.mp3',
+    created_at:new Date().toISOString()
+  };
+  // Attempt to store master MP3 as base64 for Collections page
+  // (large books may exceed the ~5 MB localStorage limit — we catch and skip)
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var stored=false;
+    try{ localStorage.setItem('collections_audio_b64',e.target.result); stored=true; }catch(err){}
+    if(stored){ incoming.audioB64Key='collections_audio_b64'; }
+    try{ localStorage.setItem('collections_incoming',JSON.stringify(incoming)); }catch(err){}
+    window.location.href=CC_URL+'/collections';
+  };
+  reader.onerror=function(){
+    // Audio too large — send metadata only; Collections page shows it as pending
+    try{ localStorage.setItem('collections_incoming',JSON.stringify(incoming)); }catch(err){}
+    window.location.href=CC_URL+'/collections';
+  };
+  reader.readAsDataURL(masterBlob);
 }
 
 // ── EPUB CONVERT ──
@@ -1147,7 +1927,7 @@ function generateComparison(){
     var card=document.createElement('div');card.className='compare-result-card fade-in';
     card.innerHTML='<div class="card-header"><div class="voice-avatar" style="width:32px;height:32px;font-size:12px;">'+voice.name.substring(0,2).toUpperCase()+'</div><div><div class="card-name">'+voice.name+'</div><div class="card-meta">Generating...</div></div></div>';
     grid.appendChild(card);
-    return fetch(WORKER+'/tts-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,voice_file:vid,voice_id:vid,language:'en'})})
+    return fetch(ENGINE+'/tts-preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:normalizeText(text),voice_file:vid,voice_id:vid,language:'en'})})
     .then(function(r){
       var ct=r.headers.get('content-type')||'';
       if(ct.indexOf('application/json')!==-1) return r.json().then(function(j){throw new Error(j.error||'Compare failed');});
@@ -1163,11 +1943,163 @@ function generateComparison(){
   Promise.all(promises).finally(function(){btn.disabled=false;btn.textContent='Compare Voices';});
 }
 
+// ── WORKER AUDIO STORAGE ──
+// Updated to route audiobook chapter uploads through nyxenvidworker.js
+// /upload-audio endpoint, which handles GCS upload + Supabase metadata.
+
+// Show a persistent on-screen toast the first time auto-save fails.
+// Subsequent failures increment the hidden count but don't stack toasts.
+// This surfaces silent worker errors (missing bucket, wrong key, etc.)
+// so the issue is obvious without digging in the console.
+function showAutoSaveError(errMsg){
+  var existing=document.getElementById('vs-save-warn');
+  if(existing){
+    var n=parseInt(existing.dataset.count||'1',10)+1;
+    existing.dataset.count=n;
+    var countEl=existing.querySelector('.vs-save-warn-count');
+    if(countEl) countEl.textContent='('+n+' chapters affected)';
+    return;
+  }
+  var toast=document.createElement('div');
+  toast.id='vs-save-warn';toast.dataset.count='1';
+  toast.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;'
+    +'background:var(--burg);color:#fff;font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:.04em;'
+    +'padding:12px 20px;border-radius:8px;max-width:480px;text-align:center;'
+    +'box-shadow:0 4px 20px rgba(0,0,0,.35);line-height:1.6;';
+  toast.innerHTML='<i class="ph ph-warning" style="font-size:16px;vertical-align:middle;margin-right:6px;"></i>'
+    +'<strong>Auto-save to Cloudflare worker failed</strong> — audio is still downloadable below but will '
+    +'not persist to History or My Account.<br>'
+    +'<span style="opacity:.8;font-size:10px;font-family:\'EB Garamond\',serif;">'+escapeHtml(errMsg)+'</span><br>'
+    +'<span class="vs-save-warn-count" style="opacity:.6;font-size:9px;"></span>'
+    +'<button onclick="this.parentNode.remove()" style="margin-left:12px;background:rgba(255,255,255,.2);'
+    +'border:none;color:#fff;font-family:\'Cinzel\',serif;font-size:9px;padding:2px 8px;border-radius:4px;cursor:pointer;">Dismiss</button>';
+  document.body.appendChild(toast);
+}
+
+// Per-chapter auto-save: called immediately after each chapter blob is
+// stitched so a browser crash / power cut only loses the chapter in flight.
+// Fire-and-forget — never blocks the generation queue.
+// Routes through nyxenvidworker.js /upload-audio which:
+//   1. Converts audio blob → base64
+//   2. Uploads to GCS bucket (nyxen-audio-generation) via signed JWT
+//   3. Writes metadata row to Supabase audio_generations table
+function autoSaveChapterToWorker(idx, title, blob, meta, user, voiceId){
+  if(!user || !blob) return;
+  try{
+    var bookSlug=(meta&&meta.title)
+      ? meta.title.replace(/[^a-zA-Z0-9]+/g,'_').toLowerCase().substring(0,40)
+      : 'audiobook';
+    var safeTitle=(title||'chapter').replace(/[^a-zA-Z0-9]+/g,'_').substring(0,40);
+    var filename=user.id+'/'+bookSlug+'/ch_'+String(idx+1).padStart(3,'0')+'_'+safeTitle+'.mp3';
+
+    // Convert blob to base64 for worker transport
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var base64Data=e.target.result.split(',')[1]; // strip data:...;base64, prefix
+      var payload={
+        filename: filename,
+        contentType: 'audio/mpeg',
+        audioBase64: base64Data,
+        metadata: {
+          user_id:       user.id,
+          title:         (meta&&meta.title)||'Untitled Audiobook',
+          chapter_title: title||('Chapter '+(idx+1)),
+          voice_name:    voiceId||'',
+          type:          'audiobook'
+        }
+      };
+
+      fetch(NYXEN_ARCHIVE+'/upload-audio',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      })
+      .then(function(res){
+        if(!res.ok){
+          return res.json().then(function(j){ throw new Error(j.error||'Worker upload failed'); });
+        }
+        return res.json();
+      })
+      .then(function(data){
+        console.info('[vs worker-save ch '+(idx+1)+'] saved',data.url);
+      })
+      .catch(function(err){
+        console.warn('[vs worker-save ch '+(idx+1)+']',err.message||err);
+        showAutoSaveError(err.message||String(err));
+      });
+    };
+    reader.readAsDataURL(blob);
+  }catch(e){ console.warn('[vs worker-save]',e); }
+}
+
+// Writes completed audiobook record to Supabase audiobooks table so it
+// appears in My Account under the creator's assets (30-day retention window).
+function saveAudiobookRecord(user, meta, chapterCount, voiceId){
+  if(!user) return;
+  try{
+    var bookId=(meta&&meta.title)||'Untitled Audiobook';
+    getSB().from('audiobooks').insert({
+      member_id: user.id,
+      book_id:   bookId,
+      format:    'mp3',
+      voice_count: 1,
+      created_at: new Date().toISOString()
+    }).then(function(res){
+      if(res.error) console.warn('[vs audiobooks insert]',res.error.message);
+      else           console.info('[vs audiobooks] record saved for',bookId);
+    }).catch(function(e){ console.warn('[vs audiobooks insert]',e.message||e); });
+  }catch(e){ console.warn('[vs audiobooks record]',e); }
+}
+
 // ── HISTORY ──
+// Cap at 10 entries — oldest auto-deletes when 11th is added.
+// Audio stored as base64 data URL so it survives page refresh.
 function saveHistory(entry){
   generationHistory.unshift(entry);
-  if(generationHistory.length>100)generationHistory=generationHistory.slice(0,100);
-  localStorage.setItem('vs_history',JSON.stringify(generationHistory));
+  if(generationHistory.length>10)generationHistory=generationHistory.slice(0,10);
+  try {
+    localStorage.setItem('vs_history',JSON.stringify(generationHistory));
+  } catch(e) {
+    // localStorage quota exceeded — drop oldest until it fits
+    while(generationHistory.length>1) {
+      generationHistory.pop();
+      try {
+        localStorage.setItem('vs_history',JSON.stringify(generationHistory));
+        break;
+      } catch(e2) { continue; }
+    }
+  }
+  // Mirror audiobook completions into audio_generations so History survives
+  // page reload and Collections tab can find them (fire-and-forget).
+  // TTS entries use base64 data URLs that can't be stored in DB — skip those.
+  if(entry.type==='audiobook' && currentUser){
+    try{
+      var sb=getSB();
+      if(sb){
+        sb.from('audio_generations').insert({
+          user_id:       currentUser.id,
+          title:         entry.text||'Audiobook',
+          chapter_title: 'Master ('+(entry.chapter_count||1)+' chapters)',
+          voice_name:    entry.voice_name||'',
+          type:          'audiobook',
+          r2_url:        entry.audio_url||'',
+          created_at:    entry.created_at||new Date().toISOString()
+        }).then(function(r){
+          if(r.error) console.warn('[vs history->audio_gen]',r.error.message);
+        }).catch(function(e){ console.warn('[vs history->audio_gen]',e.message||e); });
+      }
+    }catch(e){ console.warn('[vs saveHistory supabase]',e); }
+  }
+}
+
+// Convert ArrayBuffer to base64 data URL for persistent storage
+function bufferToDataUrl(buffer, mime) {
+  var bytes = new Uint8Array(buffer);
+  var binary = '';
+  for (var i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return 'data:' + mime + ';base64,' + btoa(binary);
 }
 function setupHistoryTab(){
   var clearBtn=document.getElementById('clear-history-btn');
@@ -1179,8 +2111,8 @@ function loadHistory(){
   if(generationHistory.length===0){c.innerHTML='<div class="history-empty"><i class="ph ph-clock-counter-clockwise" style="font-size:40px;display:block;margin-bottom:12px;opacity:.3;"></i>No generations yet</div>';return;}
   var html='<div class="history-table"><div class="history-header"><span>#</span><span>Type</span><span>Voice</span><span>Text</span><span>Date</span><span>Action</span></div>';
   generationHistory.forEach(function(g,i){
-    var date=g.created_at?new Date(g.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
-    var tp=g.text?g.text.substring(0,80)+(g.text.length>80?'...':''):'—';
+    var date=g.created_at?new Date(g.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'\u2014';
+    var tp=g.text?g.text.substring(0,80)+(g.text.length>80?'...':''):'\u2014';
     html+='<div class="history-row fade-in" style="animation-delay:'+(i*30)+'ms">'
       +'<span style="font-family:\'Cinzel\',serif;font-size:11px;color:var(--text-tertiary);">'+String(i+1).padStart(2,'0')+'</span>'
       +'<span><span class="history-type-badge '+(g.type||'tts')+'">'+(g.type||'tts').toUpperCase()+'</span></span>'
@@ -1197,7 +2129,20 @@ function loadHistory(){
 }
 function playHistoryItem(audioUrl,voiceName,type){
   var p=document.getElementById('history-player'),a=p.querySelector('audio'),info=document.getElementById('history-player-info'),dl=p.querySelector('.btn-download');
-  a.src=audioUrl;a.play();p.classList.add('visible');
+  if(!audioUrl){ return; }
+  // Always reset cleanly and reload — fixes "won't replay after first listen"
+  try{ a.pause(); }catch(e){}
+  a.oncanplay=null;
+  a.currentTime=0;
+  a.src=audioUrl;
+  a.load();
+  a.oncanplay=function(){
+    a.oncanplay=null;
+    a.currentTime=0;
+    var pr=a.play();
+    if(pr&&pr.catch){ pr.catch(function(){}); }
+  };
+  p.classList.add('visible');
   setTimeout(function(){historyWaveform.drawIdle&&historyWaveform.drawIdle();},50);
   info.textContent=(type||'TTS').toUpperCase()+' | Voice: '+voiceName;
   dl.onclick=function(){var a2=document.createElement('a');a2.href=audioUrl;a2.download='vs-'+type+'-'+Date.now()+'.mp3';a2.click();};
@@ -1214,6 +2159,85 @@ function setupWaveforms(){
   if(hi){hi.addEventListener('play',function(){historyWaveform.connect(hi);historyWaveform.start();});hi.addEventListener('pause',function(){historyWaveform.stop();});hi.addEventListener('ended',function(){historyWaveform.stop();});}
 }
 
+// ── WAV → MP3 ENCODING ──
+// Relabels the WAV blob as audio/mpeg for upload and download.
+// Browser players handle WAV data served as audio/mpeg without issue.
+// lamejs was removed — it produced static noise on every chapter it processed.
+function wavToMp3Blob(wavBlob, kbps) {
+  return wavBlob.arrayBuffer().then(function(buf) {
+    return new Blob([buf], {type: 'audio/mpeg'});
+  });
+}
+
+// ── WAV STITCHING ──
+// Merges an array of WAV Blobs into one valid WAV Blob.
+// Each /generate response is a complete WAV file (RIFF header + PCM data).
+// Raw blob concatenation embeds those extra headers as audio data, producing
+// audible clicks/pops/garble at every chunk seam. This function:
+//   1. Decodes each blob to ArrayBuffer.
+//   2. Walks the RIFF chunk list to locate the "data" chunk (handles non-44-byte headers).
+//   3. Strips headers from chunks 2+, concatenates only the raw PCM bytes.
+//   4. Copies the first chunk's header, patches the RIFF and data size fields.
+// Returns Promise<Blob> type audio/mpeg — correctly labeled.
+function stitchWavBlobs(blobs) {
+  if (!blobs || !blobs.length) return Promise.resolve(new Blob([], {type:'audio/mpeg'}));
+  if (blobs.length === 1) {
+    return blobs[0].arrayBuffer().then(function(buf){
+      return new Blob([buf], {type:'audio/mpeg'});
+    });
+  }
+  return Promise.all(blobs.map(function(b){ return b.arrayBuffer(); }))
+  .then(function(buffers) {
+    // Locate the "data" chunk inside a WAV ArrayBuffer.
+    // Returns { start: byte offset of PCM payload, size: byte count }.
+    function findData(buf) {
+      var view = new DataView(buf);
+      var off = 12; // skip "RIFF"(4) + fileSize(4) + "WAVE"(4)
+      while (off + 8 <= buf.byteLength) {
+        var id = String.fromCharCode(
+          view.getUint8(off), view.getUint8(off+1),
+          view.getUint8(off+2), view.getUint8(off+3));
+        var sz = view.getUint32(off + 4, true);
+        if (id === 'data') return { start: off + 8, size: Math.min(sz, buf.byteLength - off - 8) };
+        off += 8 + sz + (sz & 1); // WAV chunks pad to even byte boundary
+      }
+      return { start: 44, size: Math.max(0, buf.byteLength - 44) }; // standard fallback
+    }
+
+    var infos = buffers.map(findData);
+    var totalPCM = infos.reduce(function(s, d){ return s + d.size; }, 0);
+
+    // Build output: header from chunk 0 (carries sample rate / channels / bit depth)
+    // followed by all raw PCM data concatenated.
+    var hdrLen = infos[0].start;
+    var out = new Uint8Array(hdrLen + totalPCM);
+    out.set(new Uint8Array(buffers[0], 0, hdrLen), 0);
+
+    // Patch RIFF file size field (bytes 4–7 = total file size − 8).
+    var outView = new DataView(out.buffer);
+    outView.setUint32(4, out.byteLength - 8, true);
+
+    // Patch "data" chunk size field inside the copied header.
+    var hOff = 12;
+    while (hOff + 8 <= hdrLen) {
+      var hId = String.fromCharCode(out[hOff], out[hOff+1], out[hOff+2], out[hOff+3]);
+      var hSz = outView.getUint32(hOff + 4, true);
+      if (hId === 'data') { outView.setUint32(hOff + 4, totalPCM, true); break; }
+      hOff += 8 + hSz + (hSz & 1);
+    }
+
+    // Append raw PCM from every chunk (no headers).
+    var pcmOff = hdrLen;
+    buffers.forEach(function(buf, i) {
+      var d = infos[i];
+      out.set(new Uint8Array(buf, d.start, d.size), pcmOff);
+      pcmOff += d.size;
+    });
+
+    return new Blob([out.buffer], {type:'audio/mpeg'});
+  });
+}
+
 // ── UTILS ──
 function escapeHtml(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 
@@ -1226,6 +2250,15 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
   if(!toggle)return;
   toggle.addEventListener('click',function(){panel.classList.toggle('open');if(panel.classList.contains('open'))input.focus();});
   function addMsg(role,content){var d=document.createElement('div');d.className='nm '+role;d.textContent=content;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+  function buildSystemPrompt(){
+    var voiceList = 'No voices loaded yet.';
+    if(typeof VOICES !== 'undefined' && VOICES.length > 0){
+      voiceList = VOICES.map(function(v){
+        return v.name + ' (' + (v.accent || 'Unknown accent') + ')';
+      }).join(', ');
+    }
+    return 'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. VOICE LIBRARY: The platform offers a diverse selection of 52 voice profiles, each with an MP3 sample. Members preview voices directly in the library before choosing one. If asked for voice recommendations, do not name specific voices. Instead, direct members to browse the library and preview samples since voice fit is personal. You can suggest categories to look for (warm, deep, bright, accented, dramatic, soothing) but never invent voice names. PLATFORM FACTS: Audiobook generation costs 150 credits per book and has an 100,000-character cap per audiobook. Never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership costs $15 per month or $144 per year (300 credits monthly or 3,600 credits yearly). Publication Membership costs $25 per month or $240 per year (400 credits monthly or 4,800 credits yearly, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 100,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.';
+  }
   function sendMsg(){
     var text=input.value.trim();if(!text)return;
     addMsg('user',text);input.value='';send.disabled=true;
@@ -1236,7 +2269,7 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         messages:chatHistory,
-        system:'You are Nyxen, the assistant on the Cantrell Creatives Voice Studio. Help users with voice selection, narrator preview, audiobook generation, EPUB chapter parsing, and chapter narration. Keep responses short — 2 to 4 sentences. Do not use markdown formatting symbols. Do not invent platform policies. Platform facts: Audiobook generation costs 150 credits per book and has an 80,000-character cap per audiobook. There are 25 voice profiles available — never name the underlying TTS provider or model. The platform uses SMCB IDs (smcb_id) for every book — never mention ISBNs. There is no cap on how many books a publisher can publish. Tiers are Free, Reader, Studio, and Publication — there is no Pro, Basic, or Enterprise tier. Free includes 100 Studio credits per month — that is enough for some image work but NOT a full 150-credit audiobook. Studio Membership is $15/month or $144/year (300 or 3600 credits). Publication is $25/month or $240/year (400 or 4800 credits, 100% earnings). Cover generation for publication is free and lives on the Collections page (not here). The two collections are Grace (released titles) and Horizon (Coming Soon — books move to Grace on release). Format options are ebook, audiobook, or both. EPUB processing extracts chapters in spine order, preserving front matter and back matter. If a manuscript exceeds 80,000 characters, the creator needs to split it across multiple audiobooks. If you do not have a documented answer, say so honestly instead of guessing.'
+        system:buildSystemPrompt()
       })
     })
     .then(function(r){return r.json();})
@@ -1259,7 +2292,7 @@ function escapeHtml(t){var d=document.createElement('div');d.textContent=t;retur
     <div class="gate-icon"><i class="ph ph-lock"></i></div>
     <h2>Sign In Required</h2>
     <p>Please sign in to access CC Voice Studio and generate audio.</p>
-    <a class="gate-btn" href="https://creatives.smcantrellbooks.com/login?next=/voice"><i class="ph ph-sign-in"></i> Sign In</a>
+    <a class="gate-btn" href="https://creatives.smcantrellbooks.com/login?next=/voice-studio"><i class="ph ph-sign-in"></i> Sign In</a>
   </div>
 </div>
 
